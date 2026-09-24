@@ -5,7 +5,7 @@
   "description": "Site institucional e backend do Atacado Polvo — sem dependências, só módulos nativos do Node.",
   "scripts": {
     "start": "node server/server.js",
-    "test": "node --test \"server/*.test.js\"",
+    "test": "node --test \"server/*.test.js\" \"testes/*.test.js\"",
     "criar-admin": "node server/cli.js criar-admin",
     "listar-contas": "node server/cli.js listar",
     "backup": "node server/backup.js",

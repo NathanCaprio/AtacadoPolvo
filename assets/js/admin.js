@@ -67,11 +67,17 @@
     }
   }
 
-  /* ---- Funil por segmento -------------------------------------------------
+  /* ---- Funis de origem ----------------------------------------------------
 
      A pergunta que o painel precisa responder não é "quantas mensagens
      chegaram", é "de onde". Sem esse recorte não dá para saber se a landing
-     de condomínio ou a de escola vale o esforço.                           */
+     de condomínio ou a de escola vale o esforço.
+
+     São dois recortes porque são duas decisões diferentes. SEGMENTO diz quem
+     pediu (condomínio, escola) e responde onde insistir no conteúdo. ORIGEM
+     diz o que fez a pessoa pedir (a landing, a calculadora, o rodapé) e
+     responde qual peça do site está puxando lead. Uma calculadora que traz
+     síndico aparece nos dois, mas só o segundo mostra que foi ela.        */
 
   const SEGMENTO = {
     condominio: 'Condomínios',
@@ -81,26 +87,37 @@
     outros: 'Sem segmento'
   };
 
-  function desenharFunil(porSegmento) {
-    const alvo = $('#funil-barras');
-    const secao = $('#funil');
-    if (!alvo || !Array.isArray(porSegmento) || !porSegmento.length) {
+  const ORIGEM = {
+    landing: 'Páginas de segmento',
+    calculadora: 'Calculadora de consumo',
+    contato: 'Formulário de contato',
+    orcamento: 'Lista de orçamento',
+    rodape: 'Rodapé'
+  };
+
+  /* Uma função para os dois blocos: muda o campo que identifica a fatia, o
+     dicionário de rótulos e onde desenhar. */
+  function desenharFunil(dados, opcoes) {
+    const alvo = $(opcoes.alvo);
+    const secao = $(opcoes.secao);
+    if (!alvo || !Array.isArray(dados) || !dados.length) {
       if (secao) secao.hidden = true;
       return;
     }
 
     // A barra é proporcional ao maior valor, não ao total: com um segmento
     // dominante, proporção do total deixaria todos os outros invisíveis.
-    const maior = Math.max(...porSegmento.map(s => s.n), 1);
+    const maior = Math.max(...dados.map(s => s.n), 1);
 
     alvo.replaceChildren();
-    for (const s of porSegmento) {
+    for (const s of dados) {
+      const chave = s[opcoes.campo] || 'outros';
       const linha = el('div', 'funil-linha');
 
-      linha.append(el('span', 'funil-rotulo', SEGMENTO[s.seg] || s.seg));
+      linha.append(el('span', 'funil-rotulo', opcoes.rotulos[chave] || chave));
 
       const trilho = el('div', 'funil-trilho');
-      const barra = el('div', `funil-barra funil-barra--${s.seg}`);
+      const barra = el('div', `funil-barra funil-barra--${chave}`);
       barra.style.width = Math.round((s.n / maior) * 100) + '%';
       trilho.append(barra);
       linha.append(trilho);
@@ -351,7 +368,10 @@
     ]);
 
     desenharMetricas(resumo);
-    desenharFunil(resumo.porSegmento);
+    desenharFunil(resumo.porSegmento,
+      { campo: 'seg', rotulos: SEGMENTO, alvo: '#funil-barras', secao: '#funil' });
+    desenharFunil(resumo.porOrigem,
+      { campo: 'origem', rotulos: ORIGEM, alvo: '#origem-barras', secao: '#origem' });
     desenharTabela(cli.clientes);
 
     preencher($('#linhas-orcamentos'), orc.orcamentos, linhaOrcamento,

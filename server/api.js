@@ -76,7 +76,7 @@ const texto = v => (typeof v === 'string' ? v.trim() : '');
 
 // Valores aceitos em mensagens.origem / mensagens.segmento. São listas
 // fechadas de propósito: o campo vem do navegador e alimenta relatório.
-const ORIGENS = ['contato', 'landing', 'orcamento', 'rodape'];
+const ORIGENS = ['contato', 'landing', 'orcamento', 'rodape', 'calculadora'];
 const SEGMENTOS = ['condominio', 'escola', 'empresa', 'residencial'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
@@ -555,9 +555,18 @@ function resumo(req, res) {
              SUM(CASE WHEN criado_em > datetime('now','-30 days') THEN 1 ELSE 0 END) n30
         FROM mensagens GROUP BY seg ORDER BY n DESC
     `).all(),
+    // Mesmo recorte, por canal de entrada. Segmento diz QUEM pediu; origem
+    // diz O QUE fez pedir. Sem os dois não dá para saber se a calculadora
+    // está puxando lead ou só enfeitando a landing.
+    porOrigem: db.prepare(`
+      SELECT origem, COUNT(*) n,
+             SUM(CASE WHEN criado_em > datetime('now','-30 days') THEN 1 ELSE 0 END) n30
+        FROM mensagens GROUP BY origem ORDER BY n DESC
+    `).all(),
     leadsLanding30d: n(`
       SELECT COUNT(*) n FROM mensagens
-       WHERE origem = 'landing' AND criado_em > datetime('now','-30 days')`)
+       WHERE origem IN ('landing', 'calculadora')
+         AND criado_em > datetime('now','-30 days')`)
   });
 }
 

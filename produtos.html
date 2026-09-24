@@ -49,6 +49,7 @@
     <nav class="nav" id="nav" aria-label="Navegação principal">
       <a href="index.html">Início</a>
       <a href="produtos.html">Produtos</a>
+      <a href="calculadora.html">Calculadora</a>
       <a href="condominios.html">Condomínios</a>
       <a href="escolas.html">Escolas</a>
       <a href="sobre.html">A empresa</a>
@@ -162,6 +163,35 @@
 
   <div class="drawer-body" id="drawer-body"></div>
 
+  <!-- Estado de "enviado". Aparece no lugar da lista depois que o WhatsApp
+       abre: antes disso não havia retorno nenhum, e a gaveta continuava
+       idêntica, como se nada tivesse acontecido. O convite para criar conta
+       fica aqui porque é o único momento em que ela tem motivo — a pessoa
+       acabou de fazer um pedido e pode querer acompanhar o próximo. -->
+  <div class="drawer-enviado" id="drawer-enviado" hidden>
+    <span class="enviado-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </span>
+    <h3>Pedido enviado</h3>
+    <p>Abrimos o WhatsApp com sua lista já escrita. É só apertar enviar —
+       respondemos com a cotação no mesmo dia útil.</p>
+
+    <div class="enviado-conta" id="enviado-conta" hidden>
+      <p class="enviado-conta-titulo">Quer acompanhar este e os próximos pedidos?</p>
+      <p class="enviado-conta-texto">
+        Com uma conta você vê a situação de cada orçamento que pediu, sem
+        precisar procurar na conversa.
+      </p>
+      <a class="btn btn--primary btn--sm btn--block" href="entrar.html?novo=1">
+        Criar minha conta
+      </a>
+    </div>
+
+    <button class="btn btn--ghost btn--sm btn--block" id="drawer-voltar" style="margin-top:12px">
+      Voltar para a lista
+    </button>
+  </div>
+
   <div class="drawer-foot" id="drawer-foot">
 
     <div class="drawer-contato" id="drawer-contato">
@@ -231,10 +261,12 @@
         <ul class="footer-links">
           <li><a href="index.html">Início</a></li>
           <li><a href="produtos.html">Produtos</a></li>
+          <li><a href="calculadora.html">Calculadora de consumo</a></li>
           <li><a href="condominios.html">Para condomínios</a></li>
           <li><a href="escolas.html">Para escolas</a></li>
           <li><a href="sobre.html">A empresa</a></li>
           <li><a href="contato.html">Contato</a></li>
+          <li><a href="entrar.html">Área do cliente</a></li>
         </ul>
       </div>
 

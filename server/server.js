@@ -51,6 +51,11 @@ const CSP = [
   "img-src 'self' data:",
   "connect-src 'self'",
   "form-action 'self'",
+  // Os mapas das duas lojas em contato.html. Sem isto o iframe é bloqueado
+  // e o mapa fica em branco — só quando servido pelo servidor, o que torna
+  // o defeito invisível para quem testa abrindo o HTML direto do disco.
+  // É só o embed do Maps: nenhum outro domínio pode ser embutido.
+  "frame-src https://www.google.com",
   "frame-ancestors 'none'",
   "base-uri 'self'"
 ].join('; ');

@@ -9,7 +9,7 @@ painel, suba o servidor.
 
 ```bash
 npm start          # sobe em http://127.0.0.1:3000
-npm test           # 87 testes de ponta a ponta
+npm test           # 103 testes (backend + modelo de consumo)
 npm run criar-admin -- "Seu Nome" voce@exemplo.com
 ```
 
@@ -19,6 +19,7 @@ npm run criar-admin -- "Seu Nome" voce@exemplo.com
 .
 ├── index.html            Home
 ├── produtos.html         Catálogo filtrável + lista de orçamento
+├── calculadora.html      Calculadora de consumo mensal (condomínio e escola)
 ├── condominios.html      Landing de SEO — síndicos e administradoras
 ├── escolas.html          Landing de SEO — diretores e mantenedores
 ├── sobre.html            Institucional (história, valores, linha do tempo)
@@ -33,14 +34,18 @@ npm run criar-admin -- "Seu Nome" voce@exemplo.com
 ├── sitemap.xml           Só as páginas públicas
 ├── package.json          Só scripts — o projeto não tem dependências
 ├── server/               Backend (Node puro, ver abaixo)
+├── testes/               Testes do que roda no navegador (o modelo de consumo)
 └── assets/
     ├── css/style.css     Design system completo (tokens, componentes, responsivo)
     ├── img/              Logo (2 recortes), favicon e capa de compartilhamento
+    │   └── loja/         Fotos reais das duas unidades (webp)
     └── js/
         ├── config.js     >>> DADOS DA LOJA. Edite só aqui.
         ├── data.js       Catálogo mock + gerador de arte SVG dos produtos
         ├── main.js       Tema, menu, scroll reveal, contadores, FAQ
         ├── catalogo.js   Filtros, busca, ordenação, orçamento
+        ├── consumo.js    >>> COEFICIENTES DE CONSUMO. Ajuste os números aqui.
+        ├── calculadora.js Tela da calculadora (monta campos, recalcula, exporta)
         ├── contato.js    Validação e máscaras do formulário
         ├── lead.js       Formulário de cotação das landings
         ├── auth.js       Cliente da API + botão de conta no header
@@ -97,14 +102,47 @@ completo tem detalhe demais para tamanhos pequenos:
    Esses valores sobrescrevem o texto das páginas em tempo de execução, então é
    o único lugar a editar.
 2. **`assets/js/data.js`** — ajuste o catálogo real (nome, embalagem, caixa, categoria).
-3. **Fotos** — hoje os produtos usam ilustrações SVG geradas por código e há dois blocos
-   `.media-box` com aviso de "espaço reservado" (na home e em `sobre.html`). Substitua
-   por fotos reais quando tiver.
-4. **Mapa** — em `contato.html`, o bloco `.map-box` espera o `iframe` do Google Maps.
-5. **SEO** — as URLs `canonical` e o JSON-LD usam `https://www.atacadopolvo.com.br/`
+3. **Fotos dos produtos** — o catálogo ainda usa ilustrações SVG geradas por código
+   (`data.js` → `artProduto`). As fotos das **lojas** já são reais (veja abaixo); o que
+   falta é foto de produto.
+4. **SEO** — as URLs `canonical` e o JSON-LD usam `https://www.atacadopolvo.com.br/`
    como exemplo; troque pelo domínio real antes de publicar.
-6. **Depoimentos** — os nomes em `index.html`, `condominios.html` e `escolas.html`
+5. **Depoimentos** — os nomes em `index.html`, `condominios.html` e `escolas.html`
    são de exemplo. Troque por depoimentos reais (ou remova a seção).
+6. **História em `sobre.html`** — o galpão de 120 m², o Fiorino, a lista de trinta
+   mercearias e o ano de fundação são texto de protótipo. Agora eles aparecem **ao lado
+   de fotos reais das lojas**, o que dá ar de verdade a um texto que ninguém conferiu.
+   Corrija ou remova antes de publicar.
+
+## Fotos e mapas das lojas
+
+As fotos das duas unidades estão em `assets/img/loja/`, em **webp** (as treze somam
+~700 KB). O nome diz a unidade e o assunto: `medianeira-papel.webp`,
+`bento-vassouras.webp`, `*-fachada.webp`.
+
+| Onde | O que aparece |
+|---|---|
+| `index.html` | corredor de papel, no lugar do antigo "espaço reservado" |
+| `sobre.html` | fachada da Medianeira + seção "Por dentro" com as duas galerias |
+| `contato.html` | fachada de cada unidade acima do respectivo mapa |
+
+Foto de prateleira cheia é o argumento que texto nenhum substitui para quem compra
+volume: síndico e diretor querem ver estoque de verdade antes de confiar a reposição
+do prédio a um fornecedor novo. Por isso as galerias mostram corredor e pilha, não
+close de produto.
+
+- **A grade tem colunas fixas (3), não `auto-fit`**, e a contagem de fotos fecha as
+  duas galerias em duas linhas exatas. Ao acrescentar ou tirar foto, mantenha a conta
+  fechando (uma foto deitada com `.galeria-item--larga` vale por duas células).
+- **Foto com etiqueta de preço fica de fora.** Preço legível numa foto do site vira
+  compromisso que desatualiza — e é justamente a conversa que a cotação deveria ter.
+- Toda foto leva `loading="lazy"`, `width`/`height` e `alt` descritivo.
+
+Os mapas são os `iframe` do Google Maps, um por unidade, com o endereço e um link
+"Como chegar" que abre a rota já traçada. **Eles exigiram um `frame-src` no CSP**
+(`server/server.js`) — sem ele o mapa fica em branco, e só quando servido pelo
+servidor, o que torna o defeito invisível para quem testa abrindo o HTML do disco.
+Há teste travando que esse `frame-src` continue valendo só para o Maps.
 
 ## Páginas de SEO por segmento
 
@@ -124,12 +162,65 @@ Para criar uma terceira landing (empresas, restaurantes, hotéis), copie uma das
 duas e troque: `title`/`description`/`canonical`, o `H1`, o JSON-LD, os cards de
 kit e as perguntas do FAQ.
 
+## Calculadora de consumo
+
+`calculadora.html` responde a pergunta que trava a compra antes do preço:
+**"quanto eu preciso por mês?"**. Quem não sabe a quantidade não pede
+orçamento — pede "uma tabela de preços", que é o pedido que não vira venda.
+A pessoa informa o porte (unidades, torres e banheiros comuns; ou alunos,
+salas, banheiros e turnos) e recebe na tela a lista mensal item a item, com a
+quantidade e a embalagem de venda.
+
+A lista tem três saídas, porque são três pessoas diferentes:
+
+| Saída | Para quem |
+|---|---|
+| Lista de orçamento | quem quer ajustar as quantidades antes de pedir — cai em `produtos.html#orcamento` com a gaveta aberta |
+| WhatsApp | quem resolve na conversa; a mensagem já vai montada |
+| Imprimir / PDF | o síndico que leva para a assembleia e a escola que anexa ao processo de compra |
+
+Abaixo do resultado há o formulário de cotação de sempre (`lead.js`), com a
+estimativa num campo escondido: o lead chega no painel com a lista inteira no
+corpo da mensagem, e o vendedor responde sem ter que perguntar o porte.
+
+### Onde mexer nos números
+
+Tudo mora em `assets/js/consumo.js`, que é só aritmética. Cada item tem um
+**driver** e um coeficiente por mês:
+
+- **condomínio** — o driver é a área comum, não o morador (o apartamento compra
+  o próprio material). Papel, sabonete e desinfetante saem do número de
+  banheiros comuns; "unidades" quase só aparece no saco de lixo da coleta.
+- **escola** — o driver é o aluno (papel, sabonete, copo). Turno a mais **não**
+  multiplica isso, porque o aluno já foi contado uma vez; multiplica a
+  frequência de limpeza de piso e banheiro.
+- acima de 60 unidades ou 400 alunos, parte dos produtos prontos vira
+  concentrado em galão e bombona — é onde o custo por litro cai.
+- vassoura, rodo e balde saem numa lista separada, de troca trimestral, para
+  não inflar o pedido do mês.
+
+O arquivo roda no navegador e no Node, e `testes/consumo.test.js` trava os dois
+jeitos de ele quebrar em silêncio: um id que sai do catálogo (a linha sumiria
+da estimativa sem erro nenhum) e um coeficiente que deixa de acompanhar o porte.
+
+**Não há preço na calculadora, de propósito.** Preço de atacado depende do
+volume fechado, da forma de pagamento e da recorrência; um preço de tabela ali
+sairia maior que o real e queimaria a cotação.
+
+### Para acrescentar um segmento (empresas, hotéis)
+
+Escreva um bloco em `SEGMENTOS` com os campos e a função de cálculo, e
+acrescente o valor à lista `SEGMENTOS` de `server/api.js`. A tela se monta
+sozinha a partir da declaração — não há HTML nem CSS por segmento.
+
 ## O que já funciona
 
 - Tema claro/escuro com detecção do sistema e alternância manual (salva em `localStorage`)
 - Menu mobile, header sticky, animação de entrada ao rolar, contadores animados
 - Catálogo com filtro por categoria, busca, ordenação e deep link (`produtos.html?cat=cozinha`)
 - Lista de orçamento persistida no navegador, que gera uma mensagem pronta de WhatsApp
+- Calculadora de consumo mensal por porte, que vira lista de orçamento, mensagem
+  de WhatsApp, folha impressa ou lead com a estimativa anexada
 - Formulário com validação e máscaras de telefone e CNPJ
 - Acessibilidade: skip link, foco visível, `aria-*` nos componentes interativos,
   respeito a `prefers-reduced-motion`
@@ -139,10 +230,12 @@ kit e as perguntas do FAQ.
 - Orçamentos e mensagens de contato gravados no banco (inclusive de visitante
   sem conta, o que revela carrinho abandonado)
 - Cliente vê os próprios orçamentos e a situação de cada um na área da conta
+- Fotos reais das duas lojas e mapa de cada unidade na página de contato
 - `robots.txt`, `sitemap.xml` e página 404 própria
 - Política de privacidade e aceite obrigatório nos formulários (LGPD)
 - Cópia de segurança do banco automática, verificada a cada geração
-- 87 testes automatizados cobrindo backend, recuperação de senha, LGPD e backup
+- 103 testes automatizados cobrindo backend, recuperação de senha, LGPD, backup
+  e o modelo de consumo da calculadora
 
 ## Uma armadilha no header
 
@@ -222,6 +315,38 @@ backups/        cópias e exports (fora do git)
 Telas: `entrar.html`, `recuperar.html`, `conta.html` e `admin.html` (as quatro
 com `noindex`).
 
+#### Como o cliente chega na conta
+
+A conta é **caminho secundário de propósito**: quem compra atacado quer cotação,
+não criar senha. O funil principal continua sendo catálogo/calculadora →
+orçamento → WhatsApp. Mas ela precisa ser achável, e havia um buraco — até
+então a única porta de entrada era um ícone sem rótulo no header, e nenhuma
+página mencionava que a área existia.
+
+São três entradas, em ordem de descoberta:
+
+1. **Rodapé de todas as páginas** — "Área do cliente", no fim da lista de
+   navegação. É onde as pessoas procuram.
+2. **Header** — o botão que `auth.js` injeta agora sai com o rótulo "Entrar".
+   O texto some abaixo de 1140px (`.conta-btn--entrar`), onde o cabeçalho já
+   está no limite com sete itens de menu; ali volta a ser só o ícone.
+3. **Depois de enviar um orçamento** — a gaveta troca para um estado de
+   confirmação com o convite "quer acompanhar este e os próximos pedidos?".
+
+O convite é o ponto importante: é o único momento em que a conta tem motivo.
+Ele só aparece para quem **não** está logado e só quando há backend — sem API
+(HTML aberto do disco) levaria a uma tela que não funciona.
+
+O estado de confirmação da gaveta (`#drawer-enviado`) é ganho separado: antes
+o envio não dava retorno nenhum, a gaveta ficava idêntica e parecia que nada
+tinha acontecido. **A lista não é apagada no envio** — o pedido ainda não foi
+aceito pela loja, e quem fecha o WhatsApp sem mandar precisa reencontrar o que
+montou. Reabrir a gaveta sempre volta para a lista.
+
+> Testando no Live Server (porta 5500) o botão de conta **não aparece**, porque
+> não há API para responder quem está logado. É proposital. O fluxo de conta só
+> existe pela porta do `server.js`.
+
 ### Como a segurança está feita
 
 - **Senha**: scrypt (N=16384) com salt por usuário; comparação com
@@ -238,6 +363,10 @@ com `noindex`).
   admin ativo, nem remover a própria conta.
 - **Estáticos**: `server/` e `dados/` nunca são servidos; há barreira contra
   path traversal e CSP, `nosniff`, `X-Frame-Options` e `Referrer-Policy`.
+- **`frame-src`**: o CSP libera `https://www.google.com` e mais nada, por causa dos
+  mapas das lojas em `contato.html`. `frame-ancestors 'none'` continua valendo, então
+  o site embute o Maps mas ninguém embute o site. Um teste falha se esse `frame-src`
+  virar curinga — é o tipo de folga que não quebra nada visivelmente.
 - A tabela do painel é montada com `textContent`, nunca `innerHTML`: nome e
   empresa vêm do cadastro do cliente e são conteúdo não confiável.
 
@@ -278,10 +407,13 @@ provando que a trava de produção vence a variável.
   cada mensagem mostra "aceite registrado" ou "sem aceite" — o segundo aparece
   em lead antigo, de antes do checkbox existir.
 - **Origem do lead.** `mensagens.origem` e `mensagens.segmento` gravam de onde
-  o pedido veio (listas fechadas, validadas no servidor). É o que responde se
-  as páginas de condomínio e de escola estão trazendo cliente. O painel mostra
-  isso como barras em "De onde vêm os pedidos", e `GET /api/admin/resumo`
-  devolve em `porSegmento`.
+  o pedido veio (listas fechadas, validadas no servidor). São dois recortes
+  porque são duas decisões: **segmento** diz quem pediu (condomínio, escola) e
+  responde onde insistir no conteúdo; **origem** diz o que fez pedir (a landing,
+  a calculadora, o rodapé) e responde qual peça do site está puxando lead. O
+  painel mostra os dois como barras, em "De onde vêm os pedidos" e "O que fez a
+  pessoa pedir", e `GET /api/admin/resumo` devolve em `porSegmento` e
+  `porOrigem`.
 - **Migrações.** O schema é `CREATE TABLE IF NOT EXISTS`, que cria banco novo
   mas não mexe em tabela existente. `migrar()` em `server/db.js` acrescenta as
   colunas novas (`origem`, `segmento`, `aceite_em`) em banco antigo. É
@@ -329,7 +461,7 @@ troca, recusa cópia corrompida e só age depois de você digitar `restaurar`.
 npm test          # node --test "server/*.test.js"
 ```
 
-87 testes de ponta a ponta. Sobem o servidor de verdade num **banco temporário**
+103 testes. Os de `server/` sobem o servidor de verdade num **banco temporário**
 e numa porta livre, e conversam por HTTP — nada é dublado. O script usa um
 glob, então arquivo de teste novo em `server/` entra sozinho. O foco é travar o
 comportamento de segurança, que é o que quebra em silêncio numa refatoração:
@@ -411,6 +543,7 @@ Isto é um protótipo. Antes de receber cliente de verdade:
 | `data.js` | `window.CATALOGO` embutido | `GET /api/produtos` (API externa) |
 | `catalogo.js` → `enviarOrcamento()` | grava em `/api/orcamentos` **e** abre o WhatsApp | — |
 | `contato.js` → `enviar()` | grava em `/api/mensagens` **e** abre o WhatsApp | — |
+| `consumo.js` | coeficientes médios embutidos | consumo real medido por cliente |
 
 O registro roda em paralelo e o WhatsApp abre de qualquer jeito, mesmo com o
 servidor fora do ar: gravar o orçamento nunca pode atrapalhar a venda. Quem

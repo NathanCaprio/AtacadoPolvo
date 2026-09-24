@@ -52,6 +52,7 @@
     <nav class="nav" id="nav" aria-label="Navegação principal">
       <a href="index.html">Início</a>
       <a href="produtos.html">Produtos</a>
+      <a href="calculadora.html">Calculadora</a>
       <a href="condominios.html">Condomínios</a>
       <a href="escolas.html">Escolas</a>
       <a href="sobre.html">A empresa</a>
@@ -269,9 +270,51 @@
           </div>
         </div>
 
-        <div class="map-box" style="margin-top:20px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/></svg>
-          <p>Espaço reservado para o mapa. Cole aqui o <code>iframe</code> do Google Maps com o endereço real da loja.</p>
+        <!-- Os dois mapas do Google. São duas lojas, e cada uma tem o mapa
+             embaixo do próprio endereço na lista acima — mapa único com dois
+             pinos faria o cliente vir até a unidade errada. -->
+        <div class="mapas">
+          <figure class="mapa">
+            <img class="fachada" src="assets/img/loja/medianeira-fachada.webp"
+                 alt="Fachada da unidade Medianeira: loja roxa com o letreiro Atacado da Limpeza, vassouras e lixeiras expostas na calçada"
+                 width="680" height="510" loading="lazy" decoding="async">
+            <div class="map-box map-box--mapa">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4720.985801492775!2d-51.214831887822164!3d-30.063702774809286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9519795e0cd013f7%3A0x3baf50683990d951!2sAtacado%20da%20Limpeza%20Polvo%20-%20Matriz!5e1!3m2!1spt-BR!2sbr!4v1790254687284!5m2!1spt-BR!2sbr"
+                title="Mapa da unidade Medianeira, na Av. Dr. Carlos Barbosa, 931"
+                style="border:0" allowfullscreen loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+            <figcaption>
+              <b>Unidade Medianeira</b>
+              <span data-endereco-full>Av. Dr. Carlos Barbosa, 931</span>
+              <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-30.0637028,-51.2148319"
+                 target="_blank" rel="noopener">Como chegar
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </figcaption>
+          </figure>
+
+          <figure class="mapa">
+            <img class="fachada" src="assets/img/loja/bento-fachada.webp"
+                 alt="Fachada da unidade Bento Gonçalves: letreiro Atacado da Limpeza com o WhatsApp da loja e produtos expostos na entrada"
+                 width="680" height="510" loading="lazy" decoding="async">
+            <div class="map-box map-box--mapa">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4720.945752325955!2d-51.15904578782191!3d-30.064542474808974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95199d104b92e6a1%3A0x2cf1555d271facf3!2sAtacado%20da%20Limpeza%20Polvo!5e1!3m2!1spt-BR!2sbr!4v1790254649718!5m2!1spt-BR!2sbr"
+                title="Mapa da unidade Bento Gonçalves, na Av. Bento Gonçalves, 5928"
+                style="border:0" allowfullscreen loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+            <figcaption>
+              <b>Unidade Bento Gonçalves</b>
+              <span data-endereco2-full>Av. Bento Gonçalves, 5928</span>
+              <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-30.0645425,-51.1590458"
+                 target="_blank" rel="noopener">Como chegar
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </figcaption>
+          </figure>
         </div>
       </div>
 
@@ -382,10 +425,12 @@
         <ul class="footer-links">
           <li><a href="index.html">Início</a></li>
           <li><a href="produtos.html">Produtos</a></li>
+          <li><a href="calculadora.html">Calculadora de consumo</a></li>
           <li><a href="condominios.html">Para condomínios</a></li>
           <li><a href="escolas.html">Para escolas</a></li>
           <li><a href="sobre.html">A empresa</a></li>
           <li><a href="contato.html">Contato</a></li>
+          <li><a href="entrar.html">Área do cliente</a></li>
         </ul>
       </div>
 

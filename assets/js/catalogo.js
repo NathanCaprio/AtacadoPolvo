@@ -20,6 +20,10 @@
 
   const estado = { cat: 'todos', busca: '', ordem: 'relevancia' };
 
+  // Quem está logado, quando há backend. Decide se o convite para criar
+  // conta aparece depois do envio — oferecer conta a quem já tem é ruído.
+  let clienteAtual = null;
+
   /* ---- Lista de orcamento (localStorage) -------------------------------- */
   const CHAVE = 'ap-orcamento';
   let lista = [];
@@ -120,6 +124,9 @@
 
   const abrirDrawer = (abrir) => {
     if (!drawer) return;
+    // Abrir sempre volta para a lista: quem acabou de enviar e adiciona
+    // outro produto precisa ver a lista, não a confirmação do envio anterior.
+    if (abrir) mostrarEnviado(false);
     drawer.classList.toggle('is-open', abrir);
     if (overlay) overlay.classList.toggle('is-open', abrir);
     document.body.style.overflow = abrir ? 'hidden' : '';
@@ -219,6 +226,26 @@
       : { nome: nome.trim(), tel: bruto };
   }
 
+  /* Alterna entre a lista e a confirmação dentro da gaveta. A lista NÃO é
+     apagada: o pedido ainda não foi aceito pela loja, e quem fecha o
+     WhatsApp sem enviar precisa reencontrar o que tinha montado. */
+  function mostrarEnviado(mostrar) {
+    const enviado = $('#drawer-enviado');
+    const corpo = $('#drawer-body');
+    const pe = $('#drawer-foot');
+    if (!enviado) return;
+
+    enviado.hidden = !mostrar;
+    if (corpo) corpo.hidden = mostrar;
+    if (pe) pe.hidden = mostrar;
+
+    // O convite de conta só faz sentido para quem não tem uma. Sem backend
+    // (HTML aberto do disco) ele nem aparece: levaria a uma tela que não
+    // funciona.
+    const convite = $('#enviado-conta');
+    if (convite) convite.hidden = !(mostrar && window.API && !clienteAtual);
+  }
+
   function enviarOrcamento() {
     const s = window.SITE || {};
 
@@ -235,6 +262,8 @@
     const linhas = itens.map(i => `• ${i.nome} — ${i.qtd}x (${i.caixa})`).join('\n');
     const msg = `Olá! Gostaria de um orçamento dos itens abaixo:\n\n${linhas}\n\nPedido mínimo: ${s.pedidoMinimo || ''}`;
     window.open(window.linkWhatsApp(msg), '_blank', 'noopener');
+
+    mostrarEnviado(true);
   }
 
   /* ---- Eventos ------------------------------------------------------------ */
@@ -276,10 +305,14 @@
      piscar na tela de quem não está logado. */
   if (window.API) {
     window.API.quemSou().then(c => {
+      clienteAtual = c;
       const caixa = $('#drawer-contato');
       if (c && caixa) caixa.hidden = true;
     });
   }
+
+  const voltar = $('#drawer-voltar');
+  if (voltar) voltar.addEventListener('click', () => mostrarEnviado(false));
 
   const limpar = $('#drawer-limpar');
   if (limpar) limpar.addEventListener('click', () => {
@@ -324,4 +357,10 @@
   atualizarFab();
   renderDrawer();
   render();
+
+  /* ---- Chegando com a lista pronta (#orcamento) ---------------------------
+     É por aqui que cai quem montou a estimativa na calculadora. Sem abrir a
+     gaveta, a pessoa aterrissa num catálogo comum, com um número no canto
+     que ela não pediu — e não vê que os itens já estão lá dentro. */
+  if (location.hash === '#orcamento' && lista.length) abrirDrawer(true);
 })();

@@ -412,6 +412,21 @@ describe('servidor', () => {
     assert.ok(res.headers.get('content-security-policy'));
   });
 
+  /* O CSP ganhou um frame-src por causa do mapa das lojas. Um frame-src
+     larguinho demais ('self' https: ou um curinga) deixa qualquer página de
+     terceiro ser embutida no site — e isso não quebra nada visivelmente,
+     então só um teste pega. */
+  test('o CSP só libera frame para o mapa do Google', async () => {
+    const csp = (await fetch(BASE + '/')).headers.get('content-security-policy');
+    const frameSrc = csp.split(';').map(d => d.trim())
+      .find(d => d.startsWith('frame-src '));
+
+    assert.ok(frameSrc, 'frame-src precisa ser explícito, não herdar do default-src');
+    assert.deepEqual(frameSrc.split(/\s+/).slice(1), ['https://www.google.com']);
+    assert.match(csp, /frame-ancestors 'none'/);
+    assert.doesNotMatch(csp, /frame-src[^;]*\*/);
+  });
+
   test('o cookie de sessão é httpOnly e SameSite', async () => {
     const { email } = await novaConta();
     const res = await fetch(`${BASE}/api/auth/entrar`, {

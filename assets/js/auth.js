@@ -153,7 +153,12 @@
     } else {
       a.href = 'entrar.html';
       a.title = 'Entrar na minha conta';
-      a.innerHTML = ICONE_PESSOA;
+      // Com rótulo: um ícone de pessoa sozinho, ao lado do alternador de
+      // tema, não se lê como "entrar" — ninguém clica no que não entende.
+      // O texto some abaixo de 1140px (ver .conta-btn--entrar no CSS), onde
+      // o cabeçalho já está no limite com sete itens de menu.
+      a.innerHTML = ICONE_PESSOA + '<span class="conta-rotulo">Entrar</span>';
+      a.classList.add('conta-btn--entrar');
     }
     a.setAttribute('aria-label', a.title);
 
