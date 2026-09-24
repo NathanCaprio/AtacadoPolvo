@@ -158,9 +158,22 @@ Há teste travando que esse `frame-src` continue valendo só para o Maps.
 Na home, a seção **"Para o seu segmento"** aponta para as duas, e ambas estão
 no menu e no rodapé de todas as páginas.
 
-Para criar uma terceira landing (empresas, restaurantes, hotéis), copie uma das
-duas e troque: `title`/`description`/`canonical`, o `H1`, o JSON-LD, os cards de
-kit e as perguntas do FAQ.
+### Landings discretas (restaurantes, hotéis, pets)
+
+`restaurantes.html`, `hoteis.html` e `pets.html` seguem o mesmo molde, com
+duas diferenças de propósito:
+
+- **não entram no menu nem na home** — o único link para elas é a linha
+  `.footer-seg` no fim do rodapé de todas as páginas (e o `sitemap.xml`);
+- **não têm depoimentos nem convite para a calculadora** — a calculadora só
+  conhece condomínio e escola, e depoimento só entra quando for de cliente real.
+
+Os segmentos `restaurante`, `hotel` e `pet` estão em `SEGMENTOS` de
+`server/api.js` e têm rótulo e cor no painel (`admin.js` / `.selo--*`).
+
+Para criar outra landing, copie uma delas e troque: `title`/`description`/`canonical`,
+o `H1`, o JSON-LD, os cards de kit, as perguntas do FAQ e o `data-segmento` do
+formulário (que precisa existir em `SEGMENTOS`, senão o lead chega sem segmento).
 
 ## Calculadora de consumo
 

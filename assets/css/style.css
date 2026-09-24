@@ -618,6 +618,11 @@ textarea.input{ resize:vertical; min-height:128px; }
 }
 .footer-bottom a{ color:#9580B5; }
 .footer-bottom a:hover{ color:#fff; }
+/* Links das landings que não entram no menu (restaurantes, hotéis, pets):
+   ficam só aqui, discretos, para o buscador e para quem rola até o fim. */
+.footer-seg{ padding-bottom:22px; font-size:.8rem; color:#7D6A9C; }
+.footer-seg a{ color:#9580B5; }
+.footer-seg a:hover{ color:#fff; }
 
 .wpp-fab{
   position:fixed; right:22px; bottom:22px; z-index:90;
@@ -1058,6 +1063,9 @@ textarea.input{ resize:vertical; min-height:128px; }
 .funil-barra--escola{ background:var(--purple); }
 .funil-barra--empresa{ background:#8A5A00; }
 .funil-barra--residencial{ background:#2563EB; }
+.funil-barra--restaurante{ background:#DB2777; }
+.funil-barra--hotel{ background:#0D9488; }
+.funil-barra--pet{ background:#16A34A; }
 .funil-barra--outros{ background:var(--line-strong); }
 
 /* Cores do funil por origem (mesmo componente, outro recorte) */
@@ -1089,6 +1097,9 @@ textarea.input{ resize:vertical; min-height:128px; }
 .selo--escola{ background:var(--purple-soft); color:#9A1FA8; }
 .selo--empresa{ background:var(--accent-soft); color:#7A5200; }
 .selo--residencial{ background:#E4EDFD; color:#1D4ED8; }
+.selo--restaurante{ background:#FCE7F3; color:#9D174D; }
+.selo--hotel{ background:#CCFBF1; color:#0F766E; }
+.selo--pet{ background:#DCFCE7; color:#166534; }
 .selo--landing{ background:var(--surface-3); color:var(--ink-2); }
 .selo--aceite{ background:var(--ok-soft); color:#0A6F3A; }
 .selo--sem-aceite{
@@ -1096,6 +1107,9 @@ textarea.input{ resize:vertical; min-height:128px; }
 }
 :root[data-theme="dark"] .selo--escola{ color:#F0A5FA; }
 :root[data-theme="dark"] .selo--residencial{ background:#16264A; color:#93B4FB; }
+:root[data-theme="dark"] .selo--restaurante{ background:#3B1228; color:#F9A8D4; }
+:root[data-theme="dark"] .selo--hotel{ background:#0B2F2C; color:#5EEAD4; }
+:root[data-theme="dark"] .selo--pet{ background:#0F2A18; color:#86EFAC; }
 :root[data-theme="dark"] .selo--aceite{ color:#6EE79B; }
 :root[data-theme="dark"] .selo--empresa{ color:#FFD75E; }
 :root[data-theme="dark"] .selo--sem-aceite{ color:#FF8FBB; }
@@ -1103,6 +1117,9 @@ textarea.input{ resize:vertical; min-height:128px; }
   :root:not([data-theme="light"]) .selo--escola{ color:#F0A5FA; }
   :root:not([data-theme="light"]) .selo--empresa{ color:#FFD75E; }
   :root:not([data-theme="light"]) .selo--residencial{ background:#16264A; color:#93B4FB; }
+  :root:not([data-theme="light"]) .selo--restaurante{ background:#3B1228; color:#F9A8D4; }
+  :root:not([data-theme="light"]) .selo--hotel{ background:#0B2F2C; color:#5EEAD4; }
+  :root:not([data-theme="light"]) .selo--pet{ background:#0F2A18; color:#86EFAC; }
   :root:not([data-theme="light"]) .selo--aceite{ color:#6EE79B; }
   :root:not([data-theme="light"]) .selo--sem-aceite{ color:#FF8FBB; }
 }

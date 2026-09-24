@@ -84,6 +84,9 @@
     escola: 'Escolas',
     empresa: 'Empresas',
     residencial: 'Residencial',
+    restaurante: 'Restaurantes',
+    hotel: 'Hotéis',
+    pet: 'Pet shops e veterinárias',
     outros: 'Sem segmento'
   };
 

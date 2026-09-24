@@ -36,6 +36,7 @@ npm run backup | backups | exportar | restaurar
 | Servidor estático, headers, ETag | `server/server.js` |
 
 Páginas: `index`, `produtos`, `calculadora`, `condominios`/`escolas` (SEO),
+`restaurantes`/`hoteis`/`pets` (SEO discreto: só link no rodapé `.footer-seg`, fora do menu),
 `sobre`, `contato`, `entrar`, `recuperar`, `conta`, `admin`, `privacidade`, `404`.
 Cada página tem seu JS homônimo em `assets/js/`.
 
@@ -44,4 +45,6 @@ Cada página tem seu JS homônimo em `assets/js/`.
 - **Calculadora não mostra preço**, de propósito.
 - Testes de `server/` sobem servidor real com banco temporário; não usar mocks.
 - Rotas de admin exigem 401/403 corretos e travas anti-lockout (último admin) — testes cobrem isso.
+- Nova LP: `data-segmento` do form precisa estar em `SEGMENTOS` (`server/api.js`) + rótulo em `admin.js` + `.selo--*`/`.funil-barra--*` no CSS + `sitemap.xml`.
+- `npm test` pode pegar um Node antigo de uma pasta acima; use `node --test "server/*.test.js" "testes/*.test.js"`.
 - Textos, nomes de funções e comentários são em **português**; mantenha o padrão.
