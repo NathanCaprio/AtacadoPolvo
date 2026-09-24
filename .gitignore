@@ -1,0 +1,10 @@
+# Banco de dados e arquivos do SQLite (WAL/SHM)
+dados/
+
+# Artefatos do navegador controlado por ferramenta
+.playwright-mcp/
+
+# Sistema operacional
+Thumbs.db
+desktop.ini
+.DS_Store
