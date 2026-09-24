@@ -67,6 +67,54 @@
     }
   }
 
+  /* ---- Funil por segmento -------------------------------------------------
+
+     A pergunta que o painel precisa responder não é "quantas mensagens
+     chegaram", é "de onde". Sem esse recorte não dá para saber se a landing
+     de condomínio ou a de escola vale o esforço.                           */
+
+  const SEGMENTO = {
+    condominio: 'Condomínios',
+    escola: 'Escolas',
+    empresa: 'Empresas',
+    residencial: 'Residencial',
+    outros: 'Sem segmento'
+  };
+
+  function desenharFunil(porSegmento) {
+    const alvo = $('#funil-barras');
+    const secao = $('#funil');
+    if (!alvo || !Array.isArray(porSegmento) || !porSegmento.length) {
+      if (secao) secao.hidden = true;
+      return;
+    }
+
+    // A barra é proporcional ao maior valor, não ao total: com um segmento
+    // dominante, proporção do total deixaria todos os outros invisíveis.
+    const maior = Math.max(...porSegmento.map(s => s.n), 1);
+
+    alvo.replaceChildren();
+    for (const s of porSegmento) {
+      const linha = el('div', 'funil-linha');
+
+      linha.append(el('span', 'funil-rotulo', SEGMENTO[s.seg] || s.seg));
+
+      const trilho = el('div', 'funil-trilho');
+      const barra = el('div', `funil-barra funil-barra--${s.seg}`);
+      barra.style.width = Math.round((s.n / maior) * 100) + '%';
+      trilho.append(barra);
+      linha.append(trilho);
+
+      const numeros = el('span', 'funil-numeros');
+      numeros.append(el('b', null, String(s.n)));
+      numeros.append(document.createTextNode(` · ${s.n30} em 30 dias`));
+      linha.append(numeros);
+
+      alvo.append(linha);
+    }
+    secao.hidden = false;
+  }
+
   /* ---- Tabela ------------------------------------------------------------ */
 
   function botao(rotulo, classe, aoClicar) {
@@ -113,6 +161,23 @@
         c.ativo ? 'Desativar' : 'Ativar', 'btn--ghost',
         () => agir(() => window.API.admin.editar(c.id, { ativo: !c.ativo }))
       ));
+      // Enquanto não há SMTP, é assim que o cliente que perdeu a senha
+      // volta: o atendente gera o link e passa no WhatsApp. O link é
+      // mostrado em prompt() de propósito — dá para copiar com Ctrl+C e
+      // ele não fica na tela para o próximo que passar pelo balcão.
+      caixa.append(botao('Link de senha', 'btn--ghost', async () => {
+        try {
+          const r = await window.API.pedir(`/api/admin/clientes/${c.id}/recuperacao`,
+            { metodo: 'POST' });
+          window.prompt(
+            `Link de redefinição para ${r.cliente.email} — vale ${r.horas}h. ` +
+            'Copie e mande para o cliente:', r.link);
+          mostrarAviso(`Link gerado para ${r.cliente.email}. Vale ${r.horas} hora(s).`);
+        } catch (e) {
+          mostrarAviso(e.message || 'Não deu para gerar o link.', false);
+        }
+      }));
+
       caixa.append(botao('Remover', 'btn--perigo', () => {
         if (!confirm(`Remover a conta de ${c.nome} (${c.email})? Isso não tem volta.`)) return;
         agir(() => window.API.admin.remover(c.id), 'Conta removida.');
@@ -211,6 +276,22 @@
 
     const tdMsg = el('td');
     if (m.assunto) tdMsg.append(el('div', 'nome', m.assunto));
+
+    const selos = el('div', 'selos-lead');
+    if (m.segmento) {
+      selos.append(el('span', `selo selo--${m.segmento}`, SEGMENTO[m.segmento] || m.segmento));
+    }
+    if (m.origem === 'landing') {
+      selos.append(el('span', 'selo selo--landing', 'veio da landing'));
+    }
+    // O aceite da política é o que a auditoria de administradora e de escola
+    // pede. Sem carimbo, o selo avisa — pode ser lead antigo, de antes do
+    // checkbox existir.
+    selos.append(m.aceite_em
+      ? el('span', 'selo selo--aceite', 'aceite registrado')
+      : el('span', 'selo selo--sem-aceite', 'sem aceite'));
+    if (selos.childNodes.length) tdMsg.append(selos);
+
     tdMsg.append(el('p', 'msg-corpo', m.mensagem));
     tr.append(tdMsg);
 
@@ -270,6 +351,7 @@
     ]);
 
     desenharMetricas(resumo);
+    desenharFunil(resumo.porSegmento);
     desenharTabela(cli.clientes);
 
     preencher($('#linhas-orcamentos'), orc.orcamentos, linhaOrcamento,
@@ -290,6 +372,26 @@
       mostrarAviso(e.message || 'Não deu para concluir.', false);
     }
   }
+
+  /* ---- Exportação CSV -----------------------------------------------------
+
+     Link direto, não fetch: a rota devolve o arquivo com Content-Disposition
+     e o navegador cuida do download. Se a sessão tiver caído, o servidor
+     responde 401 em JSON e a aba mostra o erro — pior do que tratar aqui,
+     mas em troca não seguramos o arquivo inteiro em memória.               */
+
+  document.querySelectorAll('[data-exportar]').forEach(botao => {
+    botao.addEventListener('click', () => {
+      const tipo = botao.dataset.exportar;
+      const a = document.createElement('a');
+      a.href = `/api/admin/exportar?tipo=${encodeURIComponent(tipo)}`;
+      a.download = '';
+      document.body.append(a);
+      a.click();
+      a.remove();
+      mostrarAviso('Arquivo gerado. Confira a pasta de downloads.');
+    });
+  });
 
   /* ---- Boot: exige admin --------------------------------------------------- */
 

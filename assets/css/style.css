@@ -857,3 +857,362 @@ textarea.input{ resize:vertical; min-height:128px; }
   white-space:pre-wrap; max-width:60ch;
 }
 .nao-lida{ box-shadow:inset 3px 0 0 var(--brand); }
+
+
+/* 17. COTAÇÃO: formulário de lead das landings ========================== */
+/* O bloco que fecha condominios.html e escolas.html. Duas colunas no
+   desktop (argumento à esquerda, formulário à direita) e empilhado no
+   celular, com o formulário primeiro — quem chegou até aqui rolando já
+   está convencido, não precisa ler o argumento de novo.                  */
+
+/* Verde escuro o bastante para o ícone passar em contraste; ver o comentário
+   de .vantagens abaixo. */
+.cotacao, .lead-ok{ --ok-ink:#0A6F3A; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .cotacao,
+  :root:not([data-theme="light"]) .lead-ok{ --ok-ink:#6EE79B; }
+}
+:root[data-theme="dark"] .cotacao,
+:root[data-theme="dark"] .lead-ok{ --ok-ink:#6EE79B; }
+
+.cotacao{
+  display:grid; grid-template-columns:1fr 1.05fr; gap:clamp(28px,4vw,56px);
+  align-items:start;
+}
+.cotacao-texto h2{ margin-bottom:14px; }
+.cotacao-texto .lead{ margin-bottom:26px; }
+
+.vantagens{ list-style:none; margin:0 0 26px; padding:0; display:grid; gap:12px; }
+.vantagens li{
+  display:flex; align-items:flex-start; gap:11px;
+  font-size:.95rem; color:var(--ink-2); line-height:1.5;
+}
+.vantagens li svg{
+  flex:none; width:18px; height:18px; margin-top:2px; color:var(--ok-ink);
+}
+
+.cotacao-alt{ font-size:.92rem; color:var(--ink-3); line-height:1.6; }
+.cotacao-alt a{ font-weight:700; color:var(--brand); }
+
+.cotacao-card{ position:relative; box-shadow:var(--shadow-md); }
+.cotacao-card-titulo{ font-size:1.15rem; margin-bottom:4px; }
+.cotacao-card-sub{ font-size:.89rem; color:var(--ink-3); margin-bottom:24px; }
+.cotacao-card textarea.input{ min-height:84px; resize:vertical; }
+.cotacao-hint{ text-align:center; margin-top:14px; }
+
+.cotacao-cruzado{ margin-top:34px; font-size:.93rem; color:var(--ink-3); }
+
+/* Aceite da LGPD. O alvo de clique é o rótulo inteiro, não só a caixinha:
+   no celular, 16px de caixa é alvo pequeno demais.                        */
+.field--check{ margin-top:4px; }
+.field .check{
+  display:flex; align-items:flex-start; gap:10px; cursor:pointer;
+  font-size:.85rem; line-height:1.5; color:var(--ink-3);
+  font-family:var(--font-body); font-weight:400;
+}
+.field .check input[type="checkbox"]{
+  flex:none; width:18px; height:18px; margin-top:1px;
+  accent-color:var(--brand); cursor:pointer;
+}
+.field .check a{ color:var(--brand); font-weight:600; text-decoration:underline; }
+.field--check.has-error .check{ color:var(--danger); }
+
+/* Estado de sucesso: substitui o formulário no mesmo lugar, para a página
+   não dar um salto e a pessoa não achar que o envio se perdeu.            */
+.lead-ok{ text-align:center; padding:12px 0 6px; }
+.lead-ok-ico{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:56px; height:56px; margin-bottom:16px; border-radius:var(--r-full);
+  background:var(--ok-soft); color:var(--ok-ink);
+}
+.lead-ok-ico svg{ width:26px; height:26px; }
+.lead-ok h3{ font-size:1.2rem; margin-bottom:8px; }
+.lead-ok p{ font-size:.94rem; color:var(--ink-3); line-height:1.6; margin-bottom:22px; }
+
+@media (max-width: 900px){
+  .cotacao{ grid-template-columns:1fr; gap:30px; }
+  .cotacao-card{ order:-1; }
+}
+
+/* 18. TEXTO CORRIDO: privacidade, termos =============================== */
+
+/* Texto longo de leitura, não de escaneada rápida: coluna estreita (~70ch),
+   entrelinha alta e hierarquia por espaçamento. Serve para qualquer página
+   jurídica que venha depois.                                              */
+.texto{ max-width:70ch; margin-inline:auto; }
+.texto h2{
+  font-family:var(--font-display); font-size:1.18rem; font-weight:800;
+  margin-block:38px 12px; padding-top:22px; border-top:1px solid var(--line);
+}
+.texto h2:first-child{ margin-top:0; padding-top:0; border-top:0; }
+.texto h3{ font-size:1rem; margin-bottom:6px; }
+.texto p{ color:var(--ink-2); line-height:1.75; margin-bottom:14px; }
+.texto p.nota{ font-size:.88rem; color:var(--ink-3); }
+.texto a{ color:var(--brand); font-weight:600; text-decoration:underline; }
+.texto code{
+  font-size:.86em; padding:2px 6px; border-radius:var(--r-sm);
+  background:var(--surface-3); color:var(--ink-2);
+}
+.texto ul{ margin:0 0 16px; padding:0; list-style:none; }
+.texto ul li{
+  position:relative; padding-left:26px; margin-bottom:10px;
+  color:var(--ink-2); line-height:1.7;
+}
+/* Marcador desenhado no CSS: um bullet de lista não acompanha a entrelinha
+   alta e fica descolado da primeira linha do item.                        */
+.texto ul li::before{
+  content:""; position:absolute; left:6px; top:.62em;
+  width:7px; height:7px; border-radius:var(--r-full); background:var(--brand);
+}
+.texto .tabela-wrap{ margin-block:18px 22px; }
+.texto .tabela{ min-width:560px; font-size:.86rem; }
+.texto .grid{ margin-block:18px 22px; }
+.texto .card h3{ margin-bottom:8px; }
+.texto .card p{ font-size:.92rem; margin-bottom:0; }
+
+/* 19. DIREITOS DO TITULAR na área do cliente ============================ */
+/* O cartão de "Seus dados" em conta.html: baixar a exportação e excluir a
+   conta. O excluir fica atrás de um clique e de uma confirmação por senha —
+   é ação sem volta e não pode ficar a um toque de distância de quem só
+   queria conferir o telefone cadastrado.                                   */
+
+.privacidade-intro{
+  font-size:.88rem; color:var(--ink-3); line-height:1.6; margin-bottom:16px;
+}
+.privacidade-intro a{ color:var(--brand); font-weight:600; }
+
+.privacidade-acoes{ display:flex; flex-wrap:wrap; gap:10px; }
+.privacidade-acoes .btn{ flex:1 1 auto; justify-content:center; }
+.privacidade-acoes .btn svg{ width:16px; height:16px; }
+
+.excluir-caixa{
+  margin-top:18px; padding-top:18px; border-top:1px solid var(--line);
+}
+.excluir-alerta{
+  font-size:.85rem; line-height:1.6; color:var(--ink-2); margin-bottom:16px;
+  padding:12px 14px; border-radius:var(--r-md);
+  background:color-mix(in srgb, var(--danger) 8%, transparent);
+  border:1px solid color-mix(in srgb, var(--danger) 28%, transparent);
+}
+.excluir-alerta b{ color:var(--danger); }
+.excluir-caixa .field{ margin-bottom:14px; }
+
+/* 20. CORREÇÃO: FAQ fechada fora da árvore de acessibilidade ============ */
+
+/* max-height:0 + overflow:hidden esconde só aos olhos. O leitor de tela
+   continuava lendo as respostas todas, e link dentro de resposta fechada
+   era alcançável por Tab estando invisível (WCAG 1.3.1 e 4.1.2).
+   visibility:hidden resolve os dois de uma vez, e por herdar ele vale para
+   o conteúdo inteiro do painel.
+
+   O truque está no delay: ao abrir, a visibilidade volta na hora (0s);
+   ao fechar, ela só cai depois dos 300ms da altura, senão o texto
+   desapareceria de uma vez no meio da animação.
+
+   Sobrescreve a regra da seção 11 de propósito, por vir depois na cascata —
+   três sessões editavam este arquivo ao mesmo tempo, então preferi acrescentar
+   no fim a mexer no meio. Se um dia der para consolidar, junte com .faq-a. */
+.faq-a{
+  visibility:hidden;
+  transition:max-height .3s var(--ease), visibility 0s .3s;
+}
+.faq-q[aria-expanded="true"] + .faq-a{
+  visibility:visible;
+  transition:max-height .3s var(--ease), visibility 0s 0s;
+}
+
+/* 21. FUNIL E SELOS DO PAINEL =========================================== */
+/* De onde vêm os pedidos, por segmento. Barra horizontal e não rosca:
+   comparar comprimento é mais fácil do que comparar ângulo, e o painel
+   precisa responder "qual segmento está na frente" num relance.          */
+
+.funil{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--r-lg); padding:24px 26px; margin-bottom:24px;
+}
+.funil h2{ font-size:1.05rem; margin-bottom:4px; }
+.funil-sub{ font-size:.86rem; color:var(--ink-3); margin-bottom:20px; line-height:1.55; }
+
+.funil-barras{ display:grid; gap:12px; }
+.funil-linha{
+  display:grid; grid-template-columns:130px 1fr auto;
+  align-items:center; gap:14px;
+}
+.funil-rotulo{
+  font-family:var(--font-display); font-weight:700; font-size:.85rem; color:var(--ink-2);
+}
+.funil-trilho{
+  height:10px; border-radius:var(--r-full); background:var(--surface-3); overflow:hidden;
+}
+.funil-barra{
+  height:100%; border-radius:var(--r-full); background:var(--brand);
+  transition:width .5s var(--ease);
+  /* Nunca some de vez: barra de largura zero parece bug, não "nenhum". */
+  min-width:3px;
+}
+.funil-barra--condominio{ background:var(--brand); }
+.funil-barra--escola{ background:var(--purple); }
+.funil-barra--empresa{ background:#8A5A00; }
+.funil-barra--residencial{ background:#2563EB; }
+.funil-barra--outros{ background:var(--line-strong); }
+
+/* No tema escuro os dois voltam ao tom vivo, que lá contrasta melhor com
+   o trilho e mantém a paleta reconhecível. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .funil-barra--empresa{ background:var(--accent); }
+  :root:not([data-theme="light"]) .funil-barra--residencial{ background:#60A5FA; }
+}
+:root[data-theme="dark"] .funil-barra--empresa{ background:var(--accent); }
+:root[data-theme="dark"] .funil-barra--residencial{ background:#60A5FA; }
+
+.funil-numeros{ font-size:.82rem; color:var(--ink-3); white-space:nowrap; }
+.funil-numeros b{ color:var(--ink); font-size:.95rem; font-family:var(--font-display); }
+
+/* Selos de proveniência e de consentimento na lista de mensagens. */
+.selos-lead{ display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 8px; }
+.selo--condominio{ background:var(--brand-soft); color:var(--brand-700); }
+.selo--escola{ background:var(--purple-soft); color:#9A1FA8; }
+.selo--empresa{ background:var(--accent-soft); color:#7A5200; }
+.selo--residencial{ background:#E4EDFD; color:#1D4ED8; }
+.selo--landing{ background:var(--surface-3); color:var(--ink-2); }
+.selo--aceite{ background:var(--ok-soft); color:#0A6F3A; }
+.selo--sem-aceite{
+  background:color-mix(in srgb, var(--danger) 12%, transparent); color:#9B1750;
+}
+:root[data-theme="dark"] .selo--escola{ color:#F0A5FA; }
+:root[data-theme="dark"] .selo--residencial{ background:#16264A; color:#93B4FB; }
+:root[data-theme="dark"] .selo--aceite{ color:#6EE79B; }
+:root[data-theme="dark"] .selo--empresa{ color:#FFD75E; }
+:root[data-theme="dark"] .selo--sem-aceite{ color:#FF8FBB; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .selo--escola{ color:#F0A5FA; }
+  :root:not([data-theme="light"]) .selo--empresa{ color:#FFD75E; }
+  :root:not([data-theme="light"]) .selo--residencial{ background:#16264A; color:#93B4FB; }
+  :root:not([data-theme="light"]) .selo--aceite{ color:#6EE79B; }
+  :root:not([data-theme="light"]) .selo--sem-aceite{ color:#FF8FBB; }
+}
+
+/* Barra de ação sobre cada tabela do painel (hoje só a exportação). */
+.barra-acoes{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+.barra-acoes .btn svg{ width:15px; height:15px; }
+
+@media (max-width: 620px){
+  .funil-linha{ grid-template-columns:1fr; gap:6px; }
+  .funil-numeros{ font-size:.8rem; }
+}
+
+/* 22. TOKEN --danger NO TEMA ESCURO ===================================== */
+/* Ver o comentário na seção 21: #D6337A não alcança AA como texto sobre a
+   superfície escura. Os dois seletores cobrem os dois caminhos para o tema
+   escuro (preferência do sistema e botão). */
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --danger:#FF6B9D; }
+}
+:root[data-theme="dark"]{ --danger:#FF6B9D; }
+
+/* 23. CONTRASTE: o que sobrou do passe AA ================================ */
+/* Fecha os três casos que as seções 21 e 22 não alcançaram. Medido com a
+   fórmula da WCAG 2.1 (razão de luminância relativa), alvo 4.5:1 para
+   texto normal. Append-only: nenhuma regra acima foi editada.             */
+
+/* a) --danger como TEXTO no tema claro. A seção 22 corrigiu o escuro, mas
+      no claro #D6337A ainda reprova sobre os próprios fundos tingidos:
+      .aviso--erro 3.85:1 e .excluir-alerta b 4.07:1. Escurecer o token
+      resolve os dois de uma vez e melhora todo o resto que já passava
+      raspando (.field .err e .btn--perigo iam a 4.55:1, agora 6.17:1).
+      Os seletores de tema escuro da seção 22 têm especificidade (0,2,0)
+      contra (0,1,0) daqui, então continuam vencendo — a ordem no arquivo
+      não importa. O segundo seletor cobre o tema claro forçado no botão. */
+:root,
+:root[data-theme="light"]{ --danger:#B81E63; }
+
+/* b) Efeito colateral da seção 22: .btn--perigo:hover usa --danger como
+      FUNDO com texto branco. No claro dá 6.17:1, mas no escuro o token
+      virou rosa-claro (#FF6B9D) e o branco em cima dele cai para 2.68:1 —
+      ou seja, o hover de "Excluir conta" ficou ilegível justamente no
+      estado em que a pessoa está a um clique de apagar a conta.
+      Sobre fundo claro o texto tem que escurecer, não clarear.           */
+:root[data-theme="dark"] .btn--perigo:hover{ color:var(--ink-bg); }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .btn--perigo:hover{ color:var(--ink-bg); }
+}
+
+/* c) .selo--admin no tema CLARO: 4.10:1. Passou batido porque --purple
+      ganhou override no escuro (#E879F9 sobre #3A1040 = 6.43:1, passa),
+      e só o claro ficou devendo. Mesmo padrão dos selos irmãos: valor
+      literal no claro, var(--purple) de volta no escuro.                 */
+.selo--admin{ background:var(--purple-soft); color:#A21CAF; }
+:root[data-theme="dark"] .selo--admin{ color:var(--purple); }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .selo--admin{ color:var(--purple); }
+}
+
+/* 24. ATALHO DO HERO PARA O FORMULARIO ================================= */
+/* Linha discreta abaixo dos botões do hero, nas landings. Existe porque o
+   caminho principal (WhatsApp) não serve para todo mundo, e quem não usa
+   WhatsApp não tinha como saber que havia outro sem rolar a página toda. */
+
+.hero-atalho{
+  margin-top:16px; font-size:.9rem; color:var(--ink-3); line-height:1.6;
+}
+.hero-atalho a{
+  color:var(--brand); font-weight:700; text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+/* 25. PAREAMENTO: overrides escuros que só alcançavam o botão =========== */
+/* Ver o comentário das seções 21 e 22. Cada regra aqui já existe em
+   :root[data-theme="dark"]; o que faltava era a versão para quem tem o
+   sistema no escuro e nunca usou o alternador. Os números entre
+   parênteses são o contraste ANTES, medido nesse cenário.               */
+
+@media (prefers-color-scheme: dark){
+  /* Texto branco sobre o --brand claro do tema escuro: 3.30:1, abaixo de
+     AA — e este é o botão principal do site inteiro. */
+  :root:not([data-theme="light"]) .btn--primary{ color:#1B0733; }
+  :root:not([data-theme="light"]) .conta-btn--logado{ color:#1B0733; }
+  :root:not([data-theme="light"]) .abas button[aria-selected="true"]{ color:#1B0733; }
+  :root:not([data-theme="light"]) .abas-painel button[aria-selected="true"]{ color:#1B0733; }
+
+  /* Verde escuro sobre o --ok-soft escuro: 2.35:1. São as mensagens de
+     confirmação do formulário — o retorno que diz se deu certo. */
+  :root:not([data-theme="light"]) .form-msg{ color:#6EE79B; }
+  :root:not([data-theme="light"]) .aviso--ok{ color:#6EE79B; }
+  :root:not([data-theme="light"]) .selo--fechado{ color:#6EE79B; }
+
+  /* Marrom sobre o --accent-soft escuro: 1.98:1, ilegível. */
+  :root:not([data-theme="light"]) .eyebrow--accent{ color:#FFD75E; }
+  :root:not([data-theme="light"]) .card-ico--accent{ color:#FFD75E; }
+  :root:not([data-theme="light"]) .selo--em_andamento{ color:#FFD75E; }
+
+  /* Estes dois já passavam; entram por simetria, para os dois caminhos de
+     tema ficarem idênticos e não sobrar mais nada deste tipo para achar. */
+  :root:not([data-theme="light"]) .card-ico--amber{ background:#3D2A00; color:#FFD75E; }
+  :root:not([data-theme="light"]) .card-ico--purple{ color:#F0A6FA; }
+}
+
+/* 26. CONTATO OPCIONAL NO ORCAMENTO ==================================== */
+/* Dois campos no rodapé da lista de orçamento, acima do botão de WhatsApp.
+   São opcionais e ficam visualmente mais leves que o botão de propósito:
+   o caminho principal continua sendo a conversa, e um pedido anônimo que
+   não vira conversa deixava a loja com a lista e sem ninguém para ligar. */
+
+.drawer-contato{
+  padding:14px 16px; margin-bottom:14px;
+  background:var(--surface-2); border:1px solid var(--line); border-radius:var(--r-md);
+}
+.drawer-contato[hidden]{ display:none; }
+.drawer-contato-titulo{
+  font-family:var(--font-display); font-weight:700; font-size:.85rem;
+  color:var(--ink-2); margin-bottom:10px;
+}
+.drawer-contato-titulo .opt{ font-weight:500; color:var(--ink-3); }
+.drawer-contato .field{ margin-bottom:8px; }
+.drawer-contato .field:last-of-type{ margin-bottom:0; }
+.drawer-contato-nota{
+  margin-top:10px; font-size:.75rem; color:var(--ink-3); line-height:1.5;
+}
+.drawer-contato-nota a{ color:var(--brand); text-decoration:underline; }
+
+.input--sm{ padding:9px 12px; font-size:.88rem; }

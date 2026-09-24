@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Entrar — Atacado Polvo</title>
-<meta name="description" content="Acesse sua conta Atacado Polvo.">
-<meta name="robots" content="noindex, nofollow">
+<title>Página não encontrada — Atacado Polvo</title>
+<meta name="description" content="A página que você procurou não existe. Veja o catálogo, as páginas para condomínios e escolas, ou fale com a gente.">
+<meta name="robots" content="noindex, follow">
 <meta name="theme-color" content="#7B2FE3">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 
@@ -13,6 +13,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+
+<noscript>
+  <!-- Sem JS o IntersectionObserver de main.js nunca adiciona .is-in, e
+       [data-reveal]{opacity:0} deixaria a maior parte da página invisível
+       para sempre. Reexibir é mais honesto que avisar que falta algo. -->
+  <style>
+    [data-reveal]{ opacity:1 !important; transform:none !important; }
+  </style>
+</noscript>
 </head>
 <body>
 
@@ -56,82 +65,47 @@
 
 
 <main id="main" class="section">
-  <div class="miolo">
+  <div class="wrap center" style="max-width:640px">
 
-    <div class="auth-card">
-      <div class="abas" role="tablist" aria-label="Entrar ou criar conta">
-        <button role="tab" id="aba-entrar" aria-selected="true" aria-controls="painel-entrar">Entrar</button>
-        <button role="tab" id="aba-criar" aria-selected="false" aria-controls="painel-criar">Criar conta</button>
-      </div>
+    <img src="assets/img/logo-mark.svg" alt="" width="220" height="141"
+         style="margin:0 auto 30px;opacity:.9">
 
-      <div class="aviso aviso--erro" id="aviso" role="alert"></div>
+    <span class="eyebrow">Erro 404</span>
+    <h1 style="margin:16px 0 14px">Esta página escapou por entre os tentáculos</h1>
+    <p class="lead">
+      O endereço que você abriu não existe (ou mudou de lugar). Nada grave —
+      abaixo estão os caminhos mais usados.
+    </p>
 
-      <!-- ---------- ENTRAR ---------- -->
-      <section id="painel-entrar" role="tabpanel" aria-labelledby="aba-entrar">
-        <h1>Entrar na sua conta</h1>
-        <p class="lead">Acompanhe seus dados e seus pedidos com a Polvo.</p>
+    <div class="row" style="justify-content:center;margin-top:32px">
+      <a class="btn btn--primary" href="index.html">Voltar para a home</a>
+      <a class="btn btn--ghost" href="produtos.html">Ver o catálogo</a>
+    </div>
 
-        <form id="form-entrar" novalidate>
-          <div class="field">
-            <label for="e-email">E-mail</label>
-            <input class="input" type="email" id="e-email" name="email"
-                   autocomplete="email" required placeholder="voce@empresa.com.br">
-          </div>
-          <div class="field">
-            <label for="e-senha">Senha</label>
-            <input class="input" type="password" id="e-senha" name="senha"
-                   autocomplete="current-password" required placeholder="••••••••">
-          </div>
-          <button class="btn btn--primary btn--block" type="submit">Entrar</button>
+    <div class="grid g-3" style="margin-top:48px;text-align:left">
+      <a class="cat-card" href="condominios.html" style="--cat:#7B2FE3">
+        <h3>Para condomínios</h3>
+        <p>Nota fiscal no CNPJ, entrega na portaria e orçamento item a item.</p>
+        <span class="cat-link">Ver página
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
 
-          <p class="auth-esqueci">
-            <a href="recuperar.html">Esqueci minha senha</a>
-          </p>
-        </form>
-      </section>
+      <a class="cat-card" href="escolas.html" style="--cat:#C026D3">
+        <h3>Para escolas</h3>
+        <p>Produtos com procedência e entrega programada pelo calendário escolar.</p>
+        <span class="cat-link">Ver página
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
 
-      <!-- ---------- CRIAR CONTA ---------- -->
-      <section id="painel-criar" role="tabpanel" aria-labelledby="aba-criar" hidden>
-        <h1>Criar sua conta</h1>
-        <p class="lead">Leva um minuto. Depois é só entrar para acompanhar tudo.</p>
-
-        <form id="form-criar" novalidate>
-          <div class="field">
-            <label for="c-nome">Nome</label>
-            <input class="input" type="text" id="c-nome" name="nome"
-                   autocomplete="name" required placeholder="Seu nome">
-          </div>
-          <div class="field">
-            <label for="c-email">E-mail</label>
-            <input class="input" type="email" id="c-email" name="email"
-                   autocomplete="email" required placeholder="voce@empresa.com.br">
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="c-empresa">Empresa <span class="opt">(opcional)</span></label>
-              <input class="input" type="text" id="c-empresa" name="empresa"
-                     autocomplete="organization" placeholder="Condomínio, escola…">
-            </div>
-            <div class="field">
-              <label for="c-telefone">Telefone <span class="opt">(opcional)</span></label>
-              <input class="input" type="tel" id="c-telefone" name="telefone"
-                     autocomplete="tel" placeholder="(51) 90000-0000">
-            </div>
-          </div>
-          <div class="field">
-            <label for="c-senha">Senha</label>
-            <input class="input" type="password" id="c-senha" name="senha"
-                   autocomplete="new-password" required minlength="8" placeholder="••••••••">
-            <p class="hint">Mínimo de 8 caracteres.</p>
-          </div>
-          <button class="btn btn--primary btn--block" type="submit">Criar conta</button>
-        </form>
-      </section>
-
-      <p class="auth-rodape">
-        Prefere resolver falando com alguém?
-        <a data-wpp="Olá! Vim pelo site.">Chame no WhatsApp</a>.
-      </p>
+      <a class="cat-card" href="contato.html" style="--cat:#A16207">
+        <h3>Falar com a gente</h3>
+        <p>Telefone, WhatsApp, horários e os endereços das duas unidades.</p>
+        <span class="cat-link">Ver página
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
     </div>
 
   </div>
@@ -190,11 +164,11 @@
         <ul class="footer-contact">
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/></svg>
-            <span data-endereco-full>Rua Exemplo, 123</span>
+            <span data-endereco-full>Av. Dr. Carlos Barbosa, 931 - Medianeira - Porto Alegre/RS</span>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 3.5h4l2 5-2.5 1.5a12 12 0 0 0 6 6L15.5 13.5l5 2v4a1.5 1.5 0 0 1-1.6 1.5A17 17 0 0 1 3 5.1 1.5 1.5 0 0 1 4.5 3.5z"/></svg>
-            <a data-tel href="#"><span data-site="telefone">(11) 3333-3333</span></a>
+            <a data-tel href="#"><span data-site="telefone">(51) 98025-6547</span></a>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg>
@@ -202,7 +176,7 @@
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-            <span><span data-site="horarioSemana">Segunda a sexta, 08h - 18h</span><br><span data-site="horarioSabado">Sábado, 08h - 13h</span></span>
+            <span><span data-site="horarioSemana">Segunda a sexta, 08h às 18h</span><br><span data-site="horarioSabado">Sábado, 09h às 15h</span></span>
           </li>
         </ul>
       </div>
@@ -218,6 +192,5 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/auth.js"></script>
-<script src="assets/js/entrar.js"></script>
 </body>
 </html>

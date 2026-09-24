@@ -155,6 +155,80 @@
     }
   });
 
+  /* ---- Direitos do titular (LGPD) ----------------------------------------
+
+     Exportar e excluir ficam aqui, e não só no "fale com a gente", porque é
+     isso que a LGPD chama de facilitado (art. 18) — e é o que administradora
+     de condomínio e escola conferem quando auditam fornecedor.             */
+
+  const avisoDados = $('#aviso-dados');
+
+  function avisarDados(msg, ok = true) {
+    avisoDados.textContent = msg;
+    avisoDados.className = `aviso ${ok ? 'aviso--ok' : 'aviso--erro'} is-visible`;
+    clearTimeout(avisarDados.t);
+    avisarDados.t = setTimeout(() => { avisoDados.className = 'aviso'; }, 6000);
+  }
+
+  /* O download não é um <a href> direto porque a rota exige o cookie de
+     sessão e responde JSON em erro: buscando por fetch dá para tratar a falha
+     em vez de o navegador abrir uma aba com "Não autenticado". */
+  $('#baixar-dados').addEventListener('click', async ev => {
+    const botao = ev.currentTarget;
+    botao.disabled = true;
+
+    try {
+      const res = await fetch('/api/auth/eu/dados', { credentials: 'same-origin' });
+      if (!res.ok) throw new Error('Não deu para gerar o arquivo agora.');
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'meus-dados-atacado-polvo.json';
+      document.body.append(a);
+      a.click();
+      a.remove();
+      // Sem revoke o blob fica na memória da aba até ela fechar.
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      avisarDados('Arquivo gerado. Confira a pasta de downloads.');
+    } catch (e) {
+      avisarDados(e.message || 'Não deu para gerar o arquivo agora.', false);
+    } finally {
+      botao.disabled = false;
+    }
+  });
+
+  const caixaExcluir = $('#form-excluir');
+
+  $('#abrir-excluir').addEventListener('click', () => {
+    caixaExcluir.hidden = false;
+    $('#x-senha').focus();
+  });
+
+  $('#cancelar-excluir').addEventListener('click', () => {
+    caixaExcluir.hidden = true;
+    caixaExcluir.reset();
+  });
+
+  caixaExcluir.addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const botao = caixaExcluir.querySelector('button[type="submit"]');
+    botao.disabled = true;
+
+    try {
+      await window.API.pedir('/api/auth/eu', {
+        metodo: 'DELETE', corpo: { senha: $('#x-senha').value }
+      });
+      // A conta não existe mais: qualquer coisa nesta tela passa a mentir.
+      location.replace('index.html');
+    } catch (e) {
+      avisarDados(e.message || 'Não deu para excluir a conta.', false);
+      botao.disabled = false;
+    }
+  });
+
   /* ---- Sair -------------------------------------------------------------- */
 
   $('#sair').addEventListener('click', async () => {

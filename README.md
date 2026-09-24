@@ -5,7 +5,13 @@ com um backend em Node 22 (também sem dependências) para contas de cliente e
 painel administrativo.
 
 As páginas públicas abrem com duplo clique em qualquer `.html`. Para login e
-painel, suba o servidor (`node server/server.js`).
+painel, suba o servidor.
+
+```bash
+npm start          # sobe em http://127.0.0.1:3000
+npm test           # 87 testes de ponta a ponta
+npm run criar-admin -- "Seu Nome" voce@exemplo.com
+```
 
 ## Estrutura
 
@@ -18,8 +24,14 @@ painel, suba o servidor (`node server/server.js`).
 ├── sobre.html            Institucional (história, valores, linha do tempo)
 ├── contato.html          Formulário, canais, endereços e FAQ
 ├── entrar.html           Login e cadastro
+├── recuperar.html        Redefinição de senha por link
 ├── conta.html            Área do cliente
 ├── admin.html            Painel administrativo
+├── privacidade.html      Política de privacidade (LGPD)
+├── 404.html              Página de erro (servida com status 404)
+├── robots.txt            Indexação: libera o público, barra conta/API
+├── sitemap.xml           Só as páginas públicas
+├── package.json          Só scripts — o projeto não tem dependências
 ├── server/               Backend (Node puro, ver abaixo)
 └── assets/
     ├── css/style.css     Design system completo (tokens, componentes, responsivo)
@@ -30,8 +42,10 @@ painel, suba o servidor (`node server/server.js`).
         ├── main.js       Tema, menu, scroll reveal, contadores, FAQ
         ├── catalogo.js   Filtros, busca, ordenação, orçamento
         ├── contato.js    Validação e máscaras do formulário
+        ├── lead.js       Formulário de cotação das landings
         ├── auth.js       Cliente da API + botão de conta no header
         ├── entrar.js     Tela de login/cadastro
+        ├── recuperar.js  Redefinição de senha
         ├── conta.js      Área do cliente
         └── admin.js      Painel administrativo
 ```
@@ -121,7 +135,14 @@ kit e as perguntas do FAQ.
   respeito a `prefers-reduced-motion`
 - Responsivo de 320px até desktop, e folha de estilo para impressão
 - Contas de cliente: cadastro, login, edição de dados e troca de senha
-- Painel admin: métricas, lista de clientes, promover/desativar/remover
+- Painel admin: métricas, orçamentos, mensagens e clientes, em abas
+- Orçamentos e mensagens de contato gravados no banco (inclusive de visitante
+  sem conta, o que revela carrinho abandonado)
+- Cliente vê os próprios orçamentos e a situação de cada um na área da conta
+- `robots.txt`, `sitemap.xml` e página 404 própria
+- Política de privacidade e aceite obrigatório nos formulários (LGPD)
+- Cópia de segurança do banco automática, verificada a cada geração
+- 87 testes automatizados cobrindo backend, recuperação de senha, LGPD e backup
 
 ## Uma armadilha no header
 
@@ -170,8 +191,10 @@ server/
 ├── api.js      rotas, validação, rate limit
 ├── auth.js     scrypt, sessões, cookie
 ├── db.js       schema SQLite
-└── cli.js      criar-admin / promover / listar
+├── cli.js      criar-admin / promover / listar
+└── backup.js   cópia, export, restauração
 dados/polvo.db  banco (criado no primeiro boot; fora do git)
+backups/        cópias e exports (fora do git)
 ```
 
 ### Rotas
@@ -188,8 +211,16 @@ dados/polvo.db  banco (criado no primeiro boot; fora do git)
 | GET | `/api/admin/clientes` | lista de clientes |
 | PATCH | `/api/admin/clientes/:id` | muda papel, ativa ou desativa |
 | DELETE | `/api/admin/clientes/:id` | remove a conta |
+| POST | `/api/auth/recuperar` | pede link de redefinição (responde igual para e-mail que existe ou não) |
+| GET | `/api/auth/recuperar?token=` | confere se o link ainda vale, sem gastá-lo |
+| POST | `/api/auth/redefinir` | redefine a senha com o token e já abre sessão |
+| GET | `/api/auth/eu/dados` | exporta os próprios dados em JSON (LGPD) |
+| DELETE | `/api/auth/eu` | exclui a própria conta (exige a senha) |
+| POST | `/api/admin/clientes/:id/recuperacao` | gera link de redefinição para repassar ao cliente |
+| GET | `/api/admin/exportar?tipo=` | baixa CSV de `mensagens`, `orcamentos` ou `clientes` |
 
-Telas: `entrar.html`, `conta.html` e `admin.html` (as três com `noindex`).
+Telas: `entrar.html`, `recuperar.html`, `conta.html` e `admin.html` (as quatro
+com `noindex`).
 
 ### Como a segurança está feita
 
@@ -210,17 +241,163 @@ Telas: `entrar.html`, `conta.html` e `admin.html` (as três com `noindex`).
 - A tabela do painel é montada com `textContent`, nunca `innerHTML`: nome e
   empresa vêm do cadastro do cliente e são conteúdo não confiável.
 
+### Recuperação de senha
+
+Mesmo desenho das sessões: o token de 32 bytes só existe em claro dentro do
+link; no banco (tabela `recuperacoes`) fica o sha256 dele. Vale 1 hora, morre
+ao ser usado e um pedido novo invalida o anterior — link velho parado numa
+caixa de entrada deixa de valer. A rota responde 200 tanto para e-mail
+cadastrado quanto para inexistente, senão a tela vira um verificador de quem é
+cliente da empresa. Redefinir derruba todas as sessões abertas e abre uma nova
+só para quem acabou de provar o acesso.
+
+> **Não há envio de e-mail** — o projeto não tem dependências e o SMTP ainda
+> não foi contratado. Hoje o link chega ao cliente por dois caminhos, os dois
+> manuais: impresso no console do servidor, e gerado sob demanda pelo admin no
+> painel (botão "Link de senha" na aba Clientes, que abre um prompt para copiar
+> e mandar no WhatsApp). Quando houver SMTP, o único ponto a mexer é
+> `entregarLink()` em `server/api.js`.
+
+`RECUPERACAO_NO_CORPO=1` devolve o link na própria resposta, para
+desenvolvimento e testes — é ignorada com `NODE_ENV=production`, e há teste
+provando que a trava de produção vence a variável.
+
+### Direitos do titular, consentimento e origem do lead
+
+- **Direitos do titular (LGPD).** `GET /api/auth/eu/dados` devolve cadastro,
+  orçamentos, mensagens e sessões como arquivo para download.
+  `DELETE /api/auth/eu` exclui a conta: pede a senha de novo, apaga o cadastro
+  e limpa nome, e-mail, telefone, empresa e CNPJ das mensagens ligadas a ela.
+  As linhas de mensagem e orçamento permanecem sem dono
+  (`ON DELETE SET NULL`), porque o histórico comercial e o relatório por
+  segmento não são dado pessoal. A trava do último admin também vale aqui.
+  Os dois botões estão na área da conta.
+- **Consentimento.** `mensagens.aceite_em` guarda quando a pessoa marcou o
+  aceite da política. O carimbo é do servidor, não do navegador. É o que
+  administradora de condomínio e escola pedem ao auditar fornecedor. No painel,
+  cada mensagem mostra "aceite registrado" ou "sem aceite" — o segundo aparece
+  em lead antigo, de antes do checkbox existir.
+- **Origem do lead.** `mensagens.origem` e `mensagens.segmento` gravam de onde
+  o pedido veio (listas fechadas, validadas no servidor). É o que responde se
+  as páginas de condomínio e de escola estão trazendo cliente. O painel mostra
+  isso como barras em "De onde vêm os pedidos", e `GET /api/admin/resumo`
+  devolve em `porSegmento`.
+- **Migrações.** O schema é `CREATE TABLE IF NOT EXISTS`, que cria banco novo
+  mas não mexe em tabela existente. `migrar()` em `server/db.js` acrescenta as
+  colunas novas (`origem`, `segmento`, `aceite_em`) em banco antigo. É
+  idempotente.
+
+### Backup
+
+O servidor faz uma cópia do banco **no boot e a cada 24 h**, sozinho. Não
+depende de ninguém lembrar de rodar nada.
+
+```bash
+npm run backup      # cópia agora
+npm run backups     # o que já existe
+npm run exportar    # JSON legível, sem senhas (para planilha/outro sistema)
+npm run restaurar polvo-2026-09-24T14-03-51.db
+```
+
+As cópias caem em `backups/`, fora do `dados/` (apagar a pasta do banco não
+pode levar o backup junto) e fora do git — o arquivo contém os hashes de senha
+dos clientes. Ficam as 14 mais novas; o resto é podado.
+
+Não é um `copy` do `polvo.db`: com WAL ligado, parte das escritas recentes vive
+no arquivo `-wal`, e copiar só o `.db` renderia um banco válido mas velho. O
+comando usa `VACUUM INTO`, que escreve um banco completo e consistente **com o
+servidor rodando**, e depois abre a cópia para conferir `integrity_check` e a
+contagem de linhas — backup que ninguém abriu é só um arquivo.
+
+`restaurar` salva o banco de agora como `antes-de-restaurar-*.db` antes da
+troca, recusa cópia corrompida e só age depois de você digitar `restaurar`.
+
+| Variável | Padrão | O que faz |
+|---|---|---|
+| `BACKUP_AUTO` | ligado | `0` desliga o backup automático |
+| `INTERVALO_BACKUP` | `24` | horas entre as cópias |
+| `MANTER_BACKUPS` | `14` | quantas guardar (`0` = não poda) |
+| `DESTINO_BACKUP` | `backups/` | onde as cópias caem |
+
+> Uma cópia no mesmo disco não protege contra o disco morrer. Aponte o
+> `DESTINO_BACKUP` para uma pasta sincronizada (Drive, OneDrive) ou copie o
+> `backups/` para fora da máquina de vez em quando.
+
+### Testes
+
+```bash
+npm test          # node --test "server/*.test.js"
+```
+
+87 testes de ponta a ponta. Sobem o servidor de verdade num **banco temporário**
+e numa porta livre, e conversam por HTTP — nada é dublado. O script usa um
+glob, então arquivo de teste novo em `server/` entra sozinho. O foco é travar o
+comportamento de segurança, que é o que quebra em silêncio numa refatoração:
+
+- gate de papel (401 sem login, 403 como cliente comum) em todas as rotas de admin
+- travas anti-lockout (último admin, remover a própria conta)
+- senha: tamanho mínimo, senha atual obrigatória para trocar, senha antiga
+  para de funcionar, sessões em outros aparelhos caem
+- login não revela se o e-mail existe (mesmo status e mesmo corpo)
+- um cliente não enxerga o orçamento de outro
+- `server/` e `dados/` não são servidos; path traversal barrado
+- 405 vs 404 nas rotas, cabeçalhos de segurança, cookie `HttpOnly`/`SameSite`
+
+O backup tem suíte própria (`server/backup.test.js`): a cópia abre e tem os
+mesmos dados, escrita posterior não aparece nela, a poda respeita o limite, o
+export não carrega hash de senha, e `restaurar` não encosta no banco quando a
+confirmação não vem ou a cópia está corrompida.
+
+A suíte de recuperação e LGPD (`server/recuperacao.test.js`) cobre:
+
+- pedir redefinição não revela se o e-mail existe (mesmo status e mesmo corpo);
+  conta desativada não recebe link
+- um pedido novo invalida o link anterior; conferir o token não o gasta
+- o token não serve duas vezes, não sobrevive ao prazo, e senha curta não o queima
+- redefinir derruba a senha antiga e as sessões em outros aparelhos
+- link gerado pelo admin: 401 sem login, 403 como cliente comum, 409 para conta
+  desativada, e fica registrado com origem `admin`
+- exportação LGPD: 401 sem login, vem com `Content-Disposition`, e não contém
+  dado de outro cliente
+- exclusão: 401 sem a senha correta, some do banco, limpa o dado pessoal das
+  mensagens e preserva o histórico; o último admin ativo não consegue se excluir
+- aceite carimbado quando marcado e nulo quando não; `origem`/`segmento` fora da
+  lista caem no padrão
+- CSV: gate de papel, BOM de UTF-8, tipo inválido é 400, e valor começando com
+  `=` sai escapado para não virar fórmula no Excel
+- com `NODE_ENV=production` o link não vai no corpo, mesmo com a variável de
+  desenvolvimento ligada
+
+Os limites de rate limit são configuráveis por variável de ambiente
+(`LIMITE_LOGIN`, `LIMITE_CADASTRO`, `LIMITE_ORCAMENTO`, `LIMITE_MENSAGEM`,
+`LIMITE_RECUPERACAO`) — o
+padrão é o valor restritivo, e os testes os elevam para conseguir criar várias
+contas seguidas do mesmo IP. `BANCO` aponta para outro arquivo de banco.
+
 ### O que falta para ir ao ar
 
 Isto é um protótipo. Antes de receber cliente de verdade:
 
 1. **HTTPS** — o cookie só ganha a flag `Secure` com `NODE_ENV=production`,
    e sem HTTPS a sessão trafega em texto claro.
-2. **Recuperar senha** — não existe "esqueci minha senha"; depende de um
-   serviço de e-mail (SMTP).
-3. **Backup do `dados/polvo.db`** — hoje é um arquivo só, sem cópia.
-4. **LGPD** — falta aviso de privacidade, consentimento e caminho para o
-   cliente pedir exclusão dos dados.
+2. **Recuperar senha — parcialmente resolvido.** O fluxo existe e é seguro
+   (veja acima), mas **não há envio de e-mail**: o link sai no console do
+   servidor ou o admin gera um no painel para mandar no WhatsApp. Ou seja,
+   ainda depende de alguém no balcão — às 23h de domingo o cliente não
+   recupera a senha sozinho. Falta contratar SMTP e preencher
+   `entregarLink()`.
+3. **Backup fora da máquina** — a cópia automática existe (veja acima), mas
+   fica no mesmo disco. Falta mandar `backups/` para outro lugar.
+4. **LGPD — falta a revisão jurídica e os dados do controlador.** Já existe: a
+   política (`privacidade.html`), o aceite obrigatório nos formulários, a prova
+   do aceite no banco (`mensagens.aceite_em`, carimbo do servidor), as rotas dos
+   direitos do titular e os botões que as chamam na área da conta. Falta:
+   **preencher os campos `CONFERIR` do `config.js`** — hoje a política nomeia
+   como controlador um CNPJ que reprova no dígito verificador e um e-mail de
+   contato que pode não existir, e um pedido de titular enviado para uma caixa
+   inexistente desaparece sem ninguém notar; e passar o texto por quem cuida do
+   jurídico — os prazos de guarda ali são o padrão do setor, não orientação
+   jurídica.
 5. **`node:sqlite` é experimental** no Node 22 (daí o aviso no boot). A
    superfície usada é só `prepare().get/all/run`, igual à do `better-sqlite3`,
    então a troca é direta se precisar.
@@ -229,27 +406,17 @@ Isto é um protótipo. Antes de receber cliente de verdade:
 
 ## Ganchos para o backend
 
-Estes pontos do catálogo ainda não passam pelo servidor e seguem marcados com
-`TODO (backend)`. Os produtos virão de uma API externa mais adiante:
-
 | Onde | Hoje | Depois |
 |---|---|---|
-| `data.js` | `window.CATALOGO` embutido | `GET /api/produtos` |
-| `catalogo.js` → `enviarOrcamento()` | abre WhatsApp | `POST /api/orcamentos` |
-| `contato.js` → `enviar()` | abre WhatsApp | `POST /api/contato` |
+| `data.js` | `window.CATALOGO` embutido | `GET /api/produtos` (API externa) |
+| `catalogo.js` → `enviarOrcamento()` | grava em `/api/orcamentos` **e** abre o WhatsApp | — |
+| `contato.js` → `enviar()` | grava em `/api/mensagens` **e** abre o WhatsApp | — |
+
+O registro roda em paralelo e o WhatsApp abre de qualquer jeito, mesmo com o
+servidor fora do ar: gravar o orçamento nunca pode atrapalhar a venda. Quem
+está logado tem o orçamento amarrado à conta; quem não está vira sinal de
+carrinho abandonado no painel.
 
 O catálogo está embutido em JS (e não em um `.json` lido por `fetch`) de propósito:
 o navegador bloqueia requisições `file://` por CORS, e assim o site abre com duplo
-clique sem precisar de servidor. Ao ligar a API, troque pelo `fetch`.
-
-## Rodar com servidor local
-
-Opcional, mas recomendado para testar (evita restrições de `file://`):
-
-```bash
-npx serve .
-# ou
-python -m http.server 8000
-```
-#   A t a c a d o P o l v o  
- 
+clique sem precisar de servidor. Quando a API de produtos entrar, troque pelo `fetch`.

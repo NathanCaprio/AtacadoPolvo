@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Entrar — Atacado Polvo</title>
-<meta name="description" content="Acesse sua conta Atacado Polvo.">
+<title>Recuperar senha — Atacado Polvo</title>
+<meta name="description" content="Recupere o acesso à sua conta do Atacado Polvo.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#7B2FE3">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#7B2FE3">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,7 @@
 
 <a class="skip-link" href="#main">Pular para o conteúdo</a>
 
+<!-- ================= HEADER ================= -->
 <header class="header">
   <div class="wrap">
     <a class="brand" href="index.html">
@@ -54,88 +55,89 @@
 </header>
 <div class="nav-backdrop"></div>
 
-
 <main id="main" class="section">
   <div class="miolo">
-
     <div class="auth-card">
-      <div class="abas" role="tablist" aria-label="Entrar ou criar conta">
-        <button role="tab" id="aba-entrar" aria-selected="true" aria-controls="painel-entrar">Entrar</button>
-        <button role="tab" id="aba-criar" aria-selected="false" aria-controls="painel-criar">Criar conta</button>
-      </div>
 
-      <div class="aviso aviso--erro" id="aviso" role="alert"></div>
+      <div class="aviso" id="aviso" role="alert"></div>
 
-      <!-- ---------- ENTRAR ---------- -->
-      <section id="painel-entrar" role="tabpanel" aria-labelledby="aba-entrar">
-        <h1>Entrar na sua conta</h1>
-        <p class="lead">Acompanhe seus dados e seus pedidos com a Polvo.</p>
+      <!-- ---------- 1. PEDIR O LINK ---------- -->
+      <section id="painel-pedir">
+        <h1>Recuperar senha</h1>
+        <p class="lead">Informe o e-mail da sua conta. Se ele estiver cadastrado,
+        enviamos um link para você criar uma senha nova.</p>
 
-        <form id="form-entrar" novalidate>
+        <form id="form-pedir" novalidate>
           <div class="field">
-            <label for="e-email">E-mail</label>
-            <input class="input" type="email" id="e-email" name="email"
+            <label for="r-email">E-mail da conta</label>
+            <input class="input" type="email" id="r-email" name="email"
                    autocomplete="email" required placeholder="voce@empresa.com.br">
           </div>
-          <div class="field">
-            <label for="e-senha">Senha</label>
-            <input class="input" type="password" id="e-senha" name="senha"
-                   autocomplete="current-password" required placeholder="••••••••">
-          </div>
-          <button class="btn btn--primary btn--block" type="submit">Entrar</button>
-
-          <p class="auth-esqueci">
-            <a href="recuperar.html">Esqueci minha senha</a>
-          </p>
+          <button class="btn btn--primary btn--block" type="submit">Enviar link</button>
         </form>
       </section>
 
-      <!-- ---------- CRIAR CONTA ---------- -->
-      <section id="painel-criar" role="tabpanel" aria-labelledby="aba-criar" hidden>
-        <h1>Criar sua conta</h1>
-        <p class="lead">Leva um minuto. Depois é só entrar para acompanhar tudo.</p>
+      <!-- ---------- 2. PEDIDO ENVIADO ---------- -->
+      <section id="painel-enviado" hidden>
+        <h1>Confira seu e-mail</h1>
+        <p class="lead" id="texto-enviado"></p>
 
-        <form id="form-criar" novalidate>
+        <div class="aviso aviso--ok is-visible" id="link-dev" hidden>
+          <span>
+            <b>Modo de desenvolvimento.</b> Sem serviço de e-mail configurado, o
+            link aparece aqui e também no console do servidor:<br>
+            <a id="link-dev-a" href="#"></a>
+          </span>
+        </div>
+
+        <p class="auth-rodape">
+          Não chegou? Confira a caixa de spam, ou
+          <a data-wpp="Olá! Perdi o acesso à minha conta no site e preciso de ajuda para redefinir a senha.">chame a gente no WhatsApp</a>
+          — a gente gera o link na hora.
+        </p>
+      </section>
+
+      <!-- ---------- 3. CRIAR SENHA NOVA ---------- -->
+      <section id="painel-redefinir" hidden>
+        <h1>Criar senha nova</h1>
+        <p class="lead" id="texto-redefinir"></p>
+
+        <form id="form-redefinir" novalidate>
           <div class="field">
-            <label for="c-nome">Nome</label>
-            <input class="input" type="text" id="c-nome" name="nome"
-                   autocomplete="name" required placeholder="Seu nome">
-          </div>
-          <div class="field">
-            <label for="c-email">E-mail</label>
-            <input class="input" type="email" id="c-email" name="email"
-                   autocomplete="email" required placeholder="voce@empresa.com.br">
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="c-empresa">Empresa <span class="opt">(opcional)</span></label>
-              <input class="input" type="text" id="c-empresa" name="empresa"
-                     autocomplete="organization" placeholder="Condomínio, escola…">
-            </div>
-            <div class="field">
-              <label for="c-telefone">Telefone <span class="opt">(opcional)</span></label>
-              <input class="input" type="tel" id="c-telefone" name="telefone"
-                     autocomplete="tel" placeholder="(51) 90000-0000">
-            </div>
-          </div>
-          <div class="field">
-            <label for="c-senha">Senha</label>
-            <input class="input" type="password" id="c-senha" name="senha"
+            <label for="r-senha">Nova senha</label>
+            <input class="input" type="password" id="r-senha" name="senha"
                    autocomplete="new-password" required minlength="8" placeholder="••••••••">
             <p class="hint">Mínimo de 8 caracteres.</p>
           </div>
-          <button class="btn btn--primary btn--block" type="submit">Criar conta</button>
+          <div class="field">
+            <label for="r-senha2">Repita a senha</label>
+            <input class="input" type="password" id="r-senha2" name="senha2"
+                   autocomplete="new-password" required placeholder="••••••••">
+            <p class="err"></p>
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">Salvar e entrar</button>
         </form>
+
+        <p class="auth-rodape">
+          Ao salvar, as sessões abertas em outros aparelhos são encerradas.
+        </p>
       </section>
 
-      <p class="auth-rodape">
-        Prefere resolver falando com alguém?
-        <a data-wpp="Olá! Vim pelo site.">Chame no WhatsApp</a>.
-      </p>
-    </div>
+      <!-- ---------- 4. LINK INVÁLIDO ---------- -->
+      <section id="painel-invalido" hidden>
+        <h1>Link expirado</h1>
+        <p class="lead">Este link de redefinição não vale mais — ou já foi usado,
+        ou passou da validade de uma hora.</p>
+        <a class="btn btn--primary btn--block" href="recuperar.html">Pedir um link novo</a>
+        <p class="auth-rodape">
+          <a href="entrar.html">Voltar para o login</a>
+        </p>
+      </section>
 
+    </div>
   </div>
 </main>
+
 <!-- ================= FOOTER ================= -->
 <footer class="footer">
   <div class="wrap">
@@ -218,6 +220,6 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/auth.js"></script>
-<script src="assets/js/entrar.js"></script>
+<script src="assets/js/recuperar.js"></script>
 </body>
 </html>

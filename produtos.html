@@ -7,6 +7,7 @@
 <meta name="description" content="Catálogo de produtos de limpeza no atacado: cozinha, lavanderia, pisos, banheiro, descartáveis, utensílios, higiene e linha profissional. Monte seu orçamento.">
 <meta name="theme-color" content="#7B2FE3">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://www.atacadopolvo.com.br/produtos.html">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Catálogo — Atacado Polvo">
@@ -15,11 +16,21 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:locale" content="pt_BR">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+
+<noscript>
+  <!-- Sem JS o IntersectionObserver de main.js nunca adiciona .is-in, e
+       [data-reveal]{opacity:0} deixaria a maior parte da página invisível
+       para sempre. Reexibir é mais honesto que avisar que falta algo. -->
+  <style>
+    [data-reveal]{ opacity:1 !important; transform:none !important; }
+  </style>
+</noscript>
 </head>
 <body>
 
@@ -152,6 +163,28 @@
   <div class="drawer-body" id="drawer-body"></div>
 
   <div class="drawer-foot" id="drawer-foot">
+
+    <div class="drawer-contato" id="drawer-contato">
+      <p class="drawer-contato-titulo">
+        Quer que a gente te retorne? <span class="opt">(opcional)</span>
+      </p>
+      <div class="field">
+        <label class="sr-only" for="oc-nome">Seu nome</label>
+        <input class="input input--sm" type="text" id="oc-nome" name="nome"
+               autocomplete="name" placeholder="Seu nome">
+      </div>
+      <div class="field">
+        <label class="sr-only" for="oc-tel">WhatsApp ou e-mail</label>
+        <input class="input input--sm" type="text" id="oc-tel" name="tel"
+               autocomplete="tel" placeholder="WhatsApp ou e-mail">
+        <p class="err"></p>
+      </div>
+      <p class="drawer-contato-nota">
+        Só usamos para responder este orçamento.
+        <a href="privacidade.html">Política de privacidade</a>.
+      </p>
+    </div>
+
     <button class="btn btn--wpp btn--block" id="drawer-enviar">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2z"/></svg>
       Enviar pelo WhatsApp
@@ -221,11 +254,11 @@
         <ul class="footer-contact">
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/></svg>
-            <span data-endereco-full>Rua Exemplo, 123</span>
+            <span data-endereco-full>Av. Dr. Carlos Barbosa, 931 - Medianeira - Porto Alegre/RS</span>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 3.5h4l2 5-2.5 1.5a12 12 0 0 0 6 6L15.5 13.5l5 2v4a1.5 1.5 0 0 1-1.6 1.5A17 17 0 0 1 3 5.1 1.5 1.5 0 0 1 4.5 3.5z"/></svg>
-            <a data-tel href="#"><span data-site="telefone">(11) 3333-3333</span></a>
+            <a data-tel href="#"><span data-site="telefone">(51) 98025-6547</span></a>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg>
@@ -233,7 +266,7 @@
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-            <span><span data-site="horarioSemana">Segunda a sexta, 08h - 18h</span><br><span data-site="horarioSabado">Sábado, 08h - 13h</span></span>
+            <span><span data-site="horarioSemana">Segunda a sexta, 08h às 18h</span><br><span data-site="horarioSabado">Sábado, 09h às 15h</span></span>
           </li>
         </ul>
       </div>
@@ -241,7 +274,7 @@
 
     <div class="footer-bottom">
       <p>&copy; <span data-ano>2026</span> <span data-site="razaoSocial">Atacado Polvo</span> — CNPJ <span data-site="cnpj">00.000.000/0001-00</span></p>
-      <p>Site institucional — <a data-insta href="#" target="_blank" rel="noopener"><span data-site="instagramHandle">@atacadopolvo</span></a></p>
+      <p>Site institucional — <a data-insta href="#" target="_blank" rel="noopener"><span data-site="instagramHandle">@atacadopolvo</span></a> · <a href="privacidade.html">Política de Privacidade</a></p>
     </div>
   </div>
 </footer>

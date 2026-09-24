@@ -82,7 +82,48 @@ function encerrarTodasDoCliente(clienteId) {
   db.prepare('DELETE FROM sessoes WHERE cliente_id = ?').run(clienteId);
 }
 
-/* ---- 3. Cookie --------------------------------------------------------- */
+/* ---- 3. Recuperação de senha ------------------------------------------
+   Mesmo desenho das sessões: o token só existe em claro no link que vai
+   para o cliente; no banco fica o sha256. Validade curta (1 hora) porque
+   um link de redefinição é uma chave da conta inteira, e ele passa por
+   e-mail ou WhatsApp, que não são canais seguros.
+   Cada pedido novo invalida os anteriores daquela conta — assim um link
+   antigo que ficou numa caixa de entrada para de valer.                   */
+
+const HORAS_RECUPERACAO = 1;
+
+function criarRecuperacao(clienteId, origem = 'cliente') {
+  db.prepare('DELETE FROM recuperacoes WHERE cliente_id = ? AND usado_em IS NULL')
+    .run(clienteId);
+
+  const token = crypto.randomBytes(32).toString('base64url');
+  const expira = new Date(Date.now() + HORAS_RECUPERACAO * 36e5).toISOString();
+  db.prepare(`
+    INSERT INTO recuperacoes (token_hash, cliente_id, expira_em, origem)
+    VALUES (?, ?, ?, ?)
+  `).run(hashToken(token), clienteId, expira, origem);
+  return { token, expira };
+}
+
+/** Devolve a linha da recuperação válida, ou null. */
+function recuperacaoValida(token) {
+  if (!token || typeof token !== 'string') return null;
+  return db.prepare(`
+    SELECT r.id, r.cliente_id, c.email, c.nome
+      FROM recuperacoes r
+      JOIN clientes c ON c.id = r.cliente_id
+     WHERE r.token_hash = ?
+       AND r.usado_em IS NULL
+       AND r.expira_em > datetime('now')
+       AND c.ativo = 1
+  `).get(hashToken(token)) || null;
+}
+
+function marcarRecuperacaoUsada(id) {
+  db.prepare(`UPDATE recuperacoes SET usado_em = datetime('now') WHERE id = ?`).run(id);
+}
+
+/* ---- 4. Cookie --------------------------------------------------------- */
 
 function lerCookie(req, nome) {
   const bruto = req.headers.cookie;
@@ -117,5 +158,6 @@ const cookieLimpo = () =>
 module.exports = {
   gerarHash, conferirSenha,
   criarSessao, clienteDaSessao, encerrarSessao, encerrarTodasDoCliente,
+  criarRecuperacao, recuperacaoValida, marcarRecuperacaoUsada, HORAS_RECUPERACAO,
   lerCookie, cookieSessao, cookieLimpo, COOKIE
 };

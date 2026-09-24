@@ -182,10 +182,41 @@
      não acontece. Se o backend estiver fora (ou a página aberta direto do
      disco), o erro é engolido e o WhatsApp abre igual — o caminho de venda
      não pode quebrar por causa do registro.                                 */
-  function registrar(itens) {
+  function registrar(itens, contato) {
     if (!window.API) return Promise.resolve();
-    return window.API.pedir('/api/orcamentos', { metodo: 'POST', corpo: { itens } })
-      .catch(() => {});
+    return window.API.pedir('/api/orcamentos', {
+      metodo: 'POST', corpo: contato ? { itens, contato } : { itens }
+    }).catch(() => {});
+  }
+
+  /* Um campo só para WhatsApp e e-mail: pedir os dois separados dobraria o
+     atrito de um formulário que já é opcional. Aqui a gente descobre qual
+     é qual — o servidor valida de novo, de qualquer jeito. */
+  function lerContato() {
+    const caixa = $('#drawer-contato');
+    if (!caixa || caixa.hidden) return null;
+
+    const nome = ($('#oc-nome') || {}).value || '';
+    const bruto = (($('#oc-tel') || {}).value || '').trim();
+    if (!bruto) return null;
+
+    const ehEmail = bruto.includes('@');
+    const digitos = bruto.replace(/\D/g, '');
+
+    // Nem e-mail plausível nem telefone com DDD: avisa em vez de engolir.
+    if (!ehEmail && digitos.length < 10) {
+      const campo = $('#oc-tel').closest('.field');
+      campo.querySelector('.err').textContent =
+        'Informe um WhatsApp com DDD ou um e-mail.';
+      campo.classList.add('has-error');
+      $('#oc-tel').focus();
+      return false;
+    }
+    $('#oc-tel').closest('.field').classList.remove('has-error');
+
+    return ehEmail
+      ? { nome: nome.trim(), email: bruto }
+      : { nome: nome.trim(), tel: bruto };
   }
 
   function enviarOrcamento() {
@@ -196,7 +227,10 @@
       return { id: i.id, nome: p.nome || i.id, caixa: p.caixa || '', qtd: i.qtd };
     });
 
-    registrar(itens);
+    const contato = lerContato();
+    if (contato === false) return;          // o campo está preenchido e errado
+
+    registrar(itens, contato);
 
     const linhas = itens.map(i => `• ${i.nome} — ${i.qtd}x (${i.caixa})`).join('\n');
     const msg = `Olá! Gostaria de um orçamento dos itens abaixo:\n\n${linhas}\n\nPedido mínimo: ${s.pedidoMinimo || ''}`;
@@ -235,6 +269,17 @@
 
   const enviar = $('#drawer-enviar');
   if (enviar) enviar.addEventListener('click', enviarOrcamento);
+
+  /* Cliente logado não precisa digitar contato: o pedido já sai com dono.
+     A caixa começa visível e some depois — e não o contrário — porque a
+     consulta de sessão é assíncrona, e nascer escondida faria a caixa
+     piscar na tela de quem não está logado. */
+  if (window.API) {
+    window.API.quemSou().then(c => {
+      const caixa = $('#drawer-contato');
+      if (c && caixa) caixa.hidden = true;
+    });
+  }
 
   const limpar = $('#drawer-limpar');
   if (limpar) limpar.addEventListener('click', () => {

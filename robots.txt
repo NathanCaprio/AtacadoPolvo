@@ -1,0 +1,16 @@
+# Atacado Polvo
+# Troque o domínio abaixo junto com as tags canonical das páginas.
+
+User-agent: *
+Allow: /
+
+# Áreas de conta e API não devem ser indexadas.
+Disallow: /entrar
+Disallow: /entrar.html
+Disallow: /conta
+Disallow: /conta.html
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /api/
+
+Sitemap: https://www.atacadopolvo.com.br/sitemap.xml

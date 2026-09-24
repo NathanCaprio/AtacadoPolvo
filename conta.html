@@ -138,6 +138,47 @@
           </div>
         </div>
 
+        <div class="info-card info-card--privacidade" style="margin-top:20px">
+          <h3 style="margin-bottom:8px">Seus dados</h3>
+          <p class="privacidade-intro">
+            A LGPD garante que você veja e apague o que é seu, sem precisar
+            pedir para ninguém. Aqui é onde isso se faz.
+            <a href="privacidade.html">Ler a política</a>.
+          </p>
+
+          <div class="aviso" id="aviso-dados" role="status"></div>
+
+          <div class="privacidade-acoes">
+            <button class="btn btn--ghost btn--sm" id="baixar-dados" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+              Baixar meus dados
+            </button>
+            <button class="btn btn--perigo btn--sm" id="abrir-excluir" type="button">
+              Excluir minha conta
+            </button>
+          </div>
+
+          <!-- Confirmação por senha. Some atrás de um clique de propósito:
+               é ação sem volta, não pode ficar a um toque de distância. -->
+          <form id="form-excluir" class="excluir-caixa" hidden novalidate>
+            <p class="excluir-alerta">
+              <b>Isto não tem volta.</b> Seu cadastro, sua senha e suas sessões
+              são apagados na hora. O histórico de orçamentos permanece sem
+              nenhum dado que identifique você. Notas fiscais já emitidas são
+              guardadas por 5 anos, como a lei fiscal exige.
+            </p>
+            <div class="field">
+              <label for="x-senha">Digite sua senha para confirmar</label>
+              <input class="input" type="password" id="x-senha" name="senha"
+                     autocomplete="current-password" required placeholder="••••••••">
+            </div>
+            <div class="privacidade-acoes">
+              <button class="btn btn--perigo btn--sm" type="submit">Excluir definitivamente</button>
+              <button class="btn btn--ghost btn--sm" type="button" id="cancelar-excluir">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
         <div class="info-card" style="margin-top:20px">
           <h3 style="margin-bottom:10px">Precisa de ajuda?</h3>
           <div class="info-item" style="padding-top:0">
@@ -238,7 +279,7 @@
 
     <div class="footer-bottom">
       <p>&copy; <span data-ano>2026</span> <span data-site="razaoSocial">Atacado Polvo</span> — CNPJ <span data-site="cnpj">00.000.000/0001-00</span></p>
-      <p>Site institucional — <a data-insta href="#" target="_blank" rel="noopener"><span data-site="instagramHandle">@atacadopolvo</span></a></p>
+      <p>Site institucional — <a data-insta href="#" target="_blank" rel="noopener"><span data-site="instagramHandle">@atacadopolvo</span></a> · <a href="privacidade.html">Política de Privacidade</a></p>
     </div>
   </div>
 </footer>

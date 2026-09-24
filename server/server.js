@@ -17,6 +17,7 @@ const path = require('node:path');
 
 const { tratarApi } = require('./api');
 const { limparSessoes, ARQUIVO } = require('./db');
+const backup = require('./backup');
 
 const RAIZ = path.join(__dirname, '..');
 const PORTA = Number(process.env.PORTA || 3000);
@@ -34,7 +35,9 @@ const TIPOS = {
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
-  '.txt': 'text/plain; charset=utf-8'
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
+  '.webmanifest': 'application/manifest+json'
 };
 
 // Nada aqui é servido, mesmo que alguém acerte o caminho.
@@ -116,10 +119,15 @@ async function tratarEstatico(req, res, caminho) {
   try {
     await servirArquivo(req, res, absoluto, ext);
   } catch {
-    // 404 bonitinho: devolve a home se o arquivo não existe
+    // Página 404 de verdade. Devolver a home aqui seria pior: o visitante
+    // acharia que chegou onde queria, e o buscador veria conteúdo duplicado.
     try {
-      const html = await fsp.readFile(path.join(RAIZ, 'index.html'));
-      res.writeHead(404, { ...cabecalhosBase(), 'Content-Type': TIPOS['.html'] });
+      const html = await fsp.readFile(path.join(RAIZ, '404.html'));
+      res.writeHead(404, {
+        ...cabecalhosBase(),
+        'Content-Type': TIPOS['.html'],
+        'Cache-Control': 'no-cache'
+      });
       res.end(html);
     } catch {
       res.writeHead(404, cabecalhosBase()); res.end('Não encontrado');
@@ -154,6 +162,9 @@ servidor.listen(PORTA, HOST, () => {
   console.log(`  site   http://${HOST}:${PORTA}`);
   console.log(`  admin  http://${HOST}:${PORTA}/admin`);
   console.log(`  banco  ${ARQUIVO}\n`);
+
+  // Depois do listen, de propósito: se o backup travar, o site já está no ar.
+  backup.agendar();
 });
 
 for (const sinal of ['SIGINT', 'SIGTERM']) {

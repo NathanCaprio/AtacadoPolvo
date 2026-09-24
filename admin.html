@@ -72,6 +72,15 @@
 
     <div class="metricas" id="metricas"></div>
 
+    <section class="funil" id="funil" hidden>
+      <h2>De onde vêm os pedidos</h2>
+      <p class="funil-sub">
+        Por segmento, no total e nos últimos 30 dias. É o que mostra se as
+        páginas de condomínio e de escola estão trazendo cliente.
+      </p>
+      <div class="funil-barras" id="funil-barras"></div>
+    </section>
+
     <div class="abas-painel" role="tablist" aria-label="Seções do painel">
       <button role="tab" id="aba-orcamentos" aria-selected="true" aria-controls="painel-orcamentos">
         Orçamentos <span class="contador" id="cont-orcamentos" hidden></span>
@@ -90,6 +99,11 @@
         Tudo que foi montado no catálogo, inclusive por quem não tem conta — nesse caso
         o pedido fica como anônimo e serve como sinal de carrinho abandonado.
       </p>
+      <div class="barra-acoes">
+        <button class="btn btn--ghost btn--sm" data-exportar="orcamentos" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg> Baixar orçamentos (CSV)
+        </button>
+      </div>
       <div class="tabela-wrap">
         <table class="tabela">
           <thead>
@@ -109,8 +123,14 @@
     <!-- ---------- MENSAGENS ---------- -->
     <section id="painel-mensagens" role="tabpanel" aria-labelledby="aba-mensagens" hidden>
       <p class="lead" style="font-size:.92rem;margin-bottom:18px">
-        Mensagens enviadas pelo formulário de contato.
+        Mensagens do formulário de contato e das páginas de segmento. O selo
+        diz de onde o pedido veio e se o aceite da política foi registrado.
       </p>
+      <div class="barra-acoes">
+        <button class="btn btn--ghost btn--sm" data-exportar="mensagens" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg> Baixar leads (CSV)
+        </button>
+      </div>
       <div class="tabela-wrap">
         <table class="tabela">
           <thead>
@@ -130,8 +150,15 @@
     <section id="painel-clientes" role="tabpanel" aria-labelledby="aba-clientes" hidden>
       <p class="lead" style="font-size:.92rem;margin-bottom:18px">
         Promova a admin, desative o acesso ou remova a conta. Desativar e rebaixar
-        derrubam as sessões abertas na hora.
+        derrubam as sessões abertas na hora. "Link de senha" gera um endereço
+        de redefinição válido por uma hora, para você passar ao cliente que
+        perdeu o acesso.
       </p>
+      <div class="barra-acoes">
+        <button class="btn btn--ghost btn--sm" data-exportar="clientes" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg> Baixar clientes (CSV)
+        </button>
+      </div>
       <div class="tabela-wrap">
         <table class="tabela">
           <thead>
@@ -224,7 +251,7 @@
 
     <div class="footer-bottom">
       <p>&copy; <span data-ano>2026</span> <span data-site="razaoSocial">Atacado Polvo</span> — CNPJ <span data-site="cnpj">00.000.000/0001-00</span></p>
-      <p>Site institucional — <a data-insta href="#" target="_blank" rel="noopener"><span data-site="instagramHandle">@atacadopolvo</span></a></p>
+      <p>Site institucional — <a data-insta href="#" target="_blank" rel="noopener"><span data-site="instagramHandle">@atacadopolvo</span></a> · <a href="privacidade.html">Política de Privacidade</a></p>
     </div>
   </div>
 </footer>

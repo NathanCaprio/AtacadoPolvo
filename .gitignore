@@ -4,7 +4,13 @@ dados/
 # Artefatos do navegador controlado por ferramenta
 .playwright-mcp/
 
+# npm (o projeto não tem dependências, mas caso alguém instale algo)
+node_modules/
+
 # Sistema operacional
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Cópias do banco e exports (contêm hash de senha dos clientes)
+backups/

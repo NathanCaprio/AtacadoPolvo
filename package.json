@@ -1,0 +1,19 @@
+{
+  "name": "atacado-polvo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site institucional e backend do Atacado Polvo — sem dependências, só módulos nativos do Node.",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test \"server/*.test.js\"",
+    "criar-admin": "node server/cli.js criar-admin",
+    "listar-contas": "node server/cli.js listar",
+    "backup": "node server/backup.js",
+    "backups": "node server/backup.js listar",
+    "exportar": "node server/backup.js exportar",
+    "restaurar": "node server/backup.js restaurar"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

@@ -42,14 +42,17 @@
     empresa:  v => v.trim().length >= 2        || 'Informe o nome da empresa.',
     email:    v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) || 'Informe um e-mail válido.',
     tel:      v => v.replace(/\D/g, '').length >= 10 || 'Informe um telefone com DDD.',
-    mensagem: v => v.trim().length >= 10       || 'Escreva ao menos 10 caracteres.'
+    mensagem: v => v.trim().length >= 10       || 'Escreva ao menos 10 caracteres.',
+    // LGPD: o aceite é condição para gravar e para responder.
+    aceite:   v => v === 'x' || 'Precisamos do seu aceite para responder.'
   };
 
   function validarCampo(input) {
     const regra = regras[input.id];
     if (!regra) return true;
 
-    const res = regra(input.value);
+    // No checkbox o que importa é o estado, não o value.
+    const res = regra(input.type === 'checkbox' ? (input.checked ? 'x' : '') : input.value);
     const campo = input.closest('.field');
     const erro = $('.err', campo);
 
@@ -65,6 +68,14 @@
   Object.keys(regras).forEach(id => {
     const el = $('#' + id);
     if (!el) return;
+
+    // Checkbox só é conferido quando muda: validar no blur acusaria erro em
+    // quem apenas passou o Tab pelo aceite antes de ler o texto.
+    if (el.type === 'checkbox') {
+      el.addEventListener('change', () => validarCampo(el));
+      return;
+    }
+
     el.addEventListener('blur', () => validarCampo(el));
     el.addEventListener('input', () => {
       const campo = el.closest('.field');
