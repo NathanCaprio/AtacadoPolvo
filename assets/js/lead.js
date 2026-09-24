@@ -130,7 +130,9 @@
       empresa: dados.empresa || '',
       assunto: form.dataset.assunto || 'Cotação pela landing',
       origem: form.dataset.origem || 'landing',
-      segmento: form.dataset.segmento || null,
+      // A landing de recorrência pergunta o segmento num <select name="segmento">;
+      // as de segmento o trazem fixo no data-segmento do formulário.
+      segmento: dados.segmento || form.dataset.segmento || null,
       // O checkbox é obrigatório, então aqui ele está sempre marcado — mas
       // quem carimba a data é o servidor.
       aceite: true,

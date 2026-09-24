@@ -76,7 +76,8 @@ const texto = v => (typeof v === 'string' ? v.trim() : '');
 
 // Valores aceitos em mensagens.origem / mensagens.segmento. São listas
 // fechadas de propósito: o campo vem do navegador e alimenta relatório.
-const ORIGENS = ['contato', 'landing', 'orcamento', 'rodape', 'calculadora'];
+const ORIGENS = ['contato', 'landing', 'orcamento', 'rodape', 'calculadora',
+                 'recorrencia'];
 const SEGMENTOS = ['condominio', 'escola', 'empresa', 'residencial',
                    'restaurante', 'hotel', 'pet'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;

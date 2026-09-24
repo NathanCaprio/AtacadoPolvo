@@ -61,6 +61,13 @@ window.SITE = {
   pedidoMinimo: 'R$ 300,00',               // CONFERIR
   raioEntrega: 'Porto Alegre e Região Metropolitana',
 
+  // --- Pedido recorrente (recorrencia.html) ---------------------------------
+  // Desconto sobre o preço de atacado, por plano. O HTML também traz estes
+  // valores escritos (para o buscador); o que vale na tela é o daqui.
+  descontoMensal: '5%',                    // CONFERIR
+  descontoSemestral: '8%',                 // CONFERIR
+  descontoAnual: '12%',                    // CONFERIR
+
   // Mensagem padrão aberta no WhatsApp quando data-wpp vem vazio
   mensagemPadrao: 'Olá! Vim pelo site e gostaria de fazer um orçamento.'
 };

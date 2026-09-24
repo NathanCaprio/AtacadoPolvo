@@ -28,6 +28,7 @@ npm run backup | backups | exportar | restaurar
 | Catálogo de produtos | `assets/js/data.js` |
 | Coeficientes da calculadora | `assets/js/consumo.js` (novo segmento: bloco em `SEGMENTOS` + lista `SEGMENTOS` em `server/api.js`) |
 | Tema, menu, reveal, FAQ | `assets/js/main.js` |
+| Descontos dos planos recorrentes | `assets/js/config.js` (`descontoMensal/Semestral/Anual`) + números escritos em `recorrencia.html` |
 | Filtros/orçamento do catálogo | `assets/js/catalogo.js` |
 | Formulário de landing (lead) | `assets/js/lead.js` |
 | Rotas/validação/rate limit da API | `server/api.js` |
@@ -36,7 +37,7 @@ npm run backup | backups | exportar | restaurar
 | Servidor estático, headers, ETag | `server/server.js` |
 
 Páginas: `index`, `produtos`, `calculadora`, `condominios`/`escolas` (SEO),
-`restaurantes`/`hoteis`/`pets` (SEO discreto: só link no rodapé `.footer-seg`, fora do menu),
+`recorrencia` (planos com desconto, origem `recorrencia`), `restaurantes`/`hoteis`/`pets` (SEO discreto: só link na lista Navegação do rodapé, fora do menu),
 `sobre`, `contato`, `entrar`, `recuperar`, `conta`, `admin`, `privacidade`, `404`.
 Cada página tem seu JS homônimo em `assets/js/`.
 

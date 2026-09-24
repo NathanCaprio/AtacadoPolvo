@@ -93,6 +93,7 @@
   const ORIGEM = {
     landing: 'Páginas de segmento',
     calculadora: 'Calculadora de consumo',
+    recorrencia: 'Pedido recorrente',
     contato: 'Formulário de contato',
     orcamento: 'Lista de orçamento',
     rodape: 'Rodapé'
