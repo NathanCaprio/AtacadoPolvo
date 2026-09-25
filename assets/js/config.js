@@ -11,6 +11,7 @@
      data-wpp="mensagem"      -> vira um link de WhatsApp com essa mensagem
      data-tel / data-mail     -> viram tel: e mailto:
      data-insta               -> link do Instagram
+     data-grupo               -> convite do grupo de ofertas no WhatsApp
      data-endereco-full       -> endereço completo montado
      data-ano                 -> ano atual
 
@@ -56,6 +57,7 @@ window.SITE = {
   // --- Redes ----------------------------------------------------------------
   instagram: 'https://www.instagram.com/atacadopolvo/',
   instagramHandle: '@atacadopolvo',
+  grupoOfertas: 'https://chat.whatsapp.com/C8QtrJiOFjTISmCfH4oOnW', // Clube de Ofertas (data-grupo)
 
   // --- Regras comerciais ----------------------------------------------------
   pedidoMinimo: 'R$ 300,00',               // CONFERIR

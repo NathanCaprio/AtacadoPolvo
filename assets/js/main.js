@@ -70,6 +70,11 @@
     $$('[data-tel]').forEach(el => { el.href = 'tel:' + s.telefoneLink; });
     $$('[data-mail]').forEach(el => { el.href = 'mailto:' + s.email; });
     $$('[data-insta]').forEach(el => { el.href = s.instagram; });
+    $$('[data-grupo]').forEach(el => {
+      el.href = s.grupoOfertas;
+      el.target = '_blank';
+      el.rel = 'noopener';
+    });
 
     // Endereco completo montado
     $$('[data-endereco2-full]').forEach(el => {

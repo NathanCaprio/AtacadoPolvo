@@ -73,7 +73,60 @@
       </style>
     </noscript>
     <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qual é o pedido mínimo?","acceptedAnswer":{"@type":"Answer","text":"O pedido mínimo é de R$ 300,00 em produtos. Abaixo disso conseguimos atender apenas com retirada no balcão das lojas."}},{"@type":"Question","name":"Preciso ter CNPJ para comprar?","acceptedAnswer":{"@type":"Answer","text":"Não. Também vendemos para pessoa física, respeitado o pedido mínimo. Com CNPJ você acessa condições melhores de prazo e a nota sai com os impostos destacados para crédito."}},{"@type":"Question","name":"Quais são as formas de pagamento?","acceptedAnswer":{"@type":"Answer","text":"Pix, dinheiro, cartão de débito e crédito na entrega. Para clientes recorrentes com CNPJ, trabalhamos com boleto faturado a prazo após análise de cadastro."}},{"@type":"Question","name":"Em quanto tempo a entrega chega?","acceptedAnswer":{"@type":"Answer","text":"Em Porto Alegre, o prazo médio é de 24 horas úteis após a confirmação do pedido, em rota própria. Para a Região Metropolitana, combinamos a data conforme a rota da semana — normalmente de 2 a 4 dias úteis."}},{"@type":"Question","name":"Vocês vendem por unidade ou só caixa fechada?","acceptedAnswer":{"@type":"Answer","text":"O preço de atacado vale para caixa fechada, que é como o catálogo está montado. Alguns itens saem fracionados, com valor diferente — consulte o vendedor antes de fechar a lista."}},{"@type":"Question","name":"Os produtos têm registro na Anvisa?","acceptedAnswer":{"@type":"Answer","text":"Sim. Todo saneante que distribuímos é notificado ou registrado na Anvisa, com rótulo dentro da norma e ficha técnica disponível mediante solicitação."}}]}
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Qual é o pedido mínimo?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "O pedido mínimo é de R$ 300,00 em produtos. Abaixo disso conseguimos atender apenas com retirada no balcão das lojas."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Preciso ter CNPJ para comprar?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Não. Também vendemos para pessoa física, respeitado o pedido mínimo. Com CNPJ você acessa condições melhores de prazo e a nota sai com os impostos destacados para crédito."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quais são as formas de pagamento?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Pix, dinheiro, cartão de débito e crédito na entrega. Para clientes recorrentes com CNPJ, trabalhamos com boleto faturado a prazo após análise de cadastro."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Em quanto tempo a entrega chega?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Em Porto Alegre, o prazo médio é de 24 horas úteis após a confirmação do pedido, em rota própria. Para a Região Metropolitana, combinamos a data conforme a rota da semana — normalmente de 2 a 4 dias úteis."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Vocês vendem por unidade ou só caixa fechada?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "O preço de atacado vale para caixa fechada, que é como o catálogo está montado. Alguns itens saem fracionados, com valor diferente — consulte o vendedor antes de fechar a lista."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Os produtos têm registro na Anvisa?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sim. Todo saneante que distribuímos é notificado ou registrado na Anvisa, com rótulo dentro da norma e ficha técnica disponível mediante solicitação."
+            }
+          }
+        ]
+      }
     </script>
   </head>
   <body>
@@ -263,25 +316,108 @@
        Para trocar/adicionar uma marca: arquivo em assets/img/marcas/
        (SVG ou PNG transparente) + um <li> aqui. Altura é fixada no CSS. -->
       <section class="marcas" aria-labelledby="marcas-titulo">
-    <div class="wrap">
-      <p class="marcas-titulo" id="marcas-titulo">Marcas que você encontra aqui</p>
-    </div>
-    <div class="marcas-viewport">
-      <div class="marcas-trilho">
-        <ul class="marcas-lista">
-          <li><img src="assets/img/marcas/ype.png" alt="Ypê" width="151" height="120" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/bombril.svg?v=2" alt="Bombril" width="500" height="293" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/qboa.png" alt="Qboa" width="212" height="120" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/brilhante.webp" alt="Brilhante" width="320" height="259" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/gota-limpa.png" alt="Gota Limpa" width="120" height="120" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/atrius.png" alt="Atrius" width="265" height="120" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/saif.png" alt="Saif" width="173" height="120" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/veja.png" alt="Veja" width="120" height="120" loading="lazy" decoding="async"></li>
-          <li><img src="assets/img/marcas/florax.png" alt="Florax Premium" width="167" height="113" loading="lazy" decoding="async"></li>
-        </ul>
-      </div>
-    </div>
-  </section>
+        <div class="wrap">
+          <p class="marcas-titulo" id="marcas-titulo">
+            Marcas que você encontra aqui
+          </p>
+        </div>
+        <div class="marcas-viewport">
+          <div class="marcas-trilho">
+            <ul class="marcas-lista">
+              <li>
+                <img
+                  src="assets/img/marcas/ype.png"
+                  alt="Ypê"
+                  width="151"
+                  height="120"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/bombril.svg?v=2"
+                  alt="Bombril"
+                  width="500"
+                  height="293"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/qboa.png"
+                  alt="Qboa"
+                  width="212"
+                  height="120"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/brilhante.webp"
+                  alt="Brilhante"
+                  width="320"
+                  height="259"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/gota-limpa.png"
+                  alt="Gota Limpa"
+                  width="120"
+                  height="120"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/atrius.png"
+                  alt="Atrius"
+                  width="265"
+                  height="120"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/saif.png"
+                  alt="Saif"
+                  width="173"
+                  height="120"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/veja.png"
+                  alt="Veja"
+                  width="120"
+                  height="120"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/florax.png"
+                  alt="Florax Premium"
+                  width="167"
+                  height="113"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
       <!-- ================= CATEGORIAS ================= -->
       <section class="section section--tint">
@@ -361,7 +497,7 @@
       </section>
 
       <!-- ================= DIFERENCIAIS ================= -->
-      <section class="section section--tint">
+      <!-- <section class="section section--tint">
         <div class="wrap">
           <div class="section-head center" data-reveal>
             <span class="eyebrow eyebrow--accent">Por que a Polvo</span>
@@ -465,7 +601,7 @@
             </article>
           </div>
         </div>
-      </section>
+      </section> -->
 
       <!-- ================= SEGMENTOS ================= -->
       <section class="section">
@@ -566,7 +702,9 @@
                   stroke-linejoin="round"
                 >
                   <path d="M3 9l1.5-5h15L21 9" />
-                  <path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z" />
+                  <path
+                    d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"
+                  />
                   <path d="M5 13.5V21h14v-7.5M10 21v-5h4v5" />
                 </svg>
               </div>
@@ -596,27 +734,87 @@
             </article>
           </div>
 
-          <div class="calc-convite calc-convite--home" data-reveal="160">
-            <div>
-              <h3>Quanto o seu prédio consome por mês?</h3>
-              <p>
-                A calculadora estima a lista mensal pelo porte do condomínio ou
-                da escola, item a item, e vira orçamento em um clique. Sem
-                cadastro.
-              </p>
+          <div class="calc-convites calc-convite--home">
+            <div class="calc-convite calc-convite--destaque" data-reveal="160">
+              <div>
+                <div class="calc-convite__topo">
+                  <span class="calc-convite__ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+                      <path d="M16 9h2a2 2 0 0 1 2 2v10" />
+                      <path d="M8 7h4M8 11h4M8 15h4M3 21h18" /></svg
+                  ></span>
+                  <span class="eyebrow eyebrow--accent"
+                    >Calculadora grátis</span
+                  >
+                </div>
+                <h3>Quanto o seu prédio consome por mês?</h3>
+                <p>
+                  Informe o porte do condomínio e a calculadora monta a lista
+                  mensal item a item, pronta para virar orçamento. Sem cadastro.
+                </p>
+              </div>
+              <a class="btn btn--primary" href="calculadora.html?seg=condominio"
+                >Calcular o condomínio
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" /></svg
+              ></a>
             </div>
-            <a class="btn btn--primary" href="calculadora.html"
-              >Abrir a calculadora
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M5 12h14M13 6l6 6-6 6" /></svg
-            ></a>
+            <div class="calc-convite calc-convite--destaque" data-reveal="220">
+              <div>
+                <div class="calc-convite__topo">
+                  <span class="calc-convite__ico"
+                    ><svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 9l10-5 10 5-10 5-10-5z" />
+                      <path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5" />
+                      <path d="M22 9v6" /></svg
+                  ></span>
+                  <span class="eyebrow eyebrow--accent"
+                    >Calculadora grátis</span
+                  >
+                </div>
+                <h3>Quanto a sua escola consome por mês?</h3>
+                <p>
+                  Informe o número de alunos e salas e a calculadora estima a
+                  lista mensal, pronta para virar orçamento. Sem cadastro.
+                </p>
+              </div>
+              <a class="btn btn--primary" href="calculadora.html?seg=escola"
+                >Calcular a escola
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" /></svg
+              ></a>
+            </div>
           </div>
         </div>
       </section>
@@ -633,8 +831,8 @@
               </h3>
               <p>
                 Monte a lista uma vez e receba no dia certo, semanal, quinzenal
-                ou mensal. A lista pode mudar a cada entrega e o plano mensal não
-                tem fidelidade.
+                ou mensal. A lista pode mudar a cada entrega e o plano mensal
+                não tem fidelidade.
               </p>
             </div>
             <a class="btn btn--primary" href="recorrencia.html"
@@ -647,9 +845,128 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg></a
-            >
+                <path d="M5 12h14M13 6l6 6-6 6" /></svg
+            ></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CLUBE DE OFERTAS (grupo do WhatsApp) ================= -->
+      <section class="clube-faixa">
+        <div class="wrap">
+          <div class="clube" data-reveal>
+            <div class="clube__texto">
+              <span class="clube__selo"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" />
+                </svg>
+                Clube de Ofertas Polvo</span
+              >
+              <h2>Promoções relâmpago direto no seu WhatsApp</h2>
+              <p>
+                Promoções exclusivas, ofertas relâmpago e oportunidades especiais
+                para nossos clientes, direto no seu celular.
+              </p>
+              <ul class="clube__lista">
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                  Preços exclusivos para quem está no grupo
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                  Ofertas válidas no prazo informado ou enquanto durar o estoque
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                  Retire na loja ou peça por app de entrega
+                </li>
+              </ul>
+              <a
+                class="btn btn--wpp"
+                href="https://chat.whatsapp.com/C8QtrJiOFjTISmCfH4oOnW"
+                data-grupo
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"
+                  />
+                </svg>
+                Entrar no grupo de ofertas</a
+              >
+              <p class="clube__nota">Grátis e sem conversa paralela: só a loja envia mensagens.</p>
+            </div>
+            <div class="clube__cartao" aria-hidden="true">
+              <div class="clube__topo">
+                <img
+                  src="assets/img/logo-mark.svg"
+                  alt=""
+                  width="44"
+                  height="44"
+                />
+                <div>
+                  <strong>Clube de Ofertas Polvo</strong>
+                  <span>Grupo no WhatsApp</span>
+                </div>
+              </div>
+              <div class="clube__msg">
+                <b
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" />
+                  </svg>
+                  Promoção relâmpago</b
+                >
+                Ofertas novas no grupo, válidas até sábado.
+              </div>
+              <div class="clube__msg">
+                <b>Exclusivo para membros</b>
+                Ao retirar na loja, avise que é do grupo.
+              </div>
+              <div class="clube__msg clube__msg--preco">
+                <span>de <s>R$ 33,90</s></span>
+                <strong>por R$ 24,90</strong>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -849,60 +1166,158 @@
             <h2>Antes de fazer o primeiro pedido</h2>
           </div>
           <div data-reveal="80">
-          <div class="faq-item">
-            <button class="faq-q" aria-expanded="false" aria-controls="faq-a-1">
-              Qual é o pedido mínimo?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <div class="faq-a" id="faq-a-1">
-              <p>O pedido mínimo é de <b data-site="pedidoMinimo">R$ 300,00</b> em produtos. Abaixo disso conseguimos atender apenas com retirada no balcão das lojas.</p>
+            <div class="faq-item">
+              <button
+                class="faq-q"
+                aria-expanded="false"
+                aria-controls="faq-a-1"
+              >
+                Qual é o pedido mínimo?
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div class="faq-a" id="faq-a-1">
+                <p>
+                  O pedido mínimo é de
+                  <b data-site="pedidoMinimo">R$ 300,00</b> em produtos. Abaixo
+                  disso conseguimos atender apenas com retirada no balcão das
+                  lojas.
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" aria-expanded="false" aria-controls="faq-a-2">
-              Preciso ter CNPJ para comprar?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <div class="faq-a" id="faq-a-2">
-              <p>Não. Também vendemos para pessoa física, respeitado o pedido mínimo. Com CNPJ você acessa condições melhores de prazo e a nota sai com os impostos destacados para crédito.</p>
+            <div class="faq-item">
+              <button
+                class="faq-q"
+                aria-expanded="false"
+                aria-controls="faq-a-2"
+              >
+                Preciso ter CNPJ para comprar?
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div class="faq-a" id="faq-a-2">
+                <p>
+                  Não. Também vendemos para pessoa física, respeitado o pedido
+                  mínimo. Com CNPJ você acessa condições melhores de prazo e a
+                  nota sai com os impostos destacados para crédito.
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" aria-expanded="false" aria-controls="faq-a-3">
-              Quais são as formas de pagamento?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <div class="faq-a" id="faq-a-3">
-              <p>Pix, dinheiro, cartão de débito e crédito na entrega. Para clientes recorrentes com CNPJ, trabalhamos com boleto faturado a prazo após análise de cadastro.</p>
+            <div class="faq-item">
+              <button
+                class="faq-q"
+                aria-expanded="false"
+                aria-controls="faq-a-3"
+              >
+                Quais são as formas de pagamento?
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div class="faq-a" id="faq-a-3">
+                <p>
+                  Pix, dinheiro, cartão de débito e crédito na entrega. Para
+                  clientes recorrentes com CNPJ, trabalhamos com boleto faturado
+                  a prazo após análise de cadastro.
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" aria-expanded="false" aria-controls="faq-a-4">
-              Em quanto tempo a entrega chega?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <div class="faq-a" id="faq-a-4">
-              <p>Em Porto Alegre, o prazo médio é de 24 horas úteis após a confirmação do pedido, em rota própria. Para a Região Metropolitana, combinamos a data conforme a rota da semana — normalmente de 2 a 4 dias úteis.</p>
+            <div class="faq-item">
+              <button
+                class="faq-q"
+                aria-expanded="false"
+                aria-controls="faq-a-4"
+              >
+                Em quanto tempo a entrega chega?
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div class="faq-a" id="faq-a-4">
+                <p>
+                  Em Porto Alegre, o prazo médio é de 24 horas úteis após a
+                  confirmação do pedido, em rota própria. Para a Região
+                  Metropolitana, combinamos a data conforme a rota da semana —
+                  normalmente de 2 a 4 dias úteis.
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" aria-expanded="false" aria-controls="faq-a-5">
-              Vocês vendem por unidade ou só caixa fechada?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <div class="faq-a" id="faq-a-5">
-              <p>O preço de atacado vale para caixa fechada, que é como o catálogo está montado. Alguns itens saem fracionados, com valor diferente — consulte o vendedor antes de fechar a lista.</p>
+            <div class="faq-item">
+              <button
+                class="faq-q"
+                aria-expanded="false"
+                aria-controls="faq-a-5"
+              >
+                Vocês vendem por unidade ou só caixa fechada?
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div class="faq-a" id="faq-a-5">
+                <p>
+                  O preço de atacado vale para caixa fechada, que é como o
+                  catálogo está montado. Alguns itens saem fracionados, com
+                  valor diferente — consulte o vendedor antes de fechar a lista.
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" aria-expanded="false" aria-controls="faq-a-6">
-              Os produtos têm registro na Anvisa?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <div class="faq-a" id="faq-a-6">
-              <p>Sim. Todo saneante que distribuímos é notificado ou registrado na Anvisa, com rótulo dentro da norma e ficha técnica disponível mediante solicitação.</p>
+            <div class="faq-item">
+              <button
+                class="faq-q"
+                aria-expanded="false"
+                aria-controls="faq-a-6"
+              >
+                Os produtos têm registro na Anvisa?
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div class="faq-a" id="faq-a-6">
+                <p>
+                  Sim. Todo saneante que distribuímos é notificado ou registrado
+                  na Anvisa, com rótulo dentro da norma e ficha técnica
+                  disponível mediante solicitação.
+                </p>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </section>
@@ -930,9 +1345,8 @@
                 Falar no WhatsApp
               </a>
               <a
-                class="btn btn--ghost"
+                class="btn btn--vazado"
                 href="contato.html"
-                style="border-color: rgba(255, 255, 255, 0.5); color: #fff"
               >
                 Preencher formulário
               </a>
@@ -941,31 +1355,90 @@
 
           <div class="info-card onde" data-reveal="80">
             <div class="info-item">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/></svg></span>
+              <span class="ico"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"
+                  />
+                  <circle cx="12" cy="10.5" r="2.8" /></svg
+              ></span>
               <div>
                 <b>Unidade Medianeira</b>
                 <p data-endereco-full>Av. Dr. Carlos Barbosa, 931</p>
               </div>
             </div>
             <div class="info-item">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/></svg></span>
+              <span class="ico"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"
+                  />
+                  <circle cx="12" cy="10.5" r="2.8" /></svg
+              ></span>
               <div>
                 <b>Unidade Bento Gonçalves</b>
                 <p data-endereco2-full>Av. Bento Gonçalves, 5928</p>
               </div>
             </div>
             <div class="info-item">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h13v10H1zM14 10h4l3 3v4h-7"/><circle cx="5.5" cy="18.5" r="1.8"/><circle cx="17.5" cy="18.5" r="1.8"/></svg></span>
+              <span class="ico"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 7h13v10H1zM14 10h4l3 3v4h-7" />
+                  <circle cx="5.5" cy="18.5" r="1.8" />
+                  <circle cx="17.5" cy="18.5" r="1.8" /></svg
+              ></span>
               <div>
                 <b>Entrega própria</b>
-                <p><span data-site="raioEntrega">Porto Alegre e Região Metropolitana</span></p>
+                <p>
+                  <span data-site="raioEntrega"
+                    >Porto Alegre e Região Metropolitana</span
+                  >
+                </p>
               </div>
             </div>
             <div class="info-item">
-              <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+              <span class="ico"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3.5 2" /></svg
+              ></span>
               <div>
                 <b>Atendimento</b>
-                <p><span data-site="horarioSemana">Segunda a sexta, 08h às 18h</span><br /><span data-site="horarioSabado">Sábado, 09h às 15h</span></p>
+                <p>
+                  <span data-site="horarioSemana"
+                    >Segunda a sexta, 08h às 18h</span
+                  ><br /><span data-site="horarioSabado"
+                    >Sábado, 09h às 15h</span
+                  >
+                </p>
               </div>
             </div>
           </div>
@@ -1040,6 +1513,7 @@
                 </svg>
               </a>
             </div>
+            <a class="footer-grupo" data-grupo href="https://chat.whatsapp.com/C8QtrJiOFjTISmCfH4oOnW" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg> Grupo de ofertas no WhatsApp</a>
           </div>
 
           <div>
