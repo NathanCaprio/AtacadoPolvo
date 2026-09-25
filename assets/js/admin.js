@@ -280,6 +280,11 @@
         () => agir(() => window.API.pedir(`/api/admin/orcamentos/${o.id}`,
           { metodo: 'PATCH', corpo: { situacao: 'perdido' } }))));
     }
+    caixa.append(botao('Excluir', 'btn--perigo', () => {
+      if (!confirm(`Excluir o orçamento de ${o.cliente_nome || 'visitante'}? Isso não tem volta.`)) return;
+      agir(() => window.API.pedir(`/api/admin/orcamentos/${o.id}`, { metodo: 'DELETE' }),
+        'Orçamento excluído.');
+    }));
     tdAcoes.append(caixa);
     tr.append(tdAcoes);
     return tr;

@@ -161,36 +161,33 @@
     </button>
   </div>
 
-  <div class="drawer-body" id="drawer-body"></div>
-
-  <!-- Estado de "enviado". Aparece no lugar da lista depois que o WhatsApp
-       abre: antes disso não havia retorno nenhum, e a gaveta continuava
-       idêntica, como se nada tivesse acontecido. O convite para criar conta
-       fica aqui porque é o único momento em que ela tem motivo — a pessoa
-       acabou de fazer um pedido e pode querer acompanhar o próximo. -->
-  <div class="drawer-enviado" id="drawer-enviado" hidden>
-    <span class="enviado-ico">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-    </span>
-    <h3>Pedido enviado</h3>
-    <p>Abrimos o WhatsApp com sua lista já escrita. É só apertar enviar —
-       respondemos com a cotação no mesmo dia útil.</p>
-
-    <div class="enviado-conta" id="enviado-conta" hidden>
-      <p class="enviado-conta-titulo">Quer acompanhar este e os próximos pedidos?</p>
-      <p class="enviado-conta-texto">
-        Com uma conta você vê a situação de cada orçamento que pediu, sem
-        precisar procurar na conversa.
-      </p>
-      <a class="btn btn--primary btn--sm btn--block" href="entrar.html?novo=1">
-        Criar minha conta
-      </a>
+  <!-- Aviso de "enviado". Fica no topo, ACIMA da lista, que continua
+       visível: esconder os itens dava a impressão de carrinho apagado. Some
+       sozinho quando a lista muda. O convite de conta fica aqui porque é o
+       único momento em que ela tem motivo. -->
+  <div class="drawer-enviado" id="drawer-enviado" role="status" hidden>
+    <div class="enviado-topo">
+      <span class="enviado-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </span>
+      <div class="enviado-txt">
+        <h3>Lista enviada para o WhatsApp</h3>
+        <p>É só apertar enviar na conversa. Seus itens continuam abaixo para
+           ajustar ou reenviar.
+           <button type="button" class="enviado-link" id="drawer-reabrir">O WhatsApp não abriu?</button></p>
+      </div>
+      <button class="enviado-fechar" id="drawer-voltar" aria-label="Fechar aviso">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </div>
 
-    <button class="btn btn--ghost btn--sm btn--block" id="drawer-voltar" style="margin-top:12px">
-      Voltar para a lista
-    </button>
+    <p class="enviado-conta" id="enviado-conta" hidden>
+      Quer acompanhar este e os próximos pedidos?
+      <a href="entrar.html?novo=1">Criar minha conta</a>
+    </p>
   </div>
+
+  <div class="drawer-body" id="drawer-body"></div>
 
   <div class="drawer-foot" id="drawer-foot">
 

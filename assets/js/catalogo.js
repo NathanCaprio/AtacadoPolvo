@@ -176,6 +176,8 @@
   }
 
   function sincronizar() {
+    // Mexeu na lista depois de enviar: o aviso já não descreve o que está ali.
+    mostrarEnviado(false);
     salvar();
     atualizarFab();
     renderDrawer();
@@ -226,18 +228,15 @@
       : { nome: nome.trim(), tel: bruto };
   }
 
-  /* Alterna entre a lista e a confirmação dentro da gaveta. A lista NÃO é
-     apagada: o pedido ainda não foi aceito pela loja, e quem fecha o
-     WhatsApp sem enviar precisa reencontrar o que tinha montado. */
+  /* Mostra/esconde o aviso de envio no topo da gaveta. A lista NÃO é
+     apagada nem escondida: o pedido ainda não foi aceito pela loja, e quem
+     fecha o WhatsApp sem enviar precisa ver que os itens continuam ali. */
+  let ultimaMsg = '';
   function mostrarEnviado(mostrar) {
     const enviado = $('#drawer-enviado');
-    const corpo = $('#drawer-body');
-    const pe = $('#drawer-foot');
     if (!enviado) return;
 
     enviado.hidden = !mostrar;
-    if (corpo) corpo.hidden = mostrar;
-    if (pe) pe.hidden = mostrar;
 
     // O convite de conta só faz sentido para quem não tem uma. Sem backend
     // (HTML aberto do disco) ele nem aparece: levaria a uma tela que não
@@ -264,9 +263,12 @@
     const cupom = window.cupomGuardado ? window.cupomGuardado() : null;
     const msg = `Olá! Gostaria de um orçamento dos itens abaixo:\n\n${linhas}\n\nPedido mínimo: ${s.pedidoMinimo || ''}` +
                 (cupom ? `\nCupom de primeira compra: ${cupom}` : '');
+    ultimaMsg = msg;
     window.open(window.linkWhatsApp(msg), '_blank', 'noopener');
 
     mostrarEnviado(true);
+    const topo = $('#drawer-enviado');
+    if (topo) topo.scrollIntoView({ block: 'nearest' });
   }
 
   /* ---- Eventos ------------------------------------------------------------ */
@@ -316,6 +318,12 @@
 
   const voltar = $('#drawer-voltar');
   if (voltar) voltar.addEventListener('click', () => mostrarEnviado(false));
+
+  // Pop-up bloqueado ou aba fechada sem querer: reabre a mesma mensagem.
+  const reabrir = $('#drawer-reabrir');
+  if (reabrir) reabrir.addEventListener('click', () => {
+    if (ultimaMsg) window.open(window.linkWhatsApp(ultimaMsg), '_blank', 'noopener');
+  });
 
   const limpar = $('#drawer-limpar');
   if (limpar) limpar.addEventListener('click', () => {

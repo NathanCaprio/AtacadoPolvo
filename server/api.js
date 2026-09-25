@@ -22,6 +22,7 @@
      DELETE /api/admin/clientes/:id    remove cliente
      GET    /api/admin/orcamentos      todos os orçamentos
      PATCH  /api/admin/orcamentos/:id  muda a situação
+     DELETE /api/admin/orcamentos/:id  exclui o orçamento
      GET    /api/admin/mensagens       todas as mensagens
      PATCH  /api/admin/mensagens/:id   marca lida / não lida
      POST   /api/admin/clientes/:id/recuperacao   gera link de redefinição
@@ -682,6 +683,15 @@ async function editarOrcamento(req, res, id) {
   json(res, 200, { id, situacao });
 }
 
+/* Exclui de vez — para teste, duplicado ou spam. "Perdido" continua sendo o
+   caminho para pedido real que não fechou, porque mantém o histórico.   */
+function excluirOrcamento(req, res, id) {
+  if (!exigirAdmin(req, res)) return;
+  const r = db.prepare('DELETE FROM orcamentos WHERE id = ?').run(id);
+  if (!r.changes) return erro(res, 404, 'Orçamento não encontrado.');
+  res.writeHead(204); res.end();
+}
+
 function listarMensagens(req, res) {
   if (!exigirAdmin(req, res)) return;
   json(res, 200, {
@@ -889,6 +899,7 @@ const ROTAS = [
 
   ['GET',    /^\/api\/admin\/orcamentos$/,        (rq, rs) => listarOrcamentos(rq, rs)],
   ['PATCH',  /^\/api\/admin\/orcamentos\/(\d+)$/, (rq, rs, m) => editarOrcamento(rq, rs, +m[1])],
+  ['DELETE', /^\/api\/admin\/orcamentos\/(\d+)$/, (rq, rs, m) => excluirOrcamento(rq, rs, +m[1])],
   ['GET',    /^\/api\/admin\/mensagens$/,         (rq, rs) => listarMensagens(rq, rs)],
   ['PATCH',  /^\/api\/admin\/mensagens\/(\d+)$/,  (rq, rs, m) => editarMensagem(rq, rs, +m[1])],
 

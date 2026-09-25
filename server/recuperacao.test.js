@@ -685,3 +685,40 @@ describe('trava de produção', () => {
     }
   });
 });
+
+/* ---- Excluir orçamento (admin) --------------------------------------------- */
+
+describe('excluir orçamento', () => {
+  const ITENS = [{ id: 'c01', nome: 'Detergente Neutro 500ml', caixa: 'Caixa com 24 un.', qtd: 1 }];
+
+  async function comoAdmin() {
+    const admin = await novaConta();
+    promover(admin.email);
+    await admin.req('/api/auth/entrar', {
+      metodo: 'POST', corpo: { email: admin.email, senha: admin.senha }
+    });
+    return admin.req;
+  }
+
+  async function novoOrcamento() {
+    const r = await criarCliente()('/api/orcamentos', { metodo: 'POST', corpo: { itens: ITENS } });
+    return r.dados.id;
+  }
+
+  test('sem login é 401 e cliente comum é 403', async () => {
+    const id = await novoOrcamento();
+    assert.equal((await criarCliente()(`/api/admin/orcamentos/${id}`, { metodo: 'DELETE' })).status, 401);
+    const { req } = await novaConta();
+    assert.equal((await req(`/api/admin/orcamentos/${id}`, { metodo: 'DELETE' })).status, 403);
+  });
+
+  test('admin exclui e o orçamento some da lista', async () => {
+    const req = await comoAdmin();
+    const id = await novoOrcamento();
+
+    assert.equal((await req(`/api/admin/orcamentos/${id}`, { metodo: 'DELETE' })).status, 204);
+    const lista = await req('/api/admin/orcamentos');
+    assert.ok(!lista.dados.orcamentos.some(o => o.id === id));
+    assert.equal((await req(`/api/admin/orcamentos/${id}`, { metodo: 'DELETE' })).status, 404);
+  });
+});

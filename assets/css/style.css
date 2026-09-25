@@ -4388,61 +4388,85 @@ textarea.input {
   }
 }
 
-/* Confirmação de envio, dentro da gaveta de orçamento. */
+/* Aviso de envio no topo da gaveta; a lista continua visível abaixo. */
 .drawer-enviado {
-  padding: 32px 20px;
-  text-align: center;
+  margin: 14px 22px 0;
+  padding: 14px;
+  border-radius: var(--r-md, 12px);
+  background: var(--ok-soft);
 }
 .drawer-enviado[hidden] {
   display: none;
 }
+.enviado-topo {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
 .enviado-ico {
-  width: 52px;
-  height: 52px;
-  margin: 0 auto 16px;
+  flex: none;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
   border-radius: var(--r-full);
-  background: var(--ok-soft);
-  color: var(--ok);
+  background: var(--ok);
+  color: #fff;
 }
 .enviado-ico svg {
-  width: 26px;
-  height: 26px;
+  width: 18px;
+  height: 18px;
+}
+.enviado-txt {
+  flex: 1;
 }
 .drawer-enviado h3 {
-  font-size: 1.15rem;
-  margin-bottom: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
 }
-.drawer-enviado > p {
-  font-size: 0.9rem;
-  color: var(--ink-3);
-  line-height: 1.6;
-}
-
-/* O convite de conta: separado por uma linha, para ler como oferta e não
-   como parte da confirmação — o pedido já está feito, isto é opcional. */
+.enviado-txt p,
 .enviado-conta {
-  margin-top: 24px;
-  padding-top: 22px;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.enviado-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--ok);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.enviado-fechar {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  color: var(--ink-3);
+  cursor: pointer;
+  border-radius: var(--r-full);
+}
+.enviado-fechar svg {
+  width: 16px;
+  height: 16px;
+}
+.enviado-conta {
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid var(--line);
-  text-align: left;
 }
 .enviado-conta[hidden] {
   display: none;
 }
-.enviado-conta-titulo {
-  font-family: var(--font-display);
+.enviado-conta a {
   font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--ink);
-  margin-bottom: 6px;
-}
-.enviado-conta-texto {
-  font-size: 0.85rem;
-  color: var(--ink-3);
-  line-height: 1.6;
-  margin-bottom: 14px;
+  color: var(--ok);
 }
 
 /* PEDIDO RECORRENTE (recorrencia.html) ==================================== */
