@@ -68,6 +68,11 @@ window.SITE = {
   descontoSemestral: '8%',                 // CONFERIR
   descontoAnual: '12%',                    // CONFERIR
 
+  // --- Cupom de primeira compra (pop-up, assets/js/cupom.js) ---------------
+  // O código é gerado pelo servidor; aqui só o que é anunciado ao cliente.
+  cupomDesconto: '5%',                     // CONFERIR
+  cupomAtivo: true,                        // false desliga o pop-up no site todo
+
   // Mensagem padrão aberta no WhatsApp quando data-wpp vem vazio
   mensagemPadrao: 'Olá! Vim pelo site e gostaria de fazer um orçamento.'
 };

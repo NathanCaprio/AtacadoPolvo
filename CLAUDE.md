@@ -31,6 +31,7 @@ npm run backup | backups | exportar | restaurar
 | Descontos dos planos recorrentes | `assets/js/config.js` (`descontoMensal/Semestral/Anual`) + números escritos em `recorrencia.html` |
 | Filtros/orçamento do catálogo | `assets/js/catalogo.js` |
 | Formulário de landing (lead) | `assets/js/lead.js` |
+| Pop-up do cupom de 1ª compra | `assets/js/cupom.js` (valor/liga-desliga em `config.js`; rota `POST /api/cupom`) |
 | Rotas/validação/rate limit da API | `server/api.js` |
 | Senha (scrypt), sessão, cookie | `server/auth.js` |
 | Schema SQLite / migrações | `server/db.js` (banco em `dados/polvo.db`) |

@@ -87,6 +87,7 @@
     restaurante: 'Restaurantes',
     hotel: 'Hotéis',
     pet: 'Pet shops e veterinárias',
+    revenda: 'Mercados e revenda',
     outros: 'Sem segmento'
   };
 
@@ -94,6 +95,7 @@
     landing: 'Páginas de segmento',
     calculadora: 'Calculadora de consumo',
     recorrencia: 'Pedido recorrente',
+    cupom: 'Pop-up de cupom',
     contato: 'Formulário de contato',
     orcamento: 'Lista de orçamento',
     rodape: 'Rodapé'
@@ -305,6 +307,8 @@
     if (m.origem === 'landing') {
       selos.append(el('span', 'selo selo--landing', 'veio da landing'));
     }
+    // O vendedor confere este código antes de aplicar o desconto na proposta.
+    if (m.cupom) selos.append(el('span', 'selo selo--cupom', 'cupom ' + m.cupom));
     // O aceite da política é o que a auditoria de administradora e de escola
     // pede. Sem carimbo, o selo avisa — pode ser lead antigo, de antes do
     // checkbox existir.

@@ -42,7 +42,7 @@
 <header class="header">
   <div class="wrap">
     <a class="brand" href="index.html">
-      <img src="assets/img/logo-head.svg" alt="" width="40" height="40">
+      <img src="assets/img/logo-head.svg?v=3" alt="" width="63" height="40">
       <span class="brand-txt">
         <span>Atacado da Limpeza</span>
         <b>Polvo</b>
@@ -111,18 +111,28 @@
           no prazo em cidade grande.
         </p>
         <p>
-          Hoje operamos com estoque próprio, frota própria e uma carteira de centenas de
-          clientes ativos. Mudou a escala. Não mudou a regra: quem liga é atendido, e quem
-          compra recebe.
+          Hoje são duas lojas em Porto Alegre, na Medianeira e na Av. Bento Gonçalves,
+          com estoque próprio, frota própria e uma carteira de centenas de clientes ativos.
+          Mudou a escala. Não mudou a regra: quem liga é atendido, e quem compra recebe.
         </p>
       </div>
 
-      <figure class="media-foto" data-reveal="120">
-        <img src="assets/img/loja/medianeira-fachada.webp"
-             alt="Fachada da unidade Medianeira, na Av. Dr. Carlos Barbosa: letreiro Atacado da Limpeza e produtos expostos na calçada"
-             width="680" height="510" loading="lazy" decoding="async">
-        <figcaption>A unidade da Av. Dr. Carlos Barbosa, na Medianeira.</figcaption>
-      </figure>
+      <!-- As duas fachadas lado a lado em peso: com uma só, a outra unidade
+           parecia filial de segunda. -->
+      <div class="fachadas" data-reveal="120">
+        <figure class="media-foto">
+          <img src="assets/img/loja/medianeira-fachada.webp"
+               alt="Fachada da unidade Medianeira, na Av. Dr. Carlos Barbosa: letreiro Atacado da Limpeza e produtos expostos na calçada"
+               width="680" height="510" loading="lazy" decoding="async">
+          <figcaption><b>Unidade Medianeira</b> Av. Dr. Carlos Barbosa, 931</figcaption>
+        </figure>
+        <figure class="media-foto">
+          <img src="assets/img/loja/bento-fachada.webp"
+               alt="Fachada da unidade Bento Gonçalves: letreiro Atacado da Limpeza com o WhatsApp da loja e produtos expostos na entrada"
+               width="680" height="510" loading="lazy" decoding="async">
+          <figcaption><b>Unidade Bento Gonçalves</b> Av. Bento Gonçalves, 5928</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -139,7 +149,12 @@
         das duas unidades, em Porto Alegre.</p>
       </div>
 
-      <h3 class="galeria-titulo">Unidade Medianeira <span>Av. Dr. Carlos Barbosa, 931</span></h3>
+      <h3 class="galeria-titulo">Unidade Medianeira <span>Av. Dr. Carlos Barbosa, 931</span>
+        <a class="galeria-rota" href="https://www.google.com/maps/dir/?api=1&amp;destination=-30.0637028,-51.2148319"
+           target="_blank" rel="noopener">Como chegar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </h3>
       <div class="galeria" data-reveal="60">
         <figure class="galeria-item">
           <img src="assets/img/loja/medianeira-salao.webp"
@@ -173,7 +188,12 @@
         </figure>
       </div>
 
-      <h3 class="galeria-titulo">Unidade Bento Gonçalves <span>Av. Bento Gonçalves, 5928</span></h3>
+      <h3 class="galeria-titulo">Unidade Bento Gonçalves <span>Av. Bento Gonçalves, 5928</span>
+        <a class="galeria-rota" href="https://www.google.com/maps/dir/?api=1&amp;destination=-30.0645425,-51.1590458"
+           target="_blank" rel="noopener">Como chegar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </h3>
       <div class="galeria" data-reveal="60">
         <figure class="galeria-item galeria-item--larga">
           <img src="assets/img/loja/bento-vassouras.webp"
@@ -346,7 +366,7 @@
     <div class="footer-grid">
       <div class="footer-about">
         <a class="brand" href="index.html">
-          <img src="assets/img/logo-head.svg" alt="" width="40" height="40">
+          <img src="assets/img/logo-head.svg?v=3" alt="" width="63" height="40">
           <span class="brand-txt">
             <span>Atacado da Limpeza</span>
             <b>Polvo</b>
@@ -432,6 +452,7 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/cupom.js"></script>
 <script src="assets/js/auth.js"></script>
 </body>
 </html>

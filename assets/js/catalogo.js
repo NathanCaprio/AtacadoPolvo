@@ -260,7 +260,10 @@
     registrar(itens, contato);
 
     const linhas = itens.map(i => `• ${i.nome} — ${i.qtd}x (${i.caixa})`).join('\n');
-    const msg = `Olá! Gostaria de um orçamento dos itens abaixo:\n\n${linhas}\n\nPedido mínimo: ${s.pedidoMinimo || ''}`;
+    // Cupom pedido no pop-up (cupom.js) vai junto, para o vendedor conferir.
+    const cupom = window.cupomGuardado ? window.cupomGuardado() : null;
+    const msg = `Olá! Gostaria de um orçamento dos itens abaixo:\n\n${linhas}\n\nPedido mínimo: ${s.pedidoMinimo || ''}` +
+                (cupom ? `\nCupom de primeira compra: ${cupom}` : '');
     window.open(window.linkWhatsApp(msg), '_blank', 'noopener');
 
     mostrarEnviado(true);

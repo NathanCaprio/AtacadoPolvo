@@ -82,6 +82,7 @@ before(async () => {
       LIMITE_LOGIN: '500',
       LIMITE_ORCAMENTO: '500',
       LIMITE_MENSAGEM: '500',
+      LIMITE_CUPOM: '500',
       // O servidor faz um backup no boot; aqui ele só sujaria backups/ com
       // cópias do banco de teste. O backup tem testes próprios.
       BACKUP_AUTO: '0'
@@ -359,6 +360,51 @@ describe('mensagens de contato', () => {
     const r = await criarCliente()('/api/mensagens', {
       metodo: 'POST', corpo: { ...VALIDA, mensagem: '' }
     });
+    assert.equal(r.status, 400);
+  });
+});
+
+describe('cupom de primeira compra', () => {
+  const VALIDO = {
+    nome: 'Marcos', whatsapp: '(51) 99876-5432', segmento: 'revenda', aceite: true
+  };
+  const pedir = corpo => criarCliente()('/api/cupom', { metodo: 'POST', corpo });
+
+  test('gera um código novo', async () => {
+    const r = await pedir(VALIDO);
+    assert.equal(r.status, 201);
+    assert.equal(r.dados.novo, true);
+    assert.match(r.dados.cupom, /^POLVO-[A-HJ-NP-Z2-9]{5}$/);
+  });
+
+  test('mesmo WhatsApp, mesmo cupom — mesmo escrito de outro jeito', async () => {
+    const a = await pedir({ ...VALIDO, whatsapp: '51 3333-4444' });
+    const b = await pedir({ ...VALIDO, whatsapp: '+55 (51) 3333-4444', nome: 'Outro' });
+    assert.equal(a.status, 201);
+    assert.equal(b.status, 200);
+    assert.equal(b.dados.novo, false);
+    assert.equal(b.dados.cupom, a.dados.cupom);
+  });
+
+  test('recusa WhatsApp sem DDD', async () => {
+    const r = await pedir({ ...VALIDO, whatsapp: '99876-5432' });
+    assert.equal(r.status, 400);
+  });
+
+  test('recusa número de fachada', async () => {
+    for (const whatsapp of ['(00) 00000-0000', '(51) 99999-9999', '(51) 3333-333', '(51) 81234-5678']) {
+      const r = await pedir({ ...VALIDO, whatsapp });
+      assert.equal(r.status, 400, whatsapp);
+    }
+  });
+
+  test('recusa segmento fora da lista', async () => {
+    const r = await pedir({ ...VALIDO, whatsapp: '51 98888-1111', segmento: 'qualquer' });
+    assert.equal(r.status, 400);
+  });
+
+  test('recusa sem aceite da política', async () => {
+    const r = await pedir({ ...VALIDO, whatsapp: '51 98888-2222', aceite: false });
     assert.equal(r.status, 400);
   });
 });

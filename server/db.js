@@ -149,6 +149,13 @@ function migrar() {
   if (!m.includes('aceite_em')) {
     db.exec('ALTER TABLE mensagens ADD COLUMN aceite_em TEXT');
   }
+  // Cupom de primeira compra (pop-up do site). Único: o vendedor confere o
+  // código no painel antes de aplicar o desconto.
+  if (!m.includes('cupom')) {
+    db.exec('ALTER TABLE mensagens ADD COLUMN cupom TEXT');
+  }
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_msg_cupom
+             ON mensagens(cupom) WHERE cupom IS NOT NULL`);
 
   const o = colunas('orcamentos');
   for (const coluna of ['contato_nome', 'contato_email', 'contato_tel', 'aceite_em']) {

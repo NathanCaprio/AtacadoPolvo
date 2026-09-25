@@ -33,6 +33,7 @@
 'use strict';
 
 const { StringDecoder } = require('node:string_decoder');
+const crypto = require('node:crypto');
 const { db } = require('./db');
 const auth = require('./auth');
 
@@ -77,9 +78,9 @@ const texto = v => (typeof v === 'string' ? v.trim() : '');
 // Valores aceitos em mensagens.origem / mensagens.segmento. São listas
 // fechadas de propósito: o campo vem do navegador e alimenta relatório.
 const ORIGENS = ['contato', 'landing', 'orcamento', 'rodape', 'calculadora',
-                 'recorrencia'];
+                 'recorrencia', 'cupom'];
 const SEGMENTOS = ['condominio', 'escola', 'empresa', 'residencial',
-                   'restaurante', 'hotel', 'pet'];
+                   'restaurante', 'hotel', 'pet', 'revenda'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
 function validarCadastro(c) {
@@ -118,6 +119,7 @@ const TETO = {
   cadastro: Number(process.env.LIMITE_CADASTRO) || 5,
   orcamento: Number(process.env.LIMITE_ORCAMENTO) || 20,
   mensagem: Number(process.env.LIMITE_MENSAGEM) || 10,
+  cupom: Number(process.env.LIMITE_CUPOM) || 5,
   recuperacao: Number(process.env.LIMITE_RECUPERACAO) || 5
 };
 
@@ -513,6 +515,76 @@ async function criarMensagem(req, res, ip) {
   json(res, 201, { id: Number(r.lastInsertRowid) });
 }
 
+/* Cupom de primeira compra, pedido pelo pop-up do site. Só nome, WhatsApp e
+   segmento — o lead entra em mensagens (origem 'cupom') para cair no mesmo
+   painel. O desconto em si não mora aqui: o vendedor confere o código no
+   painel e aplica na proposta; o valor anunciado fica em config.js.        */
+
+// Sem 0/O e 1/I: o código é ditado por telefone e digitado no WhatsApp.
+const ALFABETO_CUPOM = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+function gerarCupom() {
+  let s = '';
+  for (let i = 0; i < 5; i++) s += ALFABETO_CUPOM[crypto.randomInt(ALFABETO_CUPOM.length)];
+  return 'POLVO-' + s;
+}
+
+/** Só dígitos, sem o 55 do Brasil. Aceita fixo (10) e celular (11).
+    DDD não tem zero, celular começa com 9 e número repetido (00000-0000,
+    99999-9999) é preenchimento de fachada, não contato.                  */
+function normalizarWhats(v) {
+  let d = texto(v).replace(/\D/g, '');
+  if ((d.length === 12 || d.length === 13) && d.startsWith('55')) d = d.slice(2);
+  if (d.length !== 10 && d.length !== 11) return null;
+  if (!/^[1-9]{2}/.test(d)) return null;
+  if (d.length === 11 && d[2] !== '9') return null;
+  if (/^(\d)\1+$/.test(d.slice(2))) return null;
+  return d;
+}
+
+async function criarCupom(req, res, ip) {
+  if (!limitar(ip, 'cupom', TETO.cupom, 60 * 60 * 1000)) {
+    return erro(res, 429, 'Muitos pedidos. Tente de novo mais tarde.');
+  }
+  const b = await lerJson(req, 8 * 1024);
+  const nome = texto(b.nome).slice(0, 120);
+  const whats = normalizarWhats(b.whatsapp);
+  const segmento = texto(b.segmento);
+  const marcou = b.aceite === true || b.aceite === 'on' || b.aceite === '1' || b.aceite === 1;
+
+  if (nome.length < 2) return erro(res, 400, 'Informe seu nome.');
+  if (!whats) return erro(res, 400, 'WhatsApp inválido. Use DDD + número.');
+  if (!SEGMENTOS.includes(segmento)) return erro(res, 400, 'Escolha o seu segmento.');
+  if (!marcou) return erro(res, 400, 'É preciso aceitar a política de privacidade.');
+
+  // Um cupom por WhatsApp: quem pede de novo recebe o mesmo código, em vez
+  // de colecionar descontos de "primeira" compra.
+  const ja = db.prepare(`
+    SELECT cupom FROM mensagens WHERE origem = 'cupom' AND telefone = ? LIMIT 1
+  `).get(whats);
+  if (ja) return json(res, 200, { cupom: ja.cupom, novo: false });
+
+  const inserir = db.prepare(`
+    INSERT INTO mensagens (cliente_id, nome, email, telefone, mensagem,
+                           origem, segmento, cupom, aceite_em)
+    VALUES (?, ?, '', ?, ?, 'cupom', ?, ?, datetime('now'))
+  `);
+  const c = clienteAtual(req);
+  // Colisão é improvável (32^5 ≈ 33 mi), mas o índice único é quem manda.
+  for (let tentativa = 0; tentativa < 5; tentativa++) {
+    const cupom = gerarCupom();
+    try {
+      inserir.run(c ? c.id : null, nome, whats,
+                  `Pediu o cupom de primeira compra ${cupom} pelo pop-up do site.`,
+                  segmento, cupom);
+      return json(res, 201, { cupom, novo: true });
+    } catch (e) {
+      if (!/UNIQUE/i.test(e.message)) throw e;
+    }
+  }
+  erro(res, 500, 'Não foi possível gerar o cupom. Tente de novo.');
+}
+
 /** Orçamentos do próprio cliente logado. */
 function meusOrcamentos(req, res) {
   const c = clienteAtual(req);
@@ -615,7 +687,7 @@ function listarMensagens(req, res) {
   json(res, 200, {
     mensagens: db.prepare(`
       SELECT id, nome, email, telefone, empresa, cnpj, assunto, mensagem,
-             origem, segmento, aceite_em, lida, criado_em
+             origem, segmento, cupom, aceite_em, lida, criado_em
         FROM mensagens ORDER BY criado_em DESC LIMIT 200
     `).all()
   });
@@ -721,14 +793,16 @@ const CSV = {
   mensagens: {
     arquivo: 'leads',
     cabecalho: ['id', 'data', 'origem', 'segmento', 'nome', 'email', 'telefone',
-                'empresa', 'cnpj', 'assunto', 'mensagem', 'aceite_em', 'lida'],
+                'empresa', 'cnpj', 'assunto', 'mensagem', 'aceite_em', 'lida',
+                'cupom'],
     linhas: () => db.prepare(`
       SELECT id, criado_em, origem, segmento, nome, email, telefone, empresa,
-             cnpj, assunto, mensagem, aceite_em, lida
+             cnpj, assunto, mensagem, aceite_em, lida, cupom
         FROM mensagens ORDER BY criado_em DESC
     `).all().map(m => [m.id, m.criado_em, m.origem, m.segmento || '', m.nome,
                        m.email, m.telefone, m.empresa, m.cnpj, m.assunto,
-                       m.mensagem, m.aceite_em || '', m.lida ? 'sim' : 'não'])
+                       m.mensagem, m.aceite_em || '', m.lida ? 'sim' : 'não',
+                       m.cupom || ''])
   },
   orcamentos: {
     arquivo: 'orcamentos',
@@ -805,6 +879,7 @@ const ROTAS = [
 
   ['POST',   /^\/api\/orcamentos$/,       (rq, rs, m, ip) => criarOrcamento(rq, rs, ip)],
   ['POST',   /^\/api\/mensagens$/,        (rq, rs, m, ip) => criarMensagem(rq, rs, ip)],
+  ['POST',   /^\/api\/cupom$/,            (rq, rs, m, ip) => criarCupom(rq, rs, ip)],
   ['GET',    /^\/api\/meus\/orcamentos$/, (rq, rs) => meusOrcamentos(rq, rs)],
 
   ['GET',    /^\/api\/admin\/resumo$/,        (rq, rs) => resumo(rq, rs)],

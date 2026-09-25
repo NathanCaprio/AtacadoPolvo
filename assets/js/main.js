@@ -186,7 +186,43 @@
     });
   }
 
-  /* ---- 8. Boot ----------------------------------------------------------- */
+  /* ---- 8. "Meu orçamento" fora do catálogo ------------------------------
+     O catálogo tem o próprio botão (abre a gaveta). Nas outras páginas, se a
+     lista salva tiver itens, o botão aparece e leva ao catálogo já com a
+     gaveta aberta (#orcamento). */
+  function initQuoteFab() {
+    if ($('#quote-fab') || /admin\.html$/.test(location.pathname)) return;
+    let lista = [];
+    try { lista = JSON.parse(localStorage.getItem('ap-orcamento')) || []; } catch (e) { lista = []; }
+    const total = Array.isArray(lista) ? lista.reduce((s, i) => s + (Number(i.qtd) || 0), 0) : 0;
+    if (total <= 0) return;
+
+    const a = document.createElement('a');
+    a.className = 'quote-fab';
+    a.href = 'produtos.html#orcamento';
+    a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.5 11h10L20 7H6"/><circle cx="9" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>'
+      + 'Meu orçamento <span class="badge">' + total + '</span>';
+    document.body.appendChild(a);
+    requestAnimationFrame(() => a.classList.add('is-visible'));
+  }
+
+  /* ---- 8b. Carrossel de marcas (home) -----------------------------------
+     Duplica a lista para o trilho rolar -50% e emendar sem salto. A cópia
+     é aria-hidden: leitor de tela lê cada marca uma vez só. */
+  function initMarcas() {
+    const trilho = $('.marcas-trilho');
+    if (!trilho) return;
+    const lista = $('.marcas-lista', trilho);
+    const copia = lista.cloneNode(true);
+    copia.setAttribute('aria-hidden', 'true');
+    $$('img', copia).forEach(img => { img.alt = ''; });
+    trilho.appendChild(copia);
+    // Velocidade constante por logo, não por volta: mais marcas, volta mais longa.
+    trilho.style.setProperty('--marcas-dur', (lista.children.length * 4) + 's');
+    trilho.closest('.marcas').classList.add('marcas--ativo');
+  }
+
+  /* ---- 9. Boot ----------------------------------------------------------- */
   function init() {
     aplicarConfig();
     initHeader();
@@ -194,6 +230,8 @@
     initReveal();
     initCounters();
     initFaq();
+    initQuoteFab();
+    initMarcas();
 
     const tBtn = $('.theme-toggle');
     if (tBtn) tBtn.addEventListener('click', toggleTheme);
