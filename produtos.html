@@ -192,24 +192,39 @@
   <div class="drawer-foot" id="drawer-foot">
 
     <div class="drawer-contato" id="drawer-contato">
+      <div class="contato-ok" id="oc-ok" hidden role="status">
+        <span class="enviado-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
+        <div>
+          <p class="contato-ok-titulo">Orçamento enviado!</p>
+          <p class="contato-ok-quem" id="oc-ok-quem"></p>
+          <p class="contato-ok-acoes">
+            <button type="button" class="enviado-link" id="oc-reenviar">Reenviar</button>
+            ·
+            <button type="button" class="enviado-link" id="oc-alterar">Alterar dados</button>
+          </p>
+        </div>
+      </div>
+      <div id="oc-form">
       <p class="drawer-contato-titulo">
-        Quer que a gente te retorne? <span class="opt">(opcional)</span>
+        Para quem enviamos o orçamento?
       </p>
       <div class="field">
         <label class="sr-only" for="oc-nome">Seu nome</label>
         <input class="input input--sm" type="text" id="oc-nome" name="nome"
-               autocomplete="name" placeholder="Seu nome">
+               autocomplete="name" placeholder="Seu nome" required>
+        <p class="err"></p>
       </div>
       <div class="field">
-        <label class="sr-only" for="oc-tel">WhatsApp ou e-mail</label>
-        <input class="input input--sm" type="text" id="oc-tel" name="tel"
-               autocomplete="tel" placeholder="WhatsApp ou e-mail">
+        <label class="sr-only" for="oc-tel">WhatsApp com DDD</label>
+        <input class="input input--sm" type="tel" id="oc-tel" name="tel" inputmode="numeric"
+               autocomplete="tel-national" placeholder="WhatsApp: (00) 00000-0000" maxlength="15" required>
         <p class="err"></p>
       </div>
       <p class="drawer-contato-nota">
         Só usamos para responder este orçamento.
         <a href="privacidade.html">Política de privacidade</a>.
       </p>
+      </div>
     </div>
 
     <button class="btn btn--wpp btn--block" id="drawer-enviar">

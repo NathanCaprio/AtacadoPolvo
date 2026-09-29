@@ -73,6 +73,39 @@
 
     <div class="metricas" id="metricas"></div>
 
+    <section class="funil evolucao" id="evolucao" hidden>
+      <div class="evolucao-topo">
+        <div>
+          <h2>Orçamentos por mês</h2>
+          <p class="funil-sub">
+            Quantos pedidos de orçamento chegaram em cada mês. Clique numa
+            barra para comparar aquele mês com o anterior e com o mesmo mês
+            do ano passado.
+          </p>
+        </div>
+        <div class="evolucao-controles">
+          <label>Período
+            <select id="evolucao-periodo">
+              <option value="6">6 meses</option>
+              <option value="12" selected>12 meses</option>
+              <option value="24">24 meses</option>
+            </select>
+          </label>
+          <label>Mostrar
+            <select id="evolucao-medida">
+              <option value="n">Orçamentos</option>
+              <option value="fechados">Fechados</option>
+              <option value="aprovados">Aprovados pelo link</option>
+              <option value="itens">Caixas pedidas</option>
+              <option value="mensagens">Mensagens</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="evolucao-cartoes" id="evolucao-cartoes"></div>
+      <div class="evolucao-grafico" id="evolucao-grafico"></div>
+    </section>
+
     <section class="funil" id="funil" hidden>
       <h2>De onde vêm os pedidos</h2>
       <p class="funil-sub">

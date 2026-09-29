@@ -701,7 +701,7 @@ describe('excluir orçamento', () => {
   }
 
   async function novoOrcamento() {
-    const r = await criarCliente()('/api/orcamentos', { metodo: 'POST', corpo: { itens: ITENS } });
+    const r = await criarCliente()('/api/orcamentos', { metodo: 'POST', corpo: { itens: ITENS, contato: { nome: 'Ana', tel: '11988887777' } } });
     return r.dados.id;
   }
 

@@ -293,10 +293,22 @@ describe('acesso ao admin', () => {
 describe('orçamentos', () => {
   const ITENS = [{ id: 'c01', nome: 'Detergente Neutro 500ml', caixa: 'Caixa com 24 un.', qtd: 3 }];
 
-  test('aceita envio anônimo', async () => {
-    const r = await criarCliente()('/api/orcamentos', { metodo: 'POST', corpo: { itens: ITENS } });
+  test('aceita envio anônimo com contato', async () => {
+    const r = await criarCliente()('/api/orcamentos', {
+      metodo: 'POST', corpo: { itens: ITENS, contato: { nome: 'Ana', tel: '(11) 98888-7777' } }
+    });
     assert.equal(r.status, 201);
     assert.equal(r.dados.total_itens, 3);
+    assert.equal(r.dados.contato, true);
+  });
+
+  test('recusa envio anônimo sem contato', async () => {
+    const cli = criarCliente();
+    assert.equal((await cli('/api/orcamentos', { metodo: 'POST', corpo: { itens: ITENS } })).status, 400);
+    const soNome = await cli('/api/orcamentos', { metodo: 'POST', corpo: { itens: ITENS, contato: { nome: 'Ana' } } });
+    assert.equal(soNome.status, 400);
+    const semNome = await cli('/api/orcamentos', { metodo: 'POST', corpo: { itens: ITENS, contato: { tel: '11988887777' } } });
+    assert.equal(semNome.status, 400);
   });
 
   test('recusa lista vazia', async () => {
@@ -363,6 +375,17 @@ describe('orçamento enviado ao cliente', () => {
     assert.equal(r.status, 200, JSON.stringify(r.dados));
     return { admin: req, token: r.dados.token, id: r.dados.id };
   }
+
+  test('resumo traz a série mensal de orçamentos', async () => {
+    const { admin } = await novaProposta();
+    const r = await admin('/api/admin/resumo');
+    assert.equal(r.status, 200);
+    const serie = r.dados.porMes;
+    assert.equal(serie.length, 24);
+    assert.match(serie[23].mes, /^\d{4}-\d{2}$/);
+    assert.ok(serie[23].n >= 1, 'o orçamento de agora deveria cair no mês atual');
+    assert.ok(serie[0].mes < serie[23].mes);
+  });
 
   test('só admin cria e envia proposta', async () => {
     const anon = criarCliente();

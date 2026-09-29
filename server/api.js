@@ -437,10 +437,9 @@ async function excluirMinhaConta(req, res) {
 
 /* ---- 6. Leads: orçamentos e mensagens ---------------------------------- */
 
-/* Gravado também para visitante anônimo: um orçamento montado e não enviado
-   é carrinho abandonado, e isso é informação comercial. O POST nunca deve
-   atrapalhar o fluxo do WhatsApp, então erro aqui é sempre silencioso no
-   front — ver assets/js/catalogo.js.                                       */
+/* Visitante sem conta precisa deixar nome + WhatsApp ou e-mail: um pedido
+   sem contato aparece no painel e não há como retornar. O front já valida
+   antes de abrir o WhatsApp — ver assets/js/catalogo.js.                  */
 async function criarOrcamento(req, res, ip) {
   if (!limitar(ip, 'orcamento', TETO.orcamento, 60 * 60 * 1000)) {
     return erro(res, 429, 'Muitos envios. Tente de novo mais tarde.');
@@ -461,13 +460,14 @@ async function criarOrcamento(req, res, ip) {
 
   const c = clienteAtual(req);
 
-  // Contato opcional, digitado por quem não tem conta. Só entra se houver
-  // e-mail ou telefone: um nome solto não serve para retornar, e gravá-lo
-  // faria o painel mostrar um lead que não dá para contatar.
+  // Contato obrigatório para quem não tem conta: nome + e-mail ou telefone.
   const contato = corpo.contato && typeof corpo.contato === 'object' ? corpo.contato : {};
   const email = texto(contato.email).toLowerCase().slice(0, 160);
   const tel = texto(contato.tel || contato.telefone).slice(0, 40);
   const temContato = !c && (EMAIL_RE.test(email) || tel.replace(/\D/g, '').length >= 10);
+  if (!c && (!temContato || !texto(contato.nome))) {
+    return erro(res, 400, 'Informe seu nome e um WhatsApp com DDD ou e-mail.');
+  }
 
   const r = db.prepare(`
     INSERT INTO orcamentos (cliente_id, itens, total_itens,
@@ -649,8 +649,52 @@ function resumo(req, res) {
     leadsLanding30d: n(`
       SELECT COUNT(*) n FROM mensagens
        WHERE origem IN ('landing', 'calculadora')
-         AND criado_em > datetime('now','-30 days')`)
+         AND criado_em > datetime('now','-30 days')`),
+    porMes: serieMensal(24)
   });
+}
+
+// Orçamentos e mensagens mês a mês, do mais antigo ao atual. 24 meses para
+// o painel poder comparar com o mesmo mês do ano anterior. O banco grava em
+// UTC; o mês é contado no horário de Brasília, senão um pedido feito às 22h
+// do dia 31 cai no mês seguinte. Meses sem nada entram zerados — um buraco
+// na série apareceria no gráfico como se o mês não existisse.
+function serieMensal(meses) {
+  const MES = `strftime('%Y-%m', criado_em, '-3 hours')`;
+  const desde = `date('now', '-3 hours', 'start of month', '-${meses - 1} months')`;
+  const orc = db.prepare(`
+    SELECT ${MES} mes, COUNT(*) n,
+           SUM(situacao = 'fechado') fechados,
+           SUM(situacao = 'perdido') perdidos,
+           SUM(aprovado_em IS NOT NULL) aprovados,
+           SUM(total_itens) itens
+      FROM orcamentos WHERE ${MES} >= strftime('%Y-%m', ${desde})
+     GROUP BY mes
+  `).all();
+  const msg = db.prepare(`
+    SELECT ${MES} mes, COUNT(*) n FROM mensagens
+     WHERE ${MES} >= strftime('%Y-%m', ${desde}) GROUP BY mes
+  `).all();
+
+  const porChave = new Map(orc.map(o => [o.mes, o]));
+  const msgPorChave = new Map(msg.map(m => [m.mes, m.n]));
+  const agora = new Date(Date.now() - 3 * 3600e3);
+  const serie = [];
+  for (let i = meses - 1; i >= 0; i--) {
+    const d = new Date(Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth() - i, 1));
+    const mes = d.toISOString().slice(0, 7);
+    const o = porChave.get(mes) || {};
+    serie.push({
+      mes,
+      n: o.n || 0,
+      fechados: o.fechados || 0,
+      perdidos: o.perdidos || 0,
+      aprovados: o.aprovados || 0,
+      itens: o.itens || 0,
+      mensagens: msgPorChave.get(mes) || 0
+    });
+  }
+  return serie;
 }
 
 function listarClientes(req, res) {

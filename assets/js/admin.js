@@ -67,6 +67,133 @@
     }
   }
 
+  /* ---- Evolução mês a mês -------------------------------------------------
+
+     A série vem do servidor com 24 meses (o último é o mês corrente). O
+     gráfico mostra só o período escolhido, mas as comparações usam a série
+     toda, para "mesmo mês do ano passado" funcionar mesmo vendo 6 meses. */
+
+  const MEDIDA = {
+    n: 'orçamentos',
+    fechados: 'fechados',
+    aprovados: 'aprovados pelo link',
+    itens: 'caixas pedidas',
+    mensagens: 'mensagens'
+  };
+  const NS = 'http://www.w3.org/2000/svg';
+  const evo = { serie: [], sel: null };
+
+  const nomeMes = (mes, longo) => {
+    const [a, m] = mes.split('-').map(Number);
+    const txt = new Date(a, m - 1, 1).toLocaleDateString('pt-BR',
+      longo ? { month: 'long', year: 'numeric' } : { month: 'short' });
+    return txt.replace('.', '');
+  };
+
+  function svg(tag, attrs, texto) {
+    const n = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    if (texto !== undefined) n.textContent = texto;
+    return n;
+  }
+
+  // Variação em %; sem base (mês anterior zerado) não há porcentagem honesta.
+  function variacao(atual, antes) {
+    if (antes === undefined) return { txt: 'sem dado', cls: '' };
+    if (!antes) return atual ? { txt: 'novo', cls: 'sobe' } : { txt: '=', cls: '' };
+    const p = Math.round(((atual - antes) / antes) * 100);
+    return { txt: (p > 0 ? '+' : '') + p + '%', cls: p > 0 ? 'sobe' : p < 0 ? 'desce' : '' };
+  }
+
+  function cartaoEvo(valor, rotulo, delta) {
+    const c = el('div', 'evolucao-cartao');
+    c.append(el('b', null, valor), el('span', null, rotulo));
+    if (delta) c.append(el('small', 'evolucao-delta ' + delta.cls, delta.txt));
+    return c;
+  }
+
+  function desenharEvolucao(serie) {
+    if (serie) {
+      evo.serie = serie;
+      if (evo.sel === null) evo.sel = serie.length - 1;
+    }
+    const secao = $('#evolucao');
+    if (!evo.serie.length) { secao.hidden = true; return; }
+    secao.hidden = false;
+
+    const s = evo.serie;
+    const med = $('#evolucao-medida').value;
+    const qtd = Math.min(+$('#evolucao-periodo').value, s.length);
+    const ini = s.length - qtd;
+    if (evo.sel < ini) evo.sel = s.length - 1;
+    const i = evo.sel;
+    const m = s[i];
+    const val = x => x[med];
+
+    // Cartões de comparação do mês selecionado.
+    const janela = s.slice(ini);
+    const media = janela.reduce((t, x) => t + val(x), 0) / janela.length;
+    const totalJanela = janela.reduce((t, x) => t + x.n, 0);
+    const fechJanela = janela.reduce((t, x) => t + x.fechados, 0);
+    const cartoes = $('#evolucao-cartoes');
+    cartoes.replaceChildren(
+      cartaoEvo(String(val(m)), `${MEDIDA[med]} em ${nomeMes(m.mes, true)}`
+        + (i === s.length - 1 ? ' (até hoje)' : '')),
+      cartaoEvo(String(i > 0 ? val(s[i - 1]) : '—'), 'no mês anterior',
+        variacao(val(m), i > 0 ? val(s[i - 1]) : undefined)),
+      cartaoEvo(String(i >= 12 ? val(s[i - 12]) : '—'), 'no mesmo mês do ano passado',
+        variacao(val(m), i >= 12 ? val(s[i - 12]) : undefined)),
+      cartaoEvo(media.toLocaleString('pt-BR', { maximumFractionDigits: 1 }),
+        `média mensal (${qtd} meses)`, variacao(val(m), media)),
+      cartaoEvo(totalJanela ? Math.round((fechJanela / totalJanela) * 100) + '%' : '—',
+        `orçamentos fechados no período (${fechJanela} de ${totalJanela})`)
+    );
+
+    // Gráfico de barras em SVG, sem biblioteca.
+    const L = 640, A = 220, topo = 22, base = 28, esq = 8;
+    const maior = Math.max(...janela.map(val), 1);
+    const passo = (L - esq * 2) / qtd;
+    const larg = Math.max(passo * 0.62, 4);
+    const g = svg('svg', { viewBox: `0 0 ${L} ${A}`, role: 'img',
+      'aria-label': `${MEDIDA[med]} por mês nos últimos ${qtd} meses` });
+
+    const yMedia = topo + (A - topo - base) * (1 - media / maior);
+    g.append(svg('line', { x1: esq, x2: L - esq, y1: A - base, y2: A - base, class: 'evo-eixo' }));
+    g.append(svg('line', { x1: esq, x2: L - esq, y1: yMedia, y2: yMedia, class: 'evo-media' }));
+
+    janela.forEach((x, k) => {
+      const idx = ini + k;
+      const h = (A - topo - base) * (val(x) / maior);
+      const cx = esq + passo * k + passo / 2;
+      const grupo = svg('g', { class: 'evo-barra' + (idx === i ? ' ativa' : ''),
+        tabindex: 0, role: 'button', 'aria-label': `${nomeMes(x.mes, true)}: ${val(x)}` });
+      grupo.append(svg('title', {}, `${nomeMes(x.mes, true)}: ${val(x)} ${MEDIDA[med]}`));
+      // Área clicável da coluna inteira, não só da barra (barra baixa é difícil de acertar).
+      grupo.append(svg('rect', { x: cx - passo / 2, y: topo, width: passo, height: A - topo - base, class: 'evo-alvo' }));
+      grupo.append(svg('rect', { x: cx - larg / 2, y: A - base - Math.max(h, 2), width: larg,
+        height: Math.max(h, 2), rx: 3 }));
+      if (qtd <= 12 || idx === i) {
+        grupo.append(svg('text', { x: cx, y: A - base - Math.max(h, 2) - 6, class: 'evo-valor' }, String(val(x))));
+      }
+      const mostraRotulo = qtd <= 12 || k % 2 === (qtd - 1) % 2;
+      if (mostraRotulo) {
+        const rot = nomeMes(x.mes) + (x.mes.endsWith('-01') ? ' ' + x.mes.slice(2, 4) : '');
+        grupo.append(svg('text', { x: cx, y: A - 9, class: 'evo-mes' }, rot));
+      }
+      const escolher = () => { evo.sel = idx; desenharEvolucao(); };
+      grupo.addEventListener('click', escolher);
+      grupo.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); escolher(); }
+      });
+      g.append(grupo);
+    });
+
+    $('#evolucao-grafico').replaceChildren(g);
+  }
+
+  $('#evolucao-periodo')?.addEventListener('change', () => desenharEvolucao());
+  $('#evolucao-medida')?.addEventListener('change', () => desenharEvolucao());
+
   /* ---- Funis de origem ----------------------------------------------------
 
      A pergunta que o painel precisa responder não é "quantas mensagens
@@ -244,6 +371,9 @@
       tdQuem.append(el('div', 'nome', o.cliente_nome));
       tdQuem.append(el('div', 'email',
         o.cliente_empresa ? `${o.cliente_email} · ${o.cliente_empresa}` : o.cliente_email));
+    } else if (o.contato_nome || o.contato_tel || o.contato_email) {
+      tdQuem.append(el('div', 'nome', o.contato_nome || 'Visitante'));
+      tdQuem.append(el('div', 'email', [o.contato_tel, o.contato_email].filter(Boolean).join(' · ')));
     } else {
       tdQuem.append(el('div', 'nome', 'Visitante'));
       tdQuem.append(el('div', 'email', 'sem conta'));
@@ -743,6 +873,7 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     ]);
 
     desenharMetricas(resumo);
+    desenharEvolucao(resumo.porMes);
     desenharFunil(resumo.porSegmento,
       { campo: 'seg', rotulos: SEGMENTO, alvo: '#funil-barras', secao: '#funil' });
     desenharFunil(resumo.porOrigem,

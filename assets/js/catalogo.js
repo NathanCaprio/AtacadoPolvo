@@ -199,34 +199,37 @@
     }).catch(() => {});
   }
 
-  /* Um campo só para WhatsApp e e-mail: pedir os dois separados dobraria o
-     atrito de um formulário que já é opcional. Aqui a gente descobre qual
-     é qual — o servidor valida de novo, de qualquer jeito. */
+  /* (00) 0000-0000 ou (00) 00000-0000, conforme vai digitando. */
+  function mascaraTelefone(v) {
+    v = v.replace(/\D/g, '').slice(0, 11);
+    if (v.length <= 10) {
+      return v.replace(/^(\d{0,2})(\d{0,4})(\d{0,4}).*/, (m, a, b, c) =>
+        [a && '(' + a, a.length === 2 ? ') ' : '', b, c && '-' + c].join(''));
+    }
+    return v.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
+  }
+
+  /* Nome + WhatsApp com DDD, obrigatórios para quem não está logado: sem
+     isso a loja não tem como retornar. O servidor valida de novo. */
   function lerContato() {
     const caixa = $('#drawer-contato');
     if (!caixa || caixa.hidden) return null;
 
-    const nome = ($('#oc-nome') || {}).value || '';
-    const bruto = (($('#oc-tel') || {}).value || '').trim();
-    if (!bruto) return null;
+    const nome = (($('#oc-nome') || {}).value || '').trim();
+    const tel = (($('#oc-tel') || {}).value || '').trim();
+    const digitos = tel.replace(/\D/g, '');
 
-    const ehEmail = bruto.includes('@');
-    const digitos = bruto.replace(/\D/g, '');
+    const marcar = (id, msg) => {
+      const campo = $(id).closest('.field');
+      campo.querySelector('.err').textContent = msg;
+      campo.classList.toggle('has-error', !!msg);
+    };
+    marcar('#oc-nome', nome ? '' : 'Informe seu nome.');
+    marcar('#oc-tel', digitos.length >= 10 ? '' : 'Informe um WhatsApp com DDD.');
+    const invalido = $('#drawer-contato .has-error input');
+    if (invalido) { invalido.focus(); return false; }
 
-    // Nem e-mail plausível nem telefone com DDD: avisa em vez de engolir.
-    if (!ehEmail && digitos.length < 10) {
-      const campo = $('#oc-tel').closest('.field');
-      campo.querySelector('.err').textContent =
-        'Informe um WhatsApp com DDD ou um e-mail.';
-      campo.classList.add('has-error');
-      $('#oc-tel').focus();
-      return false;
-    }
-    $('#oc-tel').closest('.field').classList.remove('has-error');
-
-    return ehEmail
-      ? { nome: nome.trim(), email: bruto }
-      : { nome: nome.trim(), tel: bruto };
+    return { nome, tel };
   }
 
   /* Mostra/esconde o aviso de envio no topo da gaveta. A lista NÃO é
@@ -238,12 +241,24 @@
     if (!enviado) return;
 
     enviado.hidden = !mostrar;
+    if (!mostrar) mostrarContatoOk(null);
 
     // O convite de conta só faz sentido para quem não tem uma. Sem backend
     // (HTML aberto do disco) ele nem aparece: levaria a uma tela que não
     // funciona.
     const convite = $('#enviado-conta');
     if (convite) convite.hidden = !(mostrar && window.API && !clienteAtual);
+  }
+
+  /* Troca o formulário de contato por uma confirmação, com opção de
+     reenviar (reabre o WhatsApp, sem gravar de novo) ou corrigir os dados.
+     null = volta a mostrar o formulário. */
+  function mostrarContatoOk(contato) {
+    const ok = $('#oc-ok'), form = $('#oc-form');
+    if (!ok || !form) return;
+    ok.hidden = !contato;
+    form.hidden = !!contato;
+    if (contato) $('#oc-ok-quem').textContent = `${contato.nome} · ${contato.tel}`;
   }
 
   function enviarOrcamento() {
@@ -255,9 +270,10 @@
     });
 
     const contato = lerContato();
-    if (contato === false) return;          // o campo está preenchido e errado
+    if (contato === false) return;          // falta nome ou contato válido
 
     registrar(itens, contato);
+    mostrarContatoOk(contato);
 
     const linhas = itens.map(i => `• ${i.nome} — ${i.qtd}x (${i.caixa})`).join('\n');
     // Cupom pedido no pop-up (cupom.js) vai junto, para o vendedor conferir.
@@ -319,6 +335,19 @@
 
   const voltar = $('#drawer-voltar');
   if (voltar) voltar.addEventListener('click', () => mostrarEnviado(false));
+
+  const ocTel = $('#oc-tel');
+  if (ocTel) ocTel.addEventListener('input', e => { e.target.value = mascaraTelefone(e.target.value); });
+
+  const ocReenviar = $('#oc-reenviar');
+  if (ocReenviar) ocReenviar.addEventListener('click', () => {
+    if (ultimaMsg) window.open(window.linkWhatsApp(ultimaMsg), '_blank', 'noopener');
+  });
+  const ocAlterar = $('#oc-alterar');
+  if (ocAlterar) ocAlterar.addEventListener('click', () => {
+    mostrarContatoOk(null);
+    $('#oc-nome').focus();
+  });
 
   // Pop-up bloqueado ou aba fechada sem querer: reabre a mesma mensagem.
   const reabrir = $('#drawer-reabrir');

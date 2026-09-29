@@ -5140,3 +5140,95 @@ section.marcas {
 .artigo-relacionados ul {
   padding-left: 22px;
 }
+
+/* Orçamentos por mês (admin) */
+.evolucao-topo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+.evolucao-controles {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.evolucao-controles label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.evolucao-controles select {
+  font: inherit;
+  font-size: 0.86rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+.evolucao-cartoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.evolucao-cartao {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface-3);
+}
+.evolucao-cartao b {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+.evolucao-cartao span { font-size: 0.8rem; color: var(--ink-3); line-height: 1.4; }
+.evolucao-delta { font-weight: 700; font-size: 0.8rem; color: var(--ink-3); }
+.evolucao-delta.sobe { color: var(--ok); }
+.evolucao-delta.desce { color: var(--danger); }
+.evolucao-grafico svg { width: 100%; height: auto; display: block; overflow: visible; }
+.evo-eixo { stroke: var(--line-strong); }
+.evo-media { stroke: var(--ink-3); stroke-dasharray: 4 4; opacity: 0.6; }
+.evo-alvo { fill: transparent; }
+.evo-barra { cursor: pointer; outline: none; }
+.evo-barra rect:not(.evo-alvo) { fill: var(--brand); opacity: 0.45; transition: opacity 0.2s; }
+.evo-barra:hover rect:not(.evo-alvo),
+.evo-barra:focus-visible rect:not(.evo-alvo),
+.evo-barra.ativa rect:not(.evo-alvo) { opacity: 1; }
+.evo-barra:focus-visible .evo-alvo { stroke: var(--brand); stroke-dasharray: 3 3; }
+.evo-valor, .evo-mes { text-anchor: middle; font-size: 11px; fill: var(--ink-3); }
+.evo-barra.ativa .evo-valor { fill: var(--ink); font-weight: 700; }
+
+/* Confirmação no lugar do formulário de contato, depois do envio */
+.contato-ok {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.contato-ok[hidden] {
+  display: none;
+}
+.contato-ok-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ok);
+}
+.contato-ok-quem,
+.contato-ok-acoes {
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.contato-ok-acoes {
+  margin-top: 6px;
+}
+#oc-form[hidden] {
+  display: none;
+}
