@@ -15,6 +15,9 @@
      POST   /api/orcamentos            grava um pedido de orçamento
      POST   /api/mensagens             grava uma mensagem de contato
      GET    /api/meus/orcamentos       orçamentos do cliente logado
+     GET    /api/proposta/:token       orçamento enviado pela loja (link público)
+     PATCH  /api/proposta/:token       cliente muda quantidades / remove itens
+     POST   /api/proposta/:token/aprovar   cliente aprova
 
      GET    /api/admin/resumo          contagens para o painel
      GET    /api/admin/clientes        lista de clientes
@@ -23,8 +26,12 @@
      GET    /api/admin/orcamentos      todos os orçamentos
      PATCH  /api/admin/orcamentos/:id  muda a situação
      DELETE /api/admin/orcamentos/:id  exclui o orçamento
+     POST   /api/admin/orcamentos      cria orçamento pela loja, já com link
+     PUT    /api/admin/orcamentos/:id/proposta   salva preços e gera o link
+     DELETE /api/admin/orcamentos/:id/proposta   desativa o link
      GET    /api/admin/mensagens       todas as mensagens
      PATCH  /api/admin/mensagens/:id   marca lida / não lida
+     DELETE /api/admin/mensagens/:id   exclui a mensagem
      POST   /api/admin/clientes/:id/recuperacao   gera link de redefinição
      GET    /api/admin/exportar?tipo=  baixa CSV de leads / clientes
 
@@ -121,7 +128,8 @@ const TETO = {
   orcamento: Number(process.env.LIMITE_ORCAMENTO) || 20,
   mensagem: Number(process.env.LIMITE_MENSAGEM) || 10,
   cupom: Number(process.env.LIMITE_CUPOM) || 5,
-  recuperacao: Number(process.env.LIMITE_RECUPERACAO) || 5
+  recuperacao: Number(process.env.LIMITE_RECUPERACAO) || 5,
+  proposta: Number(process.env.LIMITE_PROPOSTA) || 60
 };
 
 function limitar(ip, chave, max, janelaMs) {
@@ -665,6 +673,7 @@ function listarOrcamentos(req, res) {
   const linhas = db.prepare(`
     SELECT o.id, o.itens, o.total_itens, o.situacao, o.criado_em,
            o.contato_nome, o.contato_email, o.contato_tel, o.aceite_em,
+           o.token, o.observacao, o.validade, o.enviado_em, o.alterado_em, o.aprovado_em,
            c.nome AS cliente_nome, c.email AS cliente_email, c.empresa AS cliente_empresa
       FROM orcamentos o
       LEFT JOIN clientes c ON c.id = o.cliente_id
@@ -692,6 +701,186 @@ function excluirOrcamento(req, res, id) {
   res.writeHead(204); res.end();
 }
 
+/* ---- 7b. Proposta enviada ao cliente -----------------------------------
+
+   A loja monta (ou ajusta) o orçamento no painel, com preço por item, e
+   gera um link público /orcamento.html?t=TOKEN. Quem tem o link vê a
+   proposta, muda quantidades, remove itens e aprova. O token é o único
+   segredo: não exige conta, porque boa parte dos clientes nem tem.
+
+   O cliente nunca mexe em preço nem inclui produto: só pode reduzir a
+   lista ou mudar a quantidade do que a loja cotou. Assim o preço que ele
+   aprova é sempre um preço que a loja escreveu.                          */
+
+const TOKEN_RE = /^[A-Za-z0-9_-]{20,64}$/;
+const DATA_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Itens vindos do painel. preco é em centavos por caixa; null = a cotar. */
+function limparItensProposta(bruto) {
+  if (!Array.isArray(bruto) || !bruto.length) return null;
+  return bruto.slice(0, 200).map(i => {
+    const preco = parseInt(i.preco, 10);
+    return {
+      id: texto(i.id).slice(0, 40),
+      nome: texto(i.nome).slice(0, 160),
+      caixa: texto(i.caixa).slice(0, 80),
+      qtd: Math.max(1, Math.min(9999, parseInt(i.qtd, 10) || 1)),
+      preco: Number.isFinite(preco) && preco >= 0 ? Math.min(preco, 1e9) : null
+    };
+  }).filter(i => i.nome);
+}
+
+const somaQtd = itens => itens.reduce((s, i) => s + i.qtd, 0);
+
+/* Novo orçamento criado pela própria loja (pedido que chegou por telefone,
+   WhatsApp, visita). Já nasce com link. */
+async function criarPropostaAdmin(req, res) {
+  if (!exigirAdmin(req, res)) return;
+  const b = await lerJson(req, 64 * 1024);
+  const itens = limparItensProposta(b.itens);
+  if (!itens || !itens.length) return erro(res, 400, 'Inclua ao menos um item.');
+
+  const contato = b.contato && typeof b.contato === 'object' ? b.contato : {};
+  const nome = texto(contato.nome).slice(0, 120);
+  if (nome.length < 2) return erro(res, 400, 'Informe o nome do cliente.');
+  const email = texto(contato.email).toLowerCase().slice(0, 160);
+
+  const r = db.prepare(`
+    INSERT INTO orcamentos (itens, total_itens, situacao, contato_nome,
+                            contato_email, contato_tel)
+    VALUES (?, ?, 'em_andamento', ?, ?, ?)
+  `).run(JSON.stringify(itens), somaQtd(itens), nome,
+         EMAIL_RE.test(email) ? email : null,
+         texto(contato.tel).slice(0, 40) || null);
+
+  gravarProposta(res, Number(r.lastInsertRowid), itens, b);
+}
+
+/* Salva itens, observação e validade de um orçamento existente e devolve o
+   link. O token é mantido entre edições: o cliente continua com o mesmo
+   link e vê a versão nova. Editar desfaz uma aprovação anterior. */
+async function enviarPropostaAdmin(req, res, id) {
+  if (!exigirAdmin(req, res)) return;
+  const b = await lerJson(req, 64 * 1024);
+  const itens = limparItensProposta(b.itens);
+  if (!itens || !itens.length) return erro(res, 400, 'Inclua ao menos um item.');
+  if (!db.prepare('SELECT 1 FROM orcamentos WHERE id = ?').get(id)) {
+    return erro(res, 404, 'Orçamento não encontrado.');
+  }
+  gravarProposta(res, id, itens, b);
+}
+
+function gravarProposta(res, id, itens, b) {
+  const validade = DATA_RE.test(texto(b.validade)) ? texto(b.validade) : null;
+  const observacao = texto(b.observacao).slice(0, 2000) || null;
+  const atual = db.prepare('SELECT token FROM orcamentos WHERE id = ?').get(id);
+  const token = atual.token || crypto.randomBytes(18).toString('base64url');
+
+  db.prepare(`
+    UPDATE orcamentos
+       SET itens = ?, total_itens = ?, observacao = ?, validade = ?, token = ?,
+           enviado_em = datetime('now'), aprovado_em = NULL,
+           situacao = CASE WHEN situacao = 'novo' THEN 'em_andamento' ELSE situacao END
+     WHERE id = ?
+  `).run(JSON.stringify(itens), somaQtd(itens), observacao, validade, token, id);
+
+  json(res, 200, { id, token, link: `/orcamento.html?t=${token}` });
+}
+
+/* Remove o link: quem tinha a URL deixa de ver a proposta. */
+function revogarPropostaAdmin(req, res, id) {
+  if (!exigirAdmin(req, res)) return;
+  const r = db.prepare('UPDATE orcamentos SET token = NULL WHERE id = ?').run(id);
+  if (!r.changes) return erro(res, 404, 'Orçamento não encontrado.');
+  res.writeHead(204); res.end();
+}
+
+function buscarProposta(token) {
+  if (!TOKEN_RE.test(token)) return null;
+  const o = db.prepare(`
+    SELECT o.id, o.itens, o.situacao, o.observacao, o.validade, o.enviado_em,
+           o.alterado_em, o.aprovado_em,
+           COALESCE(c.nome, o.contato_nome) AS cliente_nome
+      FROM orcamentos o LEFT JOIN clientes c ON c.id = o.cliente_id
+     WHERE o.token = ?
+  `).get(token);
+  if (!o) return null;
+  o.itens = JSON.parse(o.itens);
+  // Validade é "até o fim do dia" em horário do servidor.
+  o.vencido = !!o.validade && o.validade < new Date().toISOString().slice(0, 10);
+  // Só dá para mexer enquanto a negociação está aberta.
+  o.editavel = !o.aprovado_em && !o.vencido &&
+               ['novo', 'em_andamento'].includes(o.situacao);
+  return o;
+}
+
+function verProposta(req, res, token) {
+  const o = buscarProposta(token);
+  if (!o) return erro(res, 404, 'Orçamento não encontrado ou link desativado.');
+  json(res, 200, { orcamento: o });
+}
+
+function travada(res, o) {
+  if (!o) { erro(res, 404, 'Orçamento não encontrado ou link desativado.'); return true; }
+  if (!o.editavel) {
+    erro(res, 409, o.aprovado_em ? 'Este orçamento já foi aprovado.'
+      : o.vencido ? 'Este orçamento venceu. Peça uma nova cotação.'
+      : 'Este orçamento não aceita mais alterações.');
+    return true;
+  }
+  return false;
+}
+
+/* O cliente manda a lista inteira como quer que fique: [{id: '#n', qtd}],
+   onde n é a posição do item na proposta (id de produto pode se repetir ou
+   faltar em item avulso). Item ausente = removido. Posição que não existe
+   é ignorada: nada entra de fora, e nome, caixa e preço seguem os da loja. */
+async function alterarProposta(req, res, token, ip) {
+  if (!limitar(ip, 'proposta', TETO.proposta, 60 * 60 * 1000)) {
+    return erro(res, 429, 'Muitas alterações. Tente de novo mais tarde.');
+  }
+  const o = buscarProposta(token);
+  if (travada(res, o)) return;
+
+  const b = await lerJson(req, 32 * 1024);
+  if (!Array.isArray(b.itens)) return erro(res, 400, 'Lista inválida.');
+
+  const pedido = new Map();
+  for (const i of b.itens.slice(0, 200)) {
+    const qtd = parseInt(i && i.qtd, 10);
+    if (!Number.isFinite(qtd) || qtd < 1 || qtd > 9999) {
+      return erro(res, 400, 'Quantidade inválida.');
+    }
+    pedido.set(texto(i.id), qtd);
+  }
+  const itens = o.itens
+    .map((i, n) => {
+      const chave = `#${n}`;
+      return pedido.has(chave) ? { ...i, qtd: pedido.get(chave) } : null;
+    })
+    .filter(Boolean);
+  if (!itens.length) {
+    return erro(res, 400, 'O orçamento precisa de ao menos um item. Para desistir, fale com a loja.');
+  }
+
+  db.prepare(`
+    UPDATE orcamentos SET itens = ?, total_itens = ?, alterado_em = datetime('now')
+     WHERE id = ?
+  `).run(JSON.stringify(itens), somaQtd(itens), o.id);
+
+  json(res, 200, { orcamento: buscarProposta(token) });
+}
+
+function aprovarProposta(req, res, token, ip) {
+  if (!limitar(ip, 'proposta', TETO.proposta, 60 * 60 * 1000)) {
+    return erro(res, 429, 'Muitas alterações. Tente de novo mais tarde.');
+  }
+  const o = buscarProposta(token);
+  if (travada(res, o)) return;
+  db.prepare(`UPDATE orcamentos SET aprovado_em = datetime('now') WHERE id = ?`).run(o.id);
+  json(res, 200, { orcamento: buscarProposta(token) });
+}
+
 function listarMensagens(req, res) {
   if (!exigirAdmin(req, res)) return;
   json(res, 200, {
@@ -709,6 +898,14 @@ async function editarMensagem(req, res, id) {
   const r = db.prepare('UPDATE mensagens SET lida = ? WHERE id = ?').run(lida ? 1 : 0, id);
   if (!r.changes) return erro(res, 404, 'Mensagem não encontrada.');
   json(res, 200, { id, lida: lida ? 1 : 0 });
+}
+
+/* Exclui de vez — para spam, teste ou duplicada. */
+function excluirMensagem(req, res, id) {
+  if (!exigirAdmin(req, res)) return;
+  const r = db.prepare('DELETE FROM mensagens WHERE id = ?').run(id);
+  if (!r.changes) return erro(res, 404, 'Mensagem não encontrada.');
+  res.writeHead(204); res.end();
 }
 
 async function editarCliente(req, res, id) {
@@ -900,8 +1097,17 @@ const ROTAS = [
   ['GET',    /^\/api\/admin\/orcamentos$/,        (rq, rs) => listarOrcamentos(rq, rs)],
   ['PATCH',  /^\/api\/admin\/orcamentos\/(\d+)$/, (rq, rs, m) => editarOrcamento(rq, rs, +m[1])],
   ['DELETE', /^\/api\/admin\/orcamentos\/(\d+)$/, (rq, rs, m) => excluirOrcamento(rq, rs, +m[1])],
+  ['POST',   /^\/api\/admin\/orcamentos$/,        (rq, rs) => criarPropostaAdmin(rq, rs)],
+  ['PUT',    /^\/api\/admin\/orcamentos\/(\d+)\/proposta$/,
+             (rq, rs, m) => enviarPropostaAdmin(rq, rs, +m[1])],
+  ['DELETE', /^\/api\/admin\/orcamentos\/(\d+)\/proposta$/,
+             (rq, rs, m) => revogarPropostaAdmin(rq, rs, +m[1])],
+  ['GET',    /^\/api\/proposta\/([\w-]+)$/,         (rq, rs, m) => verProposta(rq, rs, m[1])],
+  ['PATCH',  /^\/api\/proposta\/([\w-]+)$/,         (rq, rs, m, ip) => alterarProposta(rq, rs, m[1], ip)],
+  ['POST',   /^\/api\/proposta\/([\w-]+)\/aprovar$/, (rq, rs, m, ip) => aprovarProposta(rq, rs, m[1], ip)],
   ['GET',    /^\/api\/admin\/mensagens$/,         (rq, rs) => listarMensagens(rq, rs)],
   ['PATCH',  /^\/api\/admin\/mensagens\/(\d+)$/,  (rq, rs, m) => editarMensagem(rq, rs, +m[1])],
+  ['DELETE', /^\/api\/admin\/mensagens\/(\d+)$/,  (rq, rs, m) => excluirMensagem(rq, rs, +m[1])],
 
   ['POST',   /^\/api\/admin\/clientes\/(\d+)\/recuperacao$/,
              (rq, rs, m) => gerarRecuperacaoAdmin(rq, rs, +m[1])],

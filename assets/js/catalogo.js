@@ -171,6 +171,7 @@
           <span>${i.qtd}</span>
           <button data-inc="${p.id}" aria-label="Aumentar quantidade">+</button>
         </div>
+        <button class="qi-remove" data-remove="${p.id}" aria-label="Remover ${p.nome} do orçamento">&times;</button>
       </div>`;
     }).join('');
   }
@@ -337,6 +338,7 @@
     body.addEventListener('click', e => {
       const inc = e.target.closest('[data-inc]');
       const dec = e.target.closest('[data-dec]');
+      const rem = e.target.closest('[data-remove]');
       if (inc) {
         const i = lista.find(x => x.id === inc.dataset.inc);
         if (i) i.qtd += 1;
@@ -346,6 +348,9 @@
           lista[idx].qtd -= 1;
           if (lista[idx].qtd <= 0) lista.splice(idx, 1);
         }
+      } else if (rem) {
+        const idx = lista.findIndex(x => x.id === rem.dataset.remove);
+        if (idx > -1) lista.splice(idx, 1);
       } else return;
       sincronizar();
     });

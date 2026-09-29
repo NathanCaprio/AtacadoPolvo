@@ -111,6 +111,7 @@
         o pedido fica como anônimo e serve como sinal de carrinho abandonado.
       </p>
       <div class="barra-acoes">
+        <button class="btn btn--primary btn--sm" id="novo-orcamento" type="button">+ Novo orçamento</button>
         <button class="btn btn--ghost btn--sm" data-exportar="orcamentos" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg> Baixar orçamentos (CSV)
         </button>
@@ -229,6 +230,7 @@
           <li><a href="pets.html">Para pet shops e veterinárias</a></li>
           <li><a href="sobre.html">A empresa</a></li>
           <li><a href="contato.html">Contato</a></li>
+          <li><a href="blog.html">Blog</a></li>
           <li><a href="entrar.html">Área do cliente</a></li>
         </ul>
       </div>
@@ -274,9 +276,69 @@
   </div>
 </footer>
 
+<!-- ---------- EDITOR DE PROPOSTA (montado por admin.js) ---------- -->
+<dialog class="cupom proposta-dialog" id="editor-proposta" aria-labelledby="ep-titulo">
+  <form method="dialog" id="ep-form" novalidate>
+    <button class="cupom-fechar" value="fechar" formnovalidate aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 id="ep-titulo">Enviar orçamento</h2>
+    <div class="aviso" id="ep-aviso" role="alert"></div>
+
+    <fieldset id="ep-contato" class="field-row">
+      <div class="field"><label for="ep-nome">Cliente</label>
+        <input class="input" id="ep-nome" autocomplete="off" placeholder="Nome ou empresa"></div>
+      <div class="field"><label for="ep-tel">WhatsApp <span class="opt">(opcional)</span></label>
+        <input class="input" id="ep-tel" type="tel" autocomplete="off" placeholder="(51) 99999-9999"></div>
+    </fieldset>
+
+    <div class="tabela-wrap">
+      <table class="tabela proposta-tabela">
+        <thead><tr><th>Produto</th><th>Qtd</th><th>Preço/cx (R$)</th><th class="num">Subtotal</th><th></th></tr></thead>
+        <tbody id="ep-itens"></tbody>
+        <tfoot id="ep-total" hidden></tfoot>
+      </table>
+    </div>
+
+    <div class="proposta-add">
+      <label for="ep-busca" class="sr-only">Buscar produto do catálogo</label>
+      <div class="proposta-campo">
+        <input class="input" id="ep-busca" type="search" autocomplete="off"
+          placeholder="Buscar produto por nome, categoria ou código…"
+          role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ep-resultados">
+        <ul class="proposta-busca" id="ep-resultados" role="listbox" hidden></ul>
+      </div>
+      <p class="proposta-dica">↑ ↓ para navegar · Enter adiciona · sem resultado? adicione como item avulso</p>
+    </div>
+
+    <div class="field-row">
+      <div class="field"><label for="ep-validade">Válido até <span class="opt">(opcional)</span></label>
+        <input class="input" id="ep-validade" type="date"></div>
+    </div>
+    <div class="field"><label for="ep-obs">Observação para o cliente <span class="opt">(opcional)</span></label>
+      <textarea class="input" id="ep-obs" rows="3" maxlength="2000" placeholder="Prazo de entrega, forma de pagamento…"></textarea></div>
+
+    <div class="proposta-link" id="ep-link" hidden>
+      <label for="ep-url">Link do cliente</label>
+      <input class="input" id="ep-url" readonly>
+      <div class="barra-acoes">
+        <button class="btn btn--ghost btn--sm" id="ep-copiar" type="button">Copiar link</button>
+        <a class="btn btn--wpp btn--sm" id="ep-wpp" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+        <button class="btn btn--perigo btn--sm" id="ep-revogar" type="button">Desativar link</button>
+      </div>
+    </div>
+
+    <div class="barra-acoes proposta-acoes">
+      <button class="btn btn--ghost" id="ep-pdf" type="button">Baixar PDF</button>
+      <button class="btn btn--primary" id="ep-salvar" type="button">Salvar e gerar link</button>
+    </div>
+  </form>
+</dialog>
+
 <script src="assets/js/config.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/data.js"></script>
 <script src="assets/js/admin.js"></script>
 </body>
 </html>

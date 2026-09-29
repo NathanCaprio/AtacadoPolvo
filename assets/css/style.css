@@ -1566,6 +1566,22 @@ select.input {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+.qi-remove {
+  flex: none;
+  width: 27px;
+  height: 27px;
+  border-radius: var(--r-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--ink-3);
+}
+.qi-remove:hover {
+  background: var(--surface-2);
+  color: var(--erro, #d33);
+}
 
 .overlay {
   position: fixed;
@@ -4842,4 +4858,285 @@ section.marcas {
 .cupom-codigo strong {
   white-space: nowrap;
   font-size: clamp(1.05rem, 0.9rem + 1.2vw, 1.35rem);
+}
+
+/* 33. ORÇAMENTO ENVIADO AO CLIENTE ===================================== */
+/* Página pública orcamento.html e editor do painel (#editor-proposta). */
+.proposta .tabela-wrap {
+  margin: 18px 0 10px;
+}
+.proposta-obs {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--brand);
+  background: var(--surface-2);
+  border-radius: var(--r-sm, 8px);
+  white-space: pre-line;
+}
+.proposta-tabela td.num {
+  text-align: right;
+}
+.proposta-tabela tfoot td {
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+}
+.proposta-tabela .qty {
+  display: inline-flex;
+}
+.proposta-tabela .qty input {
+  width: 56px;
+  padding: 4px;
+  min-height: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.proposta-tabela .qty button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.input--curto {
+  width: 96px;
+  padding: 6px 10px;
+  min-height: 0;
+}
+.proposta-acoes {
+  justify-content: flex-end;
+  margin: 18px 0 0;
+}
+.proposta-estado {
+  margin-top: 4px;
+  font-size: 0.78rem;
+}
+.proposta-dialog {
+  width: min(760px, calc(100% - 32px));
+}
+.proposta-dialog fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.proposta-dialog .tabela {
+  min-width: 520px;
+}
+.proposta-add {
+  margin: 12px 0 18px;
+}
+.proposta-campo {
+  position: relative;
+}
+.proposta-campo .input {
+  width: 100%;
+}
+.proposta-dica {
+  margin: 6px 2px 0;
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+.proposta-busca {
+  position: absolute;
+  z-index: 5;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 4px 0 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md, 12px);
+  box-shadow: var(--shadow-md);
+}
+.proposta-busca li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm, 8px);
+  cursor: pointer;
+}
+.proposta-busca li[aria-selected="true"] {
+  background: var(--brand-soft);
+}
+.proposta-busca .pb-info {
+  flex: 1;
+  min-width: 0;
+}
+.proposta-busca .pb-nome {
+  font-weight: 600;
+  color: var(--ink);
+}
+.proposta-busca .pb-nome mark {
+  background: var(--accent-soft);
+  color: inherit;
+  border-radius: 3px;
+}
+.proposta-busca .pb-meta {
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.proposta-busca .pb-ja {
+  flex: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.proposta-busca .pb-vazio {
+  cursor: default;
+  color: var(--ink-3);
+}
+.proposta-vazio td {
+  text-align: center;
+  color: var(--ink-3);
+  padding: 22px 12px;
+}
+.proposta-tabela tfoot .proposta-cotar {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.proposta-link {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: var(--r-md, 12px);
+  background: var(--brand-soft);
+}
+.proposta-link label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.proposta-link .barra-acoes {
+  margin: 10px 0 0;
+}
+.proposta-dialog fieldset[hidden] {
+  display: none;
+}
+
+/* ================= BLOG ================= */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .blog-grid { grid-template-columns: 1fr; }
+}
+.blog-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.22s var(--ease), border-color 0.22s var(--ease);
+}
+.blog-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+}
+.blog-card .blog-tag {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.blog-card h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.blog-card h2 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.blog-card h2 a:hover {
+  color: var(--purple);
+}
+.blog-card p {
+  color: var(--ink-3);
+  font-size: 0.95rem;
+  margin: 0;
+}
+.blog-card .blog-meta {
+  font-size: 0.82rem;
+  color: var(--ink-3);
+  margin-top: auto;
+}
+
+.artigo {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.artigo .blog-meta {
+  color: var(--ink-3);
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+}
+.artigo h1 {
+  margin-bottom: 8px;
+}
+.artigo-corpo {
+  color: var(--ink-2);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+.artigo-corpo h2 {
+  font-size: 1.5rem;
+  margin: 40px 0 14px;
+  color: var(--ink);
+}
+.artigo-corpo h3 {
+  font-size: 1.2rem;
+  margin: 28px 0 10px;
+  color: var(--ink);
+}
+.artigo-corpo p {
+  margin: 0 0 18px;
+}
+.artigo-corpo ul,
+.artigo-corpo ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+.artigo-corpo li {
+  margin-bottom: 8px;
+}
+.artigo-corpo strong {
+  color: var(--ink);
+}
+.artigo-corpo blockquote {
+  margin: 24px 0;
+  padding: 16px 20px;
+  border-left: 4px solid var(--purple);
+  background: var(--purple-soft);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+.artigo-cta {
+  margin-top: 36px;
+  padding: 24px;
+  background: var(--purple-soft);
+  border-radius: var(--r-lg);
+  text-align: center;
+}
+.artigo-cta p {
+  margin: 0 0 14px;
+  font-weight: 600;
+}
+.artigo-relacionados {
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+  padding-top: 28px;
+}
+.artigo-relacionados ul {
+  padding-left: 22px;
 }

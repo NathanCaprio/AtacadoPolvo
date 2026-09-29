@@ -266,10 +266,14 @@
 
     const tdSit = el('td');
     tdSit.append(el('span', `selo selo--${o.situacao}`, SITUACAO[o.situacao] || o.situacao));
+    const prop = estadoProposta(o);
+    if (prop) tdSit.append(el('div', 'email proposta-estado', prop));
     tr.append(tdSit);
 
     const tdAcoes = el('td');
     const caixa = el('div', 'acoes');
+    caixa.append(botao(o.token ? 'Proposta' : 'Enviar ao cliente', 'btn--primary',
+      () => abrirEditor(o)));
     caixa.append(botao(
       `Marcar ${SITUACAO[PROXIMA[o.situacao]].toLowerCase()}`, 'btn--ghost',
       () => agir(() => window.API.pedir(`/api/admin/orcamentos/${o.id}`,
@@ -288,6 +292,359 @@
     tdAcoes.append(caixa);
     tr.append(tdAcoes);
     return tr;
+  }
+
+  /* ---- Proposta enviada ao cliente ----------------------------------------
+
+     Mesmo orçamento, com preço por item e um link público que o cliente
+     abre sem conta (orcamento.html?t=TOKEN). Preço circula em centavos; o
+     campo aceita "45,90", "1.234,50" ou "45.90".                            */
+
+  function estadoProposta(o) {
+    if (!o.token) return '';
+    if (o.aprovado_em) return `✓ Aprovado pelo cliente ${data(o.aprovado_em, true)}`;
+    if (o.alterado_em && o.alterado_em > o.enviado_em) {
+      return `Cliente alterou ${data(o.alterado_em, true)}`;
+    }
+    return `Link enviado ${data(o.enviado_em, true)}`;
+  }
+
+  const editor = $('#editor-proposta');
+  let editando = null;     // orçamento aberto (null = novo)
+  let itensEd = [];        // [{id, nome, caixa, qtd, preco}]
+
+  function paraCentavos(v) {
+    let t = String(v).trim();
+    if (!t) return null;
+    if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+    const n = Math.round(parseFloat(t) * 100);
+    return Number.isFinite(n) && n >= 0 ? n : null;
+  }
+  const deCentavos = c => (c == null ? '' : (c / 100).toFixed(2).replace('.', ','));
+
+  function avisoEditor(msg, ok = false) {
+    const a = $('#ep-aviso');
+    a.textContent = msg;
+    a.className = msg ? `aviso ${ok ? 'aviso--ok' : 'aviso--erro'} is-visible` : 'aviso';
+  }
+
+  const reais = c => (c / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  // Subtotais e total são recalculados a cada tecla sem redesenhar a
+  // tabela (redesenhar tiraria o foco do campo que está sendo digitado).
+  const celulaSub = new WeakMap();   // item -> <td> do subtotal
+  function atualizarTotais() {
+    let total = 0, aCotar = 0, caixas = 0;
+    for (const item of itensEd) {
+      caixas += item.qtd;
+      const cel = celulaSub.get(item);
+      if (item.preco == null) { aCotar++; if (cel) cel.textContent = '—'; continue; }
+      const sub = item.preco * item.qtd;
+      total += sub;
+      if (cel) cel.textContent = reais(sub);
+    }
+    const tfoot = $('#ep-total');
+    tfoot.hidden = !itensEd.length;
+    tfoot.replaceChildren();
+    if (!itensEd.length) return;
+    const tr = el('tr');
+    tr.append(el('td', 'nome', `${itensEd.length} ${itensEd.length === 1 ? 'item' : 'itens'} · ${caixas} cx`));
+    const td = el('td', 'num nome', `Total ${reais(total)}`);
+    td.colSpan = 3;
+    if (aCotar) td.append(el('span', 'proposta-cotar', `${aCotar} a cotar (fora do total)`));
+    tr.append(td, el('td'));
+    tfoot.append(tr);
+  }
+
+  function desenharItensEditor() {
+    const tbody = $('#ep-itens');
+    tbody.replaceChildren();
+    if (!itensEd.length) {
+      const tr = el('tr', 'proposta-vazio');
+      const td = el('td', '', 'Nenhum item ainda — busque um produto abaixo.');
+      td.colSpan = 5;
+      tr.append(td);
+      tbody.append(tr);
+    }
+    for (const item of itensEd) {
+      const tr = el('tr');
+      const tdNome = el('td');
+      tdNome.append(el('div', 'nome', item.nome));
+      if (item.caixa) tdNome.append(el('div', 'email', item.caixa));
+      tr.append(tdNome);
+
+      const qtd = el('input', 'input input--curto');
+      qtd.type = 'number'; qtd.min = '1'; qtd.max = '9999'; qtd.value = item.qtd;
+      qtd.setAttribute('aria-label', `Quantidade de ${item.nome}`);
+      qtd.addEventListener('input', () => {
+        item.qtd = Math.max(1, Math.min(9999, parseInt(qtd.value, 10) || 1));
+        atualizarTotais();
+      });
+      const tdQ = el('td'); tdQ.append(qtd); tr.append(tdQ);
+
+      const preco = el('input', 'input input--curto');
+      preco.inputMode = 'decimal'; preco.placeholder = 'a cotar';
+      preco.value = deCentavos(item.preco);
+      preco.setAttribute('aria-label', `Preço por caixa de ${item.nome}`);
+      preco.addEventListener('input', () => { item.preco = paraCentavos(preco.value); atualizarTotais(); });
+      preco.addEventListener('change', () => { preco.value = deCentavos(item.preco); });
+      const tdP = el('td'); tdP.append(preco); tr.append(tdP);
+
+      const tdSub = el('td', 'num');
+      celulaSub.set(item, tdSub);
+      tr.append(tdSub);
+
+      const tdR = el('td');
+      tdR.append(botao('Remover', 'btn--perigo', () => {
+        itensEd = itensEd.filter(x => x !== item);
+        desenharItensEditor();
+      }));
+      tr.append(tdR);
+      tbody.append(tr);
+    }
+    atualizarTotais();
+  }
+
+  function mostrarLink(o) {
+    const caixa = $('#ep-link');
+    caixa.hidden = !o || !o.token;
+    if (caixa.hidden) return;
+    const url = `${location.origin}/orcamento.html?t=${o.token}`;
+    $('#ep-url').value = url;
+    // Com telefone o WhatsApp já abre na conversa do cliente; sem, a loja
+    // escolhe o contato.
+    const tel = (o.contato_tel || '').replace(/\D/g, '');
+    const numero = tel.length === 10 || tel.length === 11 ? '55' + tel : tel;
+    const nome = o.cliente_nome || o.contato_nome;
+    const msg = `Olá${nome ? ', ' + nome : ''}! Segue o seu orçamento do Atacado Polvo. ` +
+      `Pelo link dá para conferir, ajustar quantidades, remover itens e aprovar: ${url}`;
+    $('#ep-wpp').href = `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`;
+  }
+
+  function abrirEditor(o) {
+    editando = o || null;
+    itensEd = o ? o.itens.map(i => ({ preco: null, ...i })) : [];
+    $('#ep-titulo').textContent = o ? `Orçamento nº ${o.id}` : 'Novo orçamento';
+    $('#ep-contato').hidden = !!o;
+    $('#ep-nome').value = '';
+    $('#ep-tel').value = '';
+    $('#ep-busca').value = '';
+    $('#ep-validade').value = (o && o.validade) || '';
+    $('#ep-obs').value = (o && o.observacao) || '';
+    $('#ep-salvar').textContent = o && o.token ? 'Salvar alterações' : 'Salvar e gerar link';
+    avisoEditor('');
+    desenharItensEditor();
+    mostrarLink(o);
+    editor.showModal();
+  }
+
+  if (editor) {
+    /* Busca de produto: ignora acento/maiúscula, casa todas as palavras
+       digitadas em nome, embalagem, categoria ou código. Sem resultado, o
+       texto vira um item avulso (o servidor aceita item fora do catálogo). */
+    const busca = $('#ep-busca');
+    const lista = $('#ep-resultados');
+    const cat = window.CATALOGO || { categorias: [], produtos: [] };
+    const nomeCat = Object.fromEntries(cat.categorias.map(c => [c.id, c.nome]));
+    const normalizar = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const indice = cat.produtos.map(p => ({
+      p, chave: normalizar([p.nome, p.caixa, p.emb, nomeCat[p.cat], p.id].join(' '))
+    }));
+    let opcoes = [];   // [{p} | {avulso: 'texto'}]
+    let ativa = -1;
+
+    function adicionarItem(o) {
+      const id = o.p ? o.p.id : 'avulso-' + normalizar(o.avulso).replace(/\W+/g, '-').slice(0, 30);
+      const ja = itensEd.find(i => i.id === id);
+      if (ja) ja.qtd = Math.min(9999, ja.qtd + 1);
+      else if (o.p) itensEd.push({ id, nome: o.p.nome, caixa: o.p.caixa, qtd: 1, preco: null });
+      else itensEd.push({ id, nome: o.avulso.slice(0, 160), caixa: '', qtd: 1, preco: null });
+      busca.value = '';
+      fecharLista();
+      desenharItensEditor();
+      busca.focus();
+    }
+
+    // Destaca no nome o trecho que casou com a primeira palavra da busca.
+    function nomeDestacado(nome, termo) {
+      const div = el('div', 'pb-nome');
+      // Normaliza letra a letra para os índices baterem com o nome original.
+      const i = termo ? Array.from(nome, normalizar).join('').indexOf(termo) : -1;
+      if (i < 0) { div.textContent = nome; return div; }
+      div.append(nome.slice(0, i), el('mark', '', nome.slice(i, i + termo.length)), nome.slice(i + termo.length));
+      return div;
+    }
+
+    function fecharLista() {
+      lista.hidden = true;
+      busca.setAttribute('aria-expanded', 'false');
+      busca.removeAttribute('aria-activedescendant');
+      ativa = -1;
+    }
+
+    function marcarAtiva(n) {
+      const lis = lista.querySelectorAll('li[role="option"]');
+      if (!lis.length) return;
+      ativa = (n + lis.length) % lis.length;
+      lis.forEach((li, i) => li.setAttribute('aria-selected', i === ativa ? 'true' : 'false'));
+      busca.setAttribute('aria-activedescendant', lis[ativa].id);
+      lis[ativa].scrollIntoView({ block: 'nearest' });
+    }
+
+    function desenharLista() {
+      const q = normalizar(busca.value).trim();
+      const termos = q.split(/\s+/).filter(Boolean);
+      opcoes = (termos.length ? indice.filter(x => termos.every(t => x.chave.includes(t))) : indice)
+        .slice(0, 40).map(x => ({ p: x.p }));
+      if (busca.value.trim().length >= 3) opcoes.push({ avulso: busca.value.trim() });
+
+      lista.replaceChildren();
+      opcoes.forEach((o, i) => {
+        const li = el('li');
+        li.id = `ep-op-${i}`;
+        li.setAttribute('role', 'option');
+        const info = el('div', 'pb-info');
+        if (o.p) {
+          info.append(nomeDestacado(o.p.nome, termos[0]),
+            el('div', 'pb-meta', `${o.p.caixa} · ${nomeCat[o.p.cat] || ''}`));
+          li.append(info);
+          const ja = itensEd.find(it => it.id === o.p.id);
+          if (ja) li.append(el('span', 'pb-ja', `no orçamento · ${ja.qtd} cx`));
+        } else {
+          info.append(el('div', 'pb-nome', `+ Adicionar “${o.avulso}” como item avulso`),
+            el('div', 'pb-meta', 'Fora do catálogo — defina quantidade e preço na tabela'));
+          li.append(info);
+        }
+        // mousedown (e não click) para não perder o foco do campo antes.
+        li.addEventListener('mousedown', ev => { ev.preventDefault(); adicionarItem(o); });
+        li.addEventListener('mousemove', () => { if (ativa !== i) marcarAtiva(i); });
+        lista.append(li);
+      });
+      if (!opcoes.length) {
+        const li = el('li', 'pb-vazio', 'Nenhum produto encontrado. Digite 3 letras ou mais para item avulso.');
+        lista.append(li);
+      }
+      lista.hidden = false;
+      busca.setAttribute('aria-expanded', 'true');
+      if (opcoes.length && termos.length) marcarAtiva(0);
+      else ativa = -1;
+    }
+
+    busca.addEventListener('input', desenharLista);
+    busca.addEventListener('focus', desenharLista);
+    busca.addEventListener('blur', fecharLista);
+    busca.addEventListener('keydown', ev => {
+      if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+        ev.preventDefault();
+        if (lista.hidden) desenharLista();
+        marcarAtiva(ativa + (ev.key === 'ArrowDown' ? 1 : -1));
+      } else if (ev.key === 'Enter') {
+        ev.preventDefault();
+        if (ativa >= 0 && opcoes[ativa]) adicionarItem(opcoes[ativa]);
+      } else if (ev.key === 'Escape' && !lista.hidden) {
+        ev.preventDefault();   // fecha só a lista, não o diálogo
+        fecharLista();
+      }
+    });
+
+    $('#novo-orcamento').addEventListener('click', () => abrirEditor(null));
+
+    $('#ep-salvar').addEventListener('click', async ev => {
+      const b = ev.currentTarget;
+      if (!itensEd.length) return avisoEditor('Inclua ao menos um item.');
+      if (!editando && $('#ep-nome').value.trim().length < 2) {
+        return avisoEditor('Informe o nome do cliente.');
+      }
+
+      const corpo = {
+        itens: itensEd,
+        validade: $('#ep-validade').value,
+        observacao: $('#ep-obs').value
+      };
+      b.disabled = true;
+      try {
+        let r;
+        if (editando) {
+          r = await window.API.pedir(`/api/admin/orcamentos/${editando.id}/proposta`,
+            { metodo: 'PUT', corpo });
+        } else {
+          corpo.contato = { nome: $('#ep-nome').value, tel: $('#ep-tel').value };
+          r = await window.API.pedir('/api/admin/orcamentos', { metodo: 'POST', corpo });
+          editando = { contato_nome: corpo.contato.nome, contato_tel: corpo.contato.tel };
+        }
+        Object.assign(editando, corpo, { id: r.id, token: r.token });
+        $('#ep-titulo').textContent = `Orçamento nº ${r.id}`;
+        $('#ep-contato').hidden = true;
+        $('#ep-salvar').textContent = 'Salvar alterações';
+        mostrarLink(editando);
+        avisoEditor('Salvo. Copie o link ou envie pelo WhatsApp.', true);
+        await carregar();
+      } catch (e) {
+        avisoEditor(e.message || 'Não deu para salvar.');
+      } finally {
+        b.disabled = false;
+      }
+    });
+
+    /* PDF sem dependência: monta uma página limpa numa janela nova e abre a
+       impressão do navegador ("Salvar como PDF"). */
+    $('#ep-pdf').addEventListener('click', () => {
+      if (!itensEd.length) return avisoEditor('Inclua ao menos um item.');
+      const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const cliente = editando ? (editando.cliente_nome || editando.contato_nome) : $('#ep-nome').value.trim();
+      const validade = $('#ep-validade').value;
+      const obs = $('#ep-obs').value.trim();
+      let total = 0, aCotar = 0;
+      const linhas = itensEd.map(i => {
+        const sub = i.preco == null ? null : i.preco * i.qtd;
+        if (sub == null) aCotar++; else total += sub;
+        return `<tr><td>${esc(i.nome)}<small>${esc(i.caixa)}</small></td><td class="n">${i.qtd}</td>` +
+          `<td class="n">${i.preco == null ? 'a cotar' : reais(i.preco)}</td><td class="n">${sub == null ? '—' : reais(sub)}</td></tr>`;
+      }).join('');
+      const titulo = editando && editando.id ? `Orçamento nº ${editando.id}` : 'Orçamento';
+      const w = window.open('', '_blank');
+      if (!w) return avisoEditor('Libere pop-ups para baixar o PDF.');
+      w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>${esc(titulo)} — Atacado Polvo</title><style>
+body{font:14px/1.5 system-ui,sans-serif;color:#1b0733;margin:32px}
+h1{margin:0;font-size:22px;color:#7b2fe3}.topo{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #7b2fe3;padding-bottom:12px;margin-bottom:18px}
+table{width:100%;border-collapse:collapse;margin-top:14px}th,td{padding:8px;border-bottom:1px solid #e8def7;text-align:left;vertical-align:top}
+th{font-size:12px;text-transform:uppercase;color:#6f5c8a}.n{text-align:right;white-space:nowrap}small{display:block;color:#6f5c8a}
+tfoot td{font-weight:700;border:0}.obs{margin-top:18px;padding:10px 14px;border-left:3px solid #7b2fe3;background:#f8f5fe;white-space:pre-line}
+@page{margin:14mm}</style></head><body>
+<div class="topo"><div><h1>Atacado Polvo</h1><div>${esc(titulo)}</div></div>
+<div class="n">Emitido em ${new Date().toLocaleDateString('pt-BR')}${validade ? `<br>Válido até ${validade.split('-').reverse().join('/')}` : ''}</div></div>
+${cliente ? `<div><strong>Cliente:</strong> ${esc(cliente)}</div>` : ''}
+<table><thead><tr><th>Produto</th><th class="n">Qtd (cx)</th><th class="n">Preço/cx</th><th class="n">Subtotal</th></tr></thead>
+<tbody>${linhas}</tbody><tfoot><tr><td colspan="3" class="n">Total</td><td class="n">${reais(total)}</td></tr>
+${aCotar ? `<tr><td colspan="4" class="n" style="font-weight:400">${aCotar} item(ns) a cotar, fora do total</td></tr>` : ''}</tfoot></table>
+${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
+</body></html>`);
+      w.document.close();
+      // Script inline na janela nova seria barrado pelo CSP (herdado); o
+      // print é chamado daqui.
+      w.focus();
+      w.print();
+    });
+
+    $('#ep-copiar').addEventListener('click', async () => {
+      const campo = $('#ep-url');
+      try { await navigator.clipboard.writeText(campo.value); }
+      catch { campo.select(); document.execCommand('copy'); }
+      avisoEditor('Link copiado.', true);
+    });
+
+    $('#ep-revogar').addEventListener('click', async () => {
+      if (!editando || !confirm('Desativar o link? Quem tem a URL deixa de ver o orçamento.')) return;
+      try {
+        await window.API.pedir(`/api/admin/orcamentos/${editando.id}/proposta`, { metodo: 'DELETE' });
+        editando.token = null;
+        mostrarLink(editando);
+        $('#ep-salvar').textContent = 'Salvar e gerar link';
+        avisoEditor('Link desativado. Salvar de novo gera um link novo.', true);
+        await carregar();
+      } catch (e) { avisoEditor(e.message); }
+    });
   }
 
   /* ---- Mensagens ----------------------------------------------------------- */
@@ -332,6 +689,11 @@
     caixa.append(botao(m.lida ? 'Marcar não lida' : 'Marcar lida', 'btn--ghost',
       () => agir(() => window.API.pedir(`/api/admin/mensagens/${m.id}`,
         { metodo: 'PATCH', corpo: { lida: !m.lida } }))));
+    caixa.append(botao('Excluir', 'btn--perigo', () => {
+      if (!confirm(`Excluir a mensagem de ${m.nome}? Isso não tem volta.`)) return;
+      agir(() => window.API.pedir(`/api/admin/mensagens/${m.id}`, { metodo: 'DELETE' }),
+        'Mensagem excluída.');
+    }));
     tdAcoes.append(caixa);
     tr.append(tdAcoes);
     return tr;

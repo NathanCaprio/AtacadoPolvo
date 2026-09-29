@@ -83,6 +83,7 @@ before(async () => {
       LIMITE_ORCAMENTO: '500',
       LIMITE_MENSAGEM: '500',
       LIMITE_CUPOM: '500',
+      LIMITE_PROPOSTA: '500',
       // O servidor faz um backup no boot; aqui ele só sujaria backups/ com
       // cópias do banco de teste. O backup tem testes próprios.
       BACKUP_AUTO: '0'
@@ -338,6 +339,100 @@ describe('orçamentos', () => {
   });
 });
 
+describe('orçamento enviado ao cliente', () => {
+  const ITENS = [
+    { id: 'c01', nome: 'Detergente Neutro 500ml', caixa: 'Caixa com 24 un.', qtd: 3, preco: 4590 },
+    { id: 'b01', nome: 'Desinfetante Pinho 2L', caixa: 'Caixa com 6 un.', qtd: 2, preco: 5200 }
+  ];
+
+  async function novoAdmin() {
+    const conta = await novaConta();
+    const { DatabaseSync } = require('node:sqlite');
+    const db = new DatabaseSync(banco);
+    db.prepare(`UPDATE clientes SET papel = 'admin' WHERE email = ?`).run(conta.email);
+    db.close();
+    return conta;
+  }
+
+  async function novaProposta(extra = {}) {
+    const { req } = await novoAdmin();
+    const r = await req('/api/admin/orcamentos', {
+      metodo: 'POST',
+      corpo: { itens: ITENS, contato: { nome: 'Condomínio Teste' }, ...extra }
+    });
+    assert.equal(r.status, 200, JSON.stringify(r.dados));
+    return { admin: req, token: r.dados.token, id: r.dados.id };
+  }
+
+  test('só admin cria e envia proposta', async () => {
+    const anon = criarCliente();
+    assert.equal((await anon('/api/admin/orcamentos', { metodo: 'POST', corpo: { itens: ITENS } })).status, 401);
+    const { req } = await novaConta();
+    assert.equal((await req('/api/admin/orcamentos/1/proposta', { metodo: 'PUT', corpo: { itens: ITENS } })).status, 403);
+  });
+
+  test('cliente abre pelo link sem conta', async () => {
+    const { token } = await novaProposta({ observacao: 'Entrega na terça.' });
+    const r = await criarCliente()(`/api/proposta/${token}`);
+    assert.equal(r.status, 200);
+    assert.equal(r.dados.orcamento.itens.length, 2);
+    assert.equal(r.dados.orcamento.itens[0].preco, 4590);
+    assert.equal(r.dados.orcamento.editavel, true);
+  });
+
+  test('token desconhecido dá 404', async () => {
+    const r = await criarCliente()('/api/proposta/' + 'x'.repeat(24));
+    assert.equal(r.status, 404);
+  });
+
+  test('cliente muda quantidade e remove item, mas não mexe em preço', async () => {
+    const { token } = await novaProposta();
+    const cli = criarCliente();
+    const r = await cli(`/api/proposta/${token}`, {
+      metodo: 'PATCH',
+      corpo: { itens: [{ id: '#1', qtd: 7, preco: 1, nome: 'Outro' }, { id: '#9', qtd: 5 }] }
+    });
+    assert.equal(r.status, 200);
+    const itens = r.dados.orcamento.itens;
+    assert.equal(itens.length, 1);
+    assert.equal(itens[0].nome, 'Desinfetante Pinho 2L');
+    assert.equal(itens[0].qtd, 7);
+    assert.equal(itens[0].preco, 5200);
+    assert.ok(r.dados.orcamento.alterado_em);
+  });
+
+  test('não deixa esvaziar nem quantidade inválida', async () => {
+    const { token } = await novaProposta();
+    const cli = criarCliente();
+    assert.equal((await cli(`/api/proposta/${token}`, { metodo: 'PATCH', corpo: { itens: [] } })).status, 400);
+    assert.equal((await cli(`/api/proposta/${token}`, { metodo: 'PATCH', corpo: { itens: [{ id: '#0', qtd: 0 }] } })).status, 400);
+  });
+
+  test('depois de aprovado, trava; a loja editando destrava', async () => {
+    const { admin, token, id } = await novaProposta();
+    const cli = criarCliente();
+    assert.equal((await cli(`/api/proposta/${token}/aprovar`, { metodo: 'POST' })).status, 200);
+    const r = await cli(`/api/proposta/${token}`, { metodo: 'PATCH', corpo: { itens: [{ id: '#0', qtd: 1 }] } });
+    assert.equal(r.status, 409);
+
+    const reenvio = await admin(`/api/admin/orcamentos/${id}/proposta`, { metodo: 'PUT', corpo: { itens: ITENS } });
+    assert.equal(reenvio.dados.token, token, 'o link continua o mesmo');
+    assert.equal((await cli(`/api/proposta/${token}`)).dados.orcamento.editavel, true);
+  });
+
+  test('proposta vencida não aceita alteração', async () => {
+    const { token } = await novaProposta({ validade: '2000-01-01' });
+    const r = await criarCliente()(`/api/proposta/${token}`, { metodo: 'PATCH', corpo: { itens: [{ id: '#0', qtd: 1 }] } });
+    assert.equal(r.status, 409);
+  });
+
+  test('link desativado some', async () => {
+    const { admin, token, id } = await novaProposta();
+    assert.equal((await admin(`/api/admin/orcamentos/${id}/proposta`, { metodo: 'DELETE' })).status, 204);
+    assert.equal((await criarCliente()(`/api/proposta/${token}`)).status, 404);
+  });
+});
+
 describe('mensagens de contato', () => {
   const VALIDA = {
     nome: 'Síndico João', email: 'joao@predio.com.br',
@@ -361,6 +456,23 @@ describe('mensagens de contato', () => {
       metodo: 'POST', corpo: { ...VALIDA, mensagem: '' }
     });
     assert.equal(r.status, 400);
+  });
+
+  test('só admin exclui; some da lista', async () => {
+    const { id } = (await criarCliente()('/api/mensagens', { metodo: 'POST', corpo: VALIDA })).dados;
+    const comum = (await novaConta()).req;
+    assert.equal((await comum(`/api/admin/mensagens/${id}`, { metodo: 'DELETE' })).status, 403);
+
+    const conta = await novaConta();
+    const { DatabaseSync } = require('node:sqlite');
+    const db = new DatabaseSync(banco);
+    db.prepare(`UPDATE clientes SET papel = 'admin' WHERE email = ?`).run(conta.email);
+    db.close();
+
+    assert.equal((await conta.req(`/api/admin/mensagens/${id}`, { metodo: 'DELETE' })).status, 204);
+    assert.equal((await conta.req(`/api/admin/mensagens/${id}`, { metodo: 'DELETE' })).status, 404);
+    const lista = (await conta.req('/api/admin/mensagens')).dados.mensagens;
+    assert.ok(!lista.some(m => m.id === id));
   });
 });
 

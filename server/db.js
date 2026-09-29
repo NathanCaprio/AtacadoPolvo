@@ -158,11 +158,18 @@ function migrar() {
              ON mensagens(cupom) WHERE cupom IS NOT NULL`);
 
   const o = colunas('orcamentos');
-  for (const coluna of ['contato_nome', 'contato_email', 'contato_tel', 'aceite_em']) {
+  // Proposta enviada ao cliente: token do link público, observação e
+  // validade escritas pela loja, e os carimbos de envio, de alteração feita
+  // pelo cliente e de aprovação.
+  for (const coluna of ['contato_nome', 'contato_email', 'contato_tel', 'aceite_em',
+                        'token', 'observacao', 'validade', 'enviado_em',
+                        'alterado_em', 'aprovado_em']) {
     if (!o.includes(coluna)) {
       db.exec(`ALTER TABLE orcamentos ADD COLUMN ${coluna} TEXT`);
     }
   }
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_orc_token
+             ON orcamentos(token) WHERE token IS NOT NULL`);
 }
 
 migrar();

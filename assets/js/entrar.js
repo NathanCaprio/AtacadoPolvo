@@ -72,6 +72,13 @@
 
       try {
         const dados = Object.fromEntries(new FormData(form).entries());
+        if ('confirmarSenha' in dados) {
+          const confirmarSenha = dados.confirmarSenha;
+          delete dados.confirmarSenha;
+          if (dados.senha !== confirmarSenha) {
+            throw new Error('As senhas não são iguais.');
+          }
+        }
         const r = await acao(dados);
         irPara(r.cliente);
       } catch (e) {
