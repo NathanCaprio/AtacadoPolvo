@@ -88,7 +88,7 @@ const texto = v => (typeof v === 'string' ? v.trim() : '');
 const ORIGENS = ['contato', 'landing', 'orcamento', 'rodape', 'calculadora',
                  'recorrencia', 'cupom'];
 const SEGMENTOS = ['condominio', 'escola', 'empresa', 'residencial',
-                   'restaurante', 'hotel', 'pet', 'revenda'];
+                   'restaurante', 'hotel', 'pet', 'revenda', 'evento'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
 function validarCadastro(c) {

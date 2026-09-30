@@ -70,6 +70,12 @@
     if (estado.ordem === 'az') out = out.slice().sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
     if (estado.ordem === 'za') out = out.slice().sort((a, b) => b.nome.localeCompare(a.nome, 'pt-BR'));
     if (estado.ordem === 'categoria') out = out.slice().sort((a, b) => nomeDe(a.cat).localeCompare(nomeDe(b.cat), 'pt-BR'));
+
+    // Grid com lista fixa (relacionados em produto.html): mantém a ordem dada.
+    if (grid.dataset.ids) {
+      const ids = grid.dataset.ids.split(',');
+      out = ids.map(id => out.find(p => p.id === id)).filter(Boolean);
+    }
     return out;
   }
 
@@ -78,12 +84,13 @@
     const tag = p.tag === 'mais-vendido' ? '<span class="prod-tag">Mais vendido</span>'
               : p.tag === 'novo' ? '<span class="prod-tag prod-tag--new">Novidade</span>' : '';
     const naLista = lista.some(i => i.id === p.id);
+    const link = `produto.html?id=${p.id}`;
 
     return `<article class="prod">
-      <div class="prod-art">${tag}${window.artProduto(p.art, cor)}</div>
+      <a class="prod-art" href="${link}" tabindex="-1" aria-hidden="true">${tag}${window.artProduto(p.art, cor)}</a>
       <div class="prod-body">
         <span class="prod-cat">${nomeDe(p.cat)}</span>
-        <h3>${p.nome}</h3>
+        <h3><a class="prod-link" href="${link}">${p.nome}</a></h3>
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-meta">
           <span class="chip">${p.emb}</span>
@@ -183,7 +190,21 @@
     atualizarFab();
     renderDrawer();
     render();
+    document.dispatchEvent(new CustomEvent('orcamento:mudou', { detail: lista }));
   }
+
+  /* Para a página de produto (produto.js), que adiciona com quantidade e
+     precisa usar esta mesma lista e esta mesma gaveta. */
+  window.orcamento = {
+    adicionar(id, qtd) {
+      const item = lista.find(i => i.id === id);
+      if (item) item.qtd += qtd;
+      else lista.push({ id, qtd });
+      sincronizar();
+      abrirDrawer(true);
+    },
+    quantidade: id => (lista.find(i => i.id === id) || {}).qtd || 0
+  };
 
   /* ---- Envio -------------------------------------------------------------- */
 

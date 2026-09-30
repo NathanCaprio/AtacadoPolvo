@@ -1397,6 +1397,155 @@ select.input {
   margin-top: auto;
   padding-top: 14px;
 }
+
+/* ---- Vitrine da home (carrossel "Mais vendidos") ------------------------ */
+.vitrine-carrossel {
+  position: relative;
+}
+.vitrine-trilho {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 4 * 16px) / 5);
+  column-gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 6px 2px 14px;
+}
+.vitrine-trilho::-webkit-scrollbar {
+  display: none;
+}
+.vitrine-card {
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition:
+    transform 0.22s var(--ease),
+    box-shadow 0.22s var(--ease);
+}
+.vitrine-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.vitrine-art {
+  aspect-ratio: 1/1;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+}
+.vitrine-art svg {
+  width: 62%;
+  height: 62%;
+  transition: transform 0.3s var(--ease);
+}
+.vitrine-card:hover .vitrine-art svg {
+  transform: scale(1.05);
+}
+.vitrine-corpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px 16px;
+}
+.vitrine-corpo h3 {
+  font-size: 0.92rem;
+  line-height: 1.35;
+  font-weight: 600;
+  min-height: 2.7em;
+}
+.vitrine-oferta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+.vitrine-oferta strong {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  line-height: 1.2;
+  color: var(--brand);
+}
+.vitrine-selo {
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.vitrine-emb {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+.vitrine-foot {
+  margin-top: auto;
+  padding-top: 10px;
+}
+.vitrine-seta {
+  position: absolute;
+  top: 38%;
+  z-index: 2;
+  width: 42px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink-2);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    background 0.2s;
+}
+.vitrine-seta svg {
+  width: 22px;
+  height: 22px;
+}
+.vitrine-seta:hover:not(:disabled) {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+.vitrine-seta:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+.vitrine-seta--ant {
+  left: -16px;
+}
+.vitrine-seta--prox {
+  right: -16px;
+}
+@media (max-width: 1100px) {
+  .vitrine-trilho {
+    grid-auto-columns: calc((100% - 3 * 16px) / 4);
+  }
+}
+@media (max-width: 860px) {
+  .vitrine-trilho {
+    grid-auto-columns: calc((100% - 2 * 16px) / 3);
+  }
+}
+@media (max-width: 640px) {
+  .vitrine-trilho {
+    grid-auto-columns: 62%;
+    column-gap: 12px;
+  }
+  .vitrine-seta {
+    display: none;
+  }
+}
 .empty {
   grid-column: 1/-1;
   text-align: center;
@@ -3120,6 +3269,9 @@ textarea.input {
 .funil-barra--revenda {
   background: #ea580c;
 }
+.funil-barra--evento {
+  background: #d97706;
+}
 
 /* No tema escuro os dois voltam ao tom vivo, que lá contrasta melhor com
    o trilho e mantém a paleta reconhecível. */
@@ -3204,6 +3356,10 @@ textarea.input {
   background: #ffedd5;
   color: #9a3412;
 }
+.selo--evento {
+  background: #fef3c7;
+  color: #92400e;
+}
 .selo--cupom {
   background: #ffe4e6;
   color: #be123c;
@@ -3217,6 +3373,10 @@ textarea.input {
   background: #3b0a17;
   color: #fda4af;
 }
+:root[data-theme="dark"] .selo--evento {
+  background: #3a2a08;
+  color: #fcd34d;
+}
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .selo--revenda {
     background: #3a1a08;
@@ -3225,6 +3385,10 @@ textarea.input {
   :root:not([data-theme="light"]) .selo--cupom {
     background: #3b0a17;
     color: #fda4af;
+  }
+  :root:not([data-theme="light"]) .selo--evento {
+    background: #3a2a08;
+    color: #fcd34d;
   }
 }
 .selo--aceite {
@@ -5231,4 +5395,217 @@ section.marcas {
 }
 #oc-form[hidden] {
   display: none;
+}
+
+/* =========================================================================
+   Página de produto (produto.html)
+   ========================================================================= */
+a.prod-art {
+  display: grid;
+}
+.prod-link {
+  color: inherit;
+}
+.prod-link:hover {
+  color: var(--brand);
+}
+
+.pd-section {
+  padding-top: clamp(24px, 4vw, 40px);
+}
+.pd-trilha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 26px;
+  font-size: 0.86rem;
+  color: var(--ink-3);
+}
+.pd-trilha a {
+  color: var(--ink-2);
+}
+.pd-trilha a:hover {
+  color: var(--brand);
+}
+.pd-trilha [aria-current] {
+  color: var(--ink-3);
+}
+.pd-vazio {
+  display: grid;
+  gap: 14px;
+  padding-block: 24px 40px;
+}
+
+.pd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+.pd[hidden],
+.pd-vazio[hidden] {
+  display: none;
+}
+.pd-art {
+  position: relative;
+  aspect-ratio: 1/1;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.pd-art svg {
+  width: 62%;
+  height: 62%;
+}
+.pd-art .prod-tag {
+  top: 18px;
+  left: 18px;
+}
+.pd-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pd-info h1 {
+  font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.5rem);
+}
+
+.pd-ficha {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 6px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.pd-ficha div {
+  padding: 12px 14px;
+}
+.pd-ficha div + div {
+  border-left: 1px solid var(--line);
+}
+.pd-ficha dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pd-ficha dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pd-compra {
+  display: flex;
+  gap: 12px;
+}
+.qty--lg {
+  flex: none;
+  padding: 4px;
+}
+.qty--lg button {
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem;
+}
+.qty--lg span {
+  min-width: 36px;
+  font-size: 1rem;
+}
+.pd-add {
+  flex: 1;
+}
+.pd-na-lista {
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: var(--ok);
+}
+
+.pd-garantias {
+  display: grid;
+  gap: 8px;
+  margin: 6px 0 0;
+  padding: 18px 18px 18px 38px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  font-size: 0.9rem;
+  color: var(--ink-2);
+}
+
+.pd-passos-sec {
+  padding-top: 0;
+}
+.pd-passos-sec + .section {
+  padding-top: 0;
+}
+.pd-passos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: passo;
+}
+.pd-passos li {
+  counter-increment: passo;
+  display: grid;
+  gap: 4px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+.pd-passos li::before {
+  content: counter(passo);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 6px;
+  border-radius: var(--r-full);
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+.pd-passos span {
+  font-size: 0.88rem;
+  color: var(--ink-3);
+}
+
+.pd-rel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 20px;
+  margin-bottom: 22px;
+}
+.pd-rel-head a {
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .pd {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pd-art {
+    aspect-ratio: 4/3;
+  }
+  .pd-passos {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .pd-ficha {
+    grid-template-columns: 1fr;
+  }
+  .pd-ficha div + div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
 }

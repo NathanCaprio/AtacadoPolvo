@@ -215,6 +215,7 @@
     hotel: 'Hotéis',
     pet: 'Pet shops e veterinárias',
     revenda: 'Mercados e revenda',
+    evento: 'Festas e eventos',
     outros: 'Sem segmento'
   };
 
