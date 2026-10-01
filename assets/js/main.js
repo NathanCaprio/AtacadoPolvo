@@ -288,8 +288,21 @@
   const ICONE_LUPA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
   const SUGESTOES = 6;
 
-  // Mesma regra do catalogo.js: ignora acento e maiúscula ("agua" acha "ÁGUA").
+  // A regra de busca mora só aqui e o catalogo.js usa esta mesma (window.BUSCA),
+  // para a contagem das sugestões bater com a do catálogo. Testes em
+  // testes/busca.test.js.
+  // Ignora acento e maiúscula dos dois lados: o ERP grava "AGUA SANITARIA" e
+  // o cliente digita "água".
   const normalizar = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  // Cada palavra precisa aparecer (em qualquer ordem) no nome, descrição,
+  // texto ou categoria: "detergente 5l" acha "DETERGENTE NEUTRO 5L". O código
+  // do produto só vale inteiro. Termo vazio casa com tudo. `t` já normalizado.
+  function casaBusca(p, t, nomeCategoria) {
+    if (!t) return true;
+    if (normalizar(p.id) === t) return true;
+    const tudo = [p.nome, p.desc, p.texto, nomeCategoria].map(normalizar).join(' ');
+    return t.split(/\s+/).filter(Boolean).every(w => tudo.includes(w));
+  }
   const esc = s => String(s == null ? '' : s)
     .replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
@@ -312,8 +325,8 @@
     return catalogoPedido.then(() => window.CATALOGO || null);
   }
 
-  // Cada palavra precisa aparecer (em qualquer ordem): "detergente 5l" acha
-  // "DETERGENTE NEUTRO 5L". Nome que começa com o termo vem primeiro.
+  // Sugestões: nome que começa com o termo vem primeiro, depois nome que tem
+  // todas as palavras, depois o resto (achou pela descrição/categoria).
   function buscarProdutos(cat, termo) {
     const t = normalizar(termo.trim());
     const palavras = t.split(/\s+/).filter(Boolean);
@@ -321,15 +334,15 @@
     cat.categorias.forEach(c => { nomeCat[c.id] = c.nome; });
     const achados = [];
     cat.produtos.forEach(p => {
+      if (!casaBusca(p, t, nomeCat[p.cat])) return;
       const nome = normalizar(p.nome);
-      const tudo = [nome, normalizar(p.desc), normalizar(p.texto), normalizar(nomeCat[p.cat])].join(' ');
-      if (normalizar(p.id) !== t && !palavras.every(w => tudo.includes(w))) return;
       const peso = nome.startsWith(t) ? 0 : palavras.every(w => nome.includes(w)) ? 1 : 2;
       achados.push({ p, peso });
     });
     achados.sort((a, b) => a.peso - b.peso || a.p.nome.localeCompare(b.p.nome, 'pt-BR'));
     return { produtos: achados.map(a => a.p), nomeCat };
   }
+  window.BUSCA = { normalizar, casa: casaBusca, buscar: buscarProdutos };
 
   function initBusca() {
     const acoes = $('.header-actions');

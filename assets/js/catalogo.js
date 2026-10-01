@@ -24,9 +24,9 @@
   const referencia = (window.CATALOGO_REFERENCIA || {}).produtos || [];
   const acharProduto = id => produtos.find(x => x.id === id) || referencia.find(x => x.id === id);
 
-  // O ERP grava os nomes sem acento ("AGUA SANITARIA"): a busca ignora
-  // acento e maiúscula dos dois lados, senão "água" não acha nada.
-  const normalizar = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  // A regra de busca (acento, maiúscula, palavras em qualquer ordem, código)
+  // é a do main.js, carregado antes: a mesma da lupa do cabeçalho.
+  const { normalizar, casa } = window.BUSCA;
 
   // Mais de mil produtos num grid só travam o celular: desenha aos poucos.
   const PAGINA = 48;
@@ -71,18 +71,9 @@
   /* ---- Render do grid ---------------------------------------------------- */
   function filtrar() {
     const termo = normalizar(estado.busca.trim());
-    // Cada palavra em qualquer ordem: "detergente 5l" acha "DETERGENTE NEUTRO 5L".
-    // Mesma regra da busca do cabeçalho (main.js), para a contagem bater.
-    const palavras = termo.split(/\s+/).filter(Boolean);
     const cats = estado.cat.split(',');     // ?cat=vassouras,panos (cards das landings)
-    let out = produtos.filter(p => {
-      const okCat = estado.cat === 'todos' || cats.includes(p.cat);
-      const tudo = [p.nome, p.desc, p.texto, nomeDe(p.cat)].map(normalizar).join(' ');
-      const okBusca = !termo ||
-        palavras.every(w => tudo.includes(w)) ||
-        normalizar(p.id) === termo;
-      return okCat && okBusca;
-    });
+    let out = produtos.filter(p =>
+      (estado.cat === 'todos' || cats.includes(p.cat)) && casa(p, termo, nomeDe(p.cat)));
 
     if (estado.ordem === 'az') out = out.slice().sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
     if (estado.ordem === 'za') out = out.slice().sort((a, b) => b.nome.localeCompare(a.nome, 'pt-BR'));

@@ -117,18 +117,22 @@
     f.querySelector('.err').textContent = msg || '';
   }
 
+  // Mesmas regras de normalizarWhats em server/api.js; o teste do cupom em
+  // server/api.test.js manda os mesmos números aos dois e cobra que concordem.
+  function whatsValido(v) {
+    const digitos = String(v).replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
+    return (digitos.length === 10 || digitos.length === 11) &&
+           /^[1-9]{2}/.test(digitos) &&
+           (digitos.length === 10 || digitos[2] === '9') &&
+           !/^(\d)\1+$/.test(digitos.slice(2));
+  }
+
   function validar(form) {
     const { nome, whatsapp, segmento, aceite } = form.elements;
     let ok = true;
-    const digitos = whatsapp.value.replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
-    // Mesmas regras de normalizarWhats em server/api.js.
-    const whatsOk = (digitos.length === 10 || digitos.length === 11) &&
-                    /^[1-9]{2}/.test(digitos) &&
-                    (digitos.length === 10 || digitos[2] === '9') &&
-                    !/^(\d)\1+$/.test(digitos.slice(2));
     const regras = [
       [nome, nome.value.trim().length >= 2 ? '' : 'Informe seu nome.'],
-      [whatsapp, whatsOk ? '' : 'Número inválido. Use DDD + número.'],
+      [whatsapp, whatsValido(whatsapp.value) ? '' : 'Número inválido. Use DDD + número.'],
       [segmento, segmento.value ? '' : 'Escolha uma opção.'],
       [aceite, aceite.checked ? '' : 'Marque para receber o cupom.']
     ];
@@ -257,6 +261,8 @@
 
   /** Código já pedido neste navegador (catalogo.js usa na mensagem). */
   window.cupomGuardado = () => ler(CHAVE_CUPOM);
+  /** O que o pop-up aceita; exposto para o teste conferir contra o servidor. */
+  window.CUPOM = { SEGMENTOS: SEGMENTOS.map(s => s[0]), whatsValido };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', iniciar);

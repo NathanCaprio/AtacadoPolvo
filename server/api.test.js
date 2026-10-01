@@ -590,6 +590,39 @@ describe('cupom de primeira compra', () => {
     const r = await pedir({ ...VALIDO, whatsapp: '51 98888-2222', aceite: false });
     assert.equal(r.status, 400);
   });
+
+  /* O pop-up (assets/js/cupom.js) valida antes de mandar. Se ele aceitar um
+     número que o servidor recusa, o cliente vê "Número inválido" vindo do
+     nada depois de clicar; se recusar um que o servidor aceita, o cliente
+     simplesmente não consegue o cupom. Mesma coisa com a lista de segmentos. */
+  test('o pop-up e o servidor concordam sobre WhatsApp e segmento', async () => {
+    const nada = () => {};
+    const win = {
+      SITE: {},
+      localStorage: { getItem: () => null, setItem: nada },
+      document: { readyState: 'loading', addEventListener: nada }
+    };
+    win.window = win;
+    const vm = require('node:vm');
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'cupom.js'), 'utf8'), vm.createContext(win));
+    const { SEGMENTOS, whatsValido } = win.CUPOM;
+
+    const numeros = [
+      '(51) 99123-4501', '51991234502', '+55 51 99123-4503', '5551991234504', '(51) 3123-4505',
+      '99123-4506', '(51) 81234-5678', '(00) 99123-4507', '(51) 99999-9999', '(51) 3333-333',
+      '(51) 991234-50899', '(05) 99123-4509', '55 (51) 3123-4510', '(11) 91234-5611', ''
+    ];
+    for (const whatsapp of numeros) {
+      const r = await pedir({ ...VALIDO, whatsapp });
+      assert.equal(r.status < 300, whatsValido(whatsapp), `"${whatsapp}": pop-up ${whatsValido(whatsapp)}, servidor ${r.status}`);
+    }
+
+    assert.ok(SEGMENTOS.length >= 5);
+    for (const [i, segmento] of SEGMENTOS.entries()) {
+      const r = await pedir({ ...VALIDO, segmento, whatsapp: `(51) 99777-${String(1000 + i)}` });
+      assert.ok(r.status < 300, `segmento "${segmento}" do pop-up recusado pelo servidor (${r.status})`);
+    }
+  });
 });
 
 /* ---- Roteamento e estáticos ---------------------------------------------- */

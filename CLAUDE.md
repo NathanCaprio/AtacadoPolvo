@@ -32,7 +32,7 @@ npm run backup | backups | exportar | restaurar
 | Tema, menu, reveal, FAQ | `assets/js/main.js` |
 | Descontos dos planos recorrentes | `assets/js/config.js` (`descontoMensal/Semestral/Anual`) + números escritos em `recorrencia.html` |
 | Filtros/orçamento do catálogo | `assets/js/catalogo.js` |
-| Busca do cabeçalho (lupa, sugestões, atalho `/`) | `initBusca` em `assets/js/main.js` (injetada em todas as páginas menos admin; regra de busca igual à de `filtrar` no `catalogo.js`); CSS seção 34 |
+| Busca do cabeçalho (lupa, sugestões, atalho `/`) | `initBusca` em `assets/js/main.js` (injetada em todas as páginas menos admin). A regra de busca é uma só, `window.BUSCA` no `main.js`, usada também pelo `filtrar` do `catalogo.js`; testes em `testes/busca.test.js`; CSS seção 34 |
 | Formulário de landing (lead) | `assets/js/lead.js` |
 | Ligar/desligar as calculadoras | `calculadoraAtiva` em `config.js` (hoje `false`). Desligadas: some tudo com `data-calculadora` (link novo para elas precisa do atributo), as páginas mandam para o catálogo e saem do `sitemap.xml` (entradas comentadas lá) |
 | Pop-up do cupom de 1ª compra | `assets/js/cupom.js` (valor/liga-desliga em `config.js`; rota `POST /api/cupom`) |
