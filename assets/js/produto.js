@@ -43,9 +43,27 @@
   const meta = document.querySelector('meta[name="description"]');
   if (meta) meta.content = descricao;
   const canonical = $('#canonical');
-  if (canonical) canonical.href = `https://www.atacadopolvo.com.br/produto.html?id=${p.id}`;
+  const url = `https://www.atacadopolvo.com.br/produto.html?id=${encodeURIComponent(p.id)}`;
+  if (canonical) canonical.href = url;
+  const ogU = $('#og-url'); if (ogU) ogU.content = url;
   const ogT = $('#og-title'); if (ogT) ogT.content = `${p.nome} — Atacado Polvo`;
   const ogD = $('#og-desc');  if (ogD) ogD.content = resumo || p.desc || descricao;
+
+  // Trilha para o Google (Início › Categoria › Produto). Sem Product: o site
+  // não mostra preço, e Product sem offers dá erro no Search Console.
+  // JSON-LD não executa, então criar o <script> pelo DOM não esbarra no CSP.
+  const base = 'https://www.atacadopolvo.com.br/';
+  const itens = [['Início', base]];
+  if (cat.nome) itens.push([cat.nome, base + linkCat]);
+  itens.push([p.nome, url]);
+  const ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: itens.map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item }))
+  });
+  document.head.appendChild(ld);
 
   /* ---- Trilha ------------------------------------------------------------ */
   const trilhaCat = $('#pd-trilha-cat');

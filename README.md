@@ -105,8 +105,9 @@ completo tem detalhe demais para tamanhos pequenos:
 3. **Fotos dos produtos** — o catálogo ainda usa ilustrações SVG geradas por código
    (`data.js` → `artProduto`). As fotos das **lojas** já são reais (veja abaixo); o que
    falta é foto de produto.
-4. **SEO** — as URLs `canonical` e o JSON-LD usam `https://www.atacadopolvo.com.br/`
-   como exemplo; troque pelo domínio real antes de publicar.
+4. **SEO** — as URLs `canonical`, `og:url` e o JSON-LD (inclusive o que `produto.js`
+   monta) usam `https://www.atacadopolvo.com.br/` como exemplo; troque pelo domínio
+   real antes de publicar (`grep -rl atacadopolvo.com.br --include=*.html --include=*.js --include=*.xml .`).
 5. **Depoimentos** — os nomes em `index.html`, `condominios.html` e `escolas.html`
    são de exemplo. Troque por depoimentos reais (ou remova a seção).
 6. **História em `sobre.html`** — o galpão de 120 m², o Fiorino, a lista de trinta
