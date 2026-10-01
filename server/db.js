@@ -137,6 +137,18 @@ db.exec(`
     fotos     TEXT NOT NULL DEFAULT '[]'     -- JSON: [url, ...]
   );
 
+  -- Nome e descrição que o painel dá a um produto do ERP. Fica só aqui,
+  -- nunca vai para o ERP. Sem chave estrangeira para produtos_erp: a
+  -- sincronização apaga e regrava aquela tabela, e o ajuste tem que
+  -- sobreviver (inclusive a um produto que sai e volta para o ERP).
+  CREATE TABLE IF NOT EXISTS produtos_site (
+    erp_id     TEXT PRIMARY KEY,
+    nome       TEXT NOT NULL DEFAULT '',     -- vazio = nome automático
+    descricao  TEXT NOT NULL DEFAULT '',
+    atualizado TEXT NOT NULL DEFAULT (datetime('now')),
+    por        INTEGER REFERENCES clientes(id) ON DELETE SET NULL
+  );
+
   -- Uma linha por sincronização, para o painel mostrar quando foi a última
   -- e por que falhou.
   CREATE TABLE IF NOT EXISTS erp_sincronizacoes (

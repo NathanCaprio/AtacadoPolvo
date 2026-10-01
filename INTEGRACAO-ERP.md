@@ -86,8 +86,14 @@ limite de licenças na hora em que o servidor sincroniza, é isso.
 - **"Mais vendidos" da home:** são os mais pedidos nos orçamentos do site
   (180 dias). Enquanto houver poucos pedidos, completa com produtos com foto
   de categorias diferentes.
-- Nomes vêm do ERP sem acento ("Agua Sanitaria"); a busca do site ignora
-  acento, mas a exibição depende do cadastro no ERP.
+- **Nomes e descrições:** o ERP grava em maiúsculas e sem acento. O site
+  ajusta as maiúsculas e põe acento nas palavras comuns (lista `ACENTOS` em
+  `server/erp.js`: "AGUA SANITARIA" vira "Água Sanitária"). Para o resto, a
+  aba **Produtos no site** do painel grava nome e descrição por produto na
+  tabela `produtos_site` do nosso banco, nunca no ERP. O ajuste vale por
+  cima do nome do ERP e sobrevive às sincronizações. A descrição aparece na
+  página do produto e na descrição para o Google; o card do catálogo
+  continua com a categoria do ERP.
 
 ## Histórico da decisão
 

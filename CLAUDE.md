@@ -26,6 +26,7 @@ npm run backup | backups | exportar | restaurar
 |---|---|
 | Telefone, WhatsApp, endereço, redes | `assets/js/config.js` (único lugar; injetado via `data-site`, `data-wpp`, `data-tel`...) |
 | Catálogo de produtos | vem do ERP: `server/erp.js` (sync, grupos→categorias) → `/catalogo-erp.js`; `assets/js/data.js` = exemplo + itens da calculadora. Ver `INTEGRACAO-ERP.md` |
+| Nome/descrição de produto no site | painel, aba "Produtos no site" → tabela `produtos_site` (nunca no ERP); acentos automáticos em `ACENTOS` (`server/erp.js`) |
 | Coeficientes da calculadora | `assets/js/consumo.js` (novo segmento: bloco em `SEGMENTOS` + lista `SEGMENTOS` em `server/api.js`) |
 | Tema, menu, reveal, FAQ | `assets/js/main.js` |
 | Descontos dos planos recorrentes | `assets/js/config.js` (`descontoMensal/Semestral/Anual`) + números escritos em `recorrencia.html` |

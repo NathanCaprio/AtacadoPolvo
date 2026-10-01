@@ -33,16 +33,19 @@
   /* ---- SEO: título, descrição, canonical --------------------------------- */
   const titulo = `${p.nome} no atacado — Porto Alegre | Atacado Polvo`;
   // Produto do ERP pode vir sem descrição e é vendido por "Unidade": a
-  // frase tem que fechar nos dois casos.
-  const descricao = `${p.nome}${p.desc ? ' — ' + p.desc : ''}. Vendido por ${p.caixa.toLowerCase()}. ` +
-    'Preço de atacado sob consulta — monte seu orçamento e receba a proposta pelo WhatsApp.';
+  // frase tem que fechar nos dois casos. Com descrição escrita no painel
+  // (p.texto), o Google mostra o começo dela.
+  const corrido = (p.texto || '').replace(/\s+/g, ' ');
+  const resumo = corrido.length > 155 ? corrido.slice(0, 150).replace(/\s\S*$/, '…') : corrido;
+  const descricao = resumo || (`${p.nome}${p.desc ? ' — ' + p.desc : ''}. Vendido por ${p.caixa.toLowerCase()}. ` +
+    'Preço de atacado sob consulta — monte seu orçamento e receba a proposta pelo WhatsApp.');
   document.title = titulo;
   const meta = document.querySelector('meta[name="description"]');
   if (meta) meta.content = descricao;
   const canonical = $('#canonical');
   if (canonical) canonical.href = `https://www.atacadopolvo.com.br/produto.html?id=${p.id}`;
   const ogT = $('#og-title'); if (ogT) ogT.content = `${p.nome} — Atacado Polvo`;
-  const ogD = $('#og-desc');  if (ogD) ogD.content = p.desc || descricao;
+  const ogD = $('#og-desc');  if (ogD) ogD.content = resumo || p.desc || descricao;
 
   /* ---- Trilha ------------------------------------------------------------ */
   const trilhaCat = $('#pd-trilha-cat');
@@ -67,7 +70,8 @@
   linkCatEl.href = linkCat;
   linkCatEl.textContent = cat.nome || '';
   texto('#pd-nome', p.nome);
-  texto('#pd-desc', p.desc);
+  texto('#pd-desc', p.texto || p.desc);
+  if (p.texto) $('#pd-desc').classList.add('pd-texto');
   texto('#pd-emb', p.emb);
   if (!p.emb) {                                   // o ERP não tem embalagem
     $('#pd-emb').parentElement.remove();

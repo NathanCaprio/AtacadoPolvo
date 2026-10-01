@@ -36,6 +36,8 @@
      GET    /api/admin/exportar?tipo=  baixa CSV de leads / clientes
      GET    /api/admin/erp             situação da sincronização com o ERP
      POST   /api/admin/erp/sincronizar dispara uma sincronização agora
+     GET    /api/admin/produtos        produtos do ERP com nome/descrição do site
+     PUT    /api/admin/produtos/:erpId nome e descrição no site (só no nosso banco)
 
      GET    /catalogo-erp.js           catálogo do ERP no formato de data.js
      GET    /sitemap-produtos.xml      uma URL por produto do ERP
@@ -1137,6 +1139,21 @@ function sincronizarErp(req, res) {
   json(res, 202, erp.situacao());
 }
 
+/* Nome e descrição do produto no site. Gravam em produtos_site, nunca no
+   ERP; o catálogo público é remontado na hora. */
+function listarProdutosSite(req, res) {
+  if (!exigirAdmin(req, res)) return;
+  json(res, 200, { produtos: erp.produtosParaPainel() });
+}
+
+async function ajustarProdutoSite(req, res, erpId) {
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
+  const r = erp.ajustarProduto(erpId, await lerJson(req), admin.id);
+  if (r.erro) return erro(res, r.status, r.erro);
+  json(res, 200, r.produto);
+}
+
 /* Revalida sempre (no-cache + ETag): depois de uma sincronização o
    visitante vê o catálogo novo na próxima página, sem esperar cache vencer. */
 function servirPublico(req, res, arquivo, tipo) {
@@ -1205,6 +1222,9 @@ const ROTAS = [
 
   ['GET',    /^\/api\/admin\/erp$/,               (rq, rs) => situacaoErp(rq, rs)],
   ['POST',   /^\/api\/admin\/erp\/sincronizar$/,  (rq, rs) => sincronizarErp(rq, rs)],
+  ['GET',    /^\/api\/admin\/produtos$/,          (rq, rs) => listarProdutosSite(rq, rs)],
+  ['PUT',    /^\/api\/admin\/produtos\/([A-Za-z0-9-]{1,64})$/,
+             (rq, rs, m) => ajustarProdutoSite(rq, rs, m[1])],
   ['GET',    /^\/catalogo-erp\.js$/,
              (rq, rs) => servirPublico(rq, rs, 'js', 'text/javascript; charset=utf-8')],
   ['HEAD',   /^\/catalogo-erp\.js$/,

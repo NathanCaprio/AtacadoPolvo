@@ -50,7 +50,10 @@ const PRODUTOS = [
   { id: 'aaaaaaaa-0000-0000-0000-000000000005', situacao: 'A', codigo: 5555,
     descricao: 'RODO 40CM', gruposProdutosDescricao: 'VASSOURA - RODO - PA - BRUXA', precoVenda: 3 },
   { id: 'aaaaaaaa-0000-0000-0000-000000000006', situacao: 'A', codigo: 5555,
-    descricao: 'RODO 60CM', gruposProdutosDescricao: 'VASSOURA - RODO - PA - BRUXA', precoVenda: 4 }
+    descricao: 'RODO 60CM', gruposProdutosDescricao: 'VASSOURA - RODO - PA - BRUXA', precoVenda: 4 },
+  { id: 'aaaaaaaa-0000-0000-0000-000000000007', situacao: 'A', codigo: 7897,
+    descricao: 'AGUA SANITARIA 5L QBOA', gruposProdutosDescricao: 'LIMPEZA',
+    categoriasProdutosDescricao: 'SAPONACEOS', precoVenda: 5 }
 ];
 
 const FICHAS = {
@@ -272,7 +275,7 @@ describe('catálogo do ERP', () => {
     const admin = await novoAdmin();
     const s = await sincronizar(admin);
     assert.equal(s.historico[0].situacao, 'ok', s.historico[0].mensagem);
-    assert.equal(s.produtos, 5);
+    assert.equal(s.produtos, 6);
     assert.equal(s.comFoto, 1);
 
     const r = await criarCliente()('/catalogo-erp.js');
@@ -284,7 +287,7 @@ describe('catálogo do ERP', () => {
     const cat = window.CATALOGO;
     assert.equal(cat.origem, 'erp');
     assert.equal(window.CATALOGO_REFERENCIA, exemplo, 'a calculadora perderia os itens de referência');
-    assert.equal(cat.produtos.length, 5);
+    assert.equal(cat.produtos.length, 6);
 
     const detergente = cat.produtos.find(p => p.id === '7891');
     assert.equal(detergente.nome, 'Detergente Neutro 500ml Ype');
@@ -292,6 +295,12 @@ describe('catálogo do ERP', () => {
     assert.equal(detergente.desc, 'Detergentes');
     assert.equal(detergente.caixa, 'Unidade');
     assert.equal(detergente.foto, S3 + 'foto1.jpg');
+
+    // O ERP grava sem acento; as palavras comuns ganham o acento no site.
+    const agua = cat.produtos.find(p => p.id === '7897');
+    assert.equal(agua.nome, 'Água Sanitária 5L Qboa');
+    assert.equal(agua.desc, 'Saponáceos');
+    assert.equal(agua.texto, undefined);
 
     const saco = cat.produtos.find(p => p.id === '7892');
     assert.ok(!/[<>"]/.test(saco.nome), `nome sem escapar: ${saco.nome}`);
@@ -332,12 +341,12 @@ describe('catálogo do ERP', () => {
       const s = await sincronizar(admin);
       assert.equal(s.historico[0].situacao, 'erro');
       assert.match(s.historico[0].mensagem, /HTTP 500/);
-      assert.equal(s.produtos, 5);
+      assert.equal(s.produtos, 6);
     } finally {
       erp.listaComDefeito = false;
     }
     const { window } = rodarCatalogo((await criarCliente()('/catalogo-erp.js')).texto);
-    assert.equal(window.CATALOGO.produtos.length, 5);
+    assert.equal(window.CATALOGO.produtos.length, 6);
   });
 
   test('sessão derrubada no ERP: entra de novo sozinho', async () => {
@@ -372,6 +381,66 @@ describe('catálogo do ERP', () => {
     assert.ok(etag);
     const revalidado = await fetch(BASE + '/catalogo-erp.js', { headers: { 'If-None-Match': etag } });
     assert.equal(revalidado.status, 304);
+  });
+
+  test('nome e descrição do painel: gravam só no site e sobrevivem à sincronização', async () => {
+    const ID = 'aaaaaaaa-0000-0000-0000-000000000001';
+    const caminho = `/api/admin/produtos/${ID}`;
+    const anon = criarCliente();
+    assert.equal((await anon('/api/admin/produtos')).status, 401);
+    assert.equal((await anon(caminho, { metodo: 'PUT', corpo: { nome: 'x' } })).status, 401);
+    const { req } = await novaConta();
+    assert.equal((await req('/api/admin/produtos')).status, 403);
+    assert.equal((await req(caminho, { metodo: 'PUT', corpo: { nome: 'x' } })).status, 403);
+
+    const admin = await novoAdmin();
+    const chamadasAntes = erp.chamadas.length;
+    const lista = (await admin('/api/admin/produtos')).dados.produtos;
+    const det = lista.find(p => p.erpId === ID);
+    assert.deepEqual([det.id, det.nomeErp, det.nomeAuto, det.nome, det.grupo],
+      ['7891', 'DETERGENTE NEUTRO 500ML YPE', 'Detergente Neutro 500ml Ype', '', 'Limpeza']);
+
+    const r = await admin(caminho, { metodo: 'PUT', corpo: {
+      nome: '  Detergente Neutro Ypê 500 ml ',
+      descricao: 'Para louças e superfícies.\r\n\n\n\nRende <b>muito</b>.'
+    } });
+    assert.equal(r.status, 200, JSON.stringify(r.dados));
+    assert.equal(r.dados.nome, 'Detergente Neutro Ypê 500 ml');
+    assert.equal(r.dados.descricao, 'Para louças e superfícies.\n\nRende bmuito/b.');
+
+    // O catálogo público muda na hora, sem esperar o cache de 10 minutos.
+    const ver = async () => rodarCatalogo((await criarCliente()('/catalogo-erp.js')).texto)
+      .window.CATALOGO.produtos.find(p => p.id === '7891');
+    let p = await ver();
+    assert.equal(p.nome, 'Detergente Neutro Ypê 500 ml');
+    assert.equal(p.texto, 'Para louças e superfícies.\n\nRende bmuito/b.');
+    assert.equal(p.desc, 'Detergentes', 'o card do catálogo continua com o texto curto');
+
+    // Sincronizar de novo regrava produtos_erp, mas o ajuste fica.
+    const s = await sincronizar(admin);
+    assert.equal(s.historico[0].situacao, 'ok', s.historico[0].mensagem);
+    assert.equal((await ver()).nome, 'Detergente Neutro Ypê 500 ml');
+
+    const longo = await admin(caminho, { metodo: 'PUT', corpo: { nome: 'x'.repeat(121) } });
+    assert.equal(longo.status, 400);
+    const naoTexto = await admin(caminho, { metodo: 'PUT', corpo: { descricao: { a: 1 } } });
+    assert.equal(naoTexto.status, 400);
+    const inexistente = await admin('/api/admin/produtos/bbbbbbbb-0000-0000-0000-000000000009',
+      { metodo: 'PUT', corpo: { nome: 'x' } });
+    assert.equal(inexistente.status, 404);
+
+    // Nome igual ao automático não prende; vazio nos dois volta ao automático.
+    const igual = await admin(caminho, { metodo: 'PUT', corpo: { nome: 'Detergente Neutro 500ml Ype' } });
+    assert.equal(igual.dados.nome, '');
+    await admin(caminho, { metodo: 'PUT', corpo: { nome: '', descricao: '' } });
+    p = await ver();
+    assert.equal(p.nome, 'Detergente Neutro 500ml Ype');
+    assert.equal(p.texto, undefined);
+
+    // Nada disso chega ao ERP: só a sincronização, que é login e leitura.
+    for (const [metodo, rota] of erp.chamadas.slice(chamadasAntes)) {
+      assert.ok(metodo === 'GET' || rota === '/api/Auth/Login', `chamada proibida ao ERP: ${metodo} ${rota}`);
+    }
   });
 
   test('o CSP libera as fotos do S3 do ERP e nada além', async () => {

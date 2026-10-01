@@ -308,24 +308,47 @@ const UNIDADES = { ml: 'ml', l: 'L', lt: 'L', lts: 'L', kg: 'kg', g: 'g', gr: 'g
   cm: 'cm', m: 'm', un: 'un', und: 'un', pct: 'pct', cx: 'cx', fd: 'fd' };
 const SIGLAS = new Set(['tnt', 'pvc', 'pead', 'abs', 'led', 'uv', 'epi', 'pp', 'ps']);
 
-/* "DETERGENTE NEUTRO 500ML YPE" -> "Detergente Neutro 500ml Ype". Acento que
-   o ERP não tem não dá para adivinhar ("ABRACADEIRA" fica "Abracadeira"). */
+/* O ERP grava sem acento. Só entram palavras que, sem acento, não são outra
+   palavra em português ("PE", "PA" e "PO" ficam de fora). Palavra que não
+   está aqui sai sem acento; o nome manual do painel resolve o resto.     */
+const semAcento = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+const ACENTOS = Object.fromEntries(`
+  ação ácido água águas álcool algodão alumínio amônia aplicações automático
+  automática bacteriológico campeão cáustica cáustico cerâmica chá chão café
+  cafés clássico descartável descartáveis doméstica doméstico econômico
+  econômica elástico elétrico escovão esfregão espátula etílico extensão
+  fabricação fácil flexível galão gaúcha higiênico higiênica higiênicos
+  hipoalergênica impermeável lâmpada lâmpadas látex lavável limão líquido
+  líquida líquidos líq mágica mágico mãos mecânico média mediterrâneo metálica
+  metálico mictório místico móveis multiação nitrílica nitrílico óleo ofício
+  orgânico orgânica orquídea orquídeas oxálico paixão papéis pêssego plástica
+  plásticas plástico plásticos prático rápido rebatível refeição reservatório
+  reutilizável rolão rotatório sabão sanitária sanitário sanitários saponáceo
+  saponáceos sintética sintético sódio telescópica térmico térmica térmicos
+  úmido união unitário unitária válvula verão vulcânica`.trim().split(/\s+/)
+  .map(p => [semAcento(p), p]));
+
+// "APLICAÇOES" (com ç e sem til) também acha "aplicações".
+const acentuar = p => ACENTOS[semAcento(p)] || p;
+const maiuscula = p => p.charAt(0).toUpperCase() + p.slice(1);
+
+/* "AGUA SANITARIA 5L QBOA" -> "Água Sanitária 5L Qboa". */
 function nomeSite(bruto) {
   return limpo(bruto).toLowerCase().split(' ').map((p, i) => {
     if (!p) return p;
+    if (acentuar(p) !== p) return maiuscula(acentuar(p));
     if (/^[a-z]+\d/.test(p)) return p.toUpperCase();                  // a4, n95, pff2
     if (/\d/.test(p)) return p.replace(/(\d)(l|lt|lts)\b/g, '$1L');   // 5l -> 5L, 500ml
     if (UNIDADES[p] && i > 0) return UNIDADES[p];
     if (SIGLAS.has(p)) return p.toUpperCase();                         // TNT, PVC
     if (i > 0 && PALAVRA_MINUSCULA.has(p)) return p;
-    return p.charAt(0).toUpperCase() + p.slice(1);
+    return maiuscula(p);
   }).join(' ');
 }
 
-/* "LIMPADORES PERFUMADOS" -> "Limpadores perfumados" */
+/* "SAPONACEOS" -> "Saponáceos" */
 function frase(bruto) {
-  const t = limpo(bruto).toLowerCase();
-  return t ? t.charAt(0).toUpperCase() + t.slice(1) : '';
+  return maiuscula(limpo(bruto).toLowerCase().replace(/\p{L}+/gu, acentuar));
 }
 
 const SIGLAS_UNIDADE = { UN: 'Unidade', PCT: 'Pacote', CX: 'Caixa', BB: 'Bobina', GL: 'Galão',
@@ -371,8 +394,19 @@ function maisPedidos(ids) {
   return [...conta].sort((a, b) => b[1] - a[1]).map(([id]) => id);
 }
 
+/* Código do ERP como id (é o que o vendedor procura lá); repetido ou
+   esquisito, cai para o uuid, que nunca muda. */
+function idsDoSite(linhas) {
+  const vezes = new Map();
+  for (const l of linhas) vezes.set(l.codigo, (vezes.get(l.codigo) || 0) + 1);
+  return l => (/^[A-Za-z0-9_-]{1,40}$/.test(l.codigo) && vezes.get(l.codigo) === 1) ? l.codigo : l.erp_id;
+}
+
 function montarCatalogo() {
-  const linhas = db.prepare('SELECT erp_id, codigo, nome, grupo, categoria, unidade, fotos FROM produtos_erp').all();
+  const linhas = db.prepare(`
+    SELECT e.erp_id, e.codigo, e.nome, e.grupo, e.categoria, e.unidade, e.fotos,
+           s.nome AS nome_site, s.descricao
+      FROM produtos_erp e LEFT JOIN produtos_site s ON s.erp_id = e.erp_id`).all();
   if (!linhas.length) return null;
 
   const porChave = new Map(GRUPOS.map(g => [g.erp, g]));
@@ -394,24 +428,20 @@ function montarCatalogo() {
     return categorias.get(k);
   };
 
-  // Código do ERP como id (é o que o vendedor procura lá); repetido ou
-  // esquisito, cai para o uuid, que nunca muda.
-  const vezes = new Map();
-  for (const l of linhas) vezes.set(l.codigo, (vezes.get(l.codigo) || 0) + 1);
-  const idDe = l => (/^[A-Za-z0-9_-]{1,40}$/.test(l.codigo) && vezes.get(l.codigo) === 1) ? l.codigo : l.erp_id;
-
+  const idDe = idsDoSite(linhas);
   const produtos = linhas.map(l => {
     const cat = categoriaDe(l.grupo);
     const fotos = JSON.parse(l.fotos);
     const p = {
       id: idDe(l),
-      nome: nomeSite(l.nome),
+      nome: l.nome_site || nomeSite(l.nome),
       cat: cat.id,
       art: artePara(chave(l.nome + ' ' + l.categoria)),
       desc: frase(l.categoria),
       emb: '',
       caixa: unidadeSite(l.unidade)
     };
+    if (l.descricao) p.texto = l.descricao;     // página do produto; o card segue com desc
     if (fotos.length) p.foto = fotos[0];
     return p;
   });
@@ -485,4 +515,67 @@ function arquivosPublicos() {
   return publico;
 }
 
-module.exports = { sincronizar, agendar, situacao, configurado, arquivosPublicos, ORIGEM_FOTOS };
+/* ---- 5. Nome e descrição pelo painel -----------------------------------------
+   Gravados em produtos_site, nunca no ERP. Valem por cima do nome automático
+   (nomeSite); nome e descrição vazios apagam o ajuste.                      */
+
+const LIMITE_NOME = 120;
+const LIMITE_DESCRICAO = 1500;
+
+// Como limpo(), mas a descrição guarda as quebras de linha (parágrafos).
+const textoLivre = s => String(s || '').replace(/[<>]/g, '').replace(/"/g, '″')
+  .split(/\r?\n/).map(l => l.replace(/\s+/g, ' ').trim()).join('\n')
+  .replace(/\n{3,}/g, '\n\n').trim();
+
+function produtosParaPainel() {
+  const linhas = db.prepare(`
+    SELECT e.erp_id, e.codigo, e.nome, e.grupo, s.nome AS nome_site, s.descricao, s.atualizado
+      FROM produtos_erp e LEFT JOIN produtos_site s ON s.erp_id = e.erp_id
+     ORDER BY e.nome`).all();
+  const idDe = idsDoSite(linhas);
+  const grupos = new Map(GRUPOS.map(g => [g.erp, g.nome]));
+  return linhas.map(l => ({
+    id: idDe(l),
+    erpId: l.erp_id,
+    codigo: l.codigo,
+    grupo: grupos.get(chave(l.grupo)) || frase(l.grupo),
+    nomeErp: l.nome,
+    nomeAuto: nomeSite(l.nome),
+    nome: l.nome_site || '',
+    descricao: l.descricao || '',
+    atualizado: l.atualizado || null
+  }));
+}
+
+/** Devolve { produto } ou { status, erro }. */
+function ajustarProduto(erpId, corpo, por) {
+  const atual = db.prepare('SELECT nome FROM produtos_erp WHERE erp_id = ?').get(erpId);
+  if (!atual) return { status: 404, erro: 'Produto não encontrado.' };
+  if ([corpo.nome, corpo.descricao].some(v => v != null && typeof v !== 'string')) {
+    return { status: 400, erro: 'Nome e descrição precisam ser texto.' };
+  }
+
+  const nomeAuto = nomeSite(atual.nome);
+  let nome = limpo(corpo.nome);
+  if (nome === nomeAuto) nome = '';            // igual ao automático: não prende
+  const descricao = textoLivre(corpo.descricao);
+  if (nome.length > LIMITE_NOME) return { status: 400, erro: `O nome pode ter até ${LIMITE_NOME} caracteres.` };
+  if (descricao.length > LIMITE_DESCRICAO) {
+    return { status: 400, erro: `A descrição pode ter até ${LIMITE_DESCRICAO} caracteres.` };
+  }
+
+  if (!nome && !descricao) {
+    db.prepare('DELETE FROM produtos_site WHERE erp_id = ?').run(erpId);
+  } else {
+    db.prepare(`INSERT INTO produtos_site (erp_id, nome, descricao, por) VALUES (?, ?, ?, ?)
+                ON CONFLICT(erp_id) DO UPDATE SET nome = excluded.nome, descricao = excluded.descricao,
+                  atualizado = datetime('now'), por = excluded.por`).run(erpId, nome, descricao, por);
+  }
+  publico = null;                              // o site vê na próxima página
+  return { produto: { erpId, nomeAuto, nome, descricao } };
+}
+
+module.exports = {
+  sincronizar, agendar, situacao, configurado, arquivosPublicos, ORIGEM_FOTOS,
+  produtosParaPainel, ajustarProduto
+};

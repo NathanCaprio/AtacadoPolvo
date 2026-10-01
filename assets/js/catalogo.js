@@ -77,6 +77,7 @@
       const okBusca = !termo ||
         normalizar(p.nome).includes(termo) ||
         normalizar(p.desc).includes(termo) ||
+        normalizar(p.texto).includes(termo) ||
         normalizar(nomeDe(p.cat)).includes(termo) ||
         normalizar(p.id) === termo;
       return okCat && okBusca;

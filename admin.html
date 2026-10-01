@@ -138,6 +138,9 @@
       <button role="tab" id="aba-erp" aria-selected="false" aria-controls="painel-erp">
         Catálogo (ERP)
       </button>
+      <button role="tab" id="aba-produtos" aria-selected="false" aria-controls="painel-produtos">
+        Produtos no site
+      </button>
     </div>
 
     <!-- ---------- ORÇAMENTOS ---------- -->
@@ -248,6 +251,40 @@
           </thead>
           <tbody id="linhas-erp"></tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- ---------- PRODUTOS NO SITE ---------- -->
+    <section id="painel-produtos" role="tabpanel" aria-labelledby="aba-produtos" hidden>
+      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+        Nome e descrição que o site mostra para cada produto. Ficam gravados só
+        no site: o cadastro no ERP não muda. Sem nome escrito aqui, o site usa o
+        nome do ERP com maiúsculas e os acentos mais comuns ajustados. A
+        descrição aparece na página do produto e no resultado do Google.
+      </p>
+      <div class="barra-acoes">
+        <label for="prod-busca" class="sr-only">Buscar produto</label>
+        <input class="input" id="prod-busca" type="search" autocomplete="off"
+          placeholder="Buscar por nome ou código…" style="max-width:320px">
+        <label class="prod-filtro"><input type="checkbox" id="prod-ajustados"> Só os ajustados</label>
+        <span id="prod-contagem" role="status"></span>
+      </div>
+      <div class="tabela-wrap">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome no site</th>
+              <th>Grupo</th>
+              <th>Descrição</th>
+              <th style="text-align:right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="linhas-produtos"></tbody>
+        </table>
+      </div>
+      <div class="barra-acoes" style="justify-content:center;margin-top:16px">
+        <button class="btn btn--ghost btn--sm" id="prod-mais" type="button" hidden>Mostrar mais</button>
       </div>
     </section>
 
@@ -397,6 +434,31 @@
     <div class="barra-acoes proposta-acoes">
       <button class="btn btn--ghost" id="ep-pdf" type="button">Baixar PDF</button>
       <button class="btn btn--primary" id="ep-salvar" type="button">Salvar e gerar link</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ---------- EDITOR DE PRODUTO NO SITE (montado por admin.js) ---------- -->
+<dialog class="cupom proposta-dialog produto-dialog" id="editor-produto" aria-labelledby="pe-titulo">
+  <form method="dialog" id="pe-form" novalidate>
+    <button class="cupom-fechar" value="fechar" formnovalidate aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 id="pe-titulo">Produto no site</h2>
+    <p class="pe-erp">No ERP: <strong id="pe-erp"></strong> · código <span id="pe-codigo"></span></p>
+    <div class="aviso" id="pe-aviso" role="alert"></div>
+
+    <div class="field"><label for="pe-nome">Nome no site <span class="opt">(vazio = automático)</span></label>
+      <input class="input" id="pe-nome" maxlength="120" autocomplete="off"></div>
+    <div class="field"><label for="pe-desc">Descrição <span class="opt">(opcional)</span></label>
+      <textarea class="input" id="pe-desc" rows="7" maxlength="1500"
+        placeholder="Para que serve, rendimento, diluição, onde usar…"></textarea>
+      <span class="hint" id="pe-conta"></span></div>
+
+    <div class="barra-acoes proposta-acoes">
+      <a class="btn btn--ghost" id="pe-ver" target="_blank" rel="noopener">Ver no site</a>
+      <button class="btn btn--ghost" id="pe-limpar" type="button">Voltar ao automático</button>
+      <button class="btn btn--primary" id="pe-salvar" type="button">Salvar</button>
     </div>
   </form>
 </dialog>

@@ -898,15 +898,131 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     }
   });
 
+  /* ---- Produtos no site -----------------------------------------------------
+     Nome e descrição por produto, gravados só no banco do site (o ERP não
+     muda). A lista inteira (mil e poucos) vem na primeira vez que a aba
+     abre e é filtrada aqui; a tabela desenha de 50 em 50.                  */
+
+  const PAGINA_PRODUTOS = 50;
+  let produtosSite = null;              // null = aba ainda não aberta
+  let limiteProdutos = PAGINA_PRODUTOS;
+  const semAcento = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  function filtrarProdutos() {
+    const termo = semAcento($('#prod-busca').value.trim());
+    const soAjustados = $('#prod-ajustados').checked;
+    return produtosSite.filter(p =>
+      (!soAjustados || p.nome || p.descricao) &&
+      (!termo || String(p.codigo).toLowerCase() === termo ||
+        [p.nome, p.nomeAuto, p.grupo].some(t => semAcento(t).includes(termo))));
+  }
+
+  function linhaProduto(p) {
+    const tr = el('tr');
+    tr.append(el('td', 'num', p.codigo || '—'));
+    const tdNome = el('td');
+    tdNome.append(el('div', 'nome', p.nome || p.nomeAuto),
+      el('div', 'email', p.nome ? 'nome escrito no painel' : 'automático'));
+    tr.append(tdNome, el('td', '', p.grupo), el('td', '', p.descricao ? 'Sim' : '—'));
+    const tdAcoes = el('td');
+    const caixa = el('div', 'acoes');
+    caixa.append(botao('Editar', 'btn--ghost', () => abrirProduto(p)));
+    tdAcoes.append(caixa);
+    tr.append(tdAcoes);
+    return tr;
+  }
+
+  function desenharProdutos() {
+    if (!produtosSite) return;
+    const lista = filtrarProdutos();
+    preencher($('#linhas-produtos'), lista.slice(0, limiteProdutos), linhaProduto,
+      produtosSite.length ? 'Nenhum produto encontrado.' : 'Nenhum produto sincronizado do ERP ainda.', 5);
+    const ajustados = produtosSite.filter(p => p.nome || p.descricao).length;
+    $('#prod-contagem').textContent =
+      `${lista.length} de ${produtosSite.length} · ${ajustados} com nome ou descrição do painel`;
+    $('#prod-mais').hidden = lista.length <= limiteProdutos;
+  }
+
+  async function carregarProdutos() {
+    try {
+      produtosSite = (await window.API.pedir('/api/admin/produtos')).produtos;
+      desenharProdutos();
+    } catch (e) {
+      mostrarAviso(e.message || 'Não deu para carregar os produtos.', false);
+    }
+  }
+
+  const voltarAoInicio = () => { limiteProdutos = PAGINA_PRODUTOS; desenharProdutos(); };
+  let esperaBusca;
+  $('#prod-busca').addEventListener('input', () => {
+    clearTimeout(esperaBusca);
+    esperaBusca = setTimeout(voltarAoInicio, 150);
+  });
+  $('#prod-ajustados').addEventListener('change', voltarAoInicio);
+  $('#prod-mais').addEventListener('click', () => { limiteProdutos += PAGINA_PRODUTOS; desenharProdutos(); });
+
+  const editorProduto = $('#editor-produto');
+  let produtoAberto = null;
+
+  function avisoProduto(msg) {
+    const a = $('#pe-aviso');
+    a.textContent = msg;
+    a.className = msg ? 'aviso aviso--erro is-visible' : 'aviso';
+  }
+  const contarDescricao = () => {
+    $('#pe-conta').textContent = `${$('#pe-desc').value.length} de 1500 caracteres`;
+  };
+
+  function abrirProduto(p) {
+    produtoAberto = p;
+    avisoProduto('');
+    $('#pe-erp').textContent = p.nomeErp;
+    $('#pe-codigo').textContent = p.codigo || '—';
+    $('#pe-nome').value = p.nome;
+    $('#pe-nome').placeholder = p.nomeAuto;   // mostra o que fica se deixar vazio
+    $('#pe-desc').value = p.descricao;
+    $('#pe-ver').href = `produto.html?id=${encodeURIComponent(p.id)}`;
+    contarDescricao();
+    editorProduto.showModal();
+  }
+
+  async function salvarProduto(nome, descricao) {
+    try {
+      const r = await window.API.pedir(`/api/admin/produtos/${encodeURIComponent(produtoAberto.erpId)}`,
+        { metodo: 'PUT', corpo: { nome, descricao } });
+      Object.assign(produtoAberto, { nome: r.nome, descricao: r.descricao });
+      editorProduto.close();
+      desenharProdutos();
+      mostrarAviso(r.nome || r.descricao ? 'Produto atualizado no site.' : 'Produto voltou ao nome automático.');
+    } catch (e) {
+      avisoProduto(e.message || 'Não deu para salvar.');
+    }
+  }
+
+  $('#pe-desc').addEventListener('input', contarDescricao);
+  $('#pe-salvar').addEventListener('click', () => salvarProduto($('#pe-nome').value, $('#pe-desc').value));
+  // Enter no nome enviaria o form pelo primeiro botão — o de fechar.
+  $('#pe-nome').addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    salvarProduto($('#pe-nome').value, $('#pe-desc').value);
+  });
+  $('#pe-limpar').addEventListener('click', () => {
+    if ((produtoAberto.nome || produtoAberto.descricao) &&
+        !confirm('Apagar o nome e a descrição escritos no painel? O site volta ao nome do ERP.')) return;
+    salvarProduto('', '');
+  });
+
   /* ---- Abas ---------------------------------------------------------------- */
 
-  const ABAS = ['orcamentos', 'mensagens', 'clientes', 'erp'];
+  const ABAS = ['orcamentos', 'mensagens', 'clientes', 'erp', 'produtos'];
 
   function trocarAba(alvo) {
     for (const nome of ABAS) {
       $(`#aba-${nome}`).setAttribute('aria-selected', String(nome === alvo));
       $(`#painel-${nome}`).hidden = nome !== alvo;
     }
+    if (alvo === 'produtos' && !produtosSite) carregarProdutos();
   }
   for (const nome of ABAS) {
     $(`#aba-${nome}`).addEventListener('click', () => trocarAba(nome));

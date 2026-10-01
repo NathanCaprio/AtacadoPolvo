@@ -498,7 +498,8 @@ carregam logo depois do `data.js` e que troca o `window.CATALOGO`. Preço e
 estoque não são trazidos. As credenciais ficam no `.env` da raiz (fora do
 git), que o `npm start` carrega. Sem `ERP_EMAIL`/`ERP_SENHA`, o site segue com
 o último catálogo gravado ou, sem nenhum, com o de exemplo do `data.js`. O painel tem a aba **Catálogo (ERP)** com o
-histórico e o botão "Sincronizar agora". Detalhes e decisões em
+histórico e o botão "Sincronizar agora", e a aba **Produtos no site**, que dá
+nome e descrição a cada produto sem mexer no ERP. Detalhes e decisões em
 [INTEGRACAO-ERP.md](INTEGRACAO-ERP.md).
 
 | Variável | Padrão | O que faz |

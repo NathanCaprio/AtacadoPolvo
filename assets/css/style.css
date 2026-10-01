@@ -5154,6 +5154,23 @@ section.marcas {
 .proposta-dialog {
   width: min(760px, calc(100% - 32px));
 }
+/* Painel: nome e descrição do produto no site */
+.produto-dialog {
+  width: min(620px, calc(100% - 32px));
+}
+.pe-erp {
+  font-size: 0.85rem;
+  color: var(--ink-3);
+  margin: -6px 0 16px;
+  overflow-wrap: anywhere;
+}
+.prod-filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+}
 .proposta-dialog fieldset {
   border: 0;
   padding: 0;
@@ -5569,6 +5586,10 @@ section.marcas {
 .pd[hidden],
 .pd-vazio[hidden] {
   display: none;
+}
+/* Descrição escrita no painel: mantém os parágrafos */
+.pd-texto {
+  white-space: pre-line;
 }
 .pd-art {
   position: relative;
