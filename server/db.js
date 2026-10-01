@@ -149,6 +149,19 @@ db.exec(`
     por        INTEGER REFERENCES clientes(id) ON DELETE SET NULL
   );
 
+  -- Item da calculadora de consumo (c01, d01... de data.js) ligado a um
+  -- produto do ERP. "rende" = quantos itens da calculadora cabem em uma
+  -- unidade de venda do produto (fardo de 64 rolos = 64; galão de 5 L para
+  -- um item de 2 L = 2,5). Sem chave estrangeira pelo mesmo motivo de
+  -- produtos_site.
+  CREATE TABLE IF NOT EXISTS calculadora_ligacoes (
+    item       TEXT PRIMARY KEY,
+    erp_id     TEXT NOT NULL,
+    rende      REAL NOT NULL CHECK (rende > 0),
+    atualizado TEXT NOT NULL DEFAULT (datetime('now')),
+    por        INTEGER REFERENCES clientes(id) ON DELETE SET NULL
+  );
+
   -- Uma linha por sincronização, para o painel mostrar quando foi a última
   -- e por que falhou.
   CREATE TABLE IF NOT EXISTS erp_sincronizacoes (

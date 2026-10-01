@@ -36,6 +36,39 @@
     return m ? Number(m[1]) : 1;
   }
 
+  /* Item genérico que o painel ligou a um produto do ERP (aba Calculadora,
+     publicado em CATALOGO.calculadora). A conta continua em itens genéricos
+     ("rolo de 30 m"); "rende" diz quantos deles vêm numa unidade de venda
+     do produto real. Sem ligação válida, devolve null e fica o genérico. */
+  function produtoReal(id, real) {
+    const l = real && real.calculadora && real.calculadora[id];
+    if (!l || !(l.rende > 0)) return null;
+    const p = (real.produtos || []).find(x => x.id === l.produto);
+    return p ? { produto: p, rende: l.rende } : null;
+  }
+
+  /* Monta a linha do resultado. O -1e-9 segura a conta de ponto flutuante:
+     3 / 0,3 dá 10,000000000000002 e o ceil pediria 11. */
+  function linhaDoItem(p, unidades, real) {
+    const r = produtoReal(p.id, real);
+    const alvo = r ? r.produto : p;
+    const emCaixa = r ? r.rende : porCaixa(p);
+    return {
+      id: alvo.id,
+      ref: p.id,                 // item genérico de origem (c01...)
+      real: !!r,
+      nome: alvo.nome,
+      cat: p.cat,                // ordem da lista: a das categorias da calculadora
+      art: alvo.art,
+      foto: alvo.foto,
+      emb: p.emb,                // unidade em que o consumo foi contado
+      caixa: alvo.caixa,
+      porCaixa: emCaixa,
+      unidades,
+      caixas: Math.max(1, Math.ceil(unidades / emCaixa - 1e-9))
+    };
+  }
+
   /* ---- 2. Campos de cada segmento ---------------------------------------
      O HTML não sabe nada sobre os campos: a tela é montada a partir daqui,
      então acrescentar um segmento novo (empresa, hotel) é escrever um bloco
@@ -209,7 +242,9 @@
      um driver — esponja da cozinha e esponja da equipe), arredonda para cima
      na embalagem de venda e descarta o que não chega a meia unidade no mês.  */
 
-  function calcular(segmento, valores, catalogo) {
+  /* catalogo: o de referência (data.js), onde estão c01, d01...
+     real: o catálogo do ERP com as ligações do painel (opcional). */
+  function calcular(segmento, valores, catalogo, real) {
     const seg = SEGMENTOS[segmento];
     if (!seg) throw new Error('Segmento desconhecido: ' + segmento);
 
@@ -239,21 +274,10 @@
       if (!p) { desconhecidos.push(id); return; }          // o teste pega isto
       if (linha.qtd < 0.5) return;                          // ruído, não pedido
 
-      const unidades = Math.ceil(linha.qtd);
-      const emCaixa = porCaixa(p);
-      itens.push({
-        id: p.id,
-        nome: p.nome,
-        cat: p.cat,
-        art: p.art,
-        emb: p.emb,
-        caixa: p.caixa,
-        porCaixa: emCaixa,
-        unidades,
-        caixas: Math.max(1, Math.ceil(unidades / emCaixa)),
+      itens.push(Object.assign(linhaDoItem(p, Math.ceil(linha.qtd), real), {
         periodo: linha.periodo,
         porque: linha.porque
-      });
+      }));
     });
 
     if (desconhecidos.length) {
@@ -323,7 +347,14 @@
     return linhas.join('\n');
   }
 
-  const API = { SEGMENTOS, calcular, emTexto, porCaixa };
+  /* Todo id que os segmentos acima e consumo-evento.js lançam. O painel
+     lista estes itens para ligar a produtos do ERP; o teste confere que a
+     lista bate com o código dos dois motores. */
+  const ITENS = ['b01', 'b02', 'b03', 'b05', 'c01', 'c03', 'c04', 'c05', 'd01', 'd02', 'd03',
+    'd04', 'd05', 'd06', 'h01', 'h02', 'h03', 'l01', 'l04', 'p02', 'p03', 's01', 's02', 's05',
+    'u01', 'u02', 'u03', 'u04', 'u05', 'u06'];
+
+  const API = { SEGMENTOS, ITENS, calcular, emTexto, porCaixa, produtoReal, linhaDoItem };
 
   raiz.CONSUMO = API;
   if (typeof module !== 'undefined' && module.exports) module.exports = API;

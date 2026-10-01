@@ -25,6 +25,8 @@
   // O modelo cita os itens genéricos de data.js (c01, b01...). Com o
   // catálogo do ERP no ar eles ficam em CATALOGO_REFERENCIA.
   const catalogo = window.CATALOGO_REFERENCIA || window.CATALOGO;
+  // Itens que o painel ligou a produtos do ERP saem com o produto real.
+  const real = window.CATALOGO && window.CATALOGO.origem === 'erp' ? window.CATALOGO : null;
 
   const $  = (sel, ctx) => (ctx || document).querySelector(sel);
   const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
@@ -165,6 +167,11 @@
       plural(r.resumo.itensMes, 'item', 'itens') + ' por mês.');
   }
 
+  // Produto real: o consumo foi contado no item genérico ("47 × Rolo 30m"),
+  // que não é a unidade em que o produto do ERP é vendido.
+  const consumo = i => i.real ? `${i.unidades} × ${i.emb}`
+    : `${i.unidades} ${i.emb.indexOf('Par') === 0 ? 'pares' : 'un.'}`;
+
   function linhas(itens) {
     return itens.map(i => `
       <tr>
@@ -172,7 +179,7 @@
           <span class="nome">${i.nome}</span>
           <span class="calc-porque">${i.porque}</span>
         </td>
-        <td class="num">${i.unidades} ${i.emb.indexOf('Par') === 0 ? 'pares' : 'un.'}</td>
+        <td class="num">${consumo(i)}</td>
         <td class="num"><b>${i.caixas}x</b> ${i.caixa}</td>
       </tr>`).join('');
   }
@@ -225,7 +232,7 @@
   function calcular() {
     valores = lerValores();
     try {
-      ultimo = window.CONSUMO.calcular(segmento, valores, catalogo);
+      ultimo = window.CONSUMO.calcular(segmento, valores, catalogo, real);
     } catch (e) {
       // Catálogo fora de sincronia com o modelo: melhor sumir com a seção do
       // que mostrar uma lista pela metade e o cliente pedir errado.

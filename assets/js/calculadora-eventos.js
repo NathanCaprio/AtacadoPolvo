@@ -14,6 +14,8 @@
   // Itens genéricos de data.js; com o catálogo do ERP no ar, ficam em
   // CATALOGO_REFERENCIA (ver calculadora.js).
   const catalogo = window.CATALOGO_REFERENCIA || window.CATALOGO;
+  // Itens que o painel ligou a produtos do ERP saem com o produto real.
+  const real = window.CATALOGO && window.CATALOGO.origem === 'erp' ? window.CATALOGO : null;
 
   const $  = (sel, ctx) => (ctx || document).querySelector(sel);
   const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
@@ -95,6 +97,11 @@
       'Estimativa para o evento: ' + r.resumo.itens + ' itens, ' + r.resumo.caixas + ' caixas.');
   }
 
+  // Produto real: o consumo foi contado no item genérico ("47 × Rolo 30m"),
+  // que não é a unidade em que o produto do ERP é vendido.
+  const consumo = i => i.real ? `${i.unidades} × ${i.emb}`
+    : `${i.unidades} ${i.emb.indexOf('Par') === 0 ? 'pares' : 'un.'}`;
+
   function linhas(itens) {
     return itens.map(i => `
       <tr>
@@ -102,7 +109,7 @@
           <span class="nome">${i.nome}</span>
           <span class="calc-porque">${i.porque}</span>
         </td>
-        <td class="num">${i.unidades} ${i.emb.indexOf('Par') === 0 ? 'pares' : 'un.'}</td>
+        <td class="num">${consumo(i)}</td>
         <td class="num"><b>${i.caixas}x</b> ${i.caixa}</td>
       </tr>`).join('');
   }
@@ -145,7 +152,7 @@
   function calcular() {
     valores = lerValores();
     try {
-      ultimo = window.CONSUMO_EVENTO.calcular(valores, catalogo);
+      ultimo = window.CONSUMO_EVENTO.calcular(valores, catalogo, real);
     } catch (e) {
       elRes.hidden = true;
       return;

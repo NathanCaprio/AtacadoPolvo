@@ -69,11 +69,15 @@ limite de licenças na hora em que o servidor sincroniza, é isso.
 
 ## O que ainda é genérico
 
-- **Calculadora de consumo:** continua estimando com os 42 itens de exemplo
-  do `data.js` (ficam em `window.CATALOGO_REFERENCIA`). Os itens que ela
-  manda para o orçamento são genéricos ("Detergente Neutro 500ml"), e o
-  vendedor escolhe o produto real. Próximo passo possível: ligar cada item
-  da calculadora a um produto do ERP.
+- **Calculadora de consumo:** estima com os itens genéricos do `data.js`
+  (`window.CATALOGO_REFERENCIA`; os 30 que ela usa estão em `CONSUMO.ITENS`).
+  Na aba **Calculadora** do painel, cada item pode ser ligado a um produto do
+  ERP com "quanto rende uma unidade de venda" (fardo de 12 rolos = 12; galão
+  de 5 L para um item de 2 L = 2,5). Ligado, a calculadora mostra o produto
+  real, pede `ceil(consumo / rende)` unidades dele e é ele que vai para o
+  orçamento. Sem ligação, ou com o produto fora do ERP, o item continua
+  genérico e o vendedor escolhe o produto real. As ligações ficam na tabela
+  `calculadora_ligacoes` do nosso banco e saem em `CATALOGO.calculadora`.
 - **Links de categoria:** rodapé, landings e blog já apontam para os grupos
   do ERP. Os cards das landings abrem vários grupos de uma vez
   (`?cat=vassouras,panos`) e o "Linha profissional" abre os galões

@@ -1834,6 +1834,13 @@ select.input {
   color: var(--ink-3);
   margin-top: 6px;
 }
+/* O display do .btn venceria o atributo hidden ("Mostrar mais", "Desligar") */
+.btn[hidden] {
+  display: none;
+}
+.produto-dialog .hint {
+  display: block;
+}
 .field .err {
   font-size: 0.79rem;
   color: var(--danger);

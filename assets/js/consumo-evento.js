@@ -23,10 +23,10 @@
     return Number.isFinite(n) && n >= 0 ? n : padrao;
   };
 
-  function porCaixa(produto) {
-    const m = /(\d+)/.exec(produto.caixa || '');
-    return m ? Number(m[1]) : 1;
-  }
+  // A linha do resultado (e a troca pelo produto real do ERP) é a mesma
+  // dos outros segmentos: vem de consumo.js, carregado antes na página.
+  const CONSUMO = raiz.CONSUMO || require('./consumo.js');
+  const porCaixa = CONSUMO.porCaixa;
 
   /* ---- Campos do formulário ----------------------------------------------
      O HTML monta a tela a partir daqui, igual ao padrão de consumo.js.      */
@@ -123,7 +123,8 @@
   /* ---- Motor -----------------------------------------------------------
      Sem mês/trimestre: todo item lançado vale para o evento, uma vez só.   */
 
-  function calcular(valores, catalogo) {
+  /* catalogo: o de referência (data.js); real: o do ERP com as ligações. */
+  function calcular(valores, catalogo, real) {
     const cat = catalogo || raiz.CATALOGO;
     if (!cat) throw new Error('Catálogo indisponível.');
 
@@ -149,20 +150,9 @@
       if (!p) { desconhecidos.push(id); return; }
       if (linha.qtd < 0.5) return;
 
-      const unidades = Math.ceil(linha.qtd);
-      const emCaixa = porCaixa(p);
-      itens.push({
-        id: p.id,
-        nome: p.nome,
-        cat: p.cat,
-        art: p.art,
-        emb: p.emb,
-        caixa: p.caixa,
-        porCaixa: emCaixa,
-        unidades,
-        caixas: Math.max(1, Math.ceil(unidades / emCaixa)),
+      itens.push(Object.assign(CONSUMO.linhaDoItem(p, Math.ceil(linha.qtd), real), {
         porque: linha.porque
-      });
+      }));
     });
 
     if (desconhecidos.length) {

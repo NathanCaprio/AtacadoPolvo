@@ -141,6 +141,9 @@
       <button role="tab" id="aba-produtos" aria-selected="false" aria-controls="painel-produtos">
         Produtos no site
       </button>
+      <button role="tab" id="aba-calculadora" aria-selected="false" aria-controls="painel-calculadora">
+        Calculadora
+      </button>
     </div>
 
     <!-- ---------- ORÇAMENTOS ---------- -->
@@ -285,6 +288,33 @@
       </div>
       <div class="barra-acoes" style="justify-content:center;margin-top:16px">
         <button class="btn btn--ghost btn--sm" id="prod-mais" type="button" hidden>Mostrar mais</button>
+      </div>
+    </section>
+
+    <!-- ---------- CALCULADORA ---------- -->
+    <section id="painel-calculadora" role="tabpanel" aria-labelledby="aba-calculadora" hidden>
+      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+        A calculadora de consumo estima com itens genéricos ("papel higiênico,
+        rolo de 30 m"). Ligue cada um a um produto do ERP e diga quanto rende
+        uma unidade de venda dele: a calculadora passa a mostrar o produto
+        real e a quantidade a pedir, e é ele que vai para o orçamento. Item sem
+        ligação continua genérico. Fica gravado só no site.
+      </p>
+      <div class="barra-acoes">
+        <span id="calc-contagem" role="status"></span>
+      </div>
+      <div class="tabela-wrap">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Item da calculadora</th>
+              <th>Produto do ERP</th>
+              <th>Rende</th>
+              <th style="text-align:right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="linhas-calculadora"></tbody>
+        </table>
       </div>
     </section>
 
@@ -463,11 +493,42 @@
   </form>
 </dialog>
 
+<!-- ---------- LIGAR ITEM DA CALCULADORA (montado por admin.js) ---------- -->
+<dialog class="cupom proposta-dialog produto-dialog" id="editor-ligacao" aria-labelledby="lg-titulo">
+  <form method="dialog" id="lg-form" novalidate>
+    <button class="cupom-fechar" value="fechar" formnovalidate aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 id="lg-titulo">Ligar item da calculadora</h2>
+    <p class="pe-erp">Item: <strong id="lg-item"></strong> · a conta é feita em <strong id="lg-emb"></strong></p>
+    <div class="aviso" id="lg-aviso" role="alert"></div>
+
+    <div class="field"><label for="lg-busca">Produto do ERP</label>
+      <div class="proposta-campo">
+        <input class="input" id="lg-busca" type="search" autocomplete="off"
+          placeholder="Buscar por nome ou código…"
+          role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lg-resultados">
+        <ul class="proposta-busca" id="lg-resultados" role="listbox" hidden></ul>
+      </div>
+      <span class="hint" id="lg-escolhido">Nenhum produto escolhido.</span></div>
+
+    <div class="field"><label for="lg-rende" id="lg-rende-rotulo">Quanto rende uma unidade do produto?</label>
+      <input class="input" id="lg-rende" inputmode="decimal" autocomplete="off" style="max-width:160px">
+      <span class="hint" id="lg-rende-dica"></span></div>
+
+    <div class="barra-acoes proposta-acoes">
+      <button class="btn btn--ghost" id="lg-desligar" type="button">Desligar</button>
+      <button class="btn btn--primary" id="lg-salvar" type="button">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
 <script src="assets/js/config.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="catalogo-erp.js"></script>
+<script src="assets/js/consumo.js"></script>
 <script src="assets/js/admin.js"></script>
 </body>
 </html>

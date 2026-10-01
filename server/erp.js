@@ -464,7 +464,15 @@ function montarCatalogo() {
   const vitrine = new Set(destaque.slice(0, VITRINE));
   produtos.forEach(p => { if (vitrine.has(p.id)) p.tag = 'mais-vendido'; });
 
-  return { categorias: lista, produtos };
+  // Itens da calculadora ligados no painel: { d01: { produto: '7891', rende: 64 } }.
+  // Ligação a produto que saiu do ERP fica de fora e o item volta ao genérico.
+  const idPorErp = new Map(linhas.map(l => [l.erp_id, idDe(l)]));
+  const calculadora = {};
+  for (const c of db.prepare('SELECT item, erp_id, rende FROM calculadora_ligacoes').all()) {
+    if (idPorErp.has(c.erp_id)) calculadora[c.item] = { produto: idPorErp.get(c.erp_id), rende: c.rende };
+  }
+
+  return { categorias: lista, produtos, calculadora };
 }
 
 /* ---- 4. O que o site baixa -------------------------------------------------
@@ -529,7 +537,7 @@ const textoLivre = s => String(s || '').replace(/[<>]/g, '').replace(/"/g, '″'
 
 function produtosParaPainel() {
   const linhas = db.prepare(`
-    SELECT e.erp_id, e.codigo, e.nome, e.grupo, s.nome AS nome_site, s.descricao, s.atualizado
+    SELECT e.erp_id, e.codigo, e.nome, e.grupo, e.unidade, s.nome AS nome_site, s.descricao, s.atualizado
       FROM produtos_erp e LEFT JOIN produtos_site s ON s.erp_id = e.erp_id
      ORDER BY e.nome`).all();
   const idDe = idsDoSite(linhas);
@@ -542,6 +550,7 @@ function produtosParaPainel() {
     nomeErp: l.nome,
     nomeAuto: nomeSite(l.nome),
     nome: l.nome_site || '',
+    caixa: unidadeSite(l.unidade),
     descricao: l.descricao || '',
     atualizado: l.atualizado || null
   }));
@@ -575,7 +584,60 @@ function ajustarProduto(erpId, corpo, por) {
   return { produto: { erpId, nomeAuto, nome, descricao } };
 }
 
+/* ---- 6. Calculadora de consumo ligada a produtos do ERP ---------------------
+   Cada item genérico da calculadora (c01, d01... de data.js) pode apontar
+   para um produto real. A conta continua no item genérico; "rende" converte
+   para unidades de venda do produto. Também só no nosso banco.            */
+
+const ITEM_CALCULADORA = /^[a-z][0-9]{2}$/;
+const RENDE_MAXIMO = 10000;
+
+function ligacoesCalculadora() {
+  const linhas = db.prepare(`
+    SELECT c.item, c.erp_id, c.rende, c.atualizado, e.codigo, e.nome, e.unidade, s.nome AS nome_site
+      FROM calculadora_ligacoes c
+      LEFT JOIN produtos_erp e ON e.erp_id = c.erp_id
+      LEFT JOIN produtos_site s ON s.erp_id = c.erp_id
+     ORDER BY c.item`).all();
+  return linhas.map(l => ({
+    item: l.item,
+    erpId: l.erp_id,
+    rende: l.rende,
+    atualizado: l.atualizado,
+    // Produto que saiu do ERP: a ligação fica, mas a calculadora usa o genérico.
+    noErp: l.nome != null,
+    codigo: l.codigo || '',
+    nome: l.nome == null ? '' : (l.nome_site || nomeSite(l.nome)),
+    caixa: l.nome == null ? '' : unidadeSite(l.unidade)
+  }));
+}
+
+/** Devolve { ligacao } ou { status, erro }. */
+function ligarItem(item, corpo, por) {
+  if (!ITEM_CALCULADORA.test(item)) return { status: 400, erro: 'Item da calculadora inválido.' };
+  const rende = Number(corpo.rende);
+  if (typeof corpo.erpId !== 'string' ||
+      !db.prepare('SELECT 1 FROM produtos_erp WHERE erp_id = ?').get(corpo.erpId)) {
+    return { status: 404, erro: 'Produto não encontrado no catálogo do ERP.' };
+  }
+  if (!Number.isFinite(rende) || rende <= 0 || rende > RENDE_MAXIMO) {
+    return { status: 400, erro: 'Informe quanto rende uma unidade do produto (número maior que zero).' };
+  }
+  db.prepare(`INSERT INTO calculadora_ligacoes (item, erp_id, rende, por) VALUES (?, ?, ?, ?)
+              ON CONFLICT(item) DO UPDATE SET erp_id = excluded.erp_id, rende = excluded.rende,
+                atualizado = datetime('now'), por = excluded.por`)
+    .run(item, corpo.erpId, Math.round(rende * 1000) / 1000, por);
+  publico = null;
+  return { ligacao: ligacoesCalculadora().find(l => l.item === item) };
+}
+
+function desligarItem(item) {
+  const r = db.prepare('DELETE FROM calculadora_ligacoes WHERE item = ?').run(item);
+  publico = null;
+  return r.changes > 0;
+}
+
 module.exports = {
   sincronizar, agendar, situacao, configurado, arquivosPublicos, ORIGEM_FOTOS,
-  produtosParaPainel, ajustarProduto
+  produtosParaPainel, ajustarProduto, ligacoesCalculadora, ligarItem, desligarItem
 };

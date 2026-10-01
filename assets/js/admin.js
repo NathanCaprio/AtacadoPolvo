@@ -908,13 +908,17 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
   let limiteProdutos = PAGINA_PRODUTOS;
   const semAcento = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
+  // "higienico rolo" acha "Papel Higiênico Rolão": cada palavra em qualquer ordem.
+  function casaBusca(p, termo) {
+    if (!termo || String(p.codigo).toLowerCase() === termo) return true;
+    const texto = semAcento([p.nome, p.nomeAuto, p.grupo].join(' '));
+    return termo.split(/\s+/).every(palavra => texto.includes(palavra));
+  }
+
   function filtrarProdutos() {
     const termo = semAcento($('#prod-busca').value.trim());
     const soAjustados = $('#prod-ajustados').checked;
-    return produtosSite.filter(p =>
-      (!soAjustados || p.nome || p.descricao) &&
-      (!termo || String(p.codigo).toLowerCase() === termo ||
-        [p.nome, p.nomeAuto, p.grupo].some(t => semAcento(t).includes(termo))));
+    return produtosSite.filter(p => (!soAjustados || p.nome || p.descricao) && casaBusca(p, termo));
   }
 
   function linhaProduto(p) {
@@ -1013,9 +1017,194 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     salvarProduto('', '');
   });
 
+  /* ---- Calculadora ligada a produtos do ERP --------------------------------
+     Cada item genérico que a calculadora usa (CONSUMO.ITENS, de consumo.js)
+     pode apontar para um produto do ERP, com quanto uma unidade de venda
+     dele rende em itens genéricos. A busca usa a lista da aba Produtos.    */
+
+  const referencia = (window.CATALOGO_REFERENCIA || window.CATALOGO || {}).produtos || [];
+  const ITENS_CALC = ((window.CONSUMO && window.CONSUMO.ITENS) || [])
+    .map(id => referencia.find(p => p.id === id)).filter(Boolean);
+  let ligacoes = null;                  // null = aba ainda não aberta
+
+  const numeroBr = n => String(n).replace('.', ',');
+  // "2,5" e "2.5" valem 2,5; "1.000,5" vale 1000,5.
+  const lerNumero = s => {
+    const t = String(s).trim();
+    return Number(t.includes(',') ? t.replace(/\./g, '').replace(',', '.') : t) || 0;
+  };
+
+  function linhaLigacao(item) {
+    const l = ligacoes.find(x => x.item === item.id);
+    const tr = el('tr');
+    const tdItem = el('td');
+    tdItem.append(el('div', 'nome', item.nome), el('div', 'email', `conta em: ${item.emb}`));
+    const tdProd = el('td');
+    if (!l) {
+      tdProd.append(el('div', 'email', 'genérico (sem ligação)'));
+    } else if (!l.noErp) {
+      tdProd.append(el('div', 'nome', 'Produto saiu do ERP'),
+        el('div', 'email', 'a calculadora usa o genérico até você trocar'));
+    } else {
+      tdProd.append(el('div', 'nome', l.nome),
+        el('div', 'email', `código ${l.codigo || '—'} · vendido por ${l.caixa.toLowerCase()}`));
+    }
+    tr.append(tdItem, tdProd, el('td', 'num', l ? `${numeroBr(l.rende)} × ${item.emb}` : '—'));
+    const tdAcoes = el('td');
+    const caixa = el('div', 'acoes');
+    caixa.append(botao(l ? 'Trocar' : 'Ligar', 'btn--ghost', () => abrirLigacao(item)));
+    tdAcoes.append(caixa);
+    tr.append(tdAcoes);
+    return tr;
+  }
+
+  function desenharLigacoes() {
+    if (!ligacoes) return;
+    preencher($('#linhas-calculadora'), ITENS_CALC, linhaLigacao, 'A calculadora não carregou.', 4);
+    const prontos = ITENS_CALC.filter(i => ligacoes.some(l => l.item === i.id && l.noErp)).length;
+    $('#calc-contagem').textContent = `${prontos} de ${ITENS_CALC.length} itens ligados a produtos do ERP`;
+  }
+
+  async function carregarLigacoes() {
+    try {
+      ligacoes = (await window.API.pedir('/api/admin/calculadora')).ligacoes;
+      desenharLigacoes();
+    } catch (e) {
+      mostrarAviso(e.message || 'Não deu para carregar a calculadora.', false);
+    }
+  }
+
+  const editorLigacao = $('#editor-ligacao');
+  const buscaLig = $('#lg-busca');
+  const resultadosLig = $('#lg-resultados');
+  let ligando = null;                   // { item, escolhido }
+
+  function avisoLigacao(msg) {
+    const a = $('#lg-aviso');
+    a.textContent = msg;
+    a.className = msg ? 'aviso aviso--erro is-visible' : 'aviso';
+  }
+
+  // A pergunta muda com o produto: "Quantos «Rolo 30m» vêm em 1 fardo?"
+  function textosLigacao() {
+    const { item, escolhido } = ligando;
+    const venda = escolhido ? escolhido.caixa.toLowerCase() : 'unidade de venda';
+    $('#lg-escolhido').textContent = escolhido
+      ? `Escolhido: ${escolhido.nome || escolhido.nomeAuto} (código ${escolhido.codigo || '—'}, vendido por ${venda}).`
+      : 'Nenhum produto escolhido.';
+    $('#lg-rende-rotulo').textContent = `Quantos "${item.emb}" vêm em 1 ${venda} deste produto?`;
+
+    const rende = lerNumero($('#lg-rende').value);
+    $('#lg-rende-dica').textContent = rende > 0
+      ? `Assim, um consumo de 100 × ${item.emb} vira ${Math.ceil(100 / rende - 1e-9)} ${venda}(s) no pedido.`
+      : 'Ex.: fardo com 64 rolos = 64. Galão de 5 L para um item de 2 L = 2,5. Mesmo tamanho = 1.';
+  }
+
+  function fecharResultados() {
+    resultadosLig.hidden = true;
+    buscaLig.setAttribute('aria-expanded', 'false');
+  }
+
+  function escolher(p) {
+    ligando.escolhido = p;
+    buscaLig.value = p.nome || p.nomeAuto;
+    fecharResultados();
+    textosLigacao();
+    $('#lg-rende').focus();
+  }
+
+  function buscarParaLigar() {
+    const termo = semAcento(buscaLig.value.trim());
+    resultadosLig.replaceChildren();
+    if (termo.length < 2 || !produtosSite) { fecharResultados(); return; }
+    const achados = produtosSite.filter(p => casaBusca(p, termo)).slice(0, 8);
+    if (!achados.length) {
+      resultadosLig.append(el('li', 'pb-vazio', 'Nenhum produto com esse nome ou código.'));
+    }
+    for (const p of achados) {
+      const li = el('li');
+      li.setAttribute('role', 'option');
+      const info = el('div', 'pb-info');
+      info.append(el('div', 'pb-nome', p.nome || p.nomeAuto),
+        el('div', 'pb-meta', `código ${p.codigo || '—'} · ${p.grupo} · vendido por ${p.caixa.toLowerCase()}`));
+      li.append(info);
+      li.addEventListener('click', () => escolher(p));
+      resultadosLig.append(li);
+    }
+    resultadosLig.hidden = false;
+    buscaLig.setAttribute('aria-expanded', 'true');
+  }
+
+  async function abrirLigacao(item) {
+    if (!produtosSite) await carregarProdutos();
+    if (!produtosSite) return;
+    const l = ligacoes.find(x => x.item === item.id);
+    ligando = { item, escolhido: l && l.noErp ? produtosSite.find(p => p.erpId === l.erpId) || null : null };
+    avisoLigacao(produtosSite.length ? '' : 'Nenhum produto sincronizado do ERP ainda.');
+    $('#lg-item').textContent = item.nome;
+    $('#lg-emb').textContent = item.emb;
+    buscaLig.value = ligando.escolhido ? ligando.escolhido.nome || ligando.escolhido.nomeAuto : '';
+    $('#lg-rende').value = l ? numeroBr(l.rende) : '';
+    $('#lg-desligar').hidden = !l;
+    fecharResultados();
+    textosLigacao();
+    editorLigacao.showModal();
+  }
+
+  async function salvarLigacao() {
+    const { item, escolhido } = ligando;
+    const rende = lerNumero($('#lg-rende').value);
+    if (!escolhido) return avisoLigacao('Escolha o produto do ERP na busca.');
+    if (!(rende > 0)) return avisoLigacao('Informe quanto rende uma unidade do produto.');
+    try {
+      const l = await window.API.pedir(`/api/admin/calculadora/${item.id}`,
+        { metodo: 'PUT', corpo: { erpId: escolhido.erpId, rende } });
+      ligacoes = ligacoes.filter(x => x.item !== item.id).concat(l);
+      editorLigacao.close();
+      desenharLigacoes();
+      mostrarAviso(`${item.nome}: a calculadora agora usa ${l.nome}.`);
+    } catch (e) {
+      avisoLigacao(e.message || 'Não deu para salvar.');
+    }
+  }
+
+  let esperaLig;
+  buscaLig.addEventListener('input', () => {
+    ligando.escolhido = null;
+    textosLigacao();
+    clearTimeout(esperaLig);
+    esperaLig = setTimeout(buscarParaLigar, 120);
+  });
+  // Enter na busca escolhe o primeiro resultado (e não envia o form, que
+  // fecharia o diálogo pelo primeiro botão, o de fechar).
+  buscaLig.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const primeiro = resultadosLig.querySelector('li[role="option"]');
+    if (primeiro) primeiro.click();
+  });
+  $('#lg-rende').addEventListener('input', textosLigacao);
+  $('#lg-rende').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); salvarLigacao(); }
+  });
+  $('#lg-salvar').addEventListener('click', salvarLigacao);
+  $('#lg-desligar').addEventListener('click', async () => {
+    const { item } = ligando;
+    if (!confirm(`Desligar "${item.nome}"? A calculadora volta ao item genérico.`)) return;
+    try {
+      await window.API.pedir(`/api/admin/calculadora/${item.id}`, { metodo: 'DELETE' });
+      ligacoes = ligacoes.filter(x => x.item !== item.id);
+      editorLigacao.close();
+      desenharLigacoes();
+      mostrarAviso(`${item.nome} voltou ao genérico.`);
+    } catch (e) {
+      avisoLigacao(e.message || 'Não deu para desligar.');
+    }
+  });
+
   /* ---- Abas ---------------------------------------------------------------- */
 
-  const ABAS = ['orcamentos', 'mensagens', 'clientes', 'erp', 'produtos'];
+  const ABAS = ['orcamentos', 'mensagens', 'clientes', 'erp', 'produtos', 'calculadora'];
 
   function trocarAba(alvo) {
     for (const nome of ABAS) {
@@ -1023,6 +1212,7 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
       $(`#painel-${nome}`).hidden = nome !== alvo;
     }
     if (alvo === 'produtos' && !produtosSite) carregarProdutos();
+    if (alvo === 'calculadora' && !ligacoes) carregarLigacoes();
   }
   for (const nome of ABAS) {
     $(`#aba-${nome}`).addEventListener('click', () => trocarAba(nome));

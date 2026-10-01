@@ -38,6 +38,9 @@
      POST   /api/admin/erp/sincronizar dispara uma sincronização agora
      GET    /api/admin/produtos        produtos do ERP com nome/descrição do site
      PUT    /api/admin/produtos/:erpId nome e descrição no site (só no nosso banco)
+     GET    /api/admin/calculadora     itens da calculadora ligados a produtos do ERP
+     PUT    /api/admin/calculadora/:item   liga o item (c01...) a um produto
+     DELETE /api/admin/calculadora/:item   volta o item ao genérico
 
      GET    /catalogo-erp.js           catálogo do ERP no formato de data.js
      GET    /sitemap-produtos.xml      uma URL por produto do ERP
@@ -1154,6 +1157,26 @@ async function ajustarProdutoSite(req, res, erpId) {
   json(res, 200, r.produto);
 }
 
+/* Calculadora de consumo usando produtos reais. Também só no nosso banco. */
+function listarLigacoes(req, res) {
+  if (!exigirAdmin(req, res)) return;
+  json(res, 200, { ligacoes: erp.ligacoesCalculadora() });
+}
+
+async function ligarItemCalculadora(req, res, item) {
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
+  const r = erp.ligarItem(item, await lerJson(req), admin.id);
+  if (r.erro) return erro(res, r.status, r.erro);
+  json(res, 200, r.ligacao);
+}
+
+function desligarItemCalculadora(req, res, item) {
+  if (!exigirAdmin(req, res)) return;
+  if (!erp.desligarItem(item)) return erro(res, 404, 'Item não estava ligado.');
+  res.writeHead(204); res.end();
+}
+
 /* Revalida sempre (no-cache + ETag): depois de uma sincronização o
    visitante vê o catálogo novo na próxima página, sem esperar cache vencer. */
 function servirPublico(req, res, arquivo, tipo) {
@@ -1225,6 +1248,11 @@ const ROTAS = [
   ['GET',    /^\/api\/admin\/produtos$/,          (rq, rs) => listarProdutosSite(rq, rs)],
   ['PUT',    /^\/api\/admin\/produtos\/([A-Za-z0-9-]{1,64})$/,
              (rq, rs, m) => ajustarProdutoSite(rq, rs, m[1])],
+  ['GET',    /^\/api\/admin\/calculadora$/,       (rq, rs) => listarLigacoes(rq, rs)],
+  ['PUT',    /^\/api\/admin\/calculadora\/([a-z][0-9]{2})$/,
+             (rq, rs, m) => ligarItemCalculadora(rq, rs, m[1])],
+  ['DELETE', /^\/api\/admin\/calculadora\/([a-z][0-9]{2})$/,
+             (rq, rs, m) => desligarItemCalculadora(rq, rs, m[1])],
   ['GET',    /^\/catalogo-erp\.js$/,
              (rq, rs) => servirPublico(rq, rs, 'js', 'text/javascript; charset=utf-8')],
   ['HEAD',   /^\/catalogo-erp\.js$/,

@@ -190,3 +190,68 @@ test('o texto do condomínio não inventa área que não foi marcada', () => {
   assert.ok(!txt.includes('Piscina'));
   assert.match(txt, /Unidades \(apartamentos ou salas\): 24/);
 });
+
+/* ---- Itens ligados a produtos do ERP pelo painel ----------------------- */
+
+const CONSUMO_EVENTO = require(path.join(RAIZ, 'assets/js/consumo-evento.js'));
+
+test('ITENS lista exatamente os ids que os dois motores lançam', () => {
+  const ids = new Set();
+  for (const arq of ['assets/js/consumo.js', 'assets/js/consumo-evento.js']) {
+    const fonte = fs.readFileSync(path.join(RAIZ, arq), 'utf8');
+    for (const m of fonte.matchAll(/add\('([a-z][0-9]{2})'/g)) ids.add(m[1]);
+  }
+  assert.deepStrictEqual([...CONSUMO.ITENS].sort(), [...ids].sort());
+  for (const id of CONSUMO.ITENS) assert.ok(CATALOGO.produtos.some(p => p.id === id), id);
+});
+
+// Catálogo do ERP como o /catalogo-erp.js publica: produtos + ligações.
+const REAL = {
+  origem: 'erp',
+  produtos: [{ id: '7891', nome: 'Papel Higiênico Neve 64 Rolos', caixa: 'Fardo', art: 'roll' },
+             { id: '7892', nome: 'Desinfetante 5L', caixa: 'Unidade', art: 'gallon' }],
+  calculadora: {
+    d01: { produto: '7891', rende: 64 },
+    b01: { produto: '7892', rende: 2.5 },          // item de 2 L, produto de 5 L
+    d02: { produto: 'nao-existe', rende: 5 }       // produto saiu do ERP
+  }
+};
+
+test('item ligado sai com o produto real, contado no item genérico', () => {
+  const generico = calc('escola', ESC_PEQ);
+  const r = CONSUMO.calcular('escola', ESC_PEQ, CATALOGO, REAL);
+
+  const papelG = acha(generico, 'd01');
+  const papel = acha(r, '7891');
+  assert.ok(papel, 'd01 deveria virar o produto 7891');
+  assert.strictEqual(papel.ref, 'd01');
+  assert.strictEqual(papel.real, true);
+  assert.strictEqual(papel.nome, 'Papel Higiênico Neve 64 Rolos');
+  assert.strictEqual(papel.caixa, 'Fardo');
+  assert.strictEqual(papel.emb, 'Rolo 30m', 'o consumo continua contado em rolos');
+  assert.strictEqual(papel.unidades, papelG.unidades, 'a conta não muda');
+  assert.strictEqual(papel.caixas, Math.ceil(papelG.unidades / 64));
+
+  const desinf = acha(r, '7892');
+  assert.strictEqual(desinf.caixas, Math.ceil(acha(generico, 'b01').unidades / 2.5));
+
+  // Ligação para produto que não está no catálogo: fica o genérico.
+  assert.ok(acha(r, 'd02'));
+  assert.strictEqual(acha(r, 'd02').real, false);
+  assert.strictEqual(r.itens.length, generico.itens.length);
+});
+
+test('rende fracionado não pede uma unidade a mais por erro de arredondamento', () => {
+  const p = CATALOGO.produtos.find(x => x.id === 'b01');
+  const real = { produtos: [{ id: 'x', nome: 'X', caixa: 'Unidade' }],
+                 calculadora: { b01: { produto: 'x', rende: 0.3 } } };
+  assert.strictEqual(CONSUMO.linhaDoItem(p, 3, real).caixas, 10);   // 3 / 0,3 = 10,000000000000002
+});
+
+test('a calculadora de evento usa as mesmas ligações', () => {
+  const r = CONSUMO_EVENTO.calcular({ convidados: 120, duracao: 5 }, CATALOGO, REAL);
+  const papel = acha(r, '7891');
+  assert.ok(papel);
+  assert.strictEqual(papel.ref, 'd01');
+  assert.ok(!acha(r, 'd01'));
+});

@@ -443,6 +443,48 @@ describe('catálogo do ERP', () => {
     }
   });
 
+  test('calculadora ligada a produtos do ERP: grava só no site e sai no catálogo', async () => {
+    const ID = 'aaaaaaaa-0000-0000-0000-000000000002';      // saco de lixo, código 7892
+    const anon = criarCliente();
+    assert.equal((await anon('/api/admin/calculadora')).status, 401);
+    assert.equal((await anon('/api/admin/calculadora/d04', { metodo: 'PUT', corpo: {} })).status, 401);
+    const { req } = await novaConta();
+    assert.equal((await req('/api/admin/calculadora')).status, 403);
+    assert.equal((await req('/api/admin/calculadora/d04', { metodo: 'DELETE' })).status, 403);
+
+    const admin = await novoAdmin();
+    const chamadasAntes = erp.chamadas.length;
+    const ligar = corpo => admin('/api/admin/calculadora/d04', { metodo: 'PUT', corpo });
+
+    assert.equal((await ligar({ erpId: 'bbbbbbbb-0000-0000-0000-000000000009', rende: 1 })).status, 404);
+    assert.equal((await ligar({ erpId: ID, rende: 0 })).status, 400);
+    assert.equal((await ligar({ erpId: ID, rende: 'muito' })).status, 400);
+    assert.equal((await admin('/api/admin/calculadora/xx', { metodo: 'PUT', corpo: {} })).status, 404);
+
+    const r = await ligar({ erpId: ID, rende: 5 });
+    assert.equal(r.status, 200, JSON.stringify(r.dados));
+    assert.equal(r.dados.item, 'd04');
+    assert.equal(r.dados.rende, 5);
+    assert.equal(r.dados.codigo, '7892');
+    assert.equal(r.dados.caixa, 'Pacote');
+
+    const catalogo = async () => rodarCatalogo((await criarCliente()('/catalogo-erp.js')).texto).window.CATALOGO;
+    assert.deepEqual({ ...(await catalogo()).calculadora.d04 }, { produto: '7892', rende: 5 });
+
+    // Sobrevive à sincronização, que apaga e regrava produtos_erp.
+    await sincronizar(admin);
+    assert.equal((await catalogo()).calculadora.d04.produto, '7892');
+    assert.equal((await admin('/api/admin/calculadora')).dados.ligacoes.length, 1);
+
+    assert.equal((await admin('/api/admin/calculadora/d04', { metodo: 'DELETE' })).status, 204);
+    assert.equal((await admin('/api/admin/calculadora/d04', { metodo: 'DELETE' })).status, 404);
+    assert.equal((await catalogo()).calculadora.d04, undefined);
+
+    for (const [metodo, rota] of erp.chamadas.slice(chamadasAntes)) {
+      assert.ok(metodo === 'GET' || rota === '/api/Auth/Login', `chamada proibida ao ERP: ${metodo} ${rota}`);
+    }
+  });
+
   test('o CSP libera as fotos do S3 do ERP e nada além', async () => {
     const res = await fetch(BASE + '/produtos.html');
     const csp = res.headers.get('content-security-policy');
