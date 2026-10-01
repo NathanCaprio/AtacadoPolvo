@@ -432,6 +432,9 @@ p {
 }
 .btn--block {
   width: 100%;
+  /* Botão de largura total quebra a linha em vez de cortar o texto no celular. */
+  white-space: normal;
+  text-align: center;
 }
 
 /* 6. HEADER / NAV ======================================================== */
@@ -1341,6 +1344,12 @@ select.input {
   width: auto;
   min-width: 190px;
 }
+/* O tamanho acima é o da barra do catálogo. Dentro de formulário o select
+   ocupa o campo, senão a opção mais longa empurra o card para fora da tela. */
+.field select.input {
+  width: 100%;
+  min-width: 0;
+}
 .result-count {
   font-size: 0.88rem;
   color: var(--ink-3);
@@ -1756,7 +1765,7 @@ select.input {
 /* 11. CONTATO / FORM ==================================================== */
 .contact-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: clamp(28px, 4vw, 52px);
   align-items: start;
 }
@@ -1861,6 +1870,11 @@ textarea.input {
 }
 .info-item + .info-item {
   border-top: 1px solid var(--line);
+}
+/* O e-mail não tem onde quebrar e, num celular de 320px, empurrava o card. */
+.info-item > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .info-item .ico {
   width: 40px;
@@ -2242,7 +2256,7 @@ textarea.input {
   .split,
   .split--wide,
   .contact-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .hero-art {
     order: -1;
@@ -2868,7 +2882,7 @@ textarea.input {
 
 .cotacao {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(28px, 4vw, 56px);
   align-items: start;
 }
@@ -3007,7 +3021,7 @@ textarea.input {
 
 @media (max-width: 900px) {
   .cotacao {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 30px;
   }
   .cotacao-card {
@@ -5939,6 +5953,33 @@ section.marcas {
   }
   .brand {
     gap: 8px;
+  }
+}
+/* Em 320px (iPhone SE de 1ª geração, Android pequeno) ainda faltavam ~40px
+   e o hambúrguer saía da tela: logo, respiro lateral e botões encolhem mais. */
+@media (max-width: 359px) {
+  .header .wrap {
+    gap: 8px;
+    padding-inline: 14px;
+  }
+  .brand img {
+    width: 50px;
+    height: 32px;
+  }
+  .brand {
+    gap: 6px;
+  }
+  .header-actions .icon-btn {
+    width: 34px;
+    height: 34px;
+  }
+}
+/* Texto longo de botão ("Falar sobre plano sob medida") quebra a linha no
+   celular em vez de empurrar a página para o lado. */
+@media (max-width: 480px) {
+  .btn {
+    white-space: normal;
+    text-align: center;
   }
 }
 /* Com a calculadora ligada o menu ganha um item e, com a lupa, o header
