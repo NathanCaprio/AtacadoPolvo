@@ -32,10 +32,13 @@ npm run backup | backups | exportar | restaurar
 | Tema, menu, reveal, FAQ | `assets/js/main.js` |
 | Descontos dos planos recorrentes | `assets/js/config.js` (`descontoMensal/Semestral/Anual`) + números escritos em `recorrencia.html` |
 | Filtros/orçamento do catálogo | `assets/js/catalogo.js` |
+| Busca do cabeçalho (lupa, sugestões, atalho `/`) | `initBusca` em `assets/js/main.js` (injetada em todas as páginas menos admin; regra de busca igual à de `filtrar` no `catalogo.js`); CSS seção 34 |
 | Formulário de landing (lead) | `assets/js/lead.js` |
+| Ligar/desligar as calculadoras | `calculadoraAtiva` em `config.js` (hoje `false`). Desligadas: some tudo com `data-calculadora` (link novo para elas precisa do atributo), as páginas mandam para o catálogo e saem do `sitemap.xml` (entradas comentadas lá) |
 | Pop-up do cupom de 1ª compra | `assets/js/cupom.js` (valor/liga-desliga em `config.js`; rota `POST /api/cupom`) |
 | Orçamento enviado ao cliente (link público, cliente edita/aprova) | editor em `assets/js/admin.js` (`#editor-proposta`); página `orcamento.js`; rotas `/api/proposta/:token` e `/api/admin/orcamentos/:id/proposta` |
 | Rotas/validação/rate limit da API | `server/api.js` |
+| Auditoria do painel (quem fez o quê) | `registrar()` em `server/api.js` → tabela `auditoria` (`server/db.js`); rótulos em `ACAO` (`admin.js`). Ação admin nova que muda/exporta dado deve chamar `registrar()` |
 | Senha (scrypt), sessão, cookie | `server/auth.js` |
 | Schema SQLite / migrações | `server/db.js` (banco em `dados/polvo.db`) |
 | Servidor estático, headers, ETag | `server/server.js` |
@@ -52,5 +55,7 @@ Cada página tem seu JS homônimo em `assets/js/`.
 - Rotas de admin exigem 401/403 corretos e travas anti-lockout (último admin) — testes cobrem isso.
 - Nova LP: `data-segmento` do form precisa estar em `SEGMENTOS` (`server/api.js`) + rótulo em `admin.js` + `.selo--*`/`.funil-barra--*` no CSS + `sitemap.xml`.
 - `npm test` pode pegar um Node antigo de uma pasta acima; use `node --test "server/*.test.js" "testes/*.test.js"`.
+- **Estático é lista de permissão** (`caminhoPublico` em `server/server.js`): só raiz com `.html/.xml/.txt/.ico/.webmanifest` e `assets/`. Arquivo público em pasta nova → `PASTAS_PUBLICAS`. Nunca voltar para lista de bloqueio (furava com `%64ados`/maiúscula no Windows).
+- **API recusa POST/PUT/PATCH/DELETE com `Origin`/`Sec-Fetch-Site` de outro site** (403). Fetch do front é same-origin, então não afeta.
 - **ERP: só login e GET.** Nunca chamar rota que grave no Empresarius; `server/erp.test.js` trava isso.
 - Textos, nomes de funções e comentários são em **português**; mantenha o padrão.

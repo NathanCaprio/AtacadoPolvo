@@ -18,11 +18,16 @@
   /* ---- 1. Para onde ir depois do login ---------------------------------- */
 
   // Só aceita caminho relativo interno: um "volta" com http:// ou //host
-  // viraria redirecionamento aberto para fora do site.
+  // viraria redirecionamento aberto para fora do site. Conferir só o texto
+  // não basta — o navegador lê "/\evil.com" como "//evil.com" —, então o
+  // destino é resolvido de verdade e a origem tem que ser a mesma.
   function destino() {
     const v = new URLSearchParams(location.search).get('volta') || '';
-    if (!v.startsWith('/') || v.startsWith('//')) return null;
-    return v;
+    if (!v.startsWith('/')) return null;
+    try {
+      const url = new URL(v, location.origin);
+      return url.origin === location.origin ? url.pathname + url.search + url.hash : null;
+    } catch { return null; }
   }
 
   const irPara = cliente =>

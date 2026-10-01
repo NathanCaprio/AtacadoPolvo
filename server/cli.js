@@ -12,7 +12,7 @@
 'use strict';
 
 const readline = require('node:readline');
-const { db } = require('./db');
+const { db, auditar } = require('./db');
 const auth = require('./auth');
 
 /* ---- Entrada ----------------------------------------------------------- */
@@ -62,10 +62,11 @@ function perguntar(rotulo, { escondido = false } = {}) {
   });
 }
 
-async function pedirSenha() {
+async function pedirSenha(email) {
   await prepararEntrada();
   const a = await perguntar('Senha (mín. 8 caracteres): ', { escondido: true });
-  if (a.length < 8) { console.error('\nSenha curta demais.'); process.exit(1); }
+  const fraca = auth.senhaFraca(a, email);
+  if (fraca) { console.error('\n' + fraca); process.exit(1); }
   const b = await perguntar('Repita a senha: ', { escondido: true });
   if (a !== b) { console.error('\nAs senhas não conferem.'); process.exit(1); }
   return a;
@@ -85,11 +86,14 @@ async function criarAdmin(nome, email) {
     process.exit(1);
   }
 
-  const senha = await pedirSenha();
+  const senha = await pedirSenha(email);
   const hash = await auth.gerarHash(senha);
   db.prepare(`
     INSERT INTO clientes (nome, email, senha_hash, papel) VALUES (?, ?, ?, 'admin')
   `).run(nome.trim(), email, hash);
+  // Admin nascido no terminal não passa pelo painel: sem isto, a auditoria
+  // mostraria alguém com poder total surgindo do nada.
+  auditar({ adminEmail: 'terminal', acao: 'admin_criado', alvo: email, detalhe: 'npm run criar-admin' });
 
   console.log(`\nAdmin criado: ${email}`);
 }
@@ -102,6 +106,7 @@ async function promover(email) {
   email = email.trim().toLowerCase();
   const r = db.prepare(`UPDATE clientes SET papel = 'admin' WHERE email = ?`).run(email);
   if (!r.changes) { console.error(`Ninguém com o e-mail ${email}.`); process.exit(1); }
+  auditar({ adminEmail: 'terminal', acao: 'cliente_editado', alvo: email, detalhe: 'papel → admin (cli promover)' });
   console.log(`${email} agora é admin.`);
 }
 

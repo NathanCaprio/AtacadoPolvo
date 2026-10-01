@@ -201,6 +201,54 @@ describe('login', () => {
     assert.equal((await req('/api/auth/sair', { metodo: 'POST' })).status, 204);
     assert.equal((await req('/api/auth/eu')).status, 401);
   });
+
+  test('recusa senha óbvia e senha igual ao e-mail', async () => {
+    const email = `obvia.${Date.now()}@exemplo.com`;
+    for (const senha of ['12345678', 'Senha123', 'aaaaaaaaaa', email, email.split('@')[0]]) {
+      const r = await criarCliente()('/api/auth/cadastrar', {
+        metodo: 'POST', corpo: { nome: 'Teste', email, senha }
+      });
+      assert.equal(r.status, 400, `"${senha}" deveria ser recusada`);
+    }
+  });
+
+  /* Login por cima de uma sessão aberta: o cookie novo substitui o velho no
+     navegador, mas o velho seguia valendo no banco — quem tivesse copiado
+     (ou plantado) aquele token continuava dentro. */
+  test('entrar de novo derruba a sessão que o navegador já tinha', async () => {
+    const { email } = await novaConta();
+    const entrar = cookie => fetch(`${BASE}/api/auth/entrar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(cookie ? { Cookie: cookie } : {}) },
+      body: JSON.stringify({ email, senha: 'senhaboa123' })
+    }).then(r => r.headers.getSetCookie()[0].split(';')[0]);
+    const eu = cookie => fetch(`${BASE}/api/auth/eu`, { headers: { Cookie: cookie } })
+      .then(r => r.status);
+
+    const velho = await entrar();
+    const novo = await entrar(velho);
+    assert.equal(await eu(velho), 401);
+    assert.equal(await eu(novo), 200);
+  });
+
+  test('sessão de admin dura menos que a de cliente', async () => {
+    const { email } = await novaConta();
+    const maxAge = async () => {
+      const res = await fetch(`${BASE}/api/auth/entrar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, senha: 'senhaboa123' })
+      });
+      return Number(/Max-Age=(\d+)/.exec(res.headers.getSetCookie()[0])[1]);
+    };
+    assert.equal(await maxAge(), 30 * 86400);
+
+    const { DatabaseSync } = require('node:sqlite');
+    const db = new DatabaseSync(banco);
+    db.prepare(`UPDATE clientes SET papel = 'admin' WHERE email = ?`).run(email);
+    db.close();
+    assert.equal(await maxAge(), 7 * 86400);
+  });
 });
 
 /* ---- Troca de senha ------------------------------------------------------ */
@@ -555,6 +603,61 @@ describe('servidor', () => {
     }
   });
 
+  /* Os desvios que furavam a lista de bloqueio antiga: maiúscula (o disco do
+     Windows não diferencia), letra codificada (a lista era conferida antes do
+     decode), stream alternativo do NTFS e pasta que nunca foi bloqueada. */
+  test('não serve o banco nem o código por caminho disfarçado', async () => {
+    const anon = criarCliente();
+    for (const caminho of [
+      '/Dados/polvo.db', '/%64ados/polvo.db', '/SERVER/db.js', '/%73erver/db.js',
+      '/server%2fdb.js', '/%2eenv', '/index.html::$DATA', '/assets/..%5c..%5cserver/db.js',
+      '/backups/', '/package.json', '/README.md', '/CLAUDE.md', '/testes/consumo.test.js'
+    ]) {
+      const r = await anon(caminho);
+      assert.equal(r.status, 404, `${caminho} não deveria ser servido`);
+    }
+    // E o que é público continua saindo.
+    for (const caminho of ['/', '/entrar', '/assets/js/main.js', '/robots.txt']) {
+      assert.equal((await fetch(BASE + caminho)).status, 200, caminho);
+    }
+  });
+
+  test('Host malformado não derruba o servidor', async () => {
+    const http = require('node:http');
+    const { port } = new URL(BASE);
+    await new Promise(resolve => {
+      http.get({ host: '127.0.0.1', port, path: '/', headers: { Host: '[' } }, r => {
+        r.resume(); r.on('end', resolve);
+      }).on('error', resolve);
+    });
+    assert.equal((await fetch(BASE + '/')).status, 200, 'o servidor caiu');
+  });
+
+  test('recusa POST vindo de outro site (CSRF)', async () => {
+    for (const cab of [{ Origin: 'https://evil.example' }, { Origin: 'null' },
+                       { 'Sec-Fetch-Site': 'cross-site' }]) {
+      const res = await fetch(`${BASE}/api/auth/entrar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...cab },
+        body: JSON.stringify({ email: 'x@y.com', senha: 'qualquer1' })
+      });
+      assert.equal(res.status, 403, JSON.stringify(cab));
+    }
+    const mesma = await fetch(`${BASE}/api/auth/entrar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Origin: BASE, 'Sec-Fetch-Site': 'same-origin' },
+      body: JSON.stringify({ email: 'x@y.com', senha: 'qualquer1' })
+    });
+    assert.equal(mesma.status, 401, 'a própria origem tem que passar');
+  });
+
+  test('corpo grande demais dá 413', async () => {
+    const res = await fetch(`${BASE}/api/auth/entrar`, {
+      method: 'POST', body: 'a'.repeat(70 * 1024)
+    });
+    assert.equal(res.status, 413);
+  });
+
   test('bloqueia path traversal', async () => {
     const res = await fetch(`${BASE}/../server/auth.js`);
     assert.ok(res.status === 403 || res.status === 404, `status inesperado: ${res.status}`);
@@ -618,5 +721,54 @@ describe('servidor', () => {
     const cookie = res.headers.getSetCookie().join(';');
     assert.match(cookie, /HttpOnly/i);
     assert.match(cookie, /SameSite=Lax/i);
+  });
+});
+
+/* ---- Auditoria ----------------------------------------------------------- */
+
+describe('auditoria do painel', () => {
+  async function promover(email) {
+    const { DatabaseSync } = require('node:sqlite');
+    const db = new DatabaseSync(banco);
+    db.prepare(`UPDATE clientes SET papel = 'admin' WHERE email = ?`).run(email);
+    db.close();
+  }
+  const acoes = async (req, acao) =>
+    (await req('/api/admin/auditoria')).dados.registros.filter(r => r.acao === acao);
+
+  test('ação do admin fica registrada com quem fez', async () => {
+    const admin = await novaConta();
+    await promover(admin.email);
+    const alvo = await novaConta();
+
+    const link = await admin.req(`/api/admin/clientes/${alvo.id}/recuperacao`, { metodo: 'POST' });
+    assert.equal(link.status, 201);
+    assert.equal((await admin.req('/api/admin/exportar?tipo=clientes')).status, 200);
+    assert.equal((await admin.req(`/api/admin/clientes/${alvo.id}`, { metodo: 'DELETE' })).status, 204);
+
+    for (const [acao, sobre] of [['link_senha_gerado', alvo.email], ['exportou_csv', 'clientes'],
+                                 ['cliente_removido', alvo.email]]) {
+      const r = (await acoes(admin.req, acao)).find(x => x.alvo === sobre);
+      assert.ok(r, `${acao} deveria estar no registro`);
+      assert.equal(r.admin_email, admin.email);
+    }
+  });
+
+  test('senha errada em conta de admin fica registrada; em conta comum, não', async () => {
+    const admin = await novaConta();
+    await promover(admin.email);
+    const comum = await novaConta();
+    for (const email of [admin.email, comum.email]) {
+      await criarCliente()('/api/auth/entrar', { metodo: 'POST', corpo: { email, senha: 'errada123' } });
+    }
+    const falhas = await acoes(admin.req, 'login_falhou');
+    assert.ok(falhas.some(f => f.admin_email === admin.email));
+    assert.ok(!falhas.some(f => f.admin_email === comum.email));
+  });
+
+  test('só admin lê, e ninguém apaga', async () => {
+    const { req } = await novaConta();
+    assert.equal((await req('/api/admin/auditoria')).status, 403);
+    assert.equal((await req('/api/admin/auditoria', { metodo: 'DELETE' })).status, 405);
   });
 });

@@ -31,7 +31,7 @@
     <nav class="nav" id="nav" aria-label="Navegação principal">
       <a href="index.html">Início</a>
       <a href="produtos.html">Produtos</a>
-      <a href="calculadora.html">Calculadora</a>
+      <a href="calculadora.html" data-calculadora>Calculadora</a>
       <a href="condominios.html">Condomínios</a>
       <a href="escolas.html">Escolas</a>
       <a href="sobre.html">A empresa</a>
@@ -141,8 +141,11 @@
       <button role="tab" id="aba-produtos" aria-selected="false" aria-controls="painel-produtos">
         Produtos no site
       </button>
-      <button role="tab" id="aba-calculadora" aria-selected="false" aria-controls="painel-calculadora">
+      <button role="tab" id="aba-calculadora" data-calculadora aria-selected="false" aria-controls="painel-calculadora">
         Calculadora
+      </button>
+      <button role="tab" id="aba-auditoria" aria-selected="false" aria-controls="painel-auditoria">
+        Auditoria
       </button>
     </div>
 
@@ -292,7 +295,7 @@
     </section>
 
     <!-- ---------- CALCULADORA ---------- -->
-    <section id="painel-calculadora" role="tabpanel" aria-labelledby="aba-calculadora" hidden>
+    <section id="painel-calculadora" data-calculadora role="tabpanel" aria-labelledby="aba-calculadora" hidden>
       <p class="lead" style="font-size:.92rem;margin-bottom:18px">
         A calculadora de consumo estima com itens genéricos ("papel higiênico,
         rolo de 30 m"). Ligue cada um a um produto do ERP e diga quanto rende
@@ -314,6 +317,36 @@
             </tr>
           </thead>
           <tbody id="linhas-calculadora"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---------- AUDITORIA ---------- -->
+    <section id="painel-auditoria" role="tabpanel" aria-labelledby="aba-auditoria" hidden>
+      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+        Quem fez o quê no painel: entradas e senhas erradas em contas de admin,
+        mudança de papel, exclusões, links de senha gerados e planilhas baixadas.
+        Ninguém apaga daqui; registros com mais de um ano saem sozinhos.
+        Várias "senha errada" seguidas numa conta de admin são sinal de alguém
+        tentando entrar — troque a senha.
+      </p>
+      <div class="barra-acoes">
+        <button class="btn btn--ghost btn--sm" data-exportar="auditoria" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg> Baixar registro (CSV)
+        </button>
+      </div>
+      <div class="tabela-wrap">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Quando</th>
+              <th>Quem</th>
+              <th>Ação</th>
+              <th>Sobre</th>
+              <th>IP</th>
+            </tr>
+          </thead>
+          <tbody id="linhas-auditoria"></tbody>
         </table>
       </div>
     </section>
@@ -352,8 +385,8 @@
         <ul class="footer-links">
           <li><a href="index.html">Início</a></li>
           <li><a href="produtos.html">Produtos</a></li>
-          <li><a href="calculadora.html">Calculadora de consumo</a></li>
-          <li><a href="calculadora-eventos.html">Calculadora para festas e eventos</a></li>
+          <li data-calculadora><a href="calculadora.html" data-calculadora>Calculadora de consumo</a></li>
+          <li data-calculadora><a href="calculadora-eventos.html" data-calculadora>Calculadora para festas e eventos</a></li>
           <li><a href="recorrencia.html">Pedido recorrente</a></li>
           <li><a href="condominios.html">Para condomínios</a></li>
           <li><a href="escolas.html">Para escolas</a></li>

@@ -175,7 +175,39 @@ db.exec(`
     falhas    INTEGER,
     mensagem  TEXT
   );
+
+  -- Quem fez o quê no painel. Só recebe INSERT: nenhuma rota apaga ou edita
+  -- (a limpeza de mais de 1 ano é a única exceção, em limparAuditoria). O
+  -- e-mail é copiado de propósito: o registro sobrevive à exclusão do admin.
+  CREATE TABLE IF NOT EXISTS auditoria (
+    id          INTEGER PRIMARY KEY,
+    quando      TEXT NOT NULL DEFAULT (datetime('now')),
+    admin_id    INTEGER REFERENCES clientes(id) ON DELETE SET NULL,
+    admin_email TEXT NOT NULL,
+    acao        TEXT NOT NULL,
+    alvo        TEXT,
+    detalhe     TEXT,
+    ip          TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_auditoria_quando ON auditoria(quando);
 `);
+
+/* Registro de auditoria. adminEmail 'terminal' = comando do server/cli.js. */
+function auditar({ adminId = null, adminEmail, acao, alvo = null, detalhe = null, ip = null }) {
+  db.prepare(`
+    INSERT INTO auditoria (admin_id, admin_email, acao, alvo, detalhe, ip)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(adminId, adminEmail, acao,
+         alvo == null ? null : String(alvo).slice(0, 200),
+         detalhe == null ? null : String(detalhe).slice(0, 500),
+         ip == null ? null : String(ip).slice(0, 64));
+}
+
+/* O registro tem IP, que é dado pessoal: guarda 1 ano (o Marco Civil pede
+   ao menos 6 meses de registro de acesso) e some depois. */
+function limparAuditoria() {
+  return db.prepare(`DELETE FROM auditoria WHERE quando < datetime('now', '-1 year')`).run().changes;
+}
 
 /* Limpa sessões vencidas. Chamado no boot e de hora em hora. */
 function limparSessoes() {
@@ -240,4 +272,4 @@ function limparRecuperacoes() {
   return r.changes;
 }
 
-module.exports = { db, limparSessoes, limparRecuperacoes, ARQUIVO };
+module.exports = { db, limparSessoes, limparRecuperacoes, auditar, limparAuditoria, ARQUIVO };

@@ -527,6 +527,15 @@ p {
 .nav a[aria-current="page"] {
   color: var(--brand);
 }
+/* O botão do WhatsApp no menu mantém texto branco e fundo verde
+   (o ".nav a" acima ganharia por especificidade). */
+.nav .btn--wpp,
+.nav .btn--wpp:hover {
+  color: #fff;
+}
+.nav .btn--wpp:hover {
+  background: #198f45;
+}
 .nav a[aria-current="page"]::after {
   content: "";
   position: absolute;
@@ -1377,7 +1386,6 @@ select.input {
   border-radius: var(--r-md);
   object-fit: contain;
 }
-.vitrine-art .prod-foto,
 .pd-art .prod-foto {
   width: 84%;
   height: 84%;
@@ -1457,8 +1465,8 @@ select.input {
 .vitrine-trilho {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 4 * 16px) / 5);
-  column-gap: 16px;
+  grid-auto-columns: calc((100% - 3 * 22px) / 4);
+  column-gap: 22px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -1468,80 +1476,24 @@ select.input {
 .vitrine-trilho::-webkit-scrollbar {
   display: none;
 }
-.vitrine-card {
+/* Cards = .prod do catálogo (mesmo markup); aqui só o encaixe no carrossel */
+.vitrine-trilho > .prod {
   scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  overflow: hidden;
-  transition:
-    transform 0.22s var(--ease),
-    box-shadow 0.22s var(--ease);
 }
-.vitrine-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+/* Arrastar com o mouse (index.js) */
+@media (pointer: fine) {
+  .vitrine-trilho {
+    cursor: grab;
+  }
 }
-.vitrine-art {
-  aspect-ratio: 1/1;
-  display: grid;
-  place-items: center;
-  background: var(--surface-2);
+.vitrine-trilho.is-arrastando {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  user-select: none;
 }
-.vitrine-art svg {
-  width: 62%;
-  height: 62%;
-  transition: transform 0.3s var(--ease);
-}
-.vitrine-card:hover .vitrine-art svg {
-  transform: scale(1.05);
-}
-.vitrine-corpo {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 14px 14px 16px;
-}
-.vitrine-corpo h3 {
-  font-size: 0.92rem;
-  line-height: 1.35;
-  font-weight: 600;
-  min-height: 2.7em;
-}
-.vitrine-oferta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 4px;
-}
-.vitrine-oferta strong {
-  font-family: var(--font-display);
-  font-size: 1.08rem;
-  line-height: 1.2;
-  color: var(--brand);
-}
-.vitrine-selo {
-  flex: 0 0 auto;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: var(--r-sm);
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-.vitrine-emb {
-  font-size: 0.8rem;
-  color: var(--ink-3);
-}
-.vitrine-foot {
-  margin-top: auto;
-  padding-top: 10px;
+.vitrine-trilho.is-arrastando * {
+  cursor: grabbing;
 }
 .vitrine-seta {
   position: absolute;
@@ -1581,12 +1533,12 @@ select.input {
 }
 @media (max-width: 1100px) {
   .vitrine-trilho {
-    grid-auto-columns: calc((100% - 3 * 16px) / 4);
+    grid-auto-columns: calc((100% - 2 * 22px) / 3);
   }
 }
 @media (max-width: 860px) {
   .vitrine-trilho {
-    grid-auto-columns: calc((100% - 2 * 16px) / 3);
+    grid-auto-columns: calc((100% - 22px) / 2);
   }
 }
 @media (max-width: 640px) {
@@ -1834,6 +1786,12 @@ select.input {
   color: var(--ink-3);
   margin-top: 6px;
 }
+/* Calculadoras desligadas (calculadoraAtiva: false em config.js): main.js só
+   põe .com-calculadora no <html> quando estão ligadas. */
+html:not(.com-calculadora) [data-calculadora] {
+  display: none !important;
+}
+
 /* O display do .btn venceria o atributo hidden ("Mostrar mais", "Desligar") */
 .btn[hidden] {
   display: none;
@@ -4939,16 +4897,19 @@ section.marcas {
   transform: scale(1.06);
 }
 
-.marcas--ativo .marcas-trilho {
-  animation: marcas-rolar var(--marcas-dur, 32s) linear infinite;
+/* Rolagem e arraste ficam no main.js (initMarcas), que move o trilho por
+   transform. touch-action: pan-y deixa a página rolar na vertical no celular. */
+.marcas--ativo .marcas-viewport {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
 }
-.marcas--ativo .marcas-viewport:hover .marcas-trilho {
-  animation-play-state: paused;
+.marcas--ativo .marcas-viewport.arrastando {
+  cursor: grabbing;
 }
-@keyframes marcas-rolar {
-  to {
-    transform: translateX(-50%);
-  }
+.marcas--ativo .marcas-lista img {
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 /* Sem JS: não há cópia nem animação, então a lista se ajeita na largura. */
@@ -5763,5 +5724,231 @@ section.marcas {
   .pd-ficha div + div {
     border-left: 0;
     border-top: 1px solid var(--line);
+  }
+}
+
+/* 34. BUSCA NO CABEÇALHO ================================================ */
+/* Lupa e painel injetados pelo main.js (initBusca). O painel fica dentro do
+   .header (sticky), logo abaixo dele, e acompanha a rolagem. */
+.busca {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding-top: 8px;
+}
+.busca[hidden] {
+  display: none;
+}
+/* width fixa: o .wrap aqui herda o flex do .header .wrap, e sem ela o
+   cartão encolhia e esticava a cada letra digitada. */
+.busca-card {
+  width: 100%;
+  max-width: 640px;
+  margin-left: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.busca-caixa {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 6px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.busca-caixa > svg {
+  width: 19px;
+  height: 19px;
+  flex: none;
+  color: var(--brand);
+}
+.busca-caixa input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1rem;
+}
+.busca-caixa input:focus {
+  outline: none;
+}
+.busca-caixa input::placeholder {
+  color: var(--ink-3);
+}
+/* O "x" nativo do type=search duplica o Esc ao lado. */
+.busca-caixa input::-webkit-search-cancel-button {
+  display: none;
+}
+.busca-fechar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-full);
+  color: var(--ink-3);
+}
+.busca-fechar svg {
+  width: 18px;
+  height: 18px;
+}
+.busca-fechar:hover {
+  color: var(--brand);
+  background: var(--brand-soft);
+}
+.busca-lista {
+  position: relative; /* referência do offsetTop em marcar() (main.js) */
+  max-height: min(62vh, 470px);
+  overflow-y: auto;
+  padding: 8px;
+}
+.busca-lista:empty {
+  display: none;
+}
+.busca-titulo {
+  margin: 4px 8px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.busca-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 6px 8px;
+}
+.busca-cats a {
+  padding: 7px 12px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.busca-cats a:hover,
+.busca-cats a.is-ativo {
+  color: var(--brand);
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+.busca-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: var(--r-md);
+  color: var(--ink);
+}
+.busca-item:hover,
+.busca-item.is-ativo {
+  background: var(--brand-soft);
+}
+.busca-art {
+  width: 46px;
+  height: 46px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.busca-art svg,
+.busca-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.busca-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.busca-txt b {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.busca-txt small {
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.busca-todos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 11px;
+  border-radius: var(--r-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--brand);
+  background: var(--surface-2);
+}
+.busca-todos svg {
+  width: 16px;
+  height: 16px;
+}
+.busca-todos:hover,
+.busca-todos.is-ativo {
+  background: var(--brand-soft);
+}
+.busca-vazio {
+  margin: 0;
+  padding: 14px 10px;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+.busca-vazio a {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.busca-vazio a.is-ativo {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+@media (max-width: 620px) {
+  .busca-card {
+    max-width: none;
+  }
+  .header-actions {
+    gap: 6px;
+  }
+}
+/* Quatro botões redondos (lupa, conta, tema, menu) e o logo não cabem num
+   celular de 360px no tamanho cheio. */
+@media (max-width: 420px) {
+  .header-actions {
+    gap: 4px;
+  }
+  .header-actions .icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .brand {
+    gap: 8px;
+  }
+}
+/* Com a calculadora ligada o menu ganha um item e, com a lupa, o header
+   estoura logo acima do hambúrguer. Ali o subtítulo da marca sai (o logo
+   continua) e os botões se aproximam — juntos dão os ~50px que faltam. */
+@media (min-width: 1101px) and (max-width: 1200px) {
+  .com-calculadora .brand-txt span {
+    display: none;
+  }
+  .com-calculadora .header-actions {
+    gap: 6px;
   }
 }

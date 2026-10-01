@@ -49,6 +49,13 @@
     try { localStorage.setItem(THEME_KEY, novo); } catch (e) { /* modo privado */ }
   }
 
+  /* Calculadoras ligadas ou não (calculadoraAtiva em config.js). O CSS
+     esconde tudo que tem data-calculadora enquanto esta classe não entra. */
+  if ((window.SITE || {}).calculadoraAtiva) document.documentElement.classList.add('com-calculadora');
+  // Desligadas, as próprias páginas da calculadora (<main data-calculadora>)
+  // mandam para o catálogo — vale para quem chega por link antigo.
+  else if (document.querySelector('main[data-calculadora]')) location.replace('produtos.html');
+
   /* ---- 2. Config: injeta dados de contato no HTML ----------------------- */
   function linkWhatsApp(msg) {
     const s = window.SITE || {};
@@ -229,9 +236,254 @@
     copia.setAttribute('aria-hidden', 'true');
     $$('img', copia).forEach(img => { img.alt = ''; });
     trilho.appendChild(copia);
-    // Velocidade constante por logo, não por volta: mais marcas, volta mais longa.
-    trilho.style.setProperty('--marcas-dur', (lista.children.length * 4) + 's');
-    trilho.closest('.marcas').classList.add('marcas--ativo');
+    const secao = trilho.closest('.marcas');
+    secao.classList.add('marcas--ativo');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Rolagem por requestAnimationFrame (não CSS) para o arraste continuar de
+    // onde o trilho está. Velocidade constante por logo: 4 s cada.
+    const viewport = $('.marcas-viewport', secao);
+    let x = 0, volta = 0, parado = false, arraste = null, anterior = 0;
+    const medir = () => { volta = lista.offsetWidth; };
+    medir();
+    window.addEventListener('resize', medir);
+    // Logos lazy só têm largura depois de carregar.
+    $$('img', lista).forEach(img => img.addEventListener('load', medir));
+
+    function quadro(t) {
+      const dt = anterior ? Math.min(t - anterior, 100) : 0;
+      anterior = t;
+      if (!parado && !arraste && volta) x -= dt * volta / (lista.children.length * 4000);
+      if (volta) x = ((x % volta) - volta) % volta; // mantém em (-volta, 0]
+      trilho.style.transform = 'translateX(' + x + 'px)';
+      requestAnimationFrame(quadro);
+    }
+    requestAnimationFrame(quadro);
+
+    viewport.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') parado = true; });
+    viewport.addEventListener('pointerleave', () => { parado = false; });
+    viewport.addEventListener('pointerdown', e => {
+      arraste = { id: e.pointerId, inicio: e.clientX, x0: x };
+      viewport.setPointerCapture(e.pointerId);
+      viewport.classList.add('arrastando');
+    });
+    viewport.addEventListener('pointermove', e => {
+      if (arraste && e.pointerId === arraste.id) x = arraste.x0 + e.clientX - arraste.inicio;
+    });
+    const soltar = e => {
+      if (!arraste || e.pointerId !== arraste.id) return;
+      arraste = null;
+      viewport.classList.remove('arrastando');
+    };
+    viewport.addEventListener('pointerup', soltar);
+    viewport.addEventListener('pointercancel', soltar);
+  }
+
+  /* ---- 8c. Busca no cabeçalho -------------------------------------------
+     A lupa entra aqui, e não no HTML de cada página. O formulário funciona
+     sozinho: Enter leva a produtos.html?busca=, que o catalogo.js entende.
+     As sugestões usam window.CATALOGO; nas páginas que não carregam o
+     catálogo do ERP, data.js + catalogo-erp.js são baixados na primeira vez
+     que a busca abre. No próprio catálogo a lupa só foca o campo da página. */
+  const ICONE_LUPA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+  const SUGESTOES = 6;
+
+  // Mesma regra do catalogo.js: ignora acento e maiúscula ("agua" acha "ÁGUA").
+  const normalizar = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const esc = s => String(s == null ? '' : s)
+    .replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  function carregarScript(src) {
+    return new Promise(ok => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = s.onerror = ok;     // sem catálogo, a busca ainda manda ao catálogo
+      document.body.appendChild(s);
+    });
+  }
+  let catalogoPedido = null;
+  function catalogo() {
+    if (!catalogoPedido) {
+      catalogoPedido = $('script[src*="catalogo-erp.js"]')
+        ? Promise.resolve()
+        : (window.CATALOGO ? Promise.resolve() : carregarScript('assets/js/data.js'))
+            .then(() => carregarScript('catalogo-erp.js'));
+    }
+    return catalogoPedido.then(() => window.CATALOGO || null);
+  }
+
+  // Cada palavra precisa aparecer (em qualquer ordem): "detergente 5l" acha
+  // "DETERGENTE NEUTRO 5L". Nome que começa com o termo vem primeiro.
+  function buscarProdutos(cat, termo) {
+    const t = normalizar(termo.trim());
+    const palavras = t.split(/\s+/).filter(Boolean);
+    const nomeCat = {};
+    cat.categorias.forEach(c => { nomeCat[c.id] = c.nome; });
+    const achados = [];
+    cat.produtos.forEach(p => {
+      const nome = normalizar(p.nome);
+      const tudo = [nome, normalizar(p.desc), normalizar(p.texto), normalizar(nomeCat[p.cat])].join(' ');
+      if (normalizar(p.id) !== t && !palavras.every(w => tudo.includes(w))) return;
+      const peso = nome.startsWith(t) ? 0 : palavras.every(w => nome.includes(w)) ? 1 : 2;
+      achados.push({ p, peso });
+    });
+    achados.sort((a, b) => a.peso - b.peso || a.p.nome.localeCompare(b.p.nome, 'pt-BR'));
+    return { produtos: achados.map(a => a.p), nomeCat };
+  }
+
+  function initBusca() {
+    const acoes = $('.header-actions');
+    const header = $('.header');
+    if (!acoes || !header || /admin\.html$/.test(location.pathname)) return;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'icon-btn busca-btn';
+    btn.setAttribute('aria-label', 'Buscar produtos');
+    btn.title = 'Buscar produtos (/)';
+    btn.innerHTML = ICONE_LUPA;
+    acoes.insertBefore(btn, acoes.firstChild);
+
+    // No catálogo já existe um campo que filtra o grid ao vivo.
+    const campoDaPagina = $('#busca');
+    if (campoDaPagina) {
+      btn.addEventListener('click', () => {
+        campoDaPagina.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        campoDaPagina.focus({ preventScroll: true });
+      });
+      return;
+    }
+
+    const painel = document.createElement('div');
+    painel.className = 'busca';
+    painel.hidden = true;
+    painel.innerHTML = `<div class="wrap"><div class="busca-card">
+        <form class="busca-caixa" action="produtos.html" method="get" role="search">
+          ${ICONE_LUPA}
+          <input type="search" name="busca" maxlength="60" autocomplete="off" spellcheck="false"
+                 placeholder="Buscar produto, marca ou categoria..." aria-label="Buscar produtos"
+                 role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="busca-lista">
+          <button type="button" class="busca-fechar" aria-label="Fechar busca" title="Fechar (Esc)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </form>
+        <div class="busca-lista" id="busca-lista" role="listbox" aria-label="Sugestões"></div>
+      </div></div>`;
+    header.appendChild(painel);
+
+    const campo = $('input', painel);
+    const lista = $('.busca-lista', painel);
+    let ativo = -1;
+
+    const opcoes = () => $$('a', lista);
+    function marcar(i) {
+      const ops = opcoes();
+      ops.forEach((a, j) => a.classList.toggle('is-ativo', j === i));
+      ativo = i;
+      if (ops[i]) {
+        campo.setAttribute('aria-activedescendant', ops[i].id);
+        // Rola só a lista: scrollIntoView mexeria na página (scroll-padding do html).
+        const a = ops[i];
+        if (a.offsetTop < lista.scrollTop) lista.scrollTop = a.offsetTop;
+        else if (a.offsetTop + a.offsetHeight > lista.scrollTop + lista.clientHeight) {
+          lista.scrollTop = a.offsetTop + a.offsetHeight - lista.clientHeight;
+        }
+      } else campo.removeAttribute('aria-activedescendant');
+    }
+
+    function desenhar(cat) {
+      const termo = campo.value.trim();
+      let html = '';
+
+      if (!cat) {
+        html = termo ? '' : '<p class="busca-vazio">Digite o nome do produto, a marca ou a categoria.</p>';
+      } else if (!termo) {
+        html = '<p class="busca-titulo">Categorias</p><div class="busca-cats">' +
+          cat.categorias.map(c => `<a role="option" href="produtos.html?cat=${encodeURIComponent(c.id)}">${esc(c.nome)}</a>`).join('') +
+          '</div>';
+      } else {
+        const { produtos, nomeCat } = buscarProdutos(cat, termo);
+        const t = normalizar(termo);
+        const cats = cat.categorias.filter(c => normalizar(c.nome).includes(t)).slice(0, 3);
+        if (cats.length) {
+          html += '<div class="busca-cats">' + cats.map(c =>
+            `<a role="option" href="produtos.html?cat=${encodeURIComponent(c.id)}">${esc(c.nome)}</a>`).join('') + '</div>';
+        }
+        html += produtos.slice(0, SUGESTOES).map(p => {
+          const cor = (cat.categorias.find(c => c.id === p.cat) || {}).cor || '#7B2FE3';
+          const arte = window.imagemProduto ? window.imagemProduto(p, cor) : '';
+          return `<a class="busca-item" role="option" href="produto.html?id=${encodeURIComponent(p.id)}">
+              <span class="busca-art">${arte}</span>
+              <span class="busca-txt"><b>${esc(p.nome)}</b><small>${esc(nomeCat[p.cat] || '')}</small></span>
+            </a>`;
+        }).join('');
+        if (produtos.length) {
+          html += `<a class="busca-todos" role="option" href="produtos.html?busca=${encodeURIComponent(termo)}">
+              Ver ${produtos.length === 1 ? 'o resultado' : `todos os ${produtos.length} resultados`} no catálogo ${ICONS.arrow}</a>`;
+        } else if (!cats.length) {
+          html = `<p class="busca-vazio">Nada encontrado para “${esc(termo)}”.
+            <a role="option" href="${esc(linkWhatsApp('Olá! Procuro o produto: ' + termo))}" target="_blank" rel="noopener">Pergunte no WhatsApp</a> — a gente tem mais do que está no site.</p>`;
+        }
+      }
+
+      lista.innerHTML = html;
+      opcoes().forEach((a, i) => { a.id = 'busca-op-' + i; });
+      campo.setAttribute('aria-expanded', String(!!html));
+      marcar(-1);
+    }
+
+    let espera;
+    const atualizar = () => catalogo().then(desenhar);
+    campo.addEventListener('input', () => {
+      clearTimeout(espera);
+      espera = setTimeout(atualizar, 120);
+    });
+
+    function abrir() {
+      painel.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      campo.focus({ preventScroll: true });
+      campo.select();
+      atualizar();
+    }
+    function fechar(voltarFoco) {
+      if (painel.hidden) return;
+      painel.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      if (voltarFoco) btn.focus({ preventScroll: true });
+    }
+
+    btn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener('click', () => (painel.hidden ? abrir() : fechar()));
+    $('.busca-fechar', painel).addEventListener('click', () => fechar(true));
+
+    campo.addEventListener('keydown', e => {
+      const ops = opcoes();
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        if (!ops.length) return;
+        e.preventDefault();
+        // Gira pelas opções passando pelo campo (-1): de -1 a ops.length - 1.
+        const n = ops.length + 1;
+        marcar((ativo + 1 + (e.key === 'ArrowDown' ? 1 : -1) + n) % n - 1);
+      } else if (e.key === 'Enter' && ops[ativo]) {
+        e.preventDefault();
+        ops[ativo].click();
+      } else if (e.key === 'Escape') {
+        fechar(true);
+      }
+    });
+
+    // Fecha ao clicar fora; "/" abre de qualquer lugar (fora de campos).
+    document.addEventListener('click', e => {
+      if (!painel.hidden && !painel.contains(e.target) && !btn.contains(e.target)) fechar();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey || !painel.hidden) return;
+      const el = document.activeElement;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      e.preventDefault();
+      abrir();
+    });
   }
 
   /* ---- 9. Boot ----------------------------------------------------------- */
@@ -244,6 +496,7 @@
     initFaq();
     initQuoteFab();
     initMarcas();
+    initBusca();
 
     const tBtn = $('.theme-toggle');
     if (tBtn) tBtn.addEventListener('click', toggleTheme);

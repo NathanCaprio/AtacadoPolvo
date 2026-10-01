@@ -21,7 +21,16 @@ const scrypt = promisify(crypto.scrypt);
 const N = 16384, r = 8, p = 1, TAM = 64;
 
 const DIAS_SESSAO = 30;
-const COOKIE = 'polvo_sessao';
+// Admin vê todos os leads e clientes: sessão esquecida aberta num
+// computador da loja vale menos tempo.
+const DIAS_SESSAO_ADMIN = 7;
+/* Em produção o nome leva o prefixo __Host-: o navegador só aceita esse
+   cookie com Secure, Path=/ e sem Domain, então nem um subdomínio nem alguém
+   na rede (via http://) consegue plantar ou sobrescrever a sessão. No
+   localhost não dá — __Host- exige Secure, e Secure exige https. */
+const PRODUCAO = process.env.NODE_ENV === 'production';
+const COOKIE = PRODUCAO ? '__Host-polvo_sessao' : 'polvo_sessao';
+const diasDaSessao = papel => (papel === 'admin' ? DIAS_SESSAO_ADMIN : DIAS_SESSAO);
 
 /* ---- 1. Senha ---------------------------------------------------------- */
 
@@ -29,6 +38,36 @@ async function gerarHash(senha) {
   const salt = crypto.randomBytes(16);
   const hash = await scrypt(senha, salt, TAM, { N, r, p });
   return `scrypt$${N}$${r}$${p}$${salt.toString('hex')}$${hash.toString('hex')}`;
+}
+
+/* Hash descartável para o login com e-mail inexistente. Calculado uma vez só:
+   gerar um a cada pedido custava dois scrypts (gerar + conferir) contra um do
+   e-mail que existe — o dobro do tempo, e o tempo denunciava quem é cliente. */
+let descarte = null;
+const hashDescarte = () => (descarte ||= gerarHash('descarte-' + crypto.randomUUID()));
+
+/* As senhas que caem primeiro em qualquer lista de força bruta. O mínimo de
+   8 caracteres sozinho deixa passar "12345678" e "senha123". */
+const SENHAS_OBVIAS = new Set([
+  '12345678', '123456789', '1234567890', '12341234', '11111111', '00000000',
+  '87654321', '123123123', '11223344', '12344321', 'abcd1234', 'abc12345',
+  'qwerty123', 'qwertyuiop', 'password', 'password1', 'senha123', 'senha1234',
+  'senha12345', 'mudar123', 'mudar1234', 'admin123', 'admin1234', 'iloveyou',
+  'teamo123', 'brasil123', 'flamengo', 'corinthians', 'palmeiras', 'polvo123',
+  'atacado123', 'atacadopolvo'
+]);
+
+/** Mensagem de recusa, ou null se a senha serve. */
+function senhaFraca(senha, email = '') {
+  const s = String(senha);
+  if (s.length < 8) return 'A senha precisa de ao menos 8 caracteres.';
+  if (s.length > 200) return 'Senha longa demais.';
+  const minuscula = s.toLowerCase();
+  if (SENHAS_OBVIAS.has(minuscula) || /^(.)\1+$/.test(s) ||
+      (email && (minuscula === email.toLowerCase() || minuscula === email.split('@')[0].toLowerCase()))) {
+    return 'Essa senha é fácil demais de adivinhar. Escolha outra.';
+  }
+  return null;
 }
 
 async function conferirSenha(senha, armazenado) {
@@ -50,9 +89,9 @@ async function conferirSenha(senha, armazenado) {
 
 const hashToken = t => crypto.createHash('sha256').update(t).digest('hex');
 
-function criarSessao(clienteId, userAgent) {
+function criarSessao(clienteId, userAgent, dias = DIAS_SESSAO) {
   const token = crypto.randomBytes(32).toString('base64url');
-  const expira = new Date(Date.now() + DIAS_SESSAO * 864e5).toISOString();
+  const expira = new Date(Date.now() + dias * 864e5).toISOString();
   db.prepare(`
     INSERT INTO sessoes (token_hash, cliente_id, expira_em, user_agent)
     VALUES (?, ?, ?, ?)
@@ -132,31 +171,34 @@ function lerCookie(req, nome) {
     const i = parte.indexOf('=');
     if (i < 0) continue;
     if (parte.slice(0, i).trim() === nome) {
-      return decodeURIComponent(parte.slice(i + 1).trim());
+      // Cookie malformado (%E0) não pode virar 500: é só "sem sessão".
+      try { return decodeURIComponent(parte.slice(i + 1).trim()); } catch { return null; }
     }
   }
   return null;
 }
 
 // Secure fica de fora no localhost porque o navegador descarta cookie Secure
-// em http://. Em produção, sirva por HTTPS e ligue seguro:true.
-function cookieSessao(token, { seguro = false } = {}) {
+// em http://. Em produção (NODE_ENV=production) entra sozinho.
+function cookieSessao(token, { seguro = PRODUCAO, dias = DIAS_SESSAO } = {}) {
   const partes = [
     `${COOKIE}=${encodeURIComponent(token)}`,
     'HttpOnly',
     'SameSite=Lax',      // barra CSRF vindo de outro site em POST
     'Path=/',
-    `Max-Age=${DIAS_SESSAO * 86400}`
+    `Max-Age=${dias * 86400}`
   ];
   if (seguro) partes.push('Secure');
   return partes.join('; ');
 }
 
+// Com __Host-, até o cookie de apagar precisa de Secure, senão o navegador
+// ignora e a sessão fica no navegador depois do "sair".
 const cookieLimpo = () =>
-  `${COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`;
+  `${COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${PRODUCAO ? '; Secure' : ''}`;
 
 module.exports = {
-  gerarHash, conferirSenha,
+  gerarHash, conferirSenha, hashDescarte, senhaFraca, diasDaSessao,
   criarSessao, clienteDaSessao, encerrarSessao, encerrarTodasDoCliente,
   criarRecuperacao, recuperacaoValida, marcarRecuperacaoUsada, HORAS_RECUPERACAO,
   lerCookie, cookieSessao, cookieLimpo, COOKIE

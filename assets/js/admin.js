@@ -1202,9 +1202,60 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     }
   });
 
+  /* ---- Auditoria -----------------------------------------------------------
+     Só leitura: o servidor grava, ninguém apaga. Recarrega a cada abertura
+     da aba, porque o que interessa é sempre o mais recente.               */
+
+  const ACAO = {
+    entrou: 'Entrou no painel',
+    login_falhou: 'Senha errada',
+    senha_trocada: 'Trocou a própria senha',
+    senha_redefinida: 'Redefiniu a senha',
+    admin_criado: 'Criou admin',
+    cliente_editado: 'Mudou conta',
+    cliente_removido: 'Removeu conta',
+    link_senha_gerado: 'Gerou link de senha',
+    exportou_csv: 'Baixou planilha',
+    orcamento_situacao: 'Mudou situação do orçamento',
+    orcamento_excluido: 'Excluiu orçamento',
+    proposta_criada: 'Criou proposta',
+    proposta_salva: 'Salvou proposta',
+    proposta_revogada: 'Desativou link da proposta',
+    mensagem_excluida: 'Excluiu mensagem',
+    erp_sincronizar: 'Sincronizou o ERP',
+    produto_editado: 'Editou produto no site',
+    calculadora_ligada: 'Ligou item da calculadora',
+    calculadora_desligada: 'Desligou item da calculadora'
+  };
+
+  function linhaAuditoria(a) {
+    const tr = el('tr');
+    const acao = el('td');
+    const rotulo = ACAO[a.acao] || a.acao;
+    // Senha errada em conta de admin é a linha que precisa saltar aos olhos.
+    acao.append(a.acao === 'login_falhou' ? el('strong', '', rotulo) : rotulo);
+    tr.append(
+      el('td', '', data(a.quando, true)),
+      el('td', '', a.admin_email),
+      acao,
+      el('td', '', [a.alvo, a.detalhe].filter(Boolean).join(' — ') || '—'),
+      el('td', '', a.ip || '—')
+    );
+    return tr;
+  }
+
+  async function carregarAuditoria() {
+    try {
+      const r = await window.API.pedir('/api/admin/auditoria');
+      preencher($('#linhas-auditoria'), r.registros, linhaAuditoria, 'Nenhum registro ainda.', 5);
+    } catch (e) {
+      mostrarAviso(e.message || 'Não deu para carregar a auditoria.', false);
+    }
+  }
+
   /* ---- Abas ---------------------------------------------------------------- */
 
-  const ABAS = ['orcamentos', 'mensagens', 'clientes', 'erp', 'produtos', 'calculadora'];
+  const ABAS = ['orcamentos', 'mensagens', 'clientes', 'erp', 'produtos', 'calculadora', 'auditoria'];
 
   function trocarAba(alvo) {
     for (const nome of ABAS) {
@@ -1213,6 +1264,7 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     }
     if (alvo === 'produtos' && !produtosSite) carregarProdutos();
     if (alvo === 'calculadora' && !ligacoes) carregarLigacoes();
+    if (alvo === 'auditoria') carregarAuditoria();
   }
   for (const nome of ABAS) {
     $(`#aba-${nome}`).addEventListener('click', () => trocarAba(nome));

@@ -67,6 +67,55 @@ A conta tem 7 usuários ativos num plano de 3 licenças, o que indica que a
 licença conta acessos simultâneos. Se alguém da equipe receber aviso de
 limite de licenças na hora em que o servidor sincroniza, é isso.
 
+## Segurança (verificação de 01/10/2026)
+
+Feita só com login e GET, com o usuário do site, sem gravar nada no ERP e
+sem exibir valores (só nomes de campos, códigos HTTP e contagens).
+
+**Do lado do site, o ERP não está exposto:**
+
+- O `.env` (senha do ERP) nunca foi servido. Foi testado inclusive contra o
+  código antigo do servidor estático, que vazava o banco, e pelo nome curto
+  do Windows (`ENV~1`). Está fora do git, e o servidor só ouve em
+  `127.0.0.1`.
+- O token do ERP (JWT, 12 h) fica só na memória do processo: não vai para o
+  banco, nem para o log, nem para o navegador.
+- O catálogo público (`/catalogo-erp.js`) não tem preço, custo nem estoque.
+- O site só faz login e GET (travado em `server/erp.test.js`).
+
+**O usuário do site no ERP está bem restrito:** 1 de 165 menus liberado
+(Produtos). A API do ERP aplica a permissão no servidor, não só na tela: uma
+leitura em Usuários devolveu 403 "Usuário sem permissão para esta operação".
+A senha é forte (15 caracteres, com os 4 tipos).
+
+**Achado do lado do ERP (WME), e esse é perigoso:** a resposta do login
+devolve a configuração de e-mail da empresa inteira, com servidor SMTP,
+usuário e **senha**, para qualquer usuário, inclusive o do site, que só
+enxerga Produtos. O sistema web do ERP recebe isso a cada login, então a
+senha também fica visível no navegador de qualquer funcionário (F12 → Rede).
+Na prática, quem tiver qualquer login do ERP consegue a senha do e-mail da
+empresa. Isso vale para funcionário, ex-funcionário com conta ainda ativa ou
+quem roubar o `.env`. Com ela dá para mandar e-mail em nome da loja, por
+exemplo boleto falso para cliente. Além disso, o valor cadastrado lá tem só
+**4 caracteres**: ou é uma senha fraca, ou não é a senha real.
+
+O que fazer, em ordem:
+
+1. Trocar a senha desse e-mail por uma longa. Se for Gmail ou Outlook, ligar a
+   verificação em duas etapas na caixa e cadastrar no ERP uma **senha de
+   app**, nunca a senha da caixa.
+2. Se possível, usar no ERP uma conta só de envio (`naoresponda@...`) em vez
+   da caixa principal: se vazar, não dá acesso aos e-mails recebidos.
+3. Abrir chamado na WME pedindo que o login não devolva
+   `configuracoesEmail.senha` (só o servidor deles precisa dela para enviar).
+4. Revisar **Cadastros > Usuários** e desativar quem saiu da empresa: há 7
+   ativos para 3 licenças, e cada login ativo é uma chave para essa senha.
+
+**Não verificado:** se o bucket S3 de fotos do ERP lista os arquivos
+publicamente. Ele é da WME, não da loja. As fotos são públicas por desenho,
+mas vale perguntar à WME se a listagem está fechada e se nada além de foto
+(XML de nota, certificado) fica nele.
+
 ## O que ainda é genérico
 
 - **Calculadora de consumo:** estima com os itens genéricos do `data.js`

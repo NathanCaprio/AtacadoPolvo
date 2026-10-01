@@ -147,7 +147,11 @@
       a.title = cliente.papel === 'admin'
         ? `Painel admin — ${cliente.nome}`
         : `Minha conta — ${cliente.nome}`;
-      a.innerHTML = `<span class="conta-iniciais">${iniciais(cliente.nome)}</span>`;
+      // Nome é do cadastro (texto do usuário): textContent, nunca innerHTML.
+      const ini = document.createElement('span');
+      ini.className = 'conta-iniciais';
+      ini.textContent = iniciais(cliente.nome);
+      a.append(ini);
       a.classList.add('conta-btn--logado');
       if (cliente.papel === 'admin') a.classList.add('conta-btn--admin');
     } else {
@@ -162,8 +166,9 @@
     }
     a.setAttribute('aria-label', a.title);
 
-    // Antes do alternador de tema, para o menu hambúrguer seguir por último.
-    acoes.insertBefore(a, acoes.firstChild);
+    // Antes do alternador de tema (e depois da lupa), para o menu hambúrguer
+    // seguir por último.
+    acoes.insertBefore(a, $('.theme-toggle', acoes) || acoes.firstChild);
   }
 
   window.atualizarBotaoConta = desenharBotao;

@@ -151,7 +151,7 @@
         <nav class="nav" id="nav" aria-label="Navegação principal">
           <a href="index.html">Início</a>
           <a href="produtos.html">Produtos</a>
-          <a href="calculadora.html">Calculadora</a>
+          <a href="calculadora.html" data-calculadora>Calculadora</a>
           <a href="condominios.html">Condomínios</a>
           <a href="escolas.html">Escolas</a>
           <a href="sobre.html">A empresa</a>
@@ -414,6 +414,106 @@
                   decoding="async"
                 />
               </li>
+              <li>
+                <img
+                  src="assets/img/marcas/bompack.png"
+                  alt="Bompack"
+                  width="370"
+                  height="132"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/jimo.svg"
+                  alt="Jimo"
+                  width="220"
+                  height="75"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/coala.png"
+                  alt="Coala"
+                  width="125"
+                  height="80"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/elgin.svg"
+                  alt="Elgin"
+                  width="78"
+                  height="34"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/nobre.png"
+                  alt="Nobre"
+                  width="210"
+                  height="114"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/higifort.png"
+                  alt="Higifort"
+                  width="144"
+                  height="49"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/copozan.png"
+                  alt="Copozan"
+                  width="880"
+                  height="220"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/toksuave.png"
+                  alt="Tok Suave"
+                  width="632"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/plasvale.png"
+                  alt="Plasvale"
+                  width="747"
+                  height="196"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+              <li>
+                <img
+                  src="assets/img/marcas/alklin.png"
+                  alt="Alklin"
+                  width="254"
+                  height="159"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
             </ul>
           </div>
         </div>
@@ -431,10 +531,17 @@
             <button class="vitrine-seta vitrine-seta--ant" type="button" aria-label="Produtos anteriores" data-vitrine="-1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
             </button>
-            <div class="vitrine-trilho" id="vitrine-trilho" tabindex="0" aria-label="Produtos mais vendidos"></div>
+            <div class="vitrine-trilho" id="prod-grid" tabindex="0" aria-label="Produtos mais vendidos"></div>
             <button class="vitrine-seta vitrine-seta--prox" type="button" aria-label="Próximos produtos" data-vitrine="1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
             </button>
+          </div>
+
+          <div class="row" style="margin-top: 28px; justify-content: center">
+            <a class="btn btn--ghost" href="produtos.html">
+              Ver tudo
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </a>
           </div>
         </div>
       </section>
@@ -755,7 +862,7 @@
             </article>
           </div>
 
-          <div class="calc-convites calc-convite--home">
+          <div class="calc-convites calc-convite--home" data-calculadora>
             <div class="calc-convite calc-convite--destaque" data-reveal="160">
               <div>
                 <div class="calc-convite__topo">
@@ -783,7 +890,7 @@
                   mensal item a item, pronta para virar orçamento. Sem cadastro.
                 </p>
               </div>
-              <a class="btn btn--primary" href="calculadora.html?seg=condominio"
+              <a class="btn btn--primary" href="calculadora.html?seg=condominio" data-calculadora
                 >Calcular o condomínio
                 <svg
                   viewBox="0 0 24 24"
@@ -823,7 +930,7 @@
                   lista mensal, pronta para virar orçamento. Sem cadastro.
                 </p>
               </div>
-              <a class="btn btn--primary" href="calculadora.html?seg=escola"
+              <a class="btn btn--primary" href="calculadora.html?seg=escola" data-calculadora
                 >Calcular a escola
                 <svg
                   viewBox="0 0 24 24"
@@ -1467,6 +1574,98 @@
       </section>
     </main>
 
+    <!-- ================= DRAWER DE ORÇAMENTO ================= -->
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Lista de orçamento">
+      <div class="drawer-head">
+        <h2>Seu orçamento</h2>
+        <button class="icon-btn" id="drawer-close" aria-label="Fechar lista de orçamento">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <!-- Aviso de "enviado". Fica no topo, ACIMA da lista, que continua
+           visível: esconder os itens dava a impressão de carrinho apagado. Some
+           sozinho quando a lista muda. O convite de conta fica aqui porque é o
+           único momento em que ela tem motivo. -->
+      <div class="drawer-enviado" id="drawer-enviado" role="status" hidden>
+        <div class="enviado-topo">
+          <span class="enviado-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </span>
+          <div class="enviado-txt">
+            <h3>Lista enviada para o WhatsApp</h3>
+            <p>É só apertar enviar na conversa. Seus itens continuam abaixo para
+               ajustar ou reenviar.
+               <button type="button" class="enviado-link" id="drawer-reabrir">O WhatsApp não abriu?</button></p>
+          </div>
+          <button class="enviado-fechar" id="drawer-voltar" aria-label="Fechar aviso">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <p class="enviado-conta" id="enviado-conta" hidden>
+          Quer acompanhar este e os próximos pedidos?
+          <a href="entrar.html?novo=1">Criar minha conta</a>
+        </p>
+      </div>
+
+      <div class="drawer-body" id="drawer-body"></div>
+
+      <div class="drawer-foot" id="drawer-foot">
+
+        <div class="drawer-contato" id="drawer-contato">
+          <div class="contato-ok" id="oc-ok" hidden role="status">
+            <span class="enviado-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
+            <div>
+              <p class="contato-ok-titulo">Orçamento enviado!</p>
+              <p class="contato-ok-quem" id="oc-ok-quem"></p>
+              <p class="contato-ok-acoes">
+                <button type="button" class="enviado-link" id="oc-reenviar">Reenviar</button>
+                ·
+                <button type="button" class="enviado-link" id="oc-alterar">Alterar dados</button>
+              </p>
+            </div>
+          </div>
+          <div id="oc-form">
+          <p class="drawer-contato-titulo">
+            Para quem enviamos o orçamento?
+          </p>
+          <div class="field">
+            <label class="sr-only" for="oc-nome">Seu nome</label>
+            <input class="input input--sm" type="text" id="oc-nome" name="nome"
+                   autocomplete="name" placeholder="Seu nome" required>
+            <p class="err"></p>
+          </div>
+          <div class="field">
+            <label class="sr-only" for="oc-tel">WhatsApp com DDD</label>
+            <input class="input input--sm" type="tel" id="oc-tel" name="tel" inputmode="numeric"
+                   autocomplete="tel-national" placeholder="WhatsApp: (00) 00000-0000" maxlength="15" required>
+            <p class="err"></p>
+          </div>
+          <p class="drawer-contato-nota">
+            Só usamos para responder este orçamento.
+            <a href="privacidade.html">Política de privacidade</a>.
+          </p>
+          </div>
+        </div>
+
+        <button class="btn btn--wpp btn--block" id="drawer-enviar">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2z"/></svg>
+          Enviar pelo WhatsApp
+        </button>
+        <button class="btn btn--ghost btn--sm btn--block" id="drawer-limpar" style="margin-top:10px">Limpar lista</button>
+        <p>A lista fica salva neste navegador até você enviá-la.</p>
+      </div>
+    </aside>
+
+    <button class="quote-fab" id="quote-fab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.5 11h10L20 7H6"/><circle cx="9" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
+      Meu orçamento
+      <span class="badge">0</span>
+    </button>
+
     <!-- ================= FOOTER ================= -->
     <footer class="footer">
       <div class="wrap">
@@ -1542,8 +1741,8 @@
             <ul class="footer-links">
               <li><a href="index.html">Início</a></li>
               <li><a href="produtos.html">Produtos</a></li>
-              <li><a href="calculadora.html">Calculadora de consumo</a></li>
-          <li><a href="calculadora-eventos.html">Calculadora para festas e eventos</a></li>
+              <li data-calculadora><a href="calculadora.html" data-calculadora>Calculadora de consumo</a></li>
+          <li data-calculadora><a href="calculadora-eventos.html" data-calculadora>Calculadora para festas e eventos</a></li>
               <li><a href="recorrencia.html">Pedido recorrente</a></li>
               <li><a href="condominios.html">Para condomínios</a></li>
               <li><a href="escolas.html">Para escolas</a></li>
@@ -1685,5 +1884,6 @@
     <script src="assets/js/cupom.js"></script>
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/index.js"></script>
+    <script src="assets/js/catalogo.js"></script>
   </body>
 </html>

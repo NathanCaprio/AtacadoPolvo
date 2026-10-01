@@ -33,7 +33,8 @@
      PATCH  /api/admin/mensagens/:id   marca lida / não lida
      DELETE /api/admin/mensagens/:id   exclui a mensagem
      POST   /api/admin/clientes/:id/recuperacao   gera link de redefinição
-     GET    /api/admin/exportar?tipo=  baixa CSV de leads / clientes
+     GET    /api/admin/exportar?tipo=  baixa CSV de leads / clientes / auditoria
+     GET    /api/admin/auditoria       quem fez o quê no painel (só leitura)
      GET    /api/admin/erp             situação da sincronização com o ERP
      POST   /api/admin/erp/sincronizar dispara uma sincronização agora
      GET    /api/admin/produtos        produtos do ERP com nome/descrição do site
@@ -53,7 +54,7 @@
 
 const { StringDecoder } = require('node:string_decoder');
 const crypto = require('node:crypto');
-const { db } = require('./db');
+const { db, auditar } = require('./db');
 const auth = require('./auth');
 const erp = require('./erp');
 
@@ -67,6 +68,7 @@ function json(res, status, corpo, cabecalhos = {}) {
     'Content-Type': 'application/json; charset=utf-8',
     'Content-Length': Buffer.byteLength(txt),
     'Cache-Control': 'no-store',
+    'X-Content-Type-Options': 'nosniff',
     ...cabecalhos
   });
   res.end(txt);
@@ -82,7 +84,7 @@ async function lerJson(req, limite = 16 * 1024) {
 
   for await (const pedaco of req) {
     tamanho += pedaco.length;
-    if (tamanho > limite) throw new Error('corpo grande demais');
+    if (tamanho > limite) throw Object.assign(new Error('corpo grande demais'), { status: 413 });
     bruto += decodificador.write(pedaco);
   }
   bruto += decodificador.end();
@@ -111,8 +113,8 @@ function validarCadastro(c) {
 
   if (nome.length < 2 || nome.length > 120) problemas.push('Informe seu nome.');
   if (!EMAIL_RE.test(email) || email.length > 160) problemas.push('E-mail inválido.');
-  if (senha.length < 8) problemas.push('A senha precisa de ao menos 8 caracteres.');
-  if (senha.length > 200) problemas.push('Senha longa demais.');
+  const fraca = auth.senhaFraca(senha, email);
+  if (fraca) problemas.push(fraca);
 
   return {
     problemas,
@@ -148,6 +150,9 @@ function limitar(ip, chave, max, janelaMs) {
   const agora = Date.now();
   const id = `${chave}:${ip}`;
   const lista = (tentativas.get(id) || []).filter(t => agora - t < janelaMs);
+  // Passou do teto, não guarda mais: quem martela a rota milhões de vezes
+  // não pode fazer a lista (e a memória do processo) crescer junto.
+  if (lista.length > max) { tentativas.set(id, lista); return false; }
   lista.push(agora);
   tentativas.set(id, lista);
   return lista.length <= max;
@@ -168,10 +173,17 @@ function clienteAtual(req) {
 }
 
 function entrarComSessao(res, clienteId, req, corpo, status = 200) {
-  const { token } = auth.criarSessao(clienteId, req.headers['user-agent']);
+  // A sessão que o navegador já tinha (de outra conta, ou plantada por
+  // alguém) morre aqui: o cookie novo substitui o antigo, e o antigo não
+  // pode continuar valendo no banco.
+  auth.encerrarSessao(auth.lerCookie(req, auth.COOKIE));
+
+  const { papel } = db.prepare('SELECT papel FROM clientes WHERE id = ?').get(clienteId);
+  const dias = auth.diasDaSessao(papel);
+  const { token } = auth.criarSessao(clienteId, req.headers['user-agent'], dias);
   db.prepare(`UPDATE clientes SET ultimo_acesso = datetime('now') WHERE id = ?`)
     .run(clienteId);
-  json(res, status, corpo, { 'Set-Cookie': auth.cookieSessao(token, { seguro: PRODUCAO }) });
+  json(res, status, corpo, { 'Set-Cookie': auth.cookieSessao(token, { seguro: PRODUCAO, dias }) });
 }
 
 /* ---- 5. Rotas de autenticação ----------------------------------------- */
@@ -208,13 +220,18 @@ async function entrar(req, res, ip) {
 
   const c = db.prepare('SELECT * FROM clientes WHERE email = ?').get(email);
 
-  // Mesmo sem usuário, roda um scrypt descartável: assim o tempo de resposta
-  // não denuncia se o e-mail existe ou não.
-  const ok = c
-    ? await auth.conferirSenha(senha, c.senha_hash)
-    : await auth.conferirSenha(senha, await auth.gerarHash('descarte'));
+  // Mesmo sem usuário, roda um scrypt descartável (um só, como no caminho do
+  // usuário que existe): assim o tempo de resposta não denuncia o e-mail.
+  const ok = await auth.conferirSenha(senha, c ? c.senha_hash : await auth.hashDescarte());
 
-  if (!c || !ok || !c.ativo) return erro(res, 401, 'E-mail ou senha incorretos.');
+  // Conta de admin: entrada e senha errada vão para a auditoria. Várias
+  // "senha errada" seguidas são o sinal de alguém forçando a porta do painel.
+  const deAdmin = c && c.papel === 'admin';
+  if (!c || !ok || !c.ativo) {
+    if (deAdmin) auditar({ adminId: c.id, adminEmail: c.email, acao: 'login_falhou', ip });
+    return erro(res, 401, 'E-mail ou senha incorretos.');
+  }
+  if (deAdmin) auditar({ adminId: c.id, adminEmail: c.email, acao: 'entrou', ip });
 
   entrarComSessao(res, c.id, req, {
     cliente: { id: c.id, nome: c.nome, email: c.email, papel: c.papel }
@@ -248,16 +265,20 @@ async function editarEu(req, res) {
   json(res, 200, { cliente: clienteAtual(req) });
 }
 
-async function trocarSenha(req, res) {
+async function trocarSenha(req, res, ip) {
   const c = clienteAtual(req);
   if (!c) return erro(res, 401, 'Não autenticado.');
+  // Confere a senha atual: sem teto, uma sessão roubada vira força bruta.
+  if (!limitar(ip, 'senha', TETO.login, 15 * 60 * 1000)) {
+    return erro(res, 429, 'Muitas tentativas. Espere alguns minutos.');
+  }
 
   const corpo = await lerJson(req);
   const atual = typeof corpo.senhaAtual === 'string' ? corpo.senhaAtual : '';
   const nova = typeof corpo.senhaNova === 'string' ? corpo.senhaNova : '';
 
-  if (nova.length < 8) return erro(res, 400, 'A nova senha precisa de ao menos 8 caracteres.');
-  if (nova.length > 200) return erro(res, 400, 'Senha longa demais.');
+  const fraca = auth.senhaFraca(nova, c.email);
+  if (fraca) return erro(res, 400, fraca.replace('A senha', 'A nova senha'));
   if (nova === atual) return erro(res, 400, 'A nova senha é igual à atual.');
 
   const linha = db.prepare('SELECT senha_hash FROM clientes WHERE id = ?').get(c.id);
@@ -267,6 +288,8 @@ async function trocarSenha(req, res) {
 
   db.prepare('UPDATE clientes SET senha_hash = ? WHERE id = ?')
     .run(await auth.gerarHash(nova), c.id);
+
+  if (c.papel === 'admin') registrar(req, c, 'senha_trocada');
 
   // Derruba todas as sessões e abre uma nova: se a senha vazou, quem estava
   // logado em outro lugar perde o acesso na hora.
@@ -286,7 +309,11 @@ async function trocarSenha(req, res) {
 
 function baseDoSite(req) {
   if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/+$/, '');
-  const host = req.headers.host || '127.0.0.1';
+  // O Host vem do pedido: quem pede a recuperação da conta de outra pessoa
+  // com "Host: site-dele.com" faria o link impresso no console apontar para
+  // lá. Só aceita nome de host comum; em produção, fixe SITE_URL.
+  const bruto = String(req.headers.host || '');
+  const host = /^[a-z0-9.-]{1,253}(:\d{1,5})?$/i.test(bruto) ? bruto : '127.0.0.1';
   // Sem proxy declarado não dá para confiar no x-forwarded-proto; em produção
   // o certo é fixar SITE_URL.
   const protocolo = PRODUCAO ? 'https' : 'http';
@@ -349,11 +376,10 @@ async function redefinirSenha(req, res, ip) {
   const token = texto(corpo.token);
   const senha = typeof corpo.senha === 'string' ? corpo.senha : '';
 
-  if (senha.length < 8) return erro(res, 400, 'A senha precisa de ao menos 8 caracteres.');
-  if (senha.length > 200) return erro(res, 400, 'Senha longa demais.');
-
   const r = auth.recuperacaoValida(token);
   if (!r) return erro(res, 400, 'Este link expirou ou já foi usado.');
+  const fraca = auth.senhaFraca(senha, r.email);
+  if (fraca) return erro(res, 400, fraca);
 
   db.prepare('UPDATE clientes SET senha_hash = ? WHERE id = ?')
     .run(await auth.gerarHash(senha), r.cliente_id);
@@ -365,6 +391,7 @@ async function redefinirSenha(req, res, ip) {
 
   const c = db.prepare('SELECT id, nome, email, papel FROM clientes WHERE id = ?')
     .get(r.cliente_id);
+  if (c.papel === 'admin') registrar(req, c, 'senha_redefinida', null, 'pelo link de recuperação');
   entrarComSessao(res, c.id, req, { cliente: c });
 }
 
@@ -416,9 +443,12 @@ function exportarMeusDados(req, res) {
 /* Exclusão pedida pelo próprio cliente. Pede a senha de novo: é uma ação
    sem volta, e um clique acidental (ou uma sessão esquecida aberta) não
    pode apagar a conta.                                                    */
-async function excluirMinhaConta(req, res) {
+async function excluirMinhaConta(req, res, ip) {
   const c = clienteAtual(req);
   if (!c) return erro(res, 401, 'Não autenticado.');
+  if (!limitar(ip, 'senha', TETO.login, 15 * 60 * 1000)) {
+    return erro(res, 429, 'Muitas tentativas. Espere alguns minutos.');
+  }
 
   const corpo = await lerJson(req);
   const senha = typeof corpo.senha === 'string' ? corpo.senha : '';
@@ -627,6 +657,21 @@ function exigirAdmin(req, res) {
   return c;
 }
 
+/* Ação do admin vai para a tabela auditoria (server/db.js). Entra o que muda
+   ou leva dado embora; ler a lista e marcar mensagem como lida, não. */
+const registrar = (req, admin, acao, alvo = null, detalhe = null) =>
+  auditar({ adminId: admin.id, adminEmail: admin.email, acao, alvo, detalhe, ip: req.ipCliente });
+
+function listarAuditoria(req, res) {
+  if (!exigirAdmin(req, res)) return;
+  json(res, 200, {
+    registros: db.prepare(`
+      SELECT id, quando, admin_email, acao, alvo, detalhe, ip
+        FROM auditoria ORDER BY id DESC LIMIT 300
+    `).all()
+  });
+}
+
 function resumo(req, res) {
   if (!exigirAdmin(req, res)) return;
   const n = sql => db.prepare(sql).get().n;
@@ -739,21 +784,29 @@ function listarOrcamentos(req, res) {
 }
 
 async function editarOrcamento(req, res, id) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
   const { situacao } = await lerJson(req);
   if (!SITUACOES.includes(situacao)) return erro(res, 400, 'Situação inválida.');
 
   const r = db.prepare('UPDATE orcamentos SET situacao = ? WHERE id = ?').run(situacao, id);
   if (!r.changes) return erro(res, 404, 'Orçamento não encontrado.');
+  registrar(req, admin, 'orcamento_situacao', `#${id}`, situacao);
   json(res, 200, { id, situacao });
 }
 
 /* Exclui de vez — para teste, duplicado ou spam. "Perdido" continua sendo o
    caminho para pedido real que não fechou, porque mantém o histórico.   */
 function excluirOrcamento(req, res, id) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
+  const o = db.prepare(`SELECT o.total_itens, COALESCE(c.nome, o.contato_nome) AS quem
+                          FROM orcamentos o LEFT JOIN clientes c ON c.id = o.cliente_id
+                         WHERE o.id = ?`).get(id);
   const r = db.prepare('DELETE FROM orcamentos WHERE id = ?').run(id);
   if (!r.changes) return erro(res, 404, 'Orçamento não encontrado.');
+  registrar(req, admin, 'orcamento_excluido', `#${id}`,
+            `${o.quem || 'visitante'}, ${o.total_itens} itens`);
   res.writeHead(204); res.end();
 }
 
@@ -791,7 +844,8 @@ const somaQtd = itens => itens.reduce((s, i) => s + i.qtd, 0);
 /* Novo orçamento criado pela própria loja (pedido que chegou por telefone,
    WhatsApp, visita). Já nasce com link. */
 async function criarPropostaAdmin(req, res) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
   const b = await lerJson(req, 64 * 1024);
   const itens = limparItensProposta(b.itens);
   if (!itens || !itens.length) return erro(res, 400, 'Inclua ao menos um item.');
@@ -809,20 +863,24 @@ async function criarPropostaAdmin(req, res) {
          EMAIL_RE.test(email) ? email : null,
          texto(contato.tel).slice(0, 40) || null);
 
-  gravarProposta(res, Number(r.lastInsertRowid), itens, b);
+  const id = Number(r.lastInsertRowid);
+  registrar(req, admin, 'proposta_criada', `#${id}`, nome);
+  gravarProposta(res, id, itens, b);
 }
 
 /* Salva itens, observação e validade de um orçamento existente e devolve o
    link. O token é mantido entre edições: o cliente continua com o mesmo
    link e vê a versão nova. Editar desfaz uma aprovação anterior. */
 async function enviarPropostaAdmin(req, res, id) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
   const b = await lerJson(req, 64 * 1024);
   const itens = limparItensProposta(b.itens);
   if (!itens || !itens.length) return erro(res, 400, 'Inclua ao menos um item.');
   if (!db.prepare('SELECT 1 FROM orcamentos WHERE id = ?').get(id)) {
     return erro(res, 404, 'Orçamento não encontrado.');
   }
+  registrar(req, admin, 'proposta_salva', `#${id}`, `${itens.length} itens`);
   gravarProposta(res, id, itens, b);
 }
 
@@ -845,9 +903,11 @@ function gravarProposta(res, id, itens, b) {
 
 /* Remove o link: quem tinha a URL deixa de ver a proposta. */
 function revogarPropostaAdmin(req, res, id) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
   const r = db.prepare('UPDATE orcamentos SET token = NULL WHERE id = ?').run(id);
   if (!r.changes) return erro(res, 404, 'Orçamento não encontrado.');
+  registrar(req, admin, 'proposta_revogada', `#${id}`);
   res.writeHead(204); res.end();
 }
 
@@ -958,9 +1018,12 @@ async function editarMensagem(req, res, id) {
 
 /* Exclui de vez — para spam, teste ou duplicada. */
 function excluirMensagem(req, res, id) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
+  const m = db.prepare('SELECT nome, origem FROM mensagens WHERE id = ?').get(id);
   const r = db.prepare('DELETE FROM mensagens WHERE id = ?').run(id);
   if (!r.changes) return erro(res, 404, 'Mensagem não encontrada.');
+  registrar(req, admin, 'mensagem_excluida', `#${id}`, `${m.nome} (${m.origem})`);
   res.writeHead(204); res.end();
 }
 
@@ -987,6 +1050,11 @@ async function editarCliente(req, res, id) {
   db.prepare('UPDATE clientes SET papel = ?, ativo = ? WHERE id = ?')
     .run(papel, ativo, id);
 
+  const mudancas = [];
+  if (papel !== alvo.papel) mudancas.push(`papel: ${alvo.papel} → ${papel}`);
+  if (ativo !== alvo.ativo) mudancas.push(ativo ? 'reativado' : 'desativado');
+  if (mudancas.length) registrar(req, admin, 'cliente_editado', alvo.email, mudancas.join('; '));
+
   // Desativado ou rebaixado perde as sessões abertas na hora.
   if (ativo === 0 || papel !== alvo.papel) auth.encerrarTodasDoCliente(id);
 
@@ -1010,6 +1078,7 @@ function removerCliente(req, res, id) {
   }
 
   db.prepare('DELETE FROM clientes WHERE id = ?').run(id);  // sessões caem por cascade
+  registrar(req, admin, 'cliente_removido', alvo.email, `${alvo.nome} (${alvo.papel})`);
   res.writeHead(204); res.end();
 }
 
@@ -1027,6 +1096,8 @@ function gerarRecuperacaoAdmin(req, res, id) {
 
   const { token, expira } = auth.criarRecuperacao(alvo.id, 'admin');
   console.log(`  [recuperação] ${admin.email} gerou link para ${alvo.email}`);
+  // O link é uma chave da conta: quem gerou para quem precisa ficar gravado.
+  registrar(req, admin, 'link_senha_gerado', alvo.email);
 
   json(res, 201, {
     link: linkRedefinir(req, token),
@@ -1099,17 +1170,29 @@ const CSV = {
         FROM clientes ORDER BY criado_em DESC
     `).all().map(c => [c.id, c.nome, c.email, c.telefone, c.empresa, c.papel,
                        c.ativo ? 'sim' : 'não', c.criado_em, c.ultimo_acesso])
+  },
+  auditoria: {
+    arquivo: 'auditoria',
+    cabecalho: ['id', 'quando', 'admin', 'acao', 'alvo', 'detalhe', 'ip'],
+    linhas: () => db.prepare(`
+      SELECT id, quando, admin_email, acao, alvo, detalhe, ip FROM auditoria ORDER BY id DESC
+    `).all().map(a => [a.id, a.quando, a.admin_email, a.acao, a.alvo, a.detalhe, a.ip])
   }
 };
 
 function exportarCsv(req, res) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
 
   const tipo = new URL(req.url, 'http://x').searchParams.get('tipo') || 'mensagens';
   const def = CSV[tipo];
-  if (!def) return erro(res, 400, 'Tipo inválido. Use mensagens, orcamentos ou clientes.');
+  if (!def) return erro(res, 400, 'Tipo inválido. Use mensagens, orcamentos, clientes ou auditoria.');
 
-  const corpo = [linhaCsv(def.cabecalho), ...def.linhas().map(linhaCsv)].join('\r\n');
+  const linhas = def.linhas();
+  // A planilha leva a lista inteira para fora do sistema: é a ação que a
+  // LGPD mais quer ver registrada.
+  registrar(req, admin, 'exportou_csv', tipo, `${linhas.length} linhas`);
+  const corpo = [linhaCsv(def.cabecalho), ...linhas.map(linhaCsv)].join('\r\n');
   // BOM na frente: sem ele o Excel no Windows abre o arquivo em ANSI e come
   // todo acento. Separador ';' pela mesma razão (locale pt-BR).
   const bytes = Buffer.concat([Buffer.from([0xEF, 0xBB, 0xBF]), Buffer.from(corpo, 'utf8')]);
@@ -1134,10 +1217,12 @@ function situacaoErp(req, res) {
 /* Não espera terminar: a rodada leva perto de um minuto. O painel acompanha
    por GET /api/admin/erp. */
 function sincronizarErp(req, res) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
   if (!erp.configurado()) {
     return erro(res, 409, 'ERP não configurado: defina ERP_EMAIL e ERP_SENHA no servidor.');
   }
+  registrar(req, admin, 'erp_sincronizar');
   erp.sincronizar().catch(() => { /* o erro fica gravado no histórico */ });
   json(res, 202, erp.situacao());
 }
@@ -1154,6 +1239,7 @@ async function ajustarProdutoSite(req, res, erpId) {
   if (!admin) return;
   const r = erp.ajustarProduto(erpId, await lerJson(req), admin.id);
   if (r.erro) return erro(res, r.status, r.erro);
+  registrar(req, admin, 'produto_editado', erpId, r.produto.nome || `nome automático (${r.produto.nomeAuto})`);
   json(res, 200, r.produto);
 }
 
@@ -1168,12 +1254,15 @@ async function ligarItemCalculadora(req, res, item) {
   if (!admin) return;
   const r = erp.ligarItem(item, await lerJson(req), admin.id);
   if (r.erro) return erro(res, r.status, r.erro);
+  registrar(req, admin, 'calculadora_ligada', item);
   json(res, 200, r.ligacao);
 }
 
 function desligarItemCalculadora(req, res, item) {
-  if (!exigirAdmin(req, res)) return;
+  const admin = exigirAdmin(req, res);
+  if (!admin) return;
   if (!erp.desligarItem(item)) return erro(res, 404, 'Item não estava ligado.');
+  registrar(req, admin, 'calculadora_desligada', item);
   res.writeHead(204); res.end();
 }
 
@@ -1206,9 +1295,9 @@ const ROTAS = [
   ['POST',   /^\/api\/auth\/sair$/,      (rq, rs) => sair(rq, rs)],
   ['GET',    /^\/api\/auth\/eu$/,        (rq, rs) => eu(rq, rs)],
   ['PATCH',  /^\/api\/auth\/eu$/,        (rq, rs) => editarEu(rq, rs)],
-  ['PATCH',  /^\/api\/auth\/senha$/,     (rq, rs) => trocarSenha(rq, rs)],
+  ['PATCH',  /^\/api\/auth\/senha$/,     (rq, rs, m, ip) => trocarSenha(rq, rs, ip)],
   ['GET',    /^\/api\/auth\/eu\/dados$/,  (rq, rs) => exportarMeusDados(rq, rs)],
-  ['DELETE', /^\/api\/auth\/eu$/,         (rq, rs) => excluirMinhaConta(rq, rs)],
+  ['DELETE', /^\/api\/auth\/eu$/,         (rq, rs, m, ip) => excluirMinhaConta(rq, rs, ip)],
 
   ['POST',   /^\/api\/auth\/recuperar$/,  (rq, rs, m, ip) => pedirRecuperacao(rq, rs, ip)],
   ['GET',    /^\/api\/auth\/recuperar$/,  (rq, rs) => conferirToken(rq, rs)],
@@ -1242,6 +1331,7 @@ const ROTAS = [
   ['POST',   /^\/api\/admin\/clientes\/(\d+)\/recuperacao$/,
              (rq, rs, m) => gerarRecuperacaoAdmin(rq, rs, +m[1])],
   ['GET',    /^\/api\/admin\/exportar$/,          (rq, rs) => exportarCsv(rq, rs)],
+  ['GET',    /^\/api\/admin\/auditoria$/,         (rq, rs) => listarAuditoria(rq, rs)],
 
   ['GET',    /^\/api\/admin\/erp$/,               (rq, rs) => situacaoErp(rq, rs)],
   ['POST',   /^\/api\/admin\/erp\/sincronizar$/,  (rq, rs) => sincronizarErp(rq, rs)],
@@ -1263,6 +1353,27 @@ const ROTAS = [
              (rq, rs) => servirPublico(rq, rs, 'xml', 'application/xml; charset=utf-8')]
 ];
 
+/* CSRF, segunda camada. O SameSite=Lax já impede outro site de mandar o
+   cookie num POST, mas não cobre subdomínio (é "same-site"), navegador antigo
+   nem login CSRF (entrar na conta do atacante, que não precisa de cookie).
+   Navegador moderno manda Origin e Sec-Fetch-Site em todo pedido que muda
+   estado; se vierem, têm que ser deste site. Sem eles (curl, testes), passa:
+   quem não é navegador não carrega o cookie da vítima de qualquer jeito.  */
+function origemConfiavel(req) {
+  const site = req.headers['sec-fetch-site'];
+  if (site && site !== 'same-origin' && site !== 'none') return false;
+  const origem = req.headers.origin;
+  if (!origem) return true;
+  try {
+    const host = new URL(origem).host;         // "null" (iframe sandbox) lança
+    if (host === req.headers.host) return true;
+    // Atrás de proxy o Host que chega aqui pode ser o interno.
+    return !!process.env.SITE_URL && new URL(process.env.SITE_URL).host === host;
+  } catch {
+    return false;
+  }
+}
+
 /** Devolve true se tratou o pedido. */
 async function tratarApi(req, res, caminho, ip) {
   // O caminho pode aparecer em mais de uma rota (PATCH e DELETE em
@@ -1275,10 +1386,17 @@ async function tratarApi(req, res, caminho, ip) {
     caminhoExiste = true;
     if (req.method !== metodo) continue;
 
+    req.ipCliente = ip;                         // para o registro de auditoria
+    if (metodo !== 'GET' && metodo !== 'HEAD' && !origemConfiavel(req)) {
+      erro(res, 403, 'Origem não permitida.');
+      return true;
+    }
+
     try {
       await fn(req, res, m, ip);
     } catch (e) {
       if (e instanceof SyntaxError) erro(res, 400, 'JSON inválido.');
+      else if (e.status === 413) erro(res, 413, 'Conteúdo grande demais.');
       else {
         console.error('[api]', caminho, e);
         if (!res.headersSent) erro(res, 500, 'Erro interno.');

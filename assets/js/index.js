@@ -1,66 +1,27 @@
 /* Vitrine "Mais vendidos": carrossel com os produtos tag 'mais-vendido'.
    Com o catalogo do ERP, quem recebe a tag sao os mais pedidos nos
    orcamentos do site (server/erp.js, maisPedidos).
-   O botao usa a mesma lista de orcamento do catalogo (localStorage). */
+   catalogo.js desenha os cards e cuida da gaveta de orçamento (o trilho é
+   o #prod-grid); aqui só se diz quais ids entram (data-ids). */
 (function () {
-  const trilho = document.getElementById("vitrine-trilho");
+  const trilho = document.getElementById("prod-grid");
   if (!trilho || !window.CATALOGO) return;
 
-  const { categorias, produtos } = window.CATALOGO;
-  const cat = (id) => categorias.find((c) => c.id === id) || {};
-  const CHAVE = "ap-orcamento";
+  trilho.dataset.ids = window.CATALOGO.produtos
+    .filter((p) => p.tag === "mais-vendido")
+    .map((p) => p.id)
+    .join(",");
+  // Sem ids o catalogo.js desenharia o catálogo inteiro: some a vitrine.
+  if (!trilho.dataset.ids) trilho.closest("section").hidden = true;
 
-  const lerLista = () => {
-    try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { return []; }
-  };
-  const salvarLista = (lista) => {
-    try { localStorage.setItem(CHAVE, JSON.stringify(lista)); } catch (e) { /* modo privado */ }
-  };
-
-  const botao = (id, naLista) =>
-    naLista
-      ? `<a class="btn btn--sm btn--ghost btn--block" href="produtos.html">Na lista · ver orçamento</a>`
-      : `<button class="btn btn--sm btn--primary btn--block" type="button" data-add="${id}">Adicionar ao orçamento</button>`;
-
-  function render() {
-    const lista = lerLista();
-    trilho.innerHTML = produtos
-      .filter((p) => p.tag === "mais-vendido")
-      .map((p) => {
-        const c = cat(p.cat);
-        return `
-<article class="vitrine-card">
-<a class="vitrine-art" href="produto.html?id=${p.id}" aria-label="${p.nome}">${window.imagemProduto(p, c.cor)}</a>
-<div class="vitrine-corpo">
-<span class="prod-cat">${c.nome || ""}</span>
-<h3>${p.nome}</h3>
-<div class="vitrine-oferta">
-<strong>${p.caixa}</strong>
-<span class="vitrine-selo">Atacado</span>
-</div>
-<p class="vitrine-emb">${p.emb ? p.emb + " · preço" : "Preço"} no orçamento</p>
-<div class="vitrine-foot" data-slot="${p.id}">${botao(p.id, lista.some((i) => i.id === p.id))}</div>
-</div>
-</article>`;
-      })
-      .join("");
-    atualizarSetas();
-  }
-
-  trilho.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-add]");
-    if (!btn) return;
-    const id = btn.dataset.add;
-    const lista = lerLista();
-    if (!lista.some((i) => i.id === id)) lista.push({ id, qtd: 1 });
-    salvarLista(lista);
-    btn.parentElement.innerHTML = botao(id, true);
-  });
+  // Os cards chegam depois (catalogo.js) e são redesenhados a cada mudança
+  // na lista: as setas acompanham.
+  new MutationObserver(() => atualizarSetas()).observe(trilho, { childList: true });
 
   /* ---- Setas: rolam um "cartao" por clique ---------------------------- */
   const setas = document.querySelectorAll("[data-vitrine]");
   function passo() {
-    const card = trilho.querySelector(".vitrine-card");
+    const card = trilho.querySelector(".prod");
     const gap = parseFloat(getComputedStyle(trilho).columnGap) || 0;
     return card ? card.offsetWidth + gap : trilho.clientWidth;
   }
@@ -78,7 +39,49 @@
   trilho.addEventListener("scroll", atualizarSetas, { passive: true });
   window.addEventListener("resize", atualizarSetas);
 
-  render();
+  /* ---- Arrastar com o mouse (no toque a rolagem já é nativa) ------------
+     Durante o arrasto o snap/smooth ficam desligados (.is-arrastando) para
+     o trilho seguir o mouse; ao soltar, encaixa no cartão mais próximo.
+     Um arrasto não vale como clique no link/botão onde ele terminou. */
+  let arrasto = null;
+  let engolirClique = false;
+  trilho.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    arrasto = { x: e.clientX, inicio: trilho.scrollLeft, moveu: false };
+  });
+  window.addEventListener("pointermove", (e) => {
+    if (!arrasto) return;
+    const dx = e.clientX - arrasto.x;
+    if (!arrasto.moveu) {
+      if (Math.abs(dx) < 6) return;
+      arrasto.moveu = true;
+      trilho.classList.add("is-arrastando");
+      window.getSelection()?.removeAllRanges();
+    }
+    trilho.scrollLeft = arrasto.inicio - dx;
+  });
+  window.addEventListener("pointerup", () => {
+    if (!arrasto) return;
+    if (arrasto.moveu) {
+      trilho.classList.remove("is-arrastando");
+      const p = passo();
+      trilho.scrollTo({ left: Math.round(trilho.scrollLeft / p) * p, behavior: "smooth" });
+      engolirClique = true;
+      setTimeout(() => (engolirClique = false), 0);
+    }
+    arrasto = null;
+  });
+  trilho.addEventListener(
+    "click",
+    (e) => {
+      if (!engolirClique) return;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    true,
+  );
+  // Sem o "fantasma" nativo ao puxar a foto ou o link
+  trilho.addEventListener("dragstart", (e) => e.preventDefault());
 })();
 
 /* Monta os cards de categoria da home a partir de window.CATALOGO */

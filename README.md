@@ -344,7 +344,8 @@ backups/        cópias e exports (fora do git)
 | GET | `/api/auth/eu/dados` | exporta os próprios dados em JSON (LGPD) |
 | DELETE | `/api/auth/eu` | exclui a própria conta (exige a senha) |
 | POST | `/api/admin/clientes/:id/recuperacao` | gera link de redefinição para repassar ao cliente |
-| GET | `/api/admin/exportar?tipo=` | baixa CSV de `mensagens`, `orcamentos` ou `clientes` |
+| GET | `/api/admin/exportar?tipo=` | baixa CSV de `mensagens`, `orcamentos`, `clientes` ou `auditoria` |
+| GET | `/api/admin/auditoria` | últimos 300 registros de quem fez o quê no painel (só leitura) |
 
 Telas: `entrar.html`, `recuperar.html`, `conta.html` e `admin.html` (as quatro
 com `noindex`).
@@ -385,18 +386,72 @@ montou. Reabrir a gaveta sempre volta para a lista.
 
 - **Senha**: scrypt (N=16384) com salt por usuário; comparação com
   `timingSafeEqual`. O login roda um scrypt descartável quando o e-mail não
-  existe, para o tempo de resposta não revelar quais e-mails estão cadastrados.
+  existe, para o tempo de resposta não revelar quais e-mails estão cadastrados
+  — **um** scrypt, contra um hash descartável calculado uma vez só (gerar um a
+  cada pedido custava o dobro e denunciava o e-mail pelo tempo).
+- **Senha óbvia é recusada** (`senhaFraca` em `server/auth.js`): além do mínimo
+  de 8, barra as mais comuns (`12345678`, `senha123`…), caractere repetido e
+  senha igual ao e-mail. Vale no cadastro, na troca, na redefinição e no
+  `criar-admin`.
 - **Sessão**: token aleatório de 32 bytes em cookie `HttpOnly; SameSite=Lax`.
   No banco fica só o **sha256** do token, então vazar o banco não entrega as
-  sessões. Validade de 30 dias, com limpeza de vencidas de hora em hora.
+  sessões. Validade de 30 dias para cliente e **7 para admin**, com limpeza de
+  vencidas de hora em hora. Entrar de novo apaga do banco a sessão que o
+  navegador já tinha. Em produção o cookie se chama `__Host-polvo_sessao` e
+  leva `Secure` (o prefixo impede subdomínio ou rede insegura de plantar a
+  sessão) — por isso, ao ligar `NODE_ENV=production`, todo mundo precisa
+  entrar de novo uma vez.
+- **Timeouts**: 15 s para os cabeçalhos e 30 s para o pedido inteiro (os
+  padrões do Node, 60 s e 5 min, deixam segurar conexões abertas de propósito).
+  O teto de tentativas para de crescer quando estoura, para não virar
+  vazamento de memória sob ataque.
 - **CSRF**: `SameSite=Lax` com API na mesma origem. Se um dia a API for para
   outro domínio, isso deixa de bastar e precisa de token anti-CSRF.
 - **Rate limit**: 10 logins / 15 min e 5 cadastros / hora por IP, em memória.
   Vale por instância — rodando em mais de um processo, precisa ir para o banco.
+- **Auditoria** (tabela `auditoria`, aba "Auditoria" do painel): grava quem
+  fez o quê — entrada e senha errada em conta de admin, troca/redefinição de
+  senha de admin, mudança de papel, exclusões, links de senha gerados,
+  planilhas baixadas, propostas, produtos, calculadora e sincronização do ERP,
+  além de `criar-admin`/`promover` pelo terminal (aparecem como `terminal`).
+  Só INSERT: nenhuma rota apaga; o que passa de 1 ano sai sozinho (tem IP,
+  que é dado pessoal). Ler listas e marcar mensagem como lida não entram.
+  Ação nova no painel → chamar `registrar()` no handler e pôr o rótulo em
+  `ACAO` (`assets/js/admin.js`).
 - **Trava anti-lockout**: não dá para rebaixar, desativar ou remover o último
   admin ativo, nem remover a própria conta.
-- **Estáticos**: `server/` e `dados/` nunca são servidos; há barreira contra
-  path traversal e CSP, `nosniff`, `X-Frame-Options` e `Referrer-Policy`.
+- **CSRF, segunda camada**: todo pedido que muda estado (`POST`/`PUT`/`PATCH`/
+  `DELETE` na API) é recusado com 403 se o navegador mandar `Origin` de outro
+  site (ou `null`) ou `Sec-Fetch-Site: cross-site`/`same-site`. Cobre o que o
+  `SameSite=Lax` não cobre: subdomínio, navegador antigo e login CSRF. Atrás de
+  proxy que reescreve o `Host`, a origem de `SITE_URL` também é aceita.
+- **Estáticos — lista do que pode sair, não do que é proibido**: só arquivo na
+  raiz com extensão de página (`.html`, `.xml`, `.txt`, `.ico`,
+  `.webmanifest`) e o que está dentro de `assets/`. O caminho é decodificado e
+  normalizado antes da checagem, e `\`, `:`, segmento começando com ponto ou
+  terminado em ponto/espaço são recusados. Pasta pública nova precisa entrar
+  em `PASTAS_PUBLICAS` (`server/server.js`). Cabeçalhos: CSP (com
+  `object-src 'none'`), `nosniff`,
+  `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`,
+  `Cross-Origin-Opener-Policy` e, com `NODE_ENV=production`, HSTS.
+- **Corpo grande** dá 413; **cookie ou `Host` malformado** não derrubam nada.
+- **Rate limit também na senha com sessão aberta**: trocar senha e excluir a
+  conta conferem a senha atual, então seguem o mesmo teto do login — senão uma
+  sessão roubada viraria força bruta da senha.
+- **Proxy**: o rate limit usa o IP do socket. Atrás de nginx/Caddy, ligue
+  `PROXY_CONFIAVEL=1` para usar o último salto do `X-Forwarded-For`; sem
+  proxy, **não** ligue (qualquer um trocaria o cabeçalho e furaria o limite).
+
+> **Revisão de segurança de 01/10/2026.** A lista de bloqueio antiga era
+> conferida antes do `decodeURIComponent` e diferenciava maiúsculas — no
+> Windows, `/Dados/polvo.db`, `/%64ados/polvo.db`, `/backups/...`,
+> `/SERVER/db.js`, `README.md` etc. eram baixáveis por qualquer visitante (o
+> banco traz hash de senha, cadastro e leads). Também, um único pedido com
+> `Host: [` derrubava o processo. As duas coisas estão corrigidas e cobertas
+> por teste em `server/api.test.js` ("caminho disfarçado", "Host malformado").
+> Se este servidor chegou a ficar acessível fora da máquina antes disso, trate
+> o banco como vazado: force a troca de senha dos admins e troque a senha do
+> ERP do `.env`.
 - **`frame-src`**: o CSP libera `https://www.google.com` e mais nada, por causa dos
   mapas das lojas em `contato.html`. `frame-ancestors 'none'` continua valendo, então
   o site embute o Maps mas ninguém embute o site. Um teste falha se esse `frame-src`
@@ -589,6 +644,19 @@ Isto é um protótipo. Antes de receber cliente de verdade:
    então a troca é direta se precisar.
 6. **Rate limit e sessões em memória/arquivo** não sobrevivem a mais de uma
    instância.
+7. **Variáveis de produção**: `NODE_ENV=production` (cookie `Secure`, HSTS,
+   desliga `RECUPERACAO_NO_CORPO`), `SITE_URL=https://...` (o link de
+   recuperação deixa de depender do `Host` do pedido; o boot avisa se faltar)
+   e, se houver proxy na frente, `PROXY_CONFIAVEL=1`. O `.env` guarda a senha
+   do ERP em texto: no servidor, só o usuário do processo deve ler o arquivo.
+8. **Riscos aceitos, por ora** (revisão de 01/10/2026):
+   - não há trava de login por conta, só por IP (trava por conta deixaria
+     qualquer um bloquear o login de um cliente sabendo o e-mail dele);
+   - o CSP mantém `style-src 'unsafe-inline'` (há `style=""` no HTML e no JS);
+   - `POST /api/cupom` devolve o cupom já emitido para quem souber o WhatsApp
+     (é só um código de desconto, e o vendedor confere no painel);
+   - `backups/` fica no mesmo disco e tem hash de senha: não sincronize essa
+     pasta com nuvem pública.
 
 ## Ganchos para o backend
 

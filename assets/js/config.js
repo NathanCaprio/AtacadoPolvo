@@ -75,6 +75,13 @@ window.SITE = {
   cupomDesconto: '5%',                     // CONFERIR
   cupomAtivo: true,                        // false desliga o pop-up no site todo
 
+  // --- Calculadoras de consumo (calculadora.html e calculadora-eventos.html)
+  // false: some o que leva a elas (menu, rodapé, chamadas da home, das
+  // landings e do blog, aba do painel; tudo marcado com data-calculadora) e
+  // as duas páginas mandam para o catálogo. Para religar: true aqui e as duas
+  // URLs de volta no sitemap.xml.
+  calculadoraAtiva: false,
+
   // Mensagem padrão aberta no WhatsApp quando data-wpp vem vazio
   mensagemPadrao: 'Olá! Vim pelo site e gostaria de fazer um orçamento.'
 };

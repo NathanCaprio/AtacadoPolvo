@@ -71,14 +71,15 @@
   /* ---- Render do grid ---------------------------------------------------- */
   function filtrar() {
     const termo = normalizar(estado.busca.trim());
+    // Cada palavra em qualquer ordem: "detergente 5l" acha "DETERGENTE NEUTRO 5L".
+    // Mesma regra da busca do cabeçalho (main.js), para a contagem bater.
+    const palavras = termo.split(/\s+/).filter(Boolean);
     const cats = estado.cat.split(',');     // ?cat=vassouras,panos (cards das landings)
     let out = produtos.filter(p => {
       const okCat = estado.cat === 'todos' || cats.includes(p.cat);
+      const tudo = [p.nome, p.desc, p.texto, nomeDe(p.cat)].map(normalizar).join(' ');
       const okBusca = !termo ||
-        normalizar(p.nome).includes(termo) ||
-        normalizar(p.desc).includes(termo) ||
-        normalizar(p.texto).includes(termo) ||
-        normalizar(nomeDe(p.cat)).includes(termo) ||
+        palavras.every(w => tudo.includes(w)) ||
         normalizar(p.id) === termo;
       return okCat && okBusca;
     });

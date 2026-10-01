@@ -16,7 +16,7 @@ const fsp = require('node:fs/promises');
 const path = require('node:path');
 
 const { tratarApi } = require('./api');
-const { limparSessoes, ARQUIVO } = require('./db');
+const { limparSessoes, limparAuditoria, ARQUIVO } = require('./db');
 const backup = require('./backup');
 const erp = require('./erp');
 
@@ -41,8 +41,16 @@ const TIPOS = {
   '.webmanifest': 'application/manifest+json'
 };
 
-// Nada aqui é servido, mesmo que alguém acerte o caminho.
-const BLOQUEADOS = [/^\/server\//, /^\/dados\//, /^\/\./, /\/\./];
+/* Lista do que PODE ser servido, não do que é proibido. A lista de bloqueio
+   antiga era conferida antes do decodeURIComponent e de forma sensível a
+   maiúsculas — num disco do Windows, /Dados/polvo.db e /%64ados/polvo.db
+   entregavam o banco inteiro (hash de senha, cadastro, leads), e o mesmo
+   valia para backups/, server/ e os .md. Agora só passa:
+     - arquivo na raiz com extensão de página (index.html, robots.txt...);
+     - qualquer coisa dentro de assets/ com extensão conhecida.
+   Pasta nova com conteúdo público precisa entrar em PASTAS_PUBLICAS.      */
+const PASTAS_PUBLICAS = new Set(['assets']);
+const EXT_RAIZ = new Set(['.html', '.xml', '.txt', '.ico', '.webmanifest']);
 
 const CSP = [
   "default-src 'self'",
@@ -59,16 +67,48 @@ const CSP = [
   // É só o embed do Maps: nenhum outro domínio pode ser embutido.
   "frame-src https://www.google.com",
   "frame-ancestors 'none'",
-  "base-uri 'self'"
+  "base-uri 'self'",
+  // Sem <object>/<embed>: o site não usa, e plugin é porta clássica de XSS.
+  "object-src 'none'"
 ].join('; ');
+
+const PRODUCAO = process.env.NODE_ENV === 'production';
 
 function cabecalhosBase() {
   return {
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'X-Frame-Options': 'DENY',
-    'Content-Security-Policy': CSP
+    'Content-Security-Policy': CSP,
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+    'Cross-Origin-Opener-Policy': 'same-origin',
+    // Só em produção: HSTS num http://localhost faria o navegador insistir
+    // em https para 127.0.0.1 por um ano.
+    ...(PRODUCAO ? { 'Strict-Transport-Security': 'max-age=31536000' } : {})
   };
+}
+
+/** Caminho relativo seguro dentro da raiz, ou null se não for público. */
+function caminhoPublico(caminho) {
+  let rel;
+  try { rel = decodeURIComponent(caminho); } catch { return null; }
+  // \ vira separador no Windows; : abre stream alternativo (index.html::$DATA);
+  // \0 corta o nome em algumas APIs.
+  if (/[\\:\0]/.test(rel)) return null;
+
+  rel = path.posix.normalize(rel === '/' ? '/index.html' : rel).replace(/^\/+/, '');
+  const partes = rel.split('/');
+  // Nada que comece com ponto (.env, .git), nem ".." que tenha sobrado, nem
+  // nome terminado em ponto ou espaço (o Windows ignora: "assets." = "assets").
+  if (partes.some(p => !p || p.startsWith('.') || /[. ]$/.test(p))) return null;
+
+  let ext = path.extname(rel).toLowerCase();
+  if (!ext) { rel += '.html'; ext = '.html'; }   // /entrar -> entrar.html
+
+  if (partes.length === 1) return EXT_RAIZ.has(ext) ? { rel, ext } : null;
+  // Comparação exata: no Windows /ASSETS/ chegaria ao mesmo lugar, mas aqui
+  // não passa — e nem precisa, nenhum link do site usa maiúscula.
+  return PASTAS_PUBLICAS.has(partes[0]) && TIPOS[ext] ? { rel, ext } : null;
 }
 
 /* ---- Estáticos --------------------------------------------------------- */
@@ -79,6 +119,9 @@ const REVALIDA = new Set(['.html', '.css', '.js', '.json']);
 
 async function servirArquivo(req, res, absoluto, ext) {
   const info = await fsp.stat(absoluto);
+  // Pasta com ponto no nome passaria pelo stat; o createReadStream daria
+  // EISDIR depois do 200 e derrubaria o processo.
+  if (!info.isFile()) throw new Error('não é arquivo');
   const etag = `W/"${info.mtimeMs.toString(36)}-${info.size.toString(36)}"`;
 
   const cabecalhos = {
@@ -95,7 +138,9 @@ async function servirArquivo(req, res, absoluto, ext) {
 
   res.writeHead(200, { ...cabecalhos, 'Content-Length': info.size });
   if (req.method === 'HEAD') return res.end();
-  fs.createReadStream(absoluto).pipe(res);
+  // Erro de leitura no meio do envio (arquivo apagado, disco) não pode virar
+  // exceção sem dono: isso derruba o servidor inteiro.
+  fs.createReadStream(absoluto).on('error', () => res.destroy()).pipe(res);
 }
 
 async function tratarEstatico(req, res, caminho) {
@@ -103,28 +148,13 @@ async function tratarEstatico(req, res, caminho) {
     res.writeHead(405, cabecalhosBase()); res.end('Método não permitido');
     return;
   }
-  if (BLOQUEADOS.some(re => re.test(caminho))) {
-    res.writeHead(404, cabecalhosBase()); res.end('Não encontrado');
-    return;
-  }
-
-  let rel = caminho === '/' ? '/index.html' : caminho;
-  let absoluto = path.join(RAIZ, decodeURIComponent(rel));
-
-  // Barreira contra path traversal: o alvo tem que ficar dentro da raiz.
-  if (!absoluto.startsWith(RAIZ + path.sep) && absoluto !== RAIZ) {
-    res.writeHead(403, cabecalhosBase()); res.end('Proibido');
-    return;
-  }
-
-  let ext = path.extname(absoluto).toLowerCase();
-  if (!ext) {                                  // /entrar -> entrar.html
-    absoluto += '.html';
-    ext = '.html';
-  }
+  const alvo = caminhoPublico(caminho);
+  const absoluto = alvo && path.join(RAIZ, alvo.rel);
 
   try {
-    await servirArquivo(req, res, absoluto, ext);
+    // Segunda barreira contra path traversal: o alvo tem que ficar na raiz.
+    if (!alvo || !absoluto.startsWith(RAIZ + path.sep)) throw new Error('fora');
+    await servirArquivo(req, res, absoluto, alvo.ext);
   } catch {
     // Página 404 de verdade. Devolver a home aqui seria pior: o visitante
     // acharia que chegou onde queria, e o buscador veria conteúdo duplicado.
@@ -144,15 +174,29 @@ async function tratarEstatico(req, res, caminho) {
 
 /* ---- Servidor ---------------------------------------------------------- */
 
+/* IP direto do socket por padrão: confiar em X-Forwarded-For sem um proxy na
+   frente deixaria qualquer um furar o rate limit trocando o cabeçalho. Atrás
+   de nginx/Caddy, PROXY_CONFIAVEL=1 lê o último salto do X-Forwarded-For (o
+   que o próprio proxy acrescentou) — sem isso todo visitante teria o IP do
+   proxy e o rate limit viraria um limite global. */
+const PROXY_CONFIAVEL = process.env.PROXY_CONFIAVEL === '1';
+
+function ipDe(req) {
+  if (PROXY_CONFIAVEL) {
+    const saltos = String(req.headers['x-forwarded-for'] || '').split(',')
+      .map(s => s.trim()).filter(Boolean);
+    if (saltos.length) return saltos[saltos.length - 1].slice(0, 64);
+  }
+  return req.socket.remoteAddress || 'desconhecido';
+}
+
 const servidor = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const caminho = url.pathname;
-
-  // IP direto do socket, de propósito: confiar em X-Forwarded-For sem um proxy
-  // na frente deixaria qualquer um furar o rate limit trocando o cabeçalho.
-  const ip = req.socket.remoteAddress || 'desconhecido';
-
+  let caminho = '/';
   try {
+    // Base fixa, nunca o Host do pedido: "Host: [" fazia o new URL lançar
+    // fora do try e um único pedido derrubava o processo.
+    caminho = new URL(req.url, 'http://localhost').pathname;
+    const ip = ipDe(req);
     if (await tratarApi(req, res, caminho, ip)) return;
     await tratarEstatico(req, res, caminho);
   } catch (e) {
@@ -161,14 +205,24 @@ const servidor = http.createServer(async (req, res) => {
   }
 });
 
+/* Os padrões do Node (60 s para os cabeçalhos, 5 min para o pedido inteiro)
+   deixam um atacante segurar centenas de conexões abertas mandando um byte
+   de cada vez. O maior corpo aceito aqui tem 64 KB: 30 s sobra. */
+servidor.headersTimeout = 15 * 1000;
+servidor.requestTimeout = 30 * 1000;
+
 limparSessoes();
-setInterval(limparSessoes, 60 * 60 * 1000).unref();
+limparAuditoria();
+setInterval(() => { limparSessoes(); limparAuditoria(); }, 60 * 60 * 1000).unref();
 
 servidor.listen(PORTA, HOST, () => {
   console.log(`\n  Atacado Polvo`);
   console.log(`  site   http://${HOST}:${PORTA}`);
   console.log(`  admin  http://${HOST}:${PORTA}/admin`);
   console.log(`  banco  ${ARQUIVO}\n`);
+  if (PRODUCAO && !process.env.SITE_URL) {
+    console.warn('  [aviso] defina SITE_URL: sem ela o link de recuperação de senha usa o Host do pedido.\n');
+  }
 
   // Depois do listen, de propósito: se o backup travar, o site já está no ar.
   backup.agendar();
