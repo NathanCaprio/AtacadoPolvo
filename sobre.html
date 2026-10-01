@@ -105,14 +105,6 @@
   }
 </script>
 
-<noscript>
-  <!-- Sem JS o IntersectionObserver de main.js nunca adiciona .is-in, e
-       [data-reveal]{opacity:0} deixaria a maior parte da página invisível
-       para sempre. Reexibir é mais honesto que avisar que falta algo. -->
-  <style>
-    [data-reveal]{ opacity:1 !important; transform:none !important; }
-  </style>
-</noscript>
 </head>
 <body>
 
@@ -159,11 +151,11 @@
 <main id="main">
 
   <!-- ================= TOPO ================= -->
-  <section class="section" style="padding-bottom:24px">
+  <section class="section u-pb-24">
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">A empresa</span>
-        <h1 style="font-size:clamp(1.9rem,1.3rem + 2.6vw,3rem);margin-block:16px 14px">
+        <h1 class="u-fs-titulo-g u-my-16-14">
           Distribuímos limpeza. Vivemos de recorrência.
         </h1>
         <p class="lead">
@@ -175,16 +167,16 @@
   </section>
 
   <!-- ================= HISTÓRIA ================= -->
-  <section class="section" style="padding-top:24px">
+  <section class="section u-pt-24">
     <div class="wrap split split--wide">
       <div data-reveal>
-        <h2 style="margin-bottom:18px">Como começou</h2>
-        <p style="margin-bottom:16px">
+        <h2 class="u-mb-18">Como começou</h2>
+        <p class="u-mb-16">
           A Atacado Polvo começou num galpão alugado de 120 m², com um Fiorino e uma lista de
           trinta mercearias. O fundador vendia de porta em porta os mesmos produtos que hoje
           saem de caminhão: detergente, água sanitária, saco de lixo e papel higiênico.
         </p>
-        <p style="margin-bottom:16px">
+        <p class="u-mb-16">
           O nome veio de uma brincadeira dos primeiros clientes: “vocês têm braço pra tudo”.
           A gente gostou. O polvo tem oito braços, enxerga no escuro e se enfia em qualquer
           espaço — que é mais ou menos o que uma distribuidora precisa fazer para entregar
@@ -351,7 +343,7 @@
     <div class="wrap split">
       <div data-reveal>
         <span class="eyebrow">Trajetória</span>
-        <h2 style="margin-block:16px 14px">De um Fiorino a uma frota</h2>
+        <h2 class="u-my-16-14">De um Fiorino a uma frota</h2>
         <p class="lead">Dez anos de crescimento feito com caixa próprio e cliente que volta.</p>
       </div>
 

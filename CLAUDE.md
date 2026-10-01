@@ -56,6 +56,7 @@ Cada página tem seu JS homônimo em `assets/js/`.
 - Nova LP: `data-segmento` do form precisa estar em `SEGMENTOS` (`server/api.js`) + rótulo em `admin.js` + `.selo--*`/`.funil-barra--*` no CSS + `sitemap.xml`.
 - `npm test` pode pegar um Node antigo de uma pasta acima; use `node --test "server/*.test.js" "testes/*.test.js"`.
 - **Estático é lista de permissão** (`caminhoPublico` em `server/server.js`): só raiz com `.html/.xml/.txt/.ico/.webmanifest` e `assets/`. Arquivo público em pasta nova → `PASTAS_PUBLICAS`. Nunca voltar para lista de bloqueio (furava com `%64ados`/maiúscula no Windows).
+- **CSP sem `unsafe-inline`** (script e style): nada de `style=""`, `<style>` ou `<script>` inline no HTML nem em `innerHTML`. Ajuste pontual = classe `u-*` (CSS seção 35); valor calculado = `el.style.setProperty`. `testes/estilos.test.js` trava.
 - **API recusa POST/PUT/PATCH/DELETE com `Origin`/`Sec-Fetch-Site` de outro site** (403). Fetch do front é same-origin, então não afeta.
 - **ERP: só login e GET.** Nunca chamar rota que grave no Empresarius; `server/erp.test.js` trava isso.
 - Textos, nomes de funções e comentários são em **português**; mantenha o padrão.

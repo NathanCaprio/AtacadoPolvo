@@ -14,14 +14,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 
-<noscript>
-  <!-- Sem JS o IntersectionObserver de main.js nunca adiciona .is-in, e
-       [data-reveal]{opacity:0} deixaria a maior parte da página invisível
-       para sempre. Reexibir é mais honesto que avisar que falta algo. -->
-  <style>
-    [data-reveal]{ opacity:1 !important; transform:none !important; }
-  </style>
-</noscript>
 </head>
 <body>
 
@@ -66,25 +58,25 @@
 
 
 <main id="main" class="section">
-  <div class="wrap center" style="max-width:640px">
+  <div class="wrap center u-mw-640">
 
     <img src="assets/img/logo-mark.svg" alt="" width="220" height="141"
-         style="margin:0 auto 30px;opacity:.9">
+         class="u-m-0-auto-30 u-op-09">
 
     <span class="eyebrow">Erro 404</span>
-    <h1 style="margin:16px 0 14px">Esta página escapou por entre os tentáculos</h1>
+    <h1 class="u-m-16-0-14">Esta página escapou por entre os tentáculos</h1>
     <p class="lead">
       O endereço que você abriu não existe (ou mudou de lugar). Nada grave —
       abaixo estão os caminhos mais usados.
     </p>
 
-    <div class="row" style="justify-content:center;margin-top:32px">
+    <div class="row u-jc-center u-mt-32">
       <a class="btn btn--primary" href="index.html">Voltar para a home</a>
       <a class="btn btn--ghost" href="produtos.html">Ver o catálogo</a>
     </div>
 
-    <div class="grid g-3" style="margin-top:48px;text-align:left">
-      <a class="cat-card" href="condominios.html" style="--cat:#7B2FE3">
+    <div class="grid g-3 u-mt-48 u-ta-left">
+      <a class="cat-card u-cat-7b2fe3" href="condominios.html">
         <h3>Para condomínios</h3>
         <p>Nota fiscal no CNPJ, entrega na portaria e orçamento item a item.</p>
         <span class="cat-link">Ver página
@@ -92,7 +84,7 @@
         </span>
       </a>
 
-      <a class="cat-card" href="escolas.html" style="--cat:#C026D3">
+      <a class="cat-card u-cat-c026d3" href="escolas.html">
         <h3>Para escolas</h3>
         <p>Produtos com procedência e entrega programada pelo calendário escolar.</p>
         <span class="cat-link">Ver página
@@ -100,7 +92,7 @@
         </span>
       </a>
 
-      <a class="cat-card" href="contato.html" style="--cat:#A16207">
+      <a class="cat-card u-cat-a16207" href="contato.html">
         <h3>Falar com a gente</h3>
         <p>Telefone, WhatsApp, horários e os endereços das duas unidades.</p>
         <span class="cat-link">Ver página

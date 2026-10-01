@@ -711,6 +711,17 @@ describe('servidor', () => {
     assert.doesNotMatch(csp, /frame-src[^;]*\*/);
   });
 
+  /* script-src e style-src sem 'unsafe-inline'. O par em testes/estilos.test.js
+     garante que o HTML não tem style=""/<style>, senão a página quebra. */
+  test('o CSP não aceita script nem estilo inline', async () => {
+    const csp = (await fetch(BASE + '/')).headers.get('content-security-policy');
+    for (const dir of ['script-src', 'style-src']) {
+      const d = csp.split(';').map(x => x.trim()).find(x => x.startsWith(dir + ' '));
+      assert.ok(d, `${dir} precisa ser explícito`);
+      assert.doesNotMatch(d, /unsafe-inline/, dir);
+    }
+  });
+
   test('o cookie de sessão é httpOnly e SameSite', async () => {
     const { email } = await novaConta();
     const res = await fetch(`${BASE}/api/auth/entrar`, {

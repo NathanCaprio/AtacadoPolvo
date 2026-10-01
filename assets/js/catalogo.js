@@ -186,7 +186,7 @@
     if (!body) return;
 
     if (!lista.length) {
-      body.innerHTML = `<div class="empty" style="padding:48px 0">
+      body.innerHTML = `<div class="empty u-p-48-0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.5 11h10L20 7H6"/><circle cx="9" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
           <h3>Sua lista está vazia</h3>
           <p>Adicione produtos do catálogo para montar um orçamento.</p>

@@ -98,7 +98,7 @@
     .slice(0, PRINCIPAIS)
     .map(
       (c, i) => `
-<a class="cat-card" href="produtos.html?cat=${c.id}" style="--cat:${c.cor}" data-reveal="${i * 60}">
+<a class="cat-card" href="produtos.html?cat=${c.id}" data-reveal="${i * 60}">
 <span class="cat-ico">${window.ICONS[c.icone] || window.ICONS.drop}</span>
 <h3>${c.nome}</h3>
 <p>${c.desc}</p>
@@ -106,6 +106,9 @@
 </a>`,
     )
     .join("");
+  // A cor vai pelo CSSOM: atributo style dentro do innerHTML seria barrado pelo
+  // CSP (style-src sem unsafe-inline).
+  grid.querySelectorAll(".cat-card").forEach((el, i) => el.style.setProperty("--cat", todas[i].cor));
 
   const mais = document.getElementById("cat-mais");
   if (mais && todas.length > PRINCIPAIS) {

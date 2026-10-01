@@ -653,7 +653,6 @@ Isto é um protótipo. Antes de receber cliente de verdade:
 8. **Riscos aceitos, por ora** (revisão de 01/10/2026):
    - não há trava de login por conta, só por IP (trava por conta deixaria
      qualquer um bloquear o login de um cliente sabendo o e-mail dele);
-   - o CSP mantém `style-src 'unsafe-inline'` (há `style=""` no HTML e no JS);
    - `POST /api/cupom` devolve o cupom já emitido para quem souber o WhatsApp
      (é só um código de desconto, e o vendedor confere no painel);
    - `backups/` fica no mesmo disco e tem hash de senha: não sincronize essa

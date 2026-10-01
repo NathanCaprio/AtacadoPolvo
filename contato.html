@@ -105,14 +105,6 @@
   }
 </script>
 
-<noscript>
-  <!-- Sem JS o IntersectionObserver de main.js nunca adiciona .is-in, e
-       [data-reveal]{opacity:0} deixaria a maior parte da página invisível
-       para sempre. Reexibir é mais honesto que avisar que falta algo. -->
-  <style>
-    [data-reveal]{ opacity:1 !important; transform:none !important; }
-  </style>
-</noscript>
 </head>
 <body>
 
@@ -159,11 +151,11 @@
 <main id="main">
 
   <!-- ================= TOPO ================= -->
-  <section class="section" style="padding-bottom:24px">
+  <section class="section u-pb-24">
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">Contato</span>
-        <h1 style="font-size:clamp(1.9rem,1.3rem + 2.6vw,3rem);margin-block:16px 14px">
+        <h1 class="u-fs-titulo-g u-my-16-14">
           Fale com quem separa o seu pedido
         </h1>
         <p class="lead">
@@ -175,7 +167,7 @@
   </section>
 
   <!-- ================= FORMULÁRIO + INFORMAÇÕES ================= -->
-  <section class="section" style="padding-top:24px">
+  <section class="section u-pt-24">
     <div class="wrap contact-grid">
 
       <div class="form-card" data-reveal>
@@ -254,7 +246,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>
           </button>
 
-          <p class="hint" style="text-align:center;margin-top:14px">
+          <p class="hint u-ta-center u-mt-14">
             A mensagem fica registrada com a gente e o WhatsApp abre em seguida,
             para você já falar com um atendente.
           </p>
@@ -263,7 +255,7 @@
 
       <div data-reveal="120">
         <div class="info-card">
-          <h3 style="margin-bottom:6px">Canais diretos</h3>
+          <h3 class="u-mb-6">Canais diretos</h3>
 
           <div class="info-item">
             <span class="ico">
@@ -307,7 +299,7 @@
         </div>
 
         <div class="info-card">
-          <h3 style="margin-bottom:6px">Endereço e horários</h3>
+          <h3 class="u-mb-6">Endereço e horários</h3>
 
           <div class="info-item">
             <span class="ico">
@@ -362,7 +354,7 @@
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4720.985801492775!2d-51.214831887822164!3d-30.063702774809286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9519795e0cd013f7%3A0x3baf50683990d951!2sAtacado%20da%20Limpeza%20Polvo%20-%20Matriz!5e1!3m2!1spt-BR!2sbr!4v1790254687284!5m2!1spt-BR!2sbr"
                 title="Mapa da unidade Medianeira, na Av. Dr. Carlos Barbosa, 931"
-                style="border:0" allowfullscreen loading="lazy"
+                class="u-borda-0" allowfullscreen loading="lazy"
                 referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
             <figcaption>
@@ -383,7 +375,7 @@
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4720.945752325955!2d-51.15904578782191!3d-30.064542474808974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95199d104b92e6a1%3A0x2cf1555d271facf3!2sAtacado%20da%20Limpeza%20Polvo!5e1!3m2!1spt-BR!2sbr!4v1790254649718!5m2!1spt-BR!2sbr"
                 title="Mapa da unidade Bento Gonçalves, na Av. Bento Gonçalves, 5928"
-                style="border:0" allowfullscreen loading="lazy"
+                class="u-borda-0" allowfullscreen loading="lazy"
                 referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
             <figcaption>
@@ -403,7 +395,7 @@
 
   <!-- ================= FAQ ================= -->
   <section class="section section--tint">
-    <div class="wrap" style="max-width:840px">
+    <div class="wrap u-mw-840">
       <div class="section-head center" data-reveal>
         <span class="eyebrow eyebrow--accent">Dúvidas frequentes</span>
         <h2>Antes de fazer o primeiro pedido</h2>

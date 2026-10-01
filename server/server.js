@@ -55,7 +55,10 @@ const EXT_RAIZ = new Set(['.html', '.xml', '.txt', '.ico', '.webmanifest']);
 const CSP = [
   "default-src 'self'",
   "script-src 'self'",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  // Sem 'unsafe-inline': nada de style="" nem <style> no HTML (os ajustes
+  // pontuais são as classes u-* da seção 35 do CSS). Mexer em el.style pelo
+  // JS continua valendo: o CSP não barra o CSSOM.
+  "style-src 'self' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   // Fotos dos produtos: vêm do ERP e ficam no S3 dele (server/erp.js).
   `img-src 'self' data: ${erp.ORIGEM_FOTOS}`,

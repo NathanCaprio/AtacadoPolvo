@@ -65,7 +65,7 @@
         <h1>Painel administrativo</h1>
         <p id="quem"></p>
       </div>
-      <a class="btn btn--ghost btn--sm" href="conta.html" style="margin-left:auto">Minha conta</a>
+      <a class="btn btn--ghost btn--sm u-ml-auto" href="conta.html">Minha conta</a>
       <button class="btn btn--ghost btn--sm" id="sair" type="button">Sair</button>
     </div>
 
@@ -151,7 +151,7 @@
 
     <!-- ---------- ORÇAMENTOS ---------- -->
     <section id="painel-orcamentos" role="tabpanel" aria-labelledby="aba-orcamentos">
-      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+      <p class="lead u-fs-092rem u-mb-18">
         Tudo que foi montado no catálogo, inclusive por quem não tem conta — nesse caso
         o pedido fica como anônimo e serve como sinal de carrinho abandonado.
       </p>
@@ -169,7 +169,7 @@
               <th>Itens</th>
               <th>Quando</th>
               <th>Situação</th>
-              <th style="text-align:right">Ações</th>
+              <th class="u-ta-right">Ações</th>
             </tr>
           </thead>
           <tbody id="linhas-orcamentos"></tbody>
@@ -179,7 +179,7 @@
 
     <!-- ---------- MENSAGENS ---------- -->
     <section id="painel-mensagens" role="tabpanel" aria-labelledby="aba-mensagens" hidden>
-      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+      <p class="lead u-fs-092rem u-mb-18">
         Mensagens do formulário de contato e das páginas de segmento. O selo
         diz de onde o pedido veio e se o aceite da política foi registrado.
       </p>
@@ -195,7 +195,7 @@
               <th>Quem</th>
               <th>Mensagem</th>
               <th>Quando</th>
-              <th style="text-align:right">Ações</th>
+              <th class="u-ta-right">Ações</th>
             </tr>
           </thead>
           <tbody id="linhas-mensagens"></tbody>
@@ -205,7 +205,7 @@
 
     <!-- ---------- CLIENTES ---------- -->
     <section id="painel-clientes" role="tabpanel" aria-labelledby="aba-clientes" hidden>
-      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+      <p class="lead u-fs-092rem u-mb-18">
         Promova a admin, desative o acesso ou remova a conta. Desativar e rebaixar
         derrubam as sessões abertas na hora. "Link de senha" gera um endereço
         de redefinição válido por uma hora, para você passar ao cliente que
@@ -224,7 +224,7 @@
               <th>Papel</th>
               <th>Cadastro</th>
               <th>Último acesso</th>
-              <th style="text-align:right">Ações</th>
+              <th class="u-ta-right">Ações</th>
             </tr>
           </thead>
           <tbody id="linhas"></tbody>
@@ -234,7 +234,7 @@
 
     <!-- ---------- CATÁLOGO (ERP) ---------- -->
     <section id="painel-erp" role="tabpanel" aria-labelledby="aba-erp" hidden>
-      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+      <p class="lead u-fs-092rem u-mb-18">
         Os produtos do site vêm do ERP (Empresarius), só por leitura: nada é
         alterado lá. A sincronização roda sozinha de tempos em tempos; o botão
         força uma agora. Preço e estoque não são trazidos. Foto cadastrada no
@@ -262,7 +262,7 @@
 
     <!-- ---------- PRODUTOS NO SITE ---------- -->
     <section id="painel-produtos" role="tabpanel" aria-labelledby="aba-produtos" hidden>
-      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+      <p class="lead u-fs-092rem u-mb-18">
         Nome e descrição que o site mostra para cada produto. Ficam gravados só
         no site: o cadastro no ERP não muda. Sem nome escrito aqui, o site usa o
         nome do ERP com maiúsculas e os acentos mais comuns ajustados. A
@@ -270,8 +270,8 @@
       </p>
       <div class="barra-acoes">
         <label for="prod-busca" class="sr-only">Buscar produto</label>
-        <input class="input" id="prod-busca" type="search" autocomplete="off"
-          placeholder="Buscar por nome ou código…" style="max-width:320px">
+        <input class="input u-mw-320" id="prod-busca" type="search" autocomplete="off"
+          placeholder="Buscar por nome ou código…">
         <label class="prod-filtro"><input type="checkbox" id="prod-ajustados"> Só os ajustados</label>
         <span id="prod-contagem" role="status"></span>
       </div>
@@ -283,20 +283,20 @@
               <th>Nome no site</th>
               <th>Grupo</th>
               <th>Descrição</th>
-              <th style="text-align:right">Ações</th>
+              <th class="u-ta-right">Ações</th>
             </tr>
           </thead>
           <tbody id="linhas-produtos"></tbody>
         </table>
       </div>
-      <div class="barra-acoes" style="justify-content:center;margin-top:16px">
+      <div class="barra-acoes u-jc-center u-mt-16">
         <button class="btn btn--ghost btn--sm" id="prod-mais" type="button" hidden>Mostrar mais</button>
       </div>
     </section>
 
     <!-- ---------- CALCULADORA ---------- -->
     <section id="painel-calculadora" data-calculadora role="tabpanel" aria-labelledby="aba-calculadora" hidden>
-      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+      <p class="lead u-fs-092rem u-mb-18">
         A calculadora de consumo estima com itens genéricos ("papel higiênico,
         rolo de 30 m"). Ligue cada um a um produto do ERP e diga quanto rende
         uma unidade de venda dele: a calculadora passa a mostrar o produto
@@ -313,7 +313,7 @@
               <th>Item da calculadora</th>
               <th>Produto do ERP</th>
               <th>Rende</th>
-              <th style="text-align:right">Ações</th>
+              <th class="u-ta-right">Ações</th>
             </tr>
           </thead>
           <tbody id="linhas-calculadora"></tbody>
@@ -323,7 +323,7 @@
 
     <!-- ---------- AUDITORIA ---------- -->
     <section id="painel-auditoria" role="tabpanel" aria-labelledby="aba-auditoria" hidden>
-      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+      <p class="lead u-fs-092rem u-mb-18">
         Quem fez o quê no painel: entradas e senhas erradas em contas de admin,
         mudança de papel, exclusões, links de senha gerados e planilhas baixadas.
         Ninguém apaga daqui; registros com mais de um ano saem sozinhos.
@@ -546,7 +546,7 @@
       <span class="hint" id="lg-escolhido">Nenhum produto escolhido.</span></div>
 
     <div class="field"><label for="lg-rende" id="lg-rende-rotulo">Quanto rende uma unidade do produto?</label>
-      <input class="input" id="lg-rende" inputmode="decimal" autocomplete="off" style="max-width:160px">
+      <input class="input u-mw-160" id="lg-rende" inputmode="decimal" autocomplete="off">
       <span class="hint" id="lg-rende-dica"></span></div>
 
     <div class="barra-acoes proposta-acoes">

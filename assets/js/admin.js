@@ -733,25 +733,31 @@
           `<td class="n">${i.preco == null ? 'a cotar' : reais(i.preco)}</td><td class="n">${sub == null ? '—' : reais(sub)}</td></tr>`;
       }).join('');
       const titulo = editando && editando.id ? `Orçamento nº ${editando.id}` : 'Orçamento';
-      const w = window.open('', '_blank');
-      if (!w) return avisoEditor('Libere pop-ups para baixar o PDF.');
-      w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
-<title>${esc(titulo)} — Atacado Polvo</title><style>
+      // A janela nova herda o CSP (style-src sem 'unsafe-inline'), que barra
+      // <style> e atributo style escritos no HTML; folha montada pelo CSSOM passa.
+      const CSS_PDF = `
 body{font:14px/1.5 system-ui,sans-serif;color:#1b0733;margin:32px}
 h1{margin:0;font-size:22px;color:#7b2fe3}.topo{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #7b2fe3;padding-bottom:12px;margin-bottom:18px}
 table{width:100%;border-collapse:collapse;margin-top:14px}th,td{padding:8px;border-bottom:1px solid #e8def7;text-align:left;vertical-align:top}
 th{font-size:12px;text-transform:uppercase;color:#6f5c8a}.n{text-align:right;white-space:nowrap}small{display:block;color:#6f5c8a}
-tfoot td{font-weight:700;border:0}.obs{margin-top:18px;padding:10px 14px;border-left:3px solid #7b2fe3;background:#f8f5fe;white-space:pre-line}
-@page{margin:14mm}</style></head><body>
+tfoot td{font-weight:700;border:0}tfoot td.leve{font-weight:400}.obs{margin-top:18px;padding:10px 14px;border-left:3px solid #7b2fe3;background:#f8f5fe;white-space:pre-line}
+@page{margin:14mm}`;
+      const w = window.open('', '_blank');
+      if (!w) return avisoEditor('Libere pop-ups para baixar o PDF.');
+      w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>${esc(titulo)} — Atacado Polvo</title></head><body>
 <div class="topo"><div><h1>Atacado Polvo</h1><div>${esc(titulo)}</div></div>
 <div class="n">Emitido em ${new Date().toLocaleDateString('pt-BR')}${validade ? `<br>Válido até ${validade.split('-').reverse().join('/')}` : ''}</div></div>
 ${cliente ? `<div><strong>Cliente:</strong> ${esc(cliente)}</div>` : ''}
 <table><thead><tr><th>Produto</th><th class="n">Qtd (cx)</th><th class="n">Preço/cx</th><th class="n">Subtotal</th></tr></thead>
 <tbody>${linhas}</tbody><tfoot><tr><td colspan="3" class="n">Total</td><td class="n">${reais(total)}</td></tr>
-${aCotar ? `<tr><td colspan="4" class="n" style="font-weight:400">${aCotar} item(ns) a cotar, fora do total</td></tr>` : ''}</tfoot></table>
+${aCotar ? `<tr><td colspan="4" class="n leve">${aCotar} item(ns) a cotar, fora do total</td></tr>` : ''}</tfoot></table>
 ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
 </body></html>`);
       w.document.close();
+      const folha = new w.CSSStyleSheet();
+      folha.replaceSync(CSS_PDF);
+      w.document.adoptedStyleSheets = [folha];
       // Script inline na janela nova seria barrado pelo CSP (herdado); o
       // print é chamado daqui.
       w.focus();
