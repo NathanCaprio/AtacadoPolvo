@@ -34,8 +34,14 @@
      DELETE /api/admin/mensagens/:id   exclui a mensagem
      POST   /api/admin/clientes/:id/recuperacao   gera link de redefinição
      GET    /api/admin/exportar?tipo=  baixa CSV de leads / clientes
+     GET    /api/admin/erp             situação da sincronização com o ERP
+     POST   /api/admin/erp/sincronizar dispara uma sincronização agora
 
-   Tudo devolve JSON. Erros usam { erro: "mensagem" } com o status HTTP certo.
+     GET    /catalogo-erp.js           catálogo do ERP no formato de data.js
+     GET    /sitemap-produtos.xml      uma URL por produto do ERP
+
+   Tudo devolve JSON (menos as duas últimas). Erros usam { erro: "mensagem" }
+   com o status HTTP certo.
    ========================================================================= */
 
 'use strict';
@@ -44,6 +50,7 @@ const { StringDecoder } = require('node:string_decoder');
 const crypto = require('node:crypto');
 const { db } = require('./db');
 const auth = require('./auth');
+const erp = require('./erp');
 
 const PRODUCAO = process.env.NODE_ENV === 'production';
 
@@ -1112,7 +1119,46 @@ function exportarCsv(req, res) {
   res.end(bytes);
 }
 
-/* ---- 8. Roteador ------------------------------------------------------- */
+/* ---- 8. Catálogo do ERP (server/erp.js) -------------------------------- */
+
+function situacaoErp(req, res) {
+  if (!exigirAdmin(req, res)) return;
+  json(res, 200, erp.situacao());
+}
+
+/* Não espera terminar: a rodada leva perto de um minuto. O painel acompanha
+   por GET /api/admin/erp. */
+function sincronizarErp(req, res) {
+  if (!exigirAdmin(req, res)) return;
+  if (!erp.configurado()) {
+    return erro(res, 409, 'ERP não configurado: defina ERP_EMAIL e ERP_SENHA no servidor.');
+  }
+  erp.sincronizar().catch(() => { /* o erro fica gravado no histórico */ });
+  json(res, 202, erp.situacao());
+}
+
+/* Revalida sempre (no-cache + ETag): depois de uma sincronização o
+   visitante vê o catálogo novo na próxima página, sem esperar cache vencer. */
+function servirPublico(req, res, arquivo, tipo) {
+  const a = erp.arquivosPublicos()[arquivo];
+  const cab = {
+    'Content-Type': tipo,
+    'Cache-Control': 'no-cache',
+    'ETag': a.etag,
+    'Vary': 'Accept-Encoding',
+    'X-Content-Type-Options': 'nosniff'
+  };
+  if (req.headers['if-none-match'] === a.etag) {
+    res.writeHead(304, cab);
+    return res.end();
+  }
+  const gzip = /\bgzip\b/.test(req.headers['accept-encoding'] || '');
+  const corpo = gzip ? a.gzip : a.corpo;
+  res.writeHead(200, { ...cab, ...(gzip ? { 'Content-Encoding': 'gzip' } : {}), 'Content-Length': corpo.length });
+  res.end(corpo);
+}
+
+/* ---- 9. Roteador ------------------------------------------------------- */
 
 const ROTAS = [
   ['POST',   /^\/api\/auth\/cadastrar$/, (rq, rs, m, ip) => cadastrar(rq, rs, ip)],
@@ -1155,7 +1201,18 @@ const ROTAS = [
 
   ['POST',   /^\/api\/admin\/clientes\/(\d+)\/recuperacao$/,
              (rq, rs, m) => gerarRecuperacaoAdmin(rq, rs, +m[1])],
-  ['GET',    /^\/api\/admin\/exportar$/,          (rq, rs) => exportarCsv(rq, rs)]
+  ['GET',    /^\/api\/admin\/exportar$/,          (rq, rs) => exportarCsv(rq, rs)],
+
+  ['GET',    /^\/api\/admin\/erp$/,               (rq, rs) => situacaoErp(rq, rs)],
+  ['POST',   /^\/api\/admin\/erp\/sincronizar$/,  (rq, rs) => sincronizarErp(rq, rs)],
+  ['GET',    /^\/catalogo-erp\.js$/,
+             (rq, rs) => servirPublico(rq, rs, 'js', 'text/javascript; charset=utf-8')],
+  ['HEAD',   /^\/catalogo-erp\.js$/,
+             (rq, rs) => servirPublico(rq, rs, 'js', 'text/javascript; charset=utf-8')],
+  ['GET',    /^\/sitemap-produtos\.xml$/,
+             (rq, rs) => servirPublico(rq, rs, 'xml', 'application/xml; charset=utf-8')],
+  ['HEAD',   /^\/sitemap-produtos\.xml$/,
+             (rq, rs) => servirPublico(rq, rs, 'xml', 'application/xml; charset=utf-8')]
 ];
 
 /** Devolve true se tratou o pedido. */

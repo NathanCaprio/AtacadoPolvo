@@ -121,6 +121,35 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_rec_cliente ON recuperacoes(cliente_id);
   CREATE INDEX IF NOT EXISTS idx_rec_expira  ON recuperacoes(expira_em);
+
+  -- Espelho dos produtos ativos do ERP (server/erp.js). É substituído
+  -- inteiro a cada sincronização, então pode ser apagado sem perda: a
+  -- próxima rodada reconstrói. Preço e estoque NÃO entram aqui de
+  -- propósito — o site não mostra nenhum dos dois, e o que não está gravado
+  -- não vaza.
+  CREATE TABLE IF NOT EXISTS produtos_erp (
+    erp_id    TEXT PRIMARY KEY,              -- uuid do produto no ERP
+    codigo    TEXT NOT NULL DEFAULT '',
+    nome      TEXT NOT NULL,                 -- como está no ERP (maiúsculas)
+    grupo     TEXT NOT NULL DEFAULT '',
+    categoria TEXT NOT NULL DEFAULT '',
+    unidade   TEXT NOT NULL DEFAULT '',      -- unidade de venda ("UNIDADE")
+    fotos     TEXT NOT NULL DEFAULT '[]'     -- JSON: [url, ...]
+  );
+
+  -- Uma linha por sincronização, para o painel mostrar quando foi a última
+  -- e por que falhou.
+  CREATE TABLE IF NOT EXISTS erp_sincronizacoes (
+    id        INTEGER PRIMARY KEY,
+    inicio    TEXT NOT NULL DEFAULT (datetime('now')),
+    fim       TEXT,
+    situacao  TEXT NOT NULL DEFAULT 'rodando'
+              CHECK (situacao IN ('rodando','ok','erro')),
+    produtos  INTEGER,
+    com_foto  INTEGER,
+    falhas    INTEGER,
+    mensagem  TEXT
+  );
 `);
 
 /* Limpa sessões vencidas. Chamado no boot e de hora em hora. */

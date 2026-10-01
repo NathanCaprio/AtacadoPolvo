@@ -135,6 +135,9 @@
       <button role="tab" id="aba-clientes" aria-selected="false" aria-controls="painel-clientes">
         Clientes
       </button>
+      <button role="tab" id="aba-erp" aria-selected="false" aria-controls="painel-erp">
+        Catálogo (ERP)
+      </button>
     </div>
 
     <!-- ---------- ORÇAMENTOS ---------- -->
@@ -216,6 +219,34 @@
             </tr>
           </thead>
           <tbody id="linhas"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---------- CATÁLOGO (ERP) ---------- -->
+    <section id="painel-erp" role="tabpanel" aria-labelledby="aba-erp" hidden>
+      <p class="lead" style="font-size:.92rem;margin-bottom:18px">
+        Os produtos do site vêm do ERP (Empresarius), só por leitura: nada é
+        alterado lá. A sincronização roda sozinha de tempos em tempos; o botão
+        força uma agora. Preço e estoque não são trazidos. Foto cadastrada no
+        ERP aparece no site na próxima sincronização.
+      </p>
+      <div class="barra-acoes">
+        <button class="btn btn--primary btn--sm" id="erp-sincronizar" type="button">Sincronizar agora</button>
+        <span id="erp-situacao" role="status"></span>
+      </div>
+      <div class="tabela-wrap">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Início</th>
+              <th>Situação</th>
+              <th>Produtos</th>
+              <th>Com foto</th>
+              <th>Observação</th>
+            </tr>
+          </thead>
+          <tbody id="linhas-erp"></tbody>
         </table>
       </div>
     </section>
@@ -373,6 +404,7 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/data.js"></script>
+<script src="catalogo-erp.js"></script>
 <script src="assets/js/admin.js"></script>
 </body>
 </html>

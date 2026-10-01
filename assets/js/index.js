@@ -1,4 +1,6 @@
 /* Vitrine "Mais vendidos": carrossel com os produtos tag 'mais-vendido'.
+   Com o catalogo do ERP, quem recebe a tag sao os mais pedidos nos
+   orcamentos do site (server/erp.js, maisPedidos).
    O botao usa a mesma lista de orcamento do catalogo (localStorage). */
 (function () {
   const trilho = document.getElementById("vitrine-trilho");
@@ -28,7 +30,7 @@
         const c = cat(p.cat);
         return `
 <article class="vitrine-card">
-<a class="vitrine-art" href="produto.html?id=${p.id}" aria-label="${p.nome}">${window.artProduto(p.art, c.cor)}</a>
+<a class="vitrine-art" href="produto.html?id=${p.id}" aria-label="${p.nome}">${window.imagemProduto(p, c.cor)}</a>
 <div class="vitrine-corpo">
 <span class="prod-cat">${c.nome || ""}</span>
 <h3>${p.nome}</h3>
@@ -36,7 +38,7 @@
 <strong>${p.caixa}</strong>
 <span class="vitrine-selo">Atacado</span>
 </div>
-<p class="vitrine-emb">${p.emb} · preço no orçamento</p>
+<p class="vitrine-emb">${p.emb ? p.emb + " · preço" : "Preço"} no orçamento</p>
 <div class="vitrine-foot" data-slot="${p.id}">${botao(p.id, lista.some((i) => i.id === p.id))}</div>
 </div>
 </article>`;

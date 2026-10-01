@@ -489,6 +489,24 @@ troca, recusa cópia corrompida e só age depois de você digitar `restaurar`.
 > `DESTINO_BACKUP` para uma pasta sincronizada (Drive, OneDrive) ou copie o
 > `backups/` para fora da máquina de vez em quando.
 
+### Catálogo do ERP
+
+Os produtos do site vêm do ERP **Empresarius**, só por leitura
+(`server/erp.js`). O servidor sincroniza no boot e a cada 12 h, grava os
+produtos ativos em `produtos_erp` e serve `/catalogo-erp.js`, que as páginas
+carregam logo depois do `data.js` e que troca o `window.CATALOGO`. Preço e
+estoque não são trazidos. As credenciais ficam no `.env` da raiz (fora do
+git), que o `npm start` carrega. Sem `ERP_EMAIL`/`ERP_SENHA`, o site segue com
+o último catálogo gravado ou, sem nenhum, com o de exemplo do `data.js`. O painel tem a aba **Catálogo (ERP)** com o
+histórico e o botão "Sincronizar agora". Detalhes e decisões em
+[INTEGRACAO-ERP.md](INTEGRACAO-ERP.md).
+
+| Variável | Padrão | O que faz |
+|---|---|---|
+| `ERP_EMAIL` / `ERP_SENHA` | — | usuário do ERP criado só para o site |
+| `ERP_INTERVALO_HORAS` | `12` | horas entre as sincronizações |
+| `ERP_AUTO` | ligado | `0` = só sincroniza pelo botão do painel |
+
 ### Testes
 
 ```bash
@@ -574,7 +592,7 @@ Isto é um protótipo. Antes de receber cliente de verdade:
 
 | Onde | Hoje | Depois |
 |---|---|---|
-| `data.js` | `window.CATALOGO` embutido | `GET /api/produtos` (API externa) |
+| `data.js` | catálogo de exemplo; o real vem do ERP por `/catalogo-erp.js` | — |
 | `catalogo.js` → `enviarOrcamento()` | grava em `/api/orcamentos` **e** abre o WhatsApp | — |
 | `contato.js` → `enviar()` | grava em `/api/mensagens` **e** abre o WhatsApp | — |
 | `consumo.js` | coeficientes médios embutidos | consumo real medido por cliente |
@@ -584,6 +602,7 @@ servidor fora do ar: gravar o orçamento nunca pode atrapalhar a venda. Quem
 está logado tem o orçamento amarrado à conta; quem não está vira sinal de
 carrinho abandonado no painel.
 
-O catálogo está embutido em JS (e não em um `.json` lido por `fetch`) de propósito:
-o navegador bloqueia requisições `file://` por CORS, e assim o site abre com duplo
-clique sem precisar de servidor. Quando a API de produtos entrar, troque pelo `fetch`.
+O catálogo chega por `<script>` (e não por `fetch` de um `.json`) de propósito:
+todo o site lê `window.CATALOGO` na hora em que a página carrega, e o script
+síncrono mantém isso sem reescrever cada tela. Aberto com duplo clique (sem
+servidor), o `/catalogo-erp.js` não carrega e o site mostra o catálogo de exemplo.

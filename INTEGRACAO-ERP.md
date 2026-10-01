@@ -1,55 +1,94 @@
-# Integração com o ERP Empresarius (pendente)
+# Integração com o ERP Empresarius
 
-Objetivo: exibir no site os produtos cadastrados no Empresarius (WME Sistemas),
-sem recadastrar tudo em `assets/js/data.js`.
+Os produtos do site vêm do Empresarius (WME Sistemas). **Regra: não alterar
+nada no ERP.** O site só faz login e leitura.
 
-**Regra: não alterar nada no ERP.** Só leitura/exportação.
+## Como funciona
 
-## O que já se sabe (30/09/2026)
+- O Empresarius não tem API pública. `server/erp.js` usa a mesma API que o
+  sistema web dele usa (`empresarius.azurewebsites.net/api`), logando com um
+  **usuário criado só para o site**.
+- No boot e a cada 12 h: uma chamada traz a lista inteira de produtos e, para
+  os ativos, a ficha de cada um (é só nela que vêm as fotos), 3 de cada vez.
+  A rodada leva cerca de 35 s para cerca de 1.050 ativos.
+- O resultado vai para a tabela `produtos_erp` (SQLite) e é servido em
+  `/catalogo-erp.js`, que as páginas carregam logo depois do `data.js` e que
+  troca o `window.CATALOGO`. Grupo do ERP vira categoria do site (tabela
+  `GRUPOS` em `server/erp.js`); grupo novo aparece sozinho no fim.
+- **Preço, custo e estoque não são gravados nem enviados ao site.** O site
+  mostra "preço sob consulta" e trata tudo como disponível.
+- Fotos: ficam no S3 do ERP (públicas). Foto cadastrada no ERP aparece no
+  site na próxima sincronização. Sem foto, o site usa a ilustração.
+- Se o ERP falhar (fora do ar, lista vazia, metade das fichas sem resposta,
+  login recusado), o catálogo anterior continua no ar e o erro aparece no
+  painel, aba **Catálogo (ERP)**, que também tem o botão "Sincronizar agora".
+- `/sitemap-produtos.xml` lista uma URL por produto (está no `robots.txt`).
 
-- **Catálogo Virtual é B2B e exige login do cliente.**
-  `app.empresarius.com.br/catalogo/26de729a-.../produtos` redireciona para `/login`.
-  Sem login não há JSON de produtos acessível.
-  Configuração em: **Lojas Virtuais > Configurações > Catálogo Virtual**.
-- **Não há API pública documentada.** A IA do ERP não sabe nada sobre API REST,
-  webhooks, feeds (JSON/XML/CSV), tokens ou iframe. Mandou falar com o suporte humano.
-- **Integração WooCommerce existe** (Lojas Virtuais > Configurações > WooCommerce),
-  sem detalhes técnicos. Usá-la exigiria configurar o ERP, por isso ficou de fora.
-- **Importação em Excel existe**; a exportação de produtos provavelmente também,
-  mas a IA não soube dizer onde.
-- O site já está preparado: `assets/js/data.js` diz para trocar `window.CATALOGO`
-  por `fetch('/api/produtos')`. Essa rota **ainda não existe** em `server/api.js`.
+## Configuração (variáveis do servidor)
 
-## Próximos passos
+| Variável | Padrão | O que faz |
+|---|---|---|
+| `ERP_EMAIL` / `ERP_SENHA` | — | usuário do ERP só para o site |
+| `ERP_INTERVALO_HORAS` | `12` | horas entre as sincronizações |
+| `ERP_AUTO` | ligado | `0` = só sincroniza pelo botão do painel |
+| `ERP_URL` | API do Empresarius | os testes apontam para um ERP falso |
 
-### 1. Procurar a exportação no ERP (fazer primeiro)
-Na listagem de produtos (algo como **Cadastros > Produtos**), procurar:
-- botão/ícone **Exportar**, **Excel**, **Imprimir** ou **⋮** em cima da tabela;
-- menu **Relatórios > Produtos** (saída em Excel/PDF).
-
-Se achar: mandar ~5 linhas da planilha para mapear as colunas.
-
-### 2. Perguntar ao suporte humano da WME (WhatsApp/chamado)
+As credenciais ficam no arquivo `.env` da raiz (fora do git), que o
+`npm start` carrega (`node --env-file-if-exists=.env`). Em outro servidor,
+crie o `.env` lá ou defina as variáveis no painel da hospedagem:
 
 ```
-Olá! Preciso de duas informações:
-1) Como exporto o cadastro de produtos para Excel/CSV (com código, nome,
-   descrição, grupo, unidade, preço, estoque e link da foto)?
-2) Vocês têm API ou feed (JSON/XML) para meu site próprio consultar os
-   produtos automaticamente? Se sim, como libero e qual o custo?
-   Também queria saber se o Catálogo Virtual pode ser público, sem login.
+ERP_EMAIL=usuario-do-site@...
+ERP_SENHA=...
 ```
 
-Central de ajuda: https://cloud.wmesistemas.com/index.php/category/integracoes/
+Sem `ERP_EMAIL`/`ERP_SENHA` o servidor não sincroniza. O site mostra o
+último catálogo gravado em `produtos_erp` ou, se a tabela estiver vazia, o
+catálogo de exemplo do `data.js`.
 
-## Opções de integração (da mais segura para a menos)
+### Usuário do site no ERP
 
-1. **Planilha → importador (recomendada).** Exporta do ERP e roda um comando
-   (`npm run importar-produtos arquivo.csv`, a criar) que grava no SQLite e expõe
-   `GET /api/produtos`. Zero dependências. Reimportar sempre que mudar algo no ERP.
-2. **Botão "Fazer pedido no catálogo"** levando o cliente já cadastrado ao
-   Catálogo Virtual. Não integra dados, mas é imediato.
-3. **API da WME**, se o suporte liberar token: sincronização automática. Só troca
-   a fonte de dados do importador; o resto do site fica igual.
-4. ~~Ler o catálogo logado automaticamente~~: não fazer. Exigiria guardar senha no
-   servidor e quebraria com qualquer mudança no sistema deles.
+Criado em 30/09/2026 em **Cadastros > Usuários**, com **Opções (⋮) >
+Permissões > Menu** marcando só **Estoque > Produtos** e com o **2FA por
+WhatsApp desligado** (com ele ligado, o login automático trava pedindo
+código). Testado: entra sem código e lê a lista e as fichas.
+
+O ERP não tem permissão "somente leitura": libera ou esconde telas. Quem
+tiver essa senha consegue editar produtos dentro do ERP — por isso ninguém
+usa este usuário para entrar no sistema, e o site só faz login e GET
+(travado em `server/erp.test.js`). Motivos para ter um usuário próprio:
+
+- a senha fica guardada no servidor; se vazar, o estrago fica limitado a ler
+  produtos;
+- trocar a senha de uma pessoa não derruba o site, nem o contrário;
+- o histórico do ERP mostra o que foi acesso do site.
+
+A conta tem 7 usuários ativos num plano de 3 licenças, o que indica que a
+licença conta acessos simultâneos. Se alguém da equipe receber aviso de
+limite de licenças na hora em que o servidor sincroniza, é isso.
+
+## O que ainda é genérico
+
+- **Calculadora de consumo:** continua estimando com os 42 itens de exemplo
+  do `data.js` (ficam em `window.CATALOGO_REFERENCIA`). Os itens que ela
+  manda para o orçamento são genéricos ("Detergente Neutro 500ml"), e o
+  vendedor escolhe o produto real. Próximo passo possível: ligar cada item
+  da calculadora a um produto do ERP.
+- **Links antigos de categoria** (`?cat=cozinha` no rodapé, landings e blog)
+  caem no grupo mais próximo (`CATEGORIA_ANTIGA` em `catalogo.js`). Os textos
+  desses links ainda usam os nomes antigos.
+- **"Mais vendidos" da home:** são os mais pedidos nos orçamentos do site
+  (180 dias). Enquanto houver poucos pedidos, completa com produtos com foto
+  de categorias diferentes.
+- Nomes vêm do ERP sem acento ("Agua Sanitaria"); a busca do site ignora
+  acento, mas a exibição depende do cadastro no ERP.
+
+## Histórico da decisão
+
+Em 30/09/2026 foram avaliados: exportação manual por planilha, Catálogo
+Virtual do ERP (exige login do cliente e a configuração está bloqueada no
+plano), integrações prontas (WooCommerce, Nuvemshop etc., que exigiriam
+configurar o ERP) e leitura pela API interna. A loja escolheu a leitura pela
+API interna com usuário dedicado. Risco aceito: a API não é documentada e
+pode mudar sem aviso; se mudar, a sincronização falha, o painel mostra o
+erro e o site segue com o último catálogo bom.

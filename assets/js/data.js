@@ -1,15 +1,14 @@
 /* =========================================================================
-   ATACADO POLVO - Catalogo (mock)
+   ATACADO POLVO - Catalogo de exemplo
    -------------------------------------------------------------------------
-   Enquanto nao existe backend, o catalogo vive neste arquivo. Quando a API
-   entrar, basta trocar a leitura de window.CATALOGO por um fetch:
+   Os produtos de verdade vem do ERP: as paginas carregam /catalogo-erp.js
+   logo depois deste arquivo, e ele troca window.CATALOGO pelo catalogo
+   sincronizado (server/erp.js). Este arquivo continua valendo para:
 
-       const res  = await fetch('/api/produtos');
-       const data = await res.json();
-
-   O formato de cada produto ja segue o que a API deveria devolver.
-   (Nao usamos fetch de um .json local porque o navegador bloqueia
-   requisicoes file:// por CORS — assim o site abre com duplo clique.)
+   - o site sem ERP configurado (ou aberto com duplo clique, sem servidor);
+   - a calculadora de consumo, que estima com os itens genericos daqui
+     (ficam em window.CATALOGO_REFERENCIA quando o catalogo do ERP entra);
+   - window.artProduto, a ilustracao de quem ainda nao tem foto.
    ========================================================================= */
 
 window.CATALOGO = {
@@ -150,4 +149,12 @@ window.artProduto = function (tipo, cor) {
   return `<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     ${shapes[tipo] || shapes.bottle}
   </svg>`;
+};
+
+/* Imagem do produto: a foto do ERP quando existe, senao a ilustracao.
+   A URL ja chega filtrada pelo servidor (so o S3 do ERP passa). */
+window.imagemProduto = function (p, cor) {
+  return p && p.foto
+    ? `<img class="prod-foto" src="${p.foto}" alt="" loading="lazy" decoding="async">`
+    : window.artProduto(p && p.art, cor);
 };

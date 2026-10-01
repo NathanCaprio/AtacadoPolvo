@@ -16,3 +16,5 @@ Disallow: /orcamento.html
 Disallow: /api/
 
 Sitemap: https://www.atacadopolvo.com.br/sitemap.xml
+# Uma URL por produto do ERP, gerada pelo servidor (server/erp.js).
+Sitemap: https://www.atacadopolvo.com.br/sitemap-produtos.xml

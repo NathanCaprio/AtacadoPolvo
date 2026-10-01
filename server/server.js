@@ -18,6 +18,7 @@ const path = require('node:path');
 const { tratarApi } = require('./api');
 const { limparSessoes, ARQUIVO } = require('./db');
 const backup = require('./backup');
+const erp = require('./erp');
 
 const RAIZ = path.join(__dirname, '..');
 const PORTA = Number(process.env.PORTA || 3000);
@@ -48,7 +49,8 @@ const CSP = [
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  "img-src 'self' data:",
+  // Fotos dos produtos: vêm do ERP e ficam no S3 dele (server/erp.js).
+  `img-src 'self' data: ${erp.ORIGEM_FOTOS}`,
   "connect-src 'self'",
   "form-action 'self'",
   // Os mapas das duas lojas em contato.html. Sem isto o iframe é bloqueado
@@ -170,6 +172,8 @@ servidor.listen(PORTA, HOST, () => {
 
   // Depois do listen, de propósito: se o backup travar, o site já está no ar.
   backup.agendar();
+  // Mesmo raciocínio: o ERP fora do ar não pode segurar o boot do site.
+  erp.agendar();
 });
 
 for (const sinal of ['SIGINT', 'SIGTERM']) {

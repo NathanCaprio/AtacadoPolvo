@@ -18,7 +18,19 @@
   const corDe = id => (categorias.find(c => c.id === id) || {}).cor || '#7B2FE3';
   const nomeDe = id => (categorias.find(c => c.id === id) || {}).nome || '';
 
-  const estado = { cat: 'todos', busca: '', ordem: 'relevancia' };
+  // Item que veio da calculadora de consumo: é genérico (catálogo de
+  // exemplo, data.js) e não existe no catálogo do ERP. Continua na lista e
+  // no pedido; o vendedor escolhe o produto equivalente.
+  const referencia = (window.CATALOGO_REFERENCIA || {}).produtos || [];
+  const acharProduto = id => produtos.find(x => x.id === id) || referencia.find(x => x.id === id);
+
+  // O ERP grava os nomes sem acento ("AGUA SANITARIA"): a busca ignora
+  // acento e maiúscula dos dois lados, senão "água" não acha nada.
+  const normalizar = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  // Mais de mil produtos num grid só travam o celular: desenha aos poucos.
+  const PAGINA = 48;
+  const estado = { cat: 'todos', busca: '', ordem: 'relevancia', limite: PAGINA };
 
   // Quem está logado, quando há backend. Decide se o convite para criar
   // conta aparece depois do envio — oferecer conta a quem já tem é ruído.
@@ -50,6 +62,7 @@
       const btn = e.target.closest('.filter-btn');
       if (!btn) return;
       estado.cat = btn.dataset.cat;
+      estado.limite = PAGINA;
       $$('.filter-btn', ul).forEach(b => b.classList.toggle('is-active', b === btn));
       render();
     });
@@ -57,13 +70,14 @@
 
   /* ---- Render do grid ---------------------------------------------------- */
   function filtrar() {
-    const termo = estado.busca.trim().toLowerCase();
+    const termo = normalizar(estado.busca.trim());
     let out = produtos.filter(p => {
       const okCat = estado.cat === 'todos' || p.cat === estado.cat;
       const okBusca = !termo ||
-        p.nome.toLowerCase().includes(termo) ||
-        p.desc.toLowerCase().includes(termo) ||
-        nomeDe(p.cat).toLowerCase().includes(termo);
+        normalizar(p.nome).includes(termo) ||
+        normalizar(p.desc).includes(termo) ||
+        normalizar(nomeDe(p.cat)).includes(termo) ||
+        normalizar(p.id) === termo;
       return okCat && okBusca;
     });
 
@@ -87,14 +101,13 @@
     const link = `produto.html?id=${p.id}`;
 
     return `<article class="prod">
-      <a class="prod-art" href="${link}" tabindex="-1" aria-hidden="true">${tag}${window.artProduto(p.art, cor)}</a>
+      <a class="prod-art" href="${link}" tabindex="-1" aria-hidden="true">${tag}${window.imagemProduto(p, cor)}</a>
       <div class="prod-body">
         <span class="prod-cat">${nomeDe(p.cat)}</span>
         <h3><a class="prod-link" href="${link}">${p.nome}</a></h3>
         <p class="prod-desc">${p.desc}</p>
         <div class="prod-meta">
-          <span class="chip">${p.emb}</span>
-          <span class="chip">${p.caixa}</span>
+          ${[p.emb, p.caixa].filter(Boolean).map(t => `<span class="chip">${t}</span>`).join('')}
         </div>
         <div class="prod-foot">
           <button class="btn btn--sm ${naLista ? 'btn--ghost' : 'btn--primary'} btn--block" data-add="${p.id}">
@@ -115,13 +128,29 @@
         : `${itens.length} produtos encontrados`;
     }
 
+    // Grid de relacionados (lista fixa) não pagina.
+    const visiveis = grid.dataset.ids ? itens : itens.slice(0, estado.limite);
     grid.innerHTML = itens.length
-      ? itens.map(cardProduto).join('')
+      ? visiveis.map(cardProduto).join('')
       : `<div class="empty">
            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
            <h3>Nenhum produto encontrado</h3>
            <p>Tente outro termo ou selecione outra categoria.</p>
          </div>`;
+    atualizarMais(itens.length - visiveis.length);
+  }
+
+  let mais = null;
+  function atualizarMais(restantes) {
+    if (!mais) {
+      mais = document.createElement('div');
+      mais.className = 'prod-mais';
+      mais.innerHTML = '<button class="btn btn--ghost" type="button"></button>';
+      mais.firstChild.addEventListener('click', () => { estado.limite += PAGINA; render(); });
+      grid.after(mais);
+    }
+    mais.hidden = restantes <= 0;
+    mais.firstChild.textContent = `Ver mais produtos (${restantes})`;
   }
 
   /* ---- Drawer de orcamento ---------------------------------------------- */
@@ -165,10 +194,10 @@
 
     if (foot) foot.style.display = '';
     body.innerHTML = lista.map(i => {
-      const p = produtos.find(x => x.id === i.id);
+      const p = acharProduto(i.id);
       if (!p) return '';
       return `<div class="qi">
-        <div class="qi-art">${window.artProduto(p.art, corDe(p.cat))}</div>
+        <div class="qi-art">${window.imagemProduto(p, corDe(p.cat))}</div>
         <div class="qi-info">
           <b>${p.nome}</b>
           <span>${p.caixa}</span>
@@ -286,7 +315,7 @@
     const s = window.SITE || {};
 
     const itens = lista.map(i => {
-      const p = produtos.find(x => x.id === i.id) || {};
+      const p = acharProduto(i.id) || {};
       return { id: i.id, nome: p.nome || i.id, caixa: p.caixa || '', qtd: i.qtd };
     });
 
@@ -326,12 +355,12 @@
     let t;
     busca.addEventListener('input', e => {
       clearTimeout(t);
-      t = setTimeout(() => { estado.busca = e.target.value; render(); }, 180);
+      t = setTimeout(() => { estado.busca = e.target.value; estado.limite = PAGINA; render(); }, 180);
     });
   }
 
   const ordem = $('#ordem');
-  if (ordem) ordem.addEventListener('change', e => { estado.ordem = e.target.value; render(); });
+  if (ordem) ordem.addEventListener('change', e => { estado.ordem = e.target.value; estado.limite = PAGINA; render(); });
 
   if (fab)     fab.addEventListener('click', () => abrirDrawer(true));
   if (overlay) overlay.addEventListener('click', () => abrirDrawer(false));
@@ -407,8 +436,16 @@
   }
 
   /* ---- Categoria vinda da URL (?cat=cozinha) ------------------------------ */
+  // Rodapé, landings e blog ainda linkam as categorias do catálogo de
+  // exemplo (?cat=cozinha). Com o catálogo do ERP, cada uma cai no grupo
+  // mais próximo em vez de abrir "todos os produtos".
+  const CATEGORIA_ANTIGA = {
+    cozinha: 'limpeza', superficies: 'limpeza', profissional: 'limpeza',
+    banheiro: 'sanitarios', utensilios: 'vassouras'
+  };
   const url = new URLSearchParams(location.search);
-  const catUrl = url.get('cat');
+  let catUrl = url.get('cat');
+  if (catUrl && !categorias.some(c => c.id === catUrl)) catUrl = CATEGORIA_ANTIGA[catUrl];
   if (catUrl && categorias.some(c => c.id === catUrl)) estado.cat = catUrl;
 
   /* ---- Boot --------------------------------------------------------------- */

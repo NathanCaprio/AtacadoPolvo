@@ -1,6 +1,7 @@
 /* =========================================================================
-   ATACADO POLVO - Página de produto (produto.html?id=c01)
-   Lê o produto de data.js e preenche a página. A lista de orçamento e a
+   ATACADO POLVO - Página de produto (produto.html?id=<código do ERP>)
+   Lê o produto de window.CATALOGO (do ERP via /catalogo-erp.js, ou o de
+   exemplo de data.js) e preenche a página. A lista de orçamento e a
    gaveta são as do catalogo.js (window.orcamento), carregado depois deste
    arquivo: aqui só se diz quais ids entram no grid de relacionados.
    ========================================================================= */
@@ -31,14 +32,17 @@
 
   /* ---- SEO: título, descrição, canonical --------------------------------- */
   const titulo = `${p.nome} no atacado — Porto Alegre | Atacado Polvo`;
-  const descricao = `${p.nome}: ${p.desc} ${p.caixa}. Preço de atacado sob consulta — monte seu orçamento e receba a proposta pelo WhatsApp.`;
+  // Produto do ERP pode vir sem descrição e é vendido por "Unidade": a
+  // frase tem que fechar nos dois casos.
+  const descricao = `${p.nome}${p.desc ? ' — ' + p.desc : ''}. Vendido por ${p.caixa.toLowerCase()}. ` +
+    'Preço de atacado sob consulta — monte seu orçamento e receba a proposta pelo WhatsApp.';
   document.title = titulo;
   const meta = document.querySelector('meta[name="description"]');
   if (meta) meta.content = descricao;
   const canonical = $('#canonical');
   if (canonical) canonical.href = `https://www.atacadopolvo.com.br/produto.html?id=${p.id}`;
   const ogT = $('#og-title'); if (ogT) ogT.content = `${p.nome} — Atacado Polvo`;
-  const ogD = $('#og-desc');  if (ogD) ogD.content = p.desc;
+  const ogD = $('#og-desc');  if (ogD) ogD.content = p.desc || descricao;
 
   /* ---- Trilha ------------------------------------------------------------ */
   const trilhaCat = $('#pd-trilha-cat');
@@ -57,7 +61,7 @@
 
   const tag = p.tag === 'mais-vendido' ? '<span class="prod-tag">Mais vendido</span>'
             : p.tag === 'novo' ? '<span class="prod-tag prod-tag--new">Novidade</span>' : '';
-  $('#pd-art').innerHTML = tag + window.artProduto(p.art, cat.cor);
+  $('#pd-art').innerHTML = tag + window.imagemProduto(p, cat.cor);
 
   const linkCatEl = $('#pd-cat');
   linkCatEl.href = linkCat;
@@ -65,6 +69,10 @@
   texto('#pd-nome', p.nome);
   texto('#pd-desc', p.desc);
   texto('#pd-emb', p.emb);
+  if (!p.emb) {                                   // o ERP não tem embalagem
+    $('#pd-emb').parentElement.remove();
+    $('.pd-ficha').classList.add('pd-ficha--2');
+  }
   texto('#pd-caixa', p.caixa);
   texto('#pd-cod', p.id.toUpperCase());
 

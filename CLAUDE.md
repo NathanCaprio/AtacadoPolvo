@@ -15,7 +15,7 @@ instale pacotes nem proponha frameworks.
 
 ## Comandos
 ```bash
-npm start      # http://127.0.0.1:3000 (PORTA=8080 para trocar)
+npm start      # http://127.0.0.1:3000 (PORTA=8080 para trocar); lê .env (credenciais do ERP, fora do git)
 npm test       # node --test server/*.test.js testes/*.test.js
 npm run criar-admin -- "Nome" email@x.com
 npm run backup | backups | exportar | restaurar
@@ -25,7 +25,7 @@ npm run backup | backups | exportar | restaurar
 | Quero mudar... | Arquivo |
 |---|---|
 | Telefone, WhatsApp, endereço, redes | `assets/js/config.js` (único lugar; injetado via `data-site`, `data-wpp`, `data-tel`...) |
-| Catálogo de produtos | `assets/js/data.js` |
+| Catálogo de produtos | vem do ERP: `server/erp.js` (sync, grupos→categorias) → `/catalogo-erp.js`; `assets/js/data.js` = exemplo + itens da calculadora. Ver `INTEGRACAO-ERP.md` |
 | Coeficientes da calculadora | `assets/js/consumo.js` (novo segmento: bloco em `SEGMENTOS` + lista `SEGMENTOS` em `server/api.js`) |
 | Tema, menu, reveal, FAQ | `assets/js/main.js` |
 | Descontos dos planos recorrentes | `assets/js/config.js` (`descontoMensal/Semestral/Anual`) + números escritos em `recorrencia.html` |
@@ -50,4 +50,5 @@ Cada página tem seu JS homônimo em `assets/js/`.
 - Rotas de admin exigem 401/403 corretos e travas anti-lockout (último admin) — testes cobrem isso.
 - Nova LP: `data-segmento` do form precisa estar em `SEGMENTOS` (`server/api.js`) + rótulo em `admin.js` + `.selo--*`/`.funil-barra--*` no CSS + `sitemap.xml`.
 - `npm test` pode pegar um Node antigo de uma pasta acima; use `node --test "server/*.test.js" "testes/*.test.js"`.
+- **ERP: só login e GET.** Nunca chamar rota que grave no Empresarius; `server/erp.test.js` trava isso.
 - Textos, nomes de funções e comentários são em **português**; mantenha o padrão.

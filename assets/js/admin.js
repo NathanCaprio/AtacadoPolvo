@@ -830,9 +830,77 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     return tr;
   }
 
+  /* ---- Catálogo do ERP ------------------------------------------------------
+     A sincronização leva perto de um minuto e roda no servidor; o botão só
+     dispara, e a aba consulta a situação a cada 3 s até ela terminar.      */
+
+  const SITUACAO_ERP = { ok: 'Concluída', erro: 'Falhou', rodando: 'Rodando…' };
+
+  function linhaErp(h) {
+    const tr = el('tr');
+    tr.append(
+      el('td', '', data(h.inicio, true)),
+      el('td', '', SITUACAO_ERP[h.situacao] || h.situacao),
+      el('td', '', h.produtos == null ? '—' : String(h.produtos)),
+      el('td', '', h.comFoto == null ? '—' : String(h.comFoto)),
+      el('td', '', h.mensagem ||
+        (h.falhas ? `${h.falhas} ficha(s) sem resposta; ficaram com os dados anteriores` : ''))
+    );
+    return tr;
+  }
+
+  function desenharErp(s) {
+    const botao = $('#erp-sincronizar');
+    const resumo = $('#erp-situacao');
+    if (!s) { resumo.textContent = 'Não deu para ler a situação do ERP.'; return; }
+
+    botao.disabled = !s.configurado || s.rodando;
+    botao.textContent = s.rodando ? 'Sincronizando…' : 'Sincronizar agora';
+
+    if (!s.configurado) {
+      resumo.textContent = 'ERP não configurado no servidor (ERP_EMAIL e ERP_SENHA): ' + (s.produtos
+        ? `sem sincronização; o site segue com o último catálogo gravado (${s.produtos} produtos).`
+        : 'o site mostra o catálogo de exemplo.');
+    } else if (!s.produtos) {
+      resumo.textContent = s.rodando ? 'Primeira sincronização em andamento…'
+        : 'Nenhum produto sincronizado ainda: o site mostra o catálogo de exemplo.';
+    } else {
+      resumo.textContent = `${s.produtos} produtos no site, ${s.comFoto} com foto` +
+        (s.ultimaOk ? ` · atualizado em ${data(s.ultimaOk.fim, true)}` : '') +
+        (s.automatico ? ` · automático a cada ${s.intervaloHoras} h` : ' · automático desligado');
+    }
+
+    preencher($('#linhas-erp'), s.historico, linhaErp, 'Nenhuma sincronização ainda.', 5);
+  }
+
+  let acompanhando = null;
+  async function acompanharErp() {
+    clearTimeout(acompanhando);
+    acompanhando = null;
+    try {
+      const s = await window.API.pedir('/api/admin/erp');
+      desenharErp(s);
+      if (s.rodando) { acompanhando = setTimeout(acompanharErp, 3000); return; }
+      const h = s.historico[0];
+      if (h && h.situacao === 'ok') mostrarAviso(`Catálogo atualizado: ${h.produtos} produtos.`);
+      else if (h) mostrarAviso(`A sincronização falhou: ${h.mensagem || 'erro desconhecido'}`, false);
+    } catch (e) {
+      mostrarAviso(e.message || 'Não deu para acompanhar a sincronização.', false);
+    }
+  }
+
+  $('#erp-sincronizar').addEventListener('click', async () => {
+    try {
+      desenharErp(await window.API.pedir('/api/admin/erp/sincronizar', { metodo: 'POST' }));
+      acompanhando = setTimeout(acompanharErp, 3000);
+    } catch (e) {
+      mostrarAviso(e.message || 'Não deu para iniciar a sincronização.', false);
+    }
+  });
+
   /* ---- Abas ---------------------------------------------------------------- */
 
-  const ABAS = ['orcamentos', 'mensagens', 'clientes'];
+  const ABAS = ['orcamentos', 'mensagens', 'clientes', 'erp'];
 
   function trocarAba(alvo) {
     for (const nome of ABAS) {
@@ -866,12 +934,17 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
   }
 
   async function carregar() {
-    const [resumo, cli, orc, msg] = await Promise.all([
+    const [resumo, cli, orc, msg, erpSit] = await Promise.all([
       window.API.admin.resumo(),
       window.API.admin.clientes(),
       window.API.pedir('/api/admin/orcamentos'),
-      window.API.pedir('/api/admin/mensagens')
+      window.API.pedir('/api/admin/mensagens'),
+      // A aba do ERP não pode derrubar o painel inteiro se falhar.
+      window.API.pedir('/api/admin/erp').catch(() => null)
     ]);
+
+    desenharErp(erpSit);
+    if (erpSit && erpSit.rodando && !acompanhando) acompanhando = setTimeout(acompanharErp, 3000);
 
     desenharMetricas(resumo);
     desenharEvolucao(resumo.porMes);

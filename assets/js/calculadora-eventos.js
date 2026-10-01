@@ -11,6 +11,10 @@
   const raiz = document.querySelector('[data-calculadora]');
   if (!raiz || !window.CONSUMO_EVENTO || !window.CATALOGO) return;
 
+  // Itens genéricos de data.js; com o catálogo do ERP no ar, ficam em
+  // CATALOGO_REFERENCIA (ver calculadora.js).
+  const catalogo = window.CATALOGO_REFERENCIA || window.CATALOGO;
+
   const $  = (sel, ctx) => (ctx || document).querySelector(sel);
   const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
 
@@ -141,7 +145,7 @@
   function calcular() {
     valores = lerValores();
     try {
-      ultimo = window.CONSUMO_EVENTO.calcular(valores, window.CATALOGO);
+      ultimo = window.CONSUMO_EVENTO.calcular(valores, catalogo);
     } catch (e) {
       elRes.hidden = true;
       return;

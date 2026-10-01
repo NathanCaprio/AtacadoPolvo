@@ -22,6 +22,10 @@
   const raiz = document.querySelector('[data-calculadora]');
   if (!raiz || !window.CONSUMO || !window.CATALOGO) return;
 
+  // O modelo cita os itens genéricos de data.js (c01, b01...). Com o
+  // catálogo do ERP no ar eles ficam em CATALOGO_REFERENCIA.
+  const catalogo = window.CATALOGO_REFERENCIA || window.CATALOGO;
+
   const $  = (sel, ctx) => (ctx || document).querySelector(sel);
   const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
 
@@ -221,7 +225,7 @@
   function calcular() {
     valores = lerValores();
     try {
-      ultimo = window.CONSUMO.calcular(segmento, valores, window.CATALOGO);
+      ultimo = window.CONSUMO.calcular(segmento, valores, catalogo);
     } catch (e) {
       // Catálogo fora de sincronia com o modelo: melhor sumir com a seção do
       // que mostrar uma lista pela metade e o cliente pedir errado.
