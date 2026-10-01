@@ -71,8 +71,9 @@
   /* ---- Render do grid ---------------------------------------------------- */
   function filtrar() {
     const termo = normalizar(estado.busca.trim());
+    const cats = estado.cat.split(',');     // ?cat=vassouras,panos (cards das landings)
     let out = produtos.filter(p => {
-      const okCat = estado.cat === 'todos' || p.cat === estado.cat;
+      const okCat = estado.cat === 'todos' || cats.includes(p.cat);
       const okBusca = !termo ||
         normalizar(p.nome).includes(termo) ||
         normalizar(p.desc).includes(termo) ||
@@ -436,26 +437,32 @@
   }
 
   /* ---- Categoria vinda da URL (?cat=cozinha) ------------------------------ */
-  // Rodapé, landings e blog ainda linkam as categorias do catálogo de
-  // exemplo (?cat=cozinha). Com o catálogo do ERP, cada uma cai no grupo
-  // mais próximo em vez de abrir "todos os produtos".
+  // Links de antes do catálogo do ERP (?cat=cozinha) que ainda podem estar
+  // no Google ou em mensagens: cada um cai no grupo mais próximo em vez de
+  // abrir "todos os produtos". As páginas do site já linkam os grupos.
   const CATEGORIA_ANTIGA = {
     cozinha: 'limpeza', superficies: 'limpeza', profissional: 'limpeza',
-    banheiro: 'sanitarios', utensilios: 'vassouras'
+    banheiro: 'limpeza,sanitarios', utensilios: 'vassouras,baldes-e-mops,panos,esponjas'
   };
+  const existe = id => categorias.some(c => c.id === id);
   const url = new URLSearchParams(location.search);
-  let catUrl = url.get('cat');
-  if (catUrl && !categorias.some(c => c.id === catUrl)) catUrl = CATEGORIA_ANTIGA[catUrl];
-  if (catUrl && categorias.some(c => c.id === catUrl)) estado.cat = catUrl;
+  const pedidas = (url.get('cat') || '').split(',')
+    .flatMap(id => existe(id) ? [id] : (CATEGORIA_ANTIGA[id] || '').split(','))
+    .filter(existe);
+  if (pedidas.length) estado.cat = [...new Set(pedidas)].join(',');
+
+  // ?busca=5l: o card "Linha profissional" das landings abre só os galões.
+  const buscaUrl = (url.get('busca') || '').slice(0, 60);
+  if (buscaUrl) {
+    estado.busca = buscaUrl;
+    if (busca) busca.value = buscaUrl;
+  }
 
   /* ---- Boot --------------------------------------------------------------- */
   montarFiltros();
   if (estado.cat !== 'todos') {
-    const b = $(`.filter-btn[data-cat="${estado.cat}"]`);
-    if (b) {
-      $$('.filter-btn').forEach(x => x.classList.remove('is-active'));
-      b.classList.add('is-active');
-    }
+    const cats = estado.cat.split(',');
+    $$('.filter-btn').forEach(b => b.classList.toggle('is-active', cats.includes(b.dataset.cat)));
   }
   atualizarFab();
   renderDrawer();

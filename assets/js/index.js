@@ -86,7 +86,13 @@
   const grid = document.getElementById("cat-grid");
   if (!grid || !window.CATALOGO) return;
 
-  grid.innerHTML = window.CATALOGO.categorias
+  // 24 cards empurram o resto da home para longe: os 8 primeiros grupos
+  // (ordem de GRUPOS em server/erp.js) viram card, o resto vira link.
+  const PRINCIPAIS = 8;
+  const todas = window.CATALOGO.categorias;
+
+  grid.innerHTML = todas
+    .slice(0, PRINCIPAIS)
     .map(
       (c, i) => `
 <a class="cat-card" href="produtos.html?cat=${c.id}" style="--cat:${c.cor}" data-reveal="${i * 60}">
@@ -97,6 +103,17 @@
 </a>`,
     )
     .join("");
+
+  const mais = document.getElementById("cat-mais");
+  if (mais && todas.length > PRINCIPAIS) {
+    mais.innerHTML =
+      '<span class="cat-mais-titulo">Mais categorias:</span>' +
+      todas
+        .slice(PRINCIPAIS)
+        .map((c) => `<a class="chip" href="produtos.html?cat=${c.id}">${c.nome}</a>`)
+        .join("");
+    mais.hidden = false;
+  }
 
   // Os cards entram depois do boot, entao observamos de novo
   if ("IntersectionObserver" in window) {

@@ -74,9 +74,15 @@ limite de licenças na hora em que o servidor sincroniza, é isso.
   manda para o orçamento são genéricos ("Detergente Neutro 500ml"), e o
   vendedor escolhe o produto real. Próximo passo possível: ligar cada item
   da calculadora a um produto do ERP.
-- **Links antigos de categoria** (`?cat=cozinha` no rodapé, landings e blog)
-  caem no grupo mais próximo (`CATEGORIA_ANTIGA` em `catalogo.js`). Os textos
-  desses links ainda usam os nomes antigos.
+- **Links de categoria:** rodapé, landings e blog já apontam para os grupos
+  do ERP. Os cards das landings abrem vários grupos de uma vez
+  (`?cat=vassouras,panos`) e o "Linha profissional" abre os galões
+  (`?cat=limpeza&busca=5l`). Link antigo que ainda esteja no Google
+  (`?cat=cozinha`) cai no grupo mais próximo (`CATEGORIA_ANTIGA` em
+  `catalogo.js`). Se um grupo mudar de id em `GRUPOS`, procure o id antigo
+  nos `.html`.
+- **Home:** os 8 primeiros grupos de `GRUPOS` viram card; os outros aparecem
+  como links logo abaixo.
 - **"Mais vendidos" da home:** são os mais pedidos nos orçamentos do site
   (180 dias). Enquanto houver poucos pedidos, completa com produtos com foto
   de categorias diferentes.

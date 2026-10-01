@@ -251,7 +251,7 @@ sozinha a partir da declaração — não há HTML nem CSS por segmento.
 
 - Tema claro/escuro com detecção do sistema e alternância manual (salva em `localStorage`)
 - Menu mobile, header sticky, animação de entrada ao rolar, contadores animados
-- Catálogo com filtro por categoria, busca, ordenação e deep link (`produtos.html?cat=cozinha`)
+- Catálogo com filtro por categoria, busca, ordenação e deep link (`produtos.html?cat=limpeza`, vários grupos com `?cat=papeis,sacos-de-lixo`, busca com `&busca=5l`)
 - Lista de orçamento persistida no navegador, que gera uma mensagem pronta de WhatsApp
 - Calculadora de consumo mensal por porte, que vira lista de orçamento, mensagem
   de WhatsApp, folha impressa ou lead com a estimativa anexada

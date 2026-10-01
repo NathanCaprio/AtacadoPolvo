@@ -195,7 +195,8 @@ button {
 }
 /* Duas seções seguidas com o mesmo fundo: sem isso o espaço dobra
    (padding de baixo de uma + de cima da outra). */
-.section:not(.section--tint):not(.section--ink) + .section:not(.section--tint):not(.section--ink),
+.section:not(.section--tint):not(.section--ink)
+  + .section:not(.section--tint):not(.section--ink),
 .section--tint + .section--tint {
   padding-top: 0;
 }
@@ -933,6 +934,36 @@ p {
   transform: translateX(4px);
 }
 
+/* Home: os grupos que não viraram card, em linha, abaixo do grid */
+.cat-mais {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+}
+.cat-mais[hidden] {
+  display: none;
+}
+.cat-mais-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-right: 4px;
+}
+.cat-mais .chip {
+  font-size: 0.85rem;
+  padding: 7px 13px;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+.cat-mais .chip:hover,
+.cat-mais .chip:focus-visible {
+  background: var(--brand);
+  color: #fff;
+}
+
 /* Numeros */
 .stats {
   display: grid;
@@ -1329,11 +1360,9 @@ select.input {
 }
 .prod-art {
   position: relative;
-  aspect-ratio: 1/1;
-  display: grid;
-  place-items: center;
   padding: 26px;
   background: var(--surface-2);
+  height: 280px;
 }
 .prod-art svg {
   width: 70%;
@@ -1345,8 +1374,8 @@ select.input {
 .prod-foto {
   width: 100%;
   height: 100%;
-  object-fit: contain;
   border-radius: var(--r-md);
+  object-fit: contain;
 }
 .vitrine-art .prod-foto,
 .pd-art .prod-foto {
@@ -2055,7 +2084,9 @@ textarea.input {
   color: var(--accent);
   font-size: 0.88rem;
   font-weight: 600;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 .footer-grupo:hover {
   background: var(--accent);
@@ -4094,11 +4125,18 @@ textarea.input {
   gap: 24px;
   padding: clamp(28px, 3.4vw, 44px);
   background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--brand) 22%, transparent), transparent 55%),
+    radial-gradient(
+      circle at 100% 0%,
+      color-mix(in srgb, var(--brand) 22%, transparent),
+      transparent 55%
+    ),
     var(--brand-soft);
   border: 1.5px solid color-mix(in srgb, var(--brand) 35%, transparent);
   box-shadow: var(--shadow-md);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 .calc-convite--destaque:hover {
   transform: translateY(-4px);
@@ -4181,8 +4219,16 @@ textarea.input {
   overflow: hidden;
   padding-block: clamp(40px, 5.5vw, 68px);
   background:
-    radial-gradient(ellipse at 85% 0%, rgba(185, 59, 232, 0.45), transparent 55%),
-    radial-gradient(ellipse at 10% 100%, rgba(123, 47, 227, 0.4), transparent 55%),
+    radial-gradient(
+      ellipse at 85% 0%,
+      rgba(185, 59, 232, 0.45),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 10% 100%,
+      rgba(123, 47, 227, 0.4),
+      transparent 55%
+    ),
     #1b0733;
   color: #fff;
 }
@@ -4979,7 +5025,9 @@ section.marcas {
   place-items: center;
   border-radius: 50%;
   color: var(--ink-3);
-  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
 }
 .cupom-fechar:hover {
   background: var(--surface-2);
@@ -5221,7 +5269,9 @@ section.marcas {
   gap: 24px;
 }
 @media (max-width: 900px) {
-  .blog-grid { grid-template-columns: 1fr; }
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .blog-card {
   background: var(--surface);
@@ -5231,7 +5281,9 @@ section.marcas {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: transform 0.22s var(--ease), border-color 0.22s var(--ease);
+  transition:
+    transform 0.22s var(--ease),
+    border-color 0.22s var(--ease);
 }
 .blog-card:hover {
   transform: translateY(-4px);
@@ -5380,22 +5432,67 @@ section.marcas {
   font-size: 1.35rem;
   color: var(--ink);
 }
-.evolucao-cartao span { font-size: 0.8rem; color: var(--ink-3); line-height: 1.4; }
-.evolucao-delta { font-weight: 700; font-size: 0.8rem; color: var(--ink-3); }
-.evolucao-delta.sobe { color: var(--ok); }
-.evolucao-delta.desce { color: var(--danger); }
-.evolucao-grafico svg { width: 100%; height: auto; display: block; overflow: visible; }
-.evo-eixo { stroke: var(--line-strong); }
-.evo-media { stroke: var(--ink-3); stroke-dasharray: 4 4; opacity: 0.6; }
-.evo-alvo { fill: transparent; }
-.evo-barra { cursor: pointer; outline: none; }
-.evo-barra rect:not(.evo-alvo) { fill: var(--brand); opacity: 0.45; transition: opacity 0.2s; }
+.evolucao-cartao span {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+.evolucao-delta {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+.evolucao-delta.sobe {
+  color: var(--ok);
+}
+.evolucao-delta.desce {
+  color: var(--danger);
+}
+.evolucao-grafico svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.evo-eixo {
+  stroke: var(--line-strong);
+}
+.evo-media {
+  stroke: var(--ink-3);
+  stroke-dasharray: 4 4;
+  opacity: 0.6;
+}
+.evo-alvo {
+  fill: transparent;
+}
+.evo-barra {
+  cursor: pointer;
+  outline: none;
+}
+.evo-barra rect:not(.evo-alvo) {
+  fill: var(--brand);
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}
 .evo-barra:hover rect:not(.evo-alvo),
 .evo-barra:focus-visible rect:not(.evo-alvo),
-.evo-barra.ativa rect:not(.evo-alvo) { opacity: 1; }
-.evo-barra:focus-visible .evo-alvo { stroke: var(--brand); stroke-dasharray: 3 3; }
-.evo-valor, .evo-mes { text-anchor: middle; font-size: 11px; fill: var(--ink-3); }
-.evo-barra.ativa .evo-valor { fill: var(--ink); font-weight: 700; }
+.evo-barra.ativa rect:not(.evo-alvo) {
+  opacity: 1;
+}
+.evo-barra:focus-visible .evo-alvo {
+  stroke: var(--brand);
+  stroke-dasharray: 3 3;
+}
+.evo-valor,
+.evo-mes {
+  text-anchor: middle;
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+.evo-barra.ativa .evo-valor {
+  fill: var(--ink);
+  font-weight: 700;
+}
 
 /* Confirmação no lugar do formulário de contato, depois do envio */
 .contato-ok {
@@ -5429,9 +5526,7 @@ section.marcas {
 /* =========================================================================
    Página de produto (produto.html)
    ========================================================================= */
-a.prod-art {
-  display: grid;
-}
+
 .prod-link {
   color: inherit;
 }

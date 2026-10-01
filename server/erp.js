@@ -267,7 +267,9 @@ const chave = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
 // ou fecharia atributo.
 const limpo = s => String(s || '').replace(/[<>]/g, '').replace(/"/g, '″').replace(/\s+/g, ' ').trim();
 
-/* Grupos do ERP, na ordem em que aparecem no site. Grupo novo criado no ERP
+/* Grupos do ERP, na ordem em que aparecem no site; os 8 primeiros viram card
+   na home. Os ids estão em links fixos dos .html (rodapé, landings): trocar
+   um id exige procurar o antigo nas páginas. Grupo novo criado no ERP
    aparece sozinho no fim, com nome automático; para dar nome, ícone (um de
    window.ICONS, em main.js) e texto, basta acrescentar uma linha aqui.     */
 const GRUPOS = [
