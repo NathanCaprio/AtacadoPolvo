@@ -109,8 +109,9 @@ h1, h2, h3,
 .header .line > *:not(.header-menu),
 .header .line > .header-menu { margin: 0; }
 
-/* Marca */
-.header .block-logo {
+/* Marca. "> .block-logo": precisa vencer o margin: 0 de cima, senão o menu não
+   vai para a direita e sobra espaço vazio no fim da linha em telas largas. */
+.header .line > .block-logo {
   order: 0;
   width: auto;
   margin-right: auto;
