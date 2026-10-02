@@ -51,6 +51,11 @@
 
           {{ content_for_layout }}
 
+        {% elseif pages.current == 'company' %}
+
+          {# Atacado Polvo: "A empresa" vem do tema (conteúdo do site antigo), não do texto do painel. #}
+          {% element 'snippets/polvo-empresa' %}
+
         {% else %}
 
           {% set special_pages = [ 'listas', 'depoimentos-de-clientes', 'noticias' ] %}

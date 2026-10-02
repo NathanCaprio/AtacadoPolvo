@@ -47,7 +47,18 @@
     <div class="copy">
         <div class="container flex align-center justify-between">
 
-            <div class="text">{{ Translation('ag_mensagem_rodape') }}</div>
+            {# Atacado Polvo: sem "mensagem do rodapé" no painel, vale o texto do tema (polvo_copy). #}
+            {% set polvo_copy = Translation('ag_mensagem_rodape') %}
+            <div class="text">
+                {% if polvo_copy %}
+                    {{ polvo_copy }}
+                {% elseif settings.footer.settings.polvo_copy %}
+                    &copy; {{ 'now'|date('Y') }} {{ settings.footer.settings.polvo_copy }}
+                    {% if settings.configs.instagram %}
+                        <span class="polvo-copy-insta">&middot; <a href="{{ settings.configs.instagram }}" target="_blank" rel="noopener">@atacadopolvo</a></span>
+                    {% endif %}
+                {% endif %}
+            </div>
 
             <div class="tray">
                 {% element 'snippets/credits' %}

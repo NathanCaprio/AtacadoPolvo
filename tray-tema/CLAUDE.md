@@ -28,6 +28,8 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 | Home (seções arrastáveis) | `pages/home.html` + `configs/editor/sections/home.*.json` + `elements/snippets/*.html` |
 | Cabeçalho (uma linha: marca, menu, Orçamento, lupa, conta, carrinho) | `elements/header.html` (menu dentro da `.line`) + `snippets/polvo-marca.html` (logo-head.svg fixo, ignora o logo do painel) + `snippets/polvo-header-acoes.html` (lupa abre a busca da Tray como painel, botão WhatsApp, marca a página atual); CSS em `polvo.css` seção 2. Menu = "Menu personalizado" em `settings.json` → `header.settings.navigation`. Até 1180px o menu vai para o ☰ |
 | Rodapé | `elements/footer.html` renderiza `settings.footer.blocks` (`snippets/<tipo>.html`). Nossos blocos: `polvo_footer_about` (marca, redes, grupo de ofertas), `polvo_footer_links` (Navegação/Categorias; no painel, um link por linha "Texto | /url"), `polvo_footer_contact` (endereço/horário; telefone e e-mail = dados da loja); definidos em `configs/editor/sections/footer.json`. `support` e `social_networks` desligados. Instagram = `settings.configs.instagram` |
+| Página "A empresa" (/empresa) | `snippets/polvo-empresa.html` (conteúdo do sobre.html antigo, fotos em `img/polvo/loja/`), no lugar do texto do painel: `layouts/default.html`, ramo `pages.current == 'company'` |
+| Linha final do rodapé | `footer.html` (.copy): mensagem do rodapé do painel ou, se vazia, `settings.footer.settings.polvo_copy` (CNPJ provisório) |
 | Botão flutuante de WhatsApp | `snippets/polvo-wpp-flutuante.html` (em `layouts/default.html`, só quando o nativo da Tray está desligado) |
 | Link de WhatsApp com mensagem | `snippets/polvo-wpp-url.html` (a Tray entrega acento como entidade: `Ol&aacute;`; ele converte) |
 | Cartão de produto / preço / selos | `elements/snippets/product.html`, `product-price.html`, `product-tags.html` |
@@ -82,12 +84,14 @@ de `server/tema-lp.js`). Teste: `server/tema-lp.test.js`.
 - Redirecionar quando o domínio virar (301 no painel da Tray): `/condominios.html`→`/condominios`,
   `/escolas.html`→`/escolas`, `/recorrencia.html`→`/recorrencia`, `/restaurantes.html`→`/restaurantes`,
   `/hoteis.html`→`/hoteis`, `/pets.html`→`/pets`, `/produtos.html`→busca vazia, `/index.html`→`/`.
-  Sem LP ainda: sobre, contato, blog (4 artigos), calculadoras, black friday.
+  "A empresa" foi para o tema (/empresa, não é LP). Sem equivalente ainda: blog (4 artigos),
+  calculadoras, black friday. Política de privacidade: **não** copiar a antiga (descreve o
+  servidor/ERP do site antigo, não a Tray); precisa de texto novo, decisão do usuário.
 
 ## Fica com o usuário no painel (não é tema)
 - Telefone/WhatsApp/e-mail do rodapé = dados da loja (hoje (51) 99526-6894 e e-mail pessoal; o oficial é (51) 98025-6547, ver `assets/js/config.js`).
 - Botão flutuante de WhatsApp = recurso nativo ("Ative o botão de WhatsApp na sua loja").
-- Banners. Texto da faixa do topo: `settings.json` → `header.settings.message_line_content` (editável no painel).
+- Banners (o "Destaque suas CATEGORIAS" no topo da busca/categorias é banner de exemplo do painel). Texto da faixa do topo: `settings.json` → `header.settings.message_line_content` (editável no painel).
 - Número do botão "Orçamento" do cabeçalho = WhatsApp dos dados da loja (`ag_telefone_3`), o mesmo do rodapé.
 
 ## Regras

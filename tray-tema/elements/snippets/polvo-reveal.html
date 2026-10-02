@@ -3,7 +3,7 @@
    2) Números do hero (+400, 24h, +850) contam de 0 até o valor.
    Os alvos são marcados aqui por seletor, para os snippets e as seções da Tray não
    precisarem de data-reveal. Sem JS ou com "reduzir movimento", tudo aparece parado.
-   Incluído no fim de pages/home.html. CSS em polvo-home.css ("Revelação ao rolar"). #}
+   Incluído no fim de pages/home.html e de snippets/polvo-empresa.html. CSS em polvo-home.css ("Revelação ao rolar"). #}
 <script>
 (function () {
     if (!('IntersectionObserver' in window)) return;
@@ -16,7 +16,9 @@
         ['.polvo-passos > .polvo-passo', 90, 4],
         ['.polvo-segmentos > .polvo-card', 90, 3],
         ['.polvo-chips, .polvo-cats__botao, .polvo-faixa, .polvo-faq, .polvo-cta, .polvo-clube__grid', 0, 1],
-        ['.polvo-sobre > *', 120, 2],
+        ['.polvo-sobre > *, .polvo-empresa__split > *', 120, 2],
+        ['.polvo-galeria__titulo, .polvo-galeria, .polvo-empresa__centro', 0, 1],
+        ['.polvo-valores > .polvo-valor', 90, 3],
         ['.polvo-infos', 0, 1]
     ];
 
@@ -34,11 +36,33 @@
         entradas.forEach(function (e) {
             if (!e.isIntersecting) return;
             var el = e.target;
+            el.polvoAgendado = true;
             setTimeout(function () { el.classList.add('is-in'); }, parseInt(el.getAttribute('data-polvo-reveal'), 10) || 0);
             io.unobserve(el);
         });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
     alvos.forEach(function (el) { io.observe(el); });
+
+    // Garantia: numa rolagem rápida o observer pode não ver um elemento passar, e ele
+    // ficaria invisível. A cada rolagem, o que já está na tela ou ficou para trás aparece.
+    var agendado = false;
+    function conferir() {
+        agendado = false;
+        alvos = alvos.filter(function (el) {
+            if (el.classList.contains('is-in') || el.polvoAgendado) return false;
+            if (el.getBoundingClientRect().top < window.innerHeight) {
+                el.classList.add('is-in');
+                io.unobserve(el);
+                return false;
+            }
+            return true;
+        });
+        if (!alvos.length) window.removeEventListener('scroll', aoRolar);
+    }
+    function aoRolar() {
+        if (!agendado) { agendado = true; setTimeout(conferir, 250); }
+    }
+    window.addEventListener('scroll', aoRolar, { passive: true });
 
     // Contadores: "+400" -> prefixo "+", 400, sufixo "".
     var contadores = new IntersectionObserver(function (entradas) {

@@ -1,0 +1,181 @@
+{# Atacado Polvo: página "A empresa" (/empresa), com o conteúdo do sobre.html do site antigo.
+   Entra no lugar do texto do painel (layouts/default.html, pages.current == 'company').
+   Fotos em img/polvo/loja/. CSS em polvo-home.css ("Página A empresa"). #}
+{% set polvo_wpp = Translation('ag_telefone_3') | replace({'(': '', ')': '', ' ': '', '-': ''}) %}
+{% set seta = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' %}
+{% set lojas = [
+  {
+    'nome': 'Unidade Medianeira', 'endereco': 'Av. Dr. Carlos Barbosa, 931',
+    'rota': 'https://www.google.com/maps/dir/?api=1&destination=-30.0637028,-51.2148319',
+    'fotos': [
+      ['medianeira-salao', 'Salão da unidade Medianeira com prateleiras de papel higiênico no alto e galões de limpeza embaixo', ''],
+      ['medianeira-papel', 'Corredor de papel higiênico com caixas fechadas empilhadas até o teto', ''],
+      ['medianeira-lixeiras', 'Prateleiras com lixeiras, baldes e sacos de lixo de vários tamanhos', ''],
+      ['medianeira-utensilios', 'Painel de vassouras, pás e rodos ao lado de prateleiras de panos', ''],
+      ['medianeira-descartaveis', 'Corredor de descartáveis e embalagens: potes, papel alumínio e copos', ''],
+      ['medianeira-balcao', 'Balcão de atendimento da unidade Medianeira', '']
+    ]
+  },
+  {
+    'nome': 'Unidade Bento Gonçalves', 'endereco': 'Av. Bento Gonçalves, 5928',
+    'rota': 'https://www.google.com/maps/dir/?api=1&destination=-30.0645425,-51.1590458',
+    'fotos': [
+      ['bento-vassouras', 'Parede de vassouras coloridas na unidade Bento Gonçalves', 'larga'],
+      ['bento-papel', 'Pilhas de fardos de papel higiênico e papel toalha', ''],
+      ['bento-aromatizantes', 'Gôndola de limpadores e aromatizantes, com galões de 5 litros na base', ''],
+      ['bento-panos', 'Expositor de panos de limpeza em várias cores', ''],
+      ['bento-corredor', 'Corredor de produtos de limpeza com baldes e lixeiras na prateleira de baixo', '']
+    ]
+  }
+] %}
+{% set valores = [
+  ['Missão', 'Abastecer o comércio com produto de limpeza de qualidade a preço de atacado, com o prazo que o cliente combinou, não o prazo que der.', '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>'],
+  ['Visão', 'Ser a distribuidora de limpeza mais confiável da região: a que o lojista chama primeiro quando o estoque aperta.', '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'],
+  ['Valores', 'Preço sem letra miúda, nota fiscal em todo pedido, produto com registro e a mesma pessoa te atendendo do primeiro ao centésimo pedido.', '<path d="M12 21s-7-4.5-9-9.5C1.6 7.6 4.5 4 8 4c1.9 0 3.2 1 4 2.2C12.8 5 14.1 4 16 4c3.5 0 6.4 3.6 5 7.5-2 5-9 9.5-9 9.5z"/>']
+] %}
+{% set trajetoria = [
+  ['2015', 'O primeiro galpão', '120 m² alugados, um veículo e trinta mercearias na carteira.'],
+  ['2018', 'Entrada no setor institucional', 'Primeiros contratos com condomínios e escolas. Nasce a linha de concentrados.'],
+  ['2021', 'Centro de distribuição próprio', 'Mudança para o galpão atual, com capacidade para mais de 400 itens em estoque.'],
+  ['2024', 'Frota e roteirização', 'Entrega própria em até 24h em Porto Alegre, com rota fixa por região.'],
+  ['Hoje', 'Mais de 850 clientes ativos', 'Mercados, restaurantes, hotéis, condomínios, escolas e revendedores.']
+] %}
+{% set estrutura = [
+  ['Centro de distribuição', 'Estoque climatizado e separado por linha, com controle de lote e validade para todo saneante.', '<path d="M3 21V9l9-6 9 6v12"/><path d="M8 21v-7h8v7M8 17h8"/>'],
+  ['Frota própria', 'Rotas fixas por região, com motorista que conhece o cliente e confere a mercadoria na entrega.', '<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>'],
+  ['Documentação em dia', 'Nota fiscal em todo pedido, produtos notificados na Anvisa e ficha técnica disponível sob solicitação.', '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 14l2 2 4-4"/>']
+] %}
+
+<div class="polvo-empresa">
+
+  <section class="polvo-secao polvo-empresa__intro">
+    <div class="container">
+      <div class="polvo-secao__cabeca polvo-secao__cabeca--esquerda">
+        <span class="polvo-eyebrow">A empresa</span>
+        <h1 class="polvo-empresa__titulo">Distribuímos limpeza. Vivemos de recorrência.</h1>
+        <p class="polvo-secao__sub">Existimos desde 2015 para resolver um problema simples e caro: comércio que fica sem produto de limpeza perde venda, perde cliente e perde alvará.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="polvo-secao polvo-empresa__historia">
+    <div class="container polvo-empresa__split">
+      <div class="polvo-empresa__texto">
+        <h2>Como começou</h2>
+        <p>A Atacado Polvo começou num galpão alugado de 120 m², com um Fiorino e uma lista de trinta mercearias. O fundador vendia de porta em porta os mesmos produtos que hoje saem de caminhão: detergente, água sanitária, saco de lixo e papel higiênico.</p>
+        <p>O nome veio de uma brincadeira dos primeiros clientes: “vocês têm braço pra tudo”. A gente gostou. O polvo tem oito braços, enxerga no escuro e se enfia em qualquer espaço, que é mais ou menos o que uma distribuidora precisa fazer para entregar no prazo em cidade grande.</p>
+        <p>Hoje são duas lojas em Porto Alegre, na Medianeira e na Av. Bento Gonçalves, com estoque próprio, frota própria e uma carteira de centenas de clientes ativos. Mudou a escala. Não mudou a regra: quem liga é atendido, e quem compra recebe.</p>
+      </div>
+      <div class="polvo-empresa__fachadas">
+        <figure class="polvo-foto">
+          <img src="{{ asset('img/polvo/loja/medianeira-fachada.webp') }}" alt="Fachada da unidade Medianeira, na Av. Dr. Carlos Barbosa: letreiro Atacado da Limpeza e produtos expostos na calçada" width="760" height="428" loading="lazy" decoding="async">
+          <figcaption><b>Unidade Medianeira</b> Av. Dr. Carlos Barbosa, 931</figcaption>
+        </figure>
+        <figure class="polvo-foto">
+          <img src="{{ asset('img/polvo/loja/bento-fachada.webp') }}" alt="Fachada da unidade Bento Gonçalves: letreiro Atacado da Limpeza com o WhatsApp da loja e produtos expostos na entrada" width="760" height="428" loading="lazy" decoding="async">
+          <figcaption><b>Unidade Bento Gonçalves</b> Av. Bento Gonçalves, 5928</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="polvo-secao">
+    <div class="container">
+      <div class="polvo-secao__cabeca">
+        <span class="polvo-eyebrow">Por dentro</span>
+        <h2 class="polvo-secao__titulo">As duas lojas, como elas são hoje</h2>
+        <p class="polvo-secao__sub">Sem cenário montado: é o que você encontra ao entrar em qualquer uma das duas unidades, em Porto Alegre.</p>
+      </div>
+
+      {% for loja in lojas %}
+        <h3 class="polvo-galeria__titulo">
+          {{ loja.nome }} <span>{{ loja.endereco }}</span>
+          <a class="polvo-galeria__rota" href="{{ loja.rota }}" target="_blank" rel="noopener">Como chegar {{ seta|raw }}</a>
+        </h3>
+        <div class="polvo-galeria">
+          {% for f in loja.fotos %}
+            <figure class="polvo-galeria__item{% if f[2] == 'larga' %} polvo-galeria__item--larga{% endif %}">
+              <img src="{{ asset('img/polvo/loja/' ~ f[0] ~ '.webp') }}" alt="{{ f[1] }}" loading="lazy" decoding="async">
+            </figure>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <p class="polvo-empresa__centro">
+        <a class="polvo-btn polvo-btn--primario" href="{{ links.contact }}">Ver endereços e contato {{ seta|raw }}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="polvo-secao polvo-secao--tinta">
+    <div class="container">
+      <div class="polvo-secao__cabeca">
+        <span class="polvo-eyebrow polvo-eyebrow--amarelo">O que nos guia</span>
+        <h2 class="polvo-secao__titulo">Missão, visão e valores</h2>
+      </div>
+      <div class="polvo-valores">
+        {% for v in valores %}
+          <div class="polvo-valor">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ v[2]|raw }}</svg> {{ v[0] }}</h3>
+            <p>{{ v[1] }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="polvo-secao">
+    <div class="container polvo-empresa__split polvo-empresa__split--trajetoria">
+      <div>
+        <span class="polvo-eyebrow">Trajetória</span>
+        <h2 class="polvo-secao__titulo">De um Fiorino a uma frota</h2>
+        <p class="polvo-secao__sub">Dez anos de crescimento feito com caixa próprio e cliente que volta.</p>
+      </div>
+      <ol class="polvo-linha-tempo">
+        {% for t in trajetoria %}
+          <li>
+            <time>{{ t[0] }}</time>
+            <h3>{{ t[1] }}</h3>
+            <p>{{ t[2] }}</p>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </section>
+
+  <section class="polvo-secao polvo-secao--tinta">
+    <div class="container">
+      <div class="polvo-secao__cabeca">
+        <span class="polvo-eyebrow polvo-eyebrow--amarelo">Estrutura</span>
+        <h2 class="polvo-secao__titulo">O que sustenta a entrega</h2>
+      </div>
+      <div class="polvo-segmentos">
+        {% for e in estrutura %}
+          <article class="polvo-card">
+            <span class="polvo-card__icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{{ e[2]|raw }}</svg></span>
+            <h3 class="polvo-card__titulo">{{ e[0] }}</h3>
+            <p class="polvo-card__texto">{{ e[1] }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="polvo-secao">
+    <div class="container">
+      <div class="polvo-cta polvo-cta--caixa">
+        <h2>Vamos abastecer seu estoque?</h2>
+        <p>Conte o que você vende ou administra e montamos uma lista inicial com os itens de maior giro para o seu perfil.</p>
+        <div class="polvo-hero__acoes">
+          {% if polvo_wpp %}
+            <a class="polvo-btn polvo-btn--claro" href="{% element 'snippets/polvo-wpp-url' { 'number': '55' ~ polvo_wpp, 'message': 'Olá! Vim pela loja e queria montar uma lista inicial para o meu negócio.' } %}" target="_blank" rel="noopener">Falar com um vendedor</a>
+          {% endif %}
+          <a class="polvo-btn polvo-btn--contorno" href="{{ links.search ~ '&palavra_busca=' }}">Ver os produtos {{ seta|raw }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+{% element 'snippets/polvo-reveal' %}
