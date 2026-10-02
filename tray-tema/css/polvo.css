@@ -289,16 +289,14 @@ h1, h2, h3,
   border-radius: 0 0 12px 12px;
 }
 
-/* Sem espaço para "Minha conta": vira botão redondo; Entrar/Cadastrar seguem no hover. */
-@media (max-width: 1439px) {
-  .header .account {
-    width: 40px;
-    padding: 0;
-    justify-content: center;
-  }
-
-  .header .account > div:not(.modal-white) { display: none; }
+/* Conta só com o ícone, em botão redondo (pedido do usuário); Entrar/Cadastrar seguem no hover. */
+.header .account {
+  width: 40px;
+  padding: 0;
+  justify-content: center;
 }
+
+.header .account > div:not(.modal-white) { display: none; }
 
 .header .cart-header .icon {
   font-size: 1.25rem;
