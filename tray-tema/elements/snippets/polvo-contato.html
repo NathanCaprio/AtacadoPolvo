@@ -1,0 +1,103 @@
+{# Atacado Polvo: página de contato como a do site antigo (contato.html): título, formulário
+   nativo da Tray à esquerda e, à direita, canais diretos, endereços/horários e mapas.
+   layouts/default.html chama duas vezes: parte 'intro' (antes do formulário) e 'lado' (depois).
+   O formulário continua sendo o da Tray (envio, captcha e máscara do page-contact.js).
+   CSS em polvo-home.css ("Página de contato"). #}
+{% set polvo_wpp = Translation('ag_telefone_3') %}
+{% set polvo_tel = Translation('ag_telefone_1') %}
+{% set polvo_email = Translation('ag_email_1') %}
+{% set unidades = [
+  {
+    'nome': 'Unidade Medianeira', 'endereco': 'Av. Dr. Carlos Barbosa, 931 - Medianeira - Porto Alegre/RS', 'foto': 'medianeira-fachada',
+    'alt': 'Fachada da unidade Medianeira: loja roxa com o letreiro Atacado da Limpeza, vassouras e lixeiras expostas na calçada',
+    'mapa': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4720.985801492775!2d-51.214831887822164!3d-30.063702774809286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9519795e0cd013f7%3A0x3baf50683990d951!2sAtacado%20da%20Limpeza%20Polvo%20-%20Matriz!5e1!3m2!1spt-BR!2sbr!4v1790254687284!5m2!1spt-BR!2sbr',
+    'rota': 'https://www.google.com/maps/dir/?api=1&destination=-30.0637028,-51.2148319'
+  },
+  {
+    'nome': 'Unidade Bento Gonçalves', 'endereco': 'Av. Bento Gonçalves, 5928 - Porto Alegre/RS', 'foto': 'bento-fachada',
+    'alt': 'Fachada da unidade Bento Gonçalves: letreiro Atacado da Limpeza com o WhatsApp da loja e produtos expostos na entrada',
+    'mapa': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4720.945752325955!2d-51.15904578782191!3d-30.064542474808974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95199d104b92e6a1%3A0x2cf1555d271facf3!2sAtacado%20da%20Limpeza%20Polvo!5e1!3m2!1spt-BR!2sbr!4v1790254649718!5m2!1spt-BR!2sbr',
+    'rota': 'https://www.google.com/maps/dir/?api=1&destination=-30.0645425,-51.1590458'
+  }
+] %}
+{% set ic = {
+  'wpp': '<path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.1-4.4A9 9 0 1 1 21 12z"/>',
+  'tel': '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  'mail': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  'insta': '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>',
+  'local': '<path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/>',
+  'relogio': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  'entrega': '<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>'
+} %}
+
+{% if parte == 'intro' %}
+  <div class="polvo-contato__intro polvo-secao__cabeca polvo-secao__cabeca--esquerda">
+    <span class="polvo-eyebrow">Contato</span>
+    <h1 class="polvo-contato__titulo">Fale com quem separa o seu pedido</h1>
+    <p class="polvo-secao__sub">Responda o formulário ou chame direto no WhatsApp. No horário comercial, o retorno costuma sair em poucos minutos.</p>
+  </div>
+{% else %}
+  <aside class="polvo-contato__lado">
+    <div class="polvo-contato__caixa">
+      <h3>Canais diretos</h3>
+      <ul class="polvo-contato__lista">
+        {% if polvo_wpp %}
+          <li>
+            <span class="polvo-contato__icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ ic.wpp|raw }}</svg></span>
+            <div><b>WhatsApp comercial</b><a href="{% element 'snippets/polvo-wpp-url' { 'number': '55' ~ (polvo_wpp | replace({'(': '', ')': '', ' ': '', '-': ''})), 'message': 'Olá! Vim pela loja.' } %}" target="_blank" rel="noopener">{{ polvo_wpp }}</a></div>
+          </li>
+        {% endif %}
+        {% if polvo_tel %}
+          <li>
+            <span class="polvo-contato__icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ ic.tel|raw }}</svg></span>
+            <div><b>Telefone</b><a href="tel:{{ polvo_tel | replace({'(': '', ')': '', ' ': '', '-': ''}) }}">{{ polvo_tel }}</a></div>
+          </li>
+        {% endif %}
+        {% if polvo_email %}
+          <li>
+            <span class="polvo-contato__icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ ic.mail|raw }}</svg></span>
+            <div><b>E-mail</b><a href="mailto:{{ polvo_email }}">{{ polvo_email }}</a></div>
+          </li>
+        {% endif %}
+        {% if settings.configs.instagram %}
+          <li>
+            <span class="polvo-contato__icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ ic.insta|raw }}</svg></span>
+            <div><b>Instagram</b><a href="{{ settings.configs.instagram }}" target="_blank" rel="noopener">@atacadopolvo</a></div>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="polvo-contato__caixa">
+      <h3>Endereço e horários</h3>
+      <ul class="polvo-contato__lista">
+        {% for u in unidades %}
+          <li>
+            <span class="polvo-contato__icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ ic.local|raw }}</svg></span>
+            <div><b>{{ u.nome }}</b><span>{{ u.endereco }}</span></div>
+          </li>
+        {% endfor %}
+        <li>
+          <span class="polvo-contato__icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ ic.relogio|raw }}</svg></span>
+          <div><b>Atendimento</b><span>Segunda a sexta, 08h às 18h<br>Sábado, 09h às 15h</span></div>
+        </li>
+        <li>
+          <span class="polvo-contato__icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ ic.entrega|raw }}</svg></span>
+          <div><b>Área de entrega</b><span>Porto Alegre e Região Metropolitana</span></div>
+        </li>
+      </ul>
+    </div>
+
+    {% for u in unidades %}
+      <figure class="polvo-contato__mapa">
+        <img src="{{ asset('img/polvo/loja/' ~ u.foto ~ '.webp') }}" alt="{{ u.alt }}" width="760" height="428" loading="lazy" decoding="async">
+        <iframe src="{{ u.mapa }}" title="Mapa da {{ u.nome }}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <figcaption>
+          <b>{{ u.nome }}</b>
+          <span>{{ u.endereco }}</span>
+          <a href="{{ u.rota }}" target="_blank" rel="noopener">Como chegar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </figcaption>
+      </figure>
+    {% endfor %}
+  </aside>
+{% endif %}

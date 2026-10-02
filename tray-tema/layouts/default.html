@@ -56,6 +56,16 @@
           {# Atacado Polvo: "A empresa" vem do tema (conteúdo do site antigo), não do texto do painel. #}
           {% element 'snippets/polvo-empresa' %}
 
+        {% elseif pages.current == 'contact' %}
+
+          {# Atacado Polvo: contato como no site antigo. O formulário da Tray fica no meio, sem mudar a
+             estrutura que o page-contact.js procura (.page-content > .container > .container3 ...). #}
+          <div class="container polvo-contato">
+            {% element 'snippets/polvo-contato' { 'parte': 'intro' } %}
+            {{ content_for_layout }}
+            {% element 'snippets/polvo-contato' { 'parte': 'lado' } %}
+          </div>
+
         {% else %}
 
           {% set special_pages = [ 'listas', 'depoimentos-de-clientes', 'noticias' ] %}
