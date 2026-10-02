@@ -607,6 +607,168 @@ h1, h2, h3,
 
 .footer .copy a { color: #fff; }
 
+/* Colunas como no site antigo: sobre | navegação | categorias | institucional | contato,
+   e pagamento/segurança numa linha embaixo (blocos em configs/settings.json → footer). */
+.footer .cols .container {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr 1fr 1fr 1.4fr;
+  gap: 32px;
+  padding-bottom: 12px;
+}
+
+.footer .cols .box { width: auto; max-width: none; margin: 0; }
+
+.footer .title {
+  margin-bottom: 18px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Mesmo ritmo nas colunas nossas e na Institucional da Tray (que usa padding de 5-10px). */
+.footer .cols .list li + li { margin-top: 11px; }
+
+.footer .cols .list a { padding: 0; font-size: 0.93rem; line-height: 1.45; }
+
+/* Pagamento e segurança: largura toda, os dois lado a lado. */
+.footer .cols .box[id^="payment_security"] {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-auto-flow: column;
+  justify-content: start;
+  column-gap: 56px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer .cols .box[id^="payment_security"] .payment-list,
+.footer .cols .box[id^="payment_security"] .security-seals { max-width: none; }
+
+.polvo-rodape-sobre__marca { display: inline-flex; align-items: center; gap: 11px; }
+
+.polvo-rodape-sobre__marca .polvo-marca__img { width: 63px; height: 40px; }
+
+.footer .polvo-marca__txt b { color: #fff; }
+
+.footer .polvo-marca__txt span { color: #9580b5; }
+
+.polvo-rodape-sobre__texto {
+  max-width: 38ch;
+  margin: 18px 0 0;
+  color: var(--color_footer_second_font);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.polvo-redes { display: flex; gap: 10px; margin-top: 20px; }
+
+.polvo-redes a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  transition: background 0.2s var(--polvo-ease), transform 0.2s var(--polvo-ease);
+}
+
+.polvo-redes a:hover { background: var(--polvo-brand); color: #fff; transform: translateY(-2px); }
+
+.polvo-redes svg { width: 19px; height: 19px; }
+
+.polvo-rodape-grupo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 201, 30, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 201, 30, 0.12);
+  color: var(--polvo-accent);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.polvo-rodape-grupo:hover { background: var(--polvo-accent); color: var(--polvo-accent-ink); transform: translateY(-2px); }
+
+.polvo-rodape-grupo svg { width: 14px; height: 14px; }
+
+.polvo-rodape-contato ul { margin: 0; padding: 0; list-style: none; }
+
+.polvo-rodape-contato li {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 13px;
+  color: var(--color_footer_second_font);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.polvo-rodape-contato svg { flex: none; width: 17px; height: 17px; margin-top: 3px; color: var(--polvo-accent); }
+
+.polvo-rodape-contato a { color: var(--color_footer_second_font); word-break: break-word; }
+
+.polvo-rodape-contato a:hover { color: #fff; }
+
+@media (max-width: 991px) {
+  .footer .cols .container { grid-template-columns: 1fr 1fr; }
+  .footer .cols .box.polvo-rodape-sobre { grid-column: 1 / -1; }
+}
+
+/* Celular: Navegação e Categorias lado a lado; o resto na largura toda. */
+@media (max-width: 575px) {
+  .footer .cols .container { gap: 28px 20px; padding-left: 16px; padding-right: 16px; }
+  .footer .cols .box[id^="pages"],
+  .footer .cols .box.polvo-rodape-contato { grid-column: 1 / -1; }
+  .footer .cols .box[id^="payment_security"] { grid-auto-flow: row; }
+}
+
+/* Botão flutuante de WhatsApp (snippets/polvo-wpp-flutuante.html), igual ao .wpp-fab antigo.
+   z-index abaixo da sombra (19) e das gavetas (20) da Tray, que o cobrem quando abertas. */
+.polvo-wpp-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  background: var(--polvo-ok);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(31, 175, 84, 0.42);
+  transition: transform 0.22s var(--polvo-ease);
+}
+
+.polvo-wpp-fab:hover { color: #fff; transform: scale(1.08); }
+
+.polvo-wpp-fab svg { width: 30px; height: 30px; }
+
+.polvo-wpp-fab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--polvo-ok);
+  border-radius: 999px;
+  animation: polvo-pulso 2.4s ease-out infinite;
+}
+
+@keyframes polvo-pulso {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .polvo-wpp-fab::after { animation: none; }
+}
+
 /* ---- 6. Movimento reduzido --------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {

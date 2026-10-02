@@ -1,0 +1,39 @@
+{# Atacado Polvo: 1ª coluna do rodapé, igual à do site antigo: marca, frase, redes e grupo de ofertas.
+   Instagram = configuração do tema (settings.configs.instagram); WhatsApp e e-mail = dados da loja. #}
+{% if section.settings.enabled %}
+{% set s = section.settings %}
+{% set polvo_wpp = Translation('ag_telefone_3') | replace({'(': '', ')': '', ' ': '', '-': ''}) %}
+{% set polvo_email = Translation('ag_email_1') %}
+<div class="box polvo-rodape-sobre" id="{{ section.id }}">
+    <a class="polvo-marca polvo-rodape-sobre__marca" href="{{ store.url }}" title="{{ store.name }}">
+        {% element 'snippets/polvo-marca' %}
+    </a>
+
+    {% if s.description %}<p class="polvo-rodape-sobre__texto">{{ s.description }}</p>{% endif %}
+
+    <div class="polvo-redes">
+        {% if settings.configs.instagram %}
+            <a href="{{ settings.configs.instagram }}" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            </a>
+        {% endif %}
+        {% if polvo_wpp %}
+            <a href="{% element 'snippets/polvo-wpp-url' { 'number': '55' ~ polvo_wpp, 'message': 'Olá! Vim pela loja.' } %}" target="_blank" rel="noopener" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+            </a>
+        {% endif %}
+        {% if polvo_email %}
+            <a href="mailto:{{ polvo_email }}" aria-label="E-mail">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            </a>
+        {% endif %}
+    </div>
+
+    {% if s.group_text and s.group_link %}
+        <a class="polvo-rodape-grupo" href="{{ s.group_link }}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+            {{ s.group_text }}
+        </a>
+    {% endif %}
+</div>
+{% endif %}

@@ -3,8 +3,83 @@
   "limit": 1,
   "static": true,
   "template": "footer",
-  "max_blocks": 4,
+  "max_blocks": 10,
   "blocks": [
+    {
+      "type": "polvo_footer_about",
+      "name": "Polvo: marca, redes e grupo de ofertas",
+      "template": "snippets/polvo_footer_about",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "description",
+          "type": "textarea",
+          "label": "Frase abaixo da marca",
+          "maxLength": 200
+        },
+        {
+          "id": "group_text",
+          "type": "text",
+          "label": "Botão do grupo: texto",
+          "maxLength": 40,
+          "info": "Em branco = sem o botão. Instagram: Configurações do tema > Redes sociais."
+        },
+        {
+          "id": "group_link",
+          "type": "text",
+          "label": "Botão do grupo: link do convite",
+          "info": "https://chat.whatsapp.com/..."
+        }
+      ]
+    },
+    {
+      "type": "polvo_footer_links",
+      "name": "Polvo: coluna de links",
+      "template": "snippets/polvo_footer_links",
+      "limit": 3,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 30
+        },
+        {
+          "id": "links",
+          "type": "textarea",
+          "label": "Links",
+          "maxLength": 1500,
+          "info": "Um por linha, no formato: Texto | /endereco"
+        }
+      ]
+    },
+    {
+      "type": "polvo_footer_contact",
+      "name": "Polvo: contato (endereço e horário)",
+      "template": "snippets/polvo_footer_contact",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 30
+        },
+        {
+          "id": "address",
+          "type": "textarea",
+          "label": "Endereço",
+          "maxLength": 200
+        },
+        {
+          "id": "hours",
+          "type": "textarea",
+          "label": "Horário de atendimento",
+          "maxLength": 150,
+          "info": "Telefone e e-mail vêm dos dados da loja."
+        }
+      ]
+    },
     {
       "type": "support",
       "name": "Suporte",

@@ -1,0 +1,36 @@
+{# Atacado Polvo: coluna "Contato" do rodapé, igual à do site antigo.
+   Telefone e e-mail = dados da loja no painel; endereço e horário = este bloco. #}
+{% if section.settings.enabled %}
+{% set s = section.settings %}
+{% set polvo_tel = Translation('ag_telefone_1') %}
+{% set polvo_email = Translation('ag_email_1') %}
+<div class="box polvo-rodape-contato" id="{{ section.id }}">
+    {% if s.title %}<div class="title">{{ s.title }}</div>{% endif %}
+    <ul>
+        {% if s.address %}
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/></svg>
+                <span>{{ s.address | nl2br }}</span>
+            </li>
+        {% endif %}
+        {% if polvo_tel %}
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+                <a href="tel:{{ polvo_tel | replace({'(': '', ')': '', ' ': '', '-': ''}) }}">{{ polvo_tel }}</a>
+            </li>
+        {% endif %}
+        {% if polvo_email %}
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                <a href="mailto:{{ polvo_email }}">{{ polvo_email }}</a>
+            </li>
+        {% endif %}
+        {% if s.hours %}
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                <span>{{ s.hours | nl2br }}</span>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}

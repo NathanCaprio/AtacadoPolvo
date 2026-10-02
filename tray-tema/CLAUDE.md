@@ -27,7 +27,8 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 | Esqueleto da página | `layouts/default.html` |
 | Home (seções arrastáveis) | `pages/home.html` + `configs/editor/sections/home.*.json` + `elements/snippets/*.html` |
 | Cabeçalho (uma linha: marca, menu, Orçamento, lupa, conta, carrinho) | `elements/header.html` (menu dentro da `.line`) + `snippets/polvo-marca.html` (logo-head.svg fixo, ignora o logo do painel) + `snippets/polvo-header-acoes.html` (lupa abre a busca da Tray como painel, botão WhatsApp, marca a página atual); CSS em `polvo.css` seção 2. Menu = "Menu personalizado" em `settings.json` → `header.settings.navigation`. Até 1180px o menu vai para o ☰ |
-| Rodapé | `elements/footer.html` (+ blocos em `snippets/`) |
+| Rodapé | `elements/footer.html` renderiza `settings.footer.blocks` (`snippets/<tipo>.html`). Nossos blocos: `polvo_footer_about` (marca, redes, grupo de ofertas), `polvo_footer_links` (Navegação/Categorias; no painel, um link por linha "Texto | /url"), `polvo_footer_contact` (endereço/horário; telefone e e-mail = dados da loja); definidos em `configs/editor/sections/footer.json`. `support` e `social_networks` desligados. Instagram = `settings.configs.instagram` |
+| Botão flutuante de WhatsApp | `snippets/polvo-wpp-flutuante.html` (em `layouts/default.html`, só quando o nativo da Tray está desligado) |
 | Link de WhatsApp com mensagem | `snippets/polvo-wpp-url.html` (a Tray entrega acento como entidade: `Ol&aacute;`; ele converte) |
 | Cartão de produto / preço / selos | `elements/snippets/product.html`, `product-price.html`, `product-tags.html` |
 | Página de produto | `pages/product.html`, `elements/product-main.html` |

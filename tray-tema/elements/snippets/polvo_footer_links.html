@@ -1,0 +1,16 @@
+{# Atacado Polvo: coluna de links do rodapé (Navegação, Categorias...).
+   No painel, um link por linha: "Texto | /endereco". #}
+{% if section.settings.enabled and section.settings.links %}
+<div class="box polvo-rodape-links" id="{{ section.id }}">
+    {% if section.settings.title %}<div class="title">{{ section.settings.title }}</div>{% endif %}
+    <ul class="list">
+        {% for linha in section.settings.links | split("\n") %}
+            {% set partes = linha | split('|') %}
+            {% if partes | length > 1 and partes[0] | trim %}
+                {% set url = partes[1] | trim %}
+                <li><a href="{{ url }}"{% if url starts with 'http' %} target="_blank" rel="noopener"{% endif %}>{{ partes[0] | trim }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
