@@ -30,3 +30,19 @@ test('toda LP monta só com ASCII, com título, descrição e seções', () => {
     assert.doesNotMatch(css, /&#\d+;/, `${nome}: entidade HTML dentro do <style>`);
   }
 });
+
+test('cabeçalho e rodapé da LP seguem o tema (menu e links do settings.json)', () => {
+  const tema = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'tray-tema', 'configs', 'settings.json'), 'utf8')).current;
+  const html = fs.readFileSync(path.join(DIST, 'condominios.html'), 'utf8');
+  const nav = html.match(/<nav class="lp-nav"[\s\S]*?<\/nav>/)[0];
+  for (const item of tema.header.settings.navigation.items) {
+    assert.ok(nav.includes(`href="${item.url.replace(/&/g, '&amp;')}"`), `menu sem ${item.url}`);
+  }
+  assert.match(nav, /href="\/condominios" aria-current="page"/, 'página atual não marcada no menu');
+  assert.match(html, /<a class="polvo-header-wpp" href="https:\/\/wa\.me\/\d+\?text=[^"]+"[^>]*>[\s\S]*?<span>Or&#231;amento<\/span>/, 'sem botão Orçamento');
+  assert.match(html, /<form class="lp-busca"[^>]*action="\/loja\/busca\.php"[\s\S]*?name="palavra_busca"/, 'sem busca');
+  const grupo = tema.footer.blocks.find(b => b.type === 'polvo_footer_about').settings.group_link;
+  assert.ok(html.includes(`class="polvo-rodape-grupo" href="${grupo}"`), 'sem grupo de ofertas no rodapé');
+  assert.match(html, /<a class="polvo-wpp-fab" href="https:\/\/wa\.me\//, 'sem botão flutuante');
+  assert.strictEqual((html.match(/id="polvo-logo"/g) || []).length, 1, 'logo deve entrar uma vez só (symbol)');
+});

@@ -150,71 +150,207 @@ function css() {
     .replace(/[^\x00-\x7f]/gu, c => `\\${c.codePointAt(0).toString(16)} `);
 }
 
-const WPP_ICONE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>';
+/* ---- Cabeçalho e rodapé: os mesmos do tema ------------------------------
+   Menu, links e textos do rodapé vêm do tema (tray-tema/configs/settings.json),
+   para a LP acompanhar o que o tema mostra; telefone, WhatsApp e e-mail vêm
+   do config.js (no tema, vêm dos dados da loja no painel). Estrutura igual a
+   elements/header.html e footer.html; CSS espelhado em lp/_base.css. */
+
+const CONTA = '/central-do-cliente';
+const CARRINHO = '/loja/redirect_cart_service.php?loja=1544153';
+
+/* Páginas institucionais da Tray (bloco "pages" do rodapé, que a LP não tem
+   como ler): as mesmas que a loja lista hoje. */
+const INSTITUCIONAL = [
+  ['Contato', '/contato'], ['Empresa', '/empresa'], ['Como comprar', '/como-comprar'],
+  ['Segurança', '/seguranca'], ['Envio', '/envio'], ['Pagamento', '/pagamento'],
+  ['Tempo de Garantia', '/tempo-de-garantia'], ['Trocas e devoluções', '/trocas-e-devolucoes']
+];
+
+const svg = (corpo, extra = 'fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"') =>
+  `<svg viewBox="0 0 24 24" ${extra} aria-hidden="true">${corpo}</svg>`;
+
+const ICONE = {
+  wpp: svg('<path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/>', 'fill="currentColor"'),
+  lupa: svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>', 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"'),
+  conta: svg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+  carrinho: svg('<path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20.5" r="1.2"/><circle cx="17" cy="20.5" r="1.2"/>'),
+  insta: svg('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>'),
+  email: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'),
+  raio: svg('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>', 'fill="currentColor"'),
+  local: svg('<path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/>'),
+  tel: svg('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
+  relogio: svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')
+};
+
+/** O que a LP usa do tema: menu, faixa do topo e blocos do rodapé. */
+function tema() {
+  const c = JSON.parse(fs.readFileSync(path.join(RAIZ, 'tray-tema', 'configs', 'settings.json'), 'utf8')).current;
+  const bloco = tipo => c.footer.blocks.filter(b => b.type === tipo && b.settings.enabled).map(b => b.settings);
+  return {
+    faixa: c.header.settings.show_message_line ? c.header.settings.message_line_content : '',
+    menu: c.header.settings.navigation.items,
+    sobre: bloco('polvo_footer_about')[0],
+    links: bloco('polvo_footer_links').map(b => ({
+      titulo: b.title,
+      itens: b.links.split('\n').map(l => l.split('|').map(x => x.trim())).filter(p => p.length > 1 && p[0])
+    })),
+    contato: bloco('polvo_footer_contact')[0],
+    copy: c.footer.settings.polvo_copy,
+    instagram: c.configs.instagram
+  };
+}
+
+/** logo-head.svg uma vez só, como <symbol>: cabeçalho e rodapé usam com <use>. */
+function logoSimbolo() {
+  const bruto = fs.readFileSync(path.join(RAIZ, 'tray-tema', 'img', 'polvo', 'logo-head.svg'), 'utf8');
+  const viewBox = bruto.match(/viewBox="([^"]+)"/)[1];
+  const corpo = bruto.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '').replace(/<title>[\s\S]*?<\/title>/, '').trim();
+  return `<svg class="lp-oculto" aria-hidden="true"><symbol id="polvo-logo" viewBox="${viewBox}">${corpo}</symbol></svg>`;
+}
+
+const marca = `<svg class="polvo-marca__img" aria-hidden="true"><use href="#polvo-logo"/></svg>
+      <span class="polvo-marca__txt" aria-hidden="true"><span>Atacado da Limpeza</span><b>Polvo</b></span>`;
+
+const linkWpp = (s, msg) => `https://wa.me/${s.whatsapp}?text=${encodeURIComponent(msg)}`;
+const externo = url => /^https?:/.test(url) ? ' target="_blank" rel="noopener"' : '';
+
+function cabecalho(nome, s, t, wppOrcamento) {
+  const menu = t.menu.map(i => {
+    const atual = i.url === '/' + nome ? ' aria-current="page"' : '';
+    return `<li><a href="${esc(i.url)}"${atual}${i.openInNewTab ? ' target="_blank" rel="noopener"' : ''}>${esc(i.label)}</a></li>`;
+  }).join('\n          ');
+  return `${t.faixa ? `<div class="lp-faixa"><div class="container">${esc(t.faixa)}</div></div>
+` : ''}<header class="lp-topo">
+  <div class="container lp-topo__linha">
+    <a class="polvo-marca" href="/" aria-label="Atacado Polvo — página inicial">
+      ${marca}
+    </a>
+    <nav class="lp-nav" id="lp-nav" aria-label="Menu principal">
+      <ul>
+          ${menu}
+          <li class="lp-nav__conta"><a href="${CONTA}">Minha conta</a></li>
+      </ul>
+    </nav>
+    <a class="polvo-header-wpp" href="${wppOrcamento}" target="_blank" rel="noopener">${ICONE.wpp}<span>Orçamento</span></a>
+    <button type="button" class="lp-redondo lp-lupa" aria-label="Buscar produtos" aria-expanded="false" aria-controls="lp-busca">${ICONE.lupa}</button>
+    <a class="lp-redondo lp-conta" href="${CONTA}" aria-label="Minha conta">${ICONE.conta}</a>
+    <a class="lp-redondo lp-carrinho" href="${CARRINHO}" aria-label="Carrinho">${ICONE.carrinho}</a>
+    <button type="button" class="lp-redondo lp-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="lp-nav"><span></span><span></span><span></span></button>
+    <form class="lp-busca" id="lp-busca" action="/loja/busca.php" method="get" role="search">
+      <input type="hidden" name="loja" value="1544153">
+      <input type="search" name="palavra_busca" placeholder="Olá, o que você procura?" aria-label="Buscar produtos" autocomplete="off">
+      <button type="submit" aria-label="Buscar">${ICONE.lupa}</button>
+    </form>
+  </div>
+</header>`;
+}
+
+function rodape(s, t) {
+  const sobre = t.sobre ? `<div class="lp-rodape__sobre">
+      <a class="polvo-marca" href="/" aria-label="Atacado Polvo — página inicial">
+        ${marca}
+      </a>
+      ${t.sobre.description ? `<p>${esc(t.sobre.description)}</p>` : ''}
+      <div class="polvo-redes">
+        ${t.instagram ? `<a href="${esc(t.instagram)}" target="_blank" rel="noopener" aria-label="Instagram">${ICONE.insta}</a>` : ''}
+        <a href="${linkWpp(s, 'Olá! Vim pela loja.')}" target="_blank" rel="noopener" aria-label="WhatsApp">${ICONE.wpp}</a>
+        <a href="mailto:${esc(s.email)}" aria-label="E-mail">${ICONE.email}</a>
+      </div>
+      ${t.sobre.group_text && t.sobre.group_link ? `<a class="polvo-rodape-grupo" href="${esc(t.sobre.group_link)}" target="_blank" rel="noopener">${ICONE.raio} ${esc(t.sobre.group_text)}</a>` : ''}
+    </div>` : '';
+  const coluna = (titulo, itens) => `<div class="lp-rodape__links">
+      <h2>${esc(titulo)}</h2>
+      <ul>${itens.map(([txt, url]) => `
+        <li><a href="${esc(url)}"${externo(url)}>${esc(txt)}</a></li>`).join('')}
+      </ul>
+    </div>`;
+  const linhas = txt => txt.split('\n').map(esc).join('<br>');
+  const c = t.contato;
+  const contato = c ? `<div class="lp-rodape__contato">
+      <h2>${esc(c.title || 'Contato')}</h2>
+      <ul>
+        ${c.address ? `<li>${ICONE.local}<span>${linhas(c.address)}</span></li>` : ''}
+        <li>${ICONE.tel}<a href="tel:${esc(s.telefoneLink)}">${esc(s.telefone)}</a></li>
+        <li>${ICONE.email}<a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>
+        ${c.hours ? `<li>${ICONE.relogio}<span>${linhas(c.hours)}</span></li>` : ''}
+      </ul>
+    </div>` : '';
+  const [navegacao, ...outras] = t.links;
+  const colunas = [sobre, ...(navegacao ? [coluna(navegacao.titulo, navegacao.itens)] : []),
+    ...outras.map(l => coluna(l.titulo, l.itens)), coluna('Institucional', INSTITUCIONAL), contato];
+  return `<footer class="lp-rodape">
+  <div class="container lp-rodape__cols">
+    ${colunas.filter(Boolean).join('\n    ')}
+  </div>
+  <div class="container lp-rodape__copy">
+    © ${new Date().getFullYear()} ${esc(t.copy || 'Atacado Polvo')}${t.instagram ? ` <span>· <a href="${esc(t.instagram)}" target="_blank" rel="noopener">${esc(s.instagramHandle)}</a></span>` : ''}
+  </div>
+</footer>`;
+}
+
+/* Lupa abre o painel de busca (Esc fecha, "/" abre, como no tema) e o ☰ abre o menu. */
+const SCRIPT = `(function () {
+  var topo = document.querySelector('.lp-topo');
+  var lupa = topo.querySelector('.lp-lupa');
+  var menu = topo.querySelector('.lp-menu');
+  var campo = topo.querySelector('.lp-busca input[type=search]');
+  function menuAberto(sim) {
+    topo.classList.toggle('lp-topo--menu', sim);
+    menu.setAttribute('aria-expanded', sim ? 'true' : 'false');
+  }
+  function busca(sim) {
+    if (sim) menuAberto(false);
+    topo.classList.toggle('lp-topo--busca', sim);
+    lupa.setAttribute('aria-expanded', sim ? 'true' : 'false');
+    if (sim) campo.focus();
+  }
+  lupa.addEventListener('click', function () { busca(!topo.classList.contains('lp-topo--busca')); });
+  menu.addEventListener('click', function () {
+    var sim = !topo.classList.contains('lp-topo--menu');
+    if (sim) busca(false);
+    menuAberto(sim);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && topo.classList.contains('lp-topo--busca')) { busca(false); lupa.focus(); }
+    else if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) { e.preventDefault(); busca(true); }
+  });
+  document.addEventListener('click', function (e) {
+    if (topo.classList.contains('lp-topo--busca') && !e.target.closest('.lp-busca') && !e.target.closest('.lp-lupa')) busca(false);
+  });
+})();`;
 
 function documento(nome, s) {
   const lp = lerConteudo(nome);
-  const meta = lp;
-  const wpp = `https://wa.me/${s.whatsapp}?text=${encodeURIComponent('Olá! Vim pelo site e quero fazer um pedido.')}`;
-  const wppLp = `https://wa.me/${s.whatsapp}?text=${encodeURIComponent(lp.hero.whatsapp)}`;
-  const logo = fs.readFileSync(path.join(RAIZ, 'assets', 'img', 'logo-mark.svg'), 'utf8')
-    .replace(/<\?xml[^>]*>/, '').replace(/<title>[\s\S]*?<\/title>/, '').replace('<svg ', '<svg aria-hidden="true" ');
+  const t = tema();
+  const wppLp = linkWpp(s, lp.hero.whatsapp);
 
   const html = `<!doctype html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(meta.titulo)}</title>
-<meta name="description" content="${esc(meta.descricao)}">
+<title>${esc(lp.titulo)}</title>
+<meta name="description" content="${esc(lp.descricao)}">
 <meta name="theme-color" content="#7b2fe3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 ${css()}
 </style>
 </head>
 <body>
-<header class="lp-topo">
-  <div class="container">
-    <a class="lp-marca" href="/" aria-label="Atacado Polvo — página inicial">${logo}<span><small>Atacado da limpeza</small><strong>Polvo</strong></span></a>
-    <nav>
-      <a class="lp-link" href="/">Loja</a>
-      <a class="lp-link" href="${BUSCA}">Todos os produtos</a>
-      <a class="polvo-btn polvo-btn--primario" href="${wpp}" target="_blank" rel="noopener">WhatsApp</a>
-    </nav>
-  </div>
-</header>
+${logoSimbolo()}
+${cabecalho(nome, s, t, wppLp)}
 <main>
 ${corpoDaLp(lp, wppLp)}
 </main>
-<footer class="lp-rodape">
-  <div class="container">
-    <div>
-      <h2>Atacado Polvo</h2>
-      <p>Distribuidora de produtos de limpeza, descartáveis e utensílios. Preço de atacado, entrega própria em ${esc(s.cidade)} e região.</p>
-    </div>
-    <div>
-      <h2>Atendimento</h2>
-      <ul>
-        <li><a href="${wpp}" target="_blank" rel="noopener">WhatsApp ${esc(s.whatsappLabel)}</a></li>
-        <li>${esc(s.horarioSemana)}</li>
-        <li>${esc(s.horarioSabado)}</li>
-      </ul>
-    </div>
-    <div>
-      <h2>Lojas</h2>
-      <ul>
-        <li>${esc(s.endereco)} — ${esc(s.bairro)}, ${esc(s.cidade)}/${esc(s.uf)}</li>
-        <li>${esc(s.endereco2)} — ${esc(s.cidade2)}/${esc(s.uf2)}</li>
-        <li><a href="${esc(s.instagram)}" target="_blank" rel="noopener">Instagram ${esc(s.instagramHandle)}</a></li>
-      </ul>
-    </div>
-    <p class="lp-rodape__copy">© ${new Date().getFullYear()} Atacado Polvo. <a href="/">Voltar para a loja</a></p>
-  </div>
-</footer>
-<a class="lp-wpp" href="${wpp}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">${WPP_ICONE}</a>
+${rodape(s, t)}
+<a class="polvo-wpp-fab" href="${linkWpp(s, 'Olá! Vim pela loja e gostaria de ajuda.')}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">${ICONE.wpp}</a>
+<script>
+${SCRIPT}
+</script>
 </body>
 </html>
 `;

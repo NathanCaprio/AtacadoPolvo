@@ -1,6 +1,6 @@
 /* Base das landing pages da Tray. A LP "página em branco" é servida sozinha
    (sem o layout nem o CSS do tema), então aqui vai o mínimo que o tema daria:
-   reset, container, tipografia, cabeçalho e rodapé. O resto vem de
+   reset, container, tipografia, cabeçalho e rodapé (espelhos do polvo.css). O resto vem de
    css/polvo.css (tokens) e css/polvo-home.css (seções), embutidos pelo
    server/tema-lp.js. */
 
@@ -26,84 +26,370 @@ h1, h2, h3, p { margin-top: 0; }
 
 .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-/* ---- Cabeçalho -------------------------------------------------------- */
+/* ---- Faixa do topo e cabeçalho --------------------------------------- */
+/* Espelho de css/polvo.css seção 2 (o tema estiliza classes da Tray, que a LP
+   não tem). Mudou lá, muda aqui. */
 
-.lp-topo {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.94);
-  border-bottom: 1px solid var(--polvo-line);
-  backdrop-filter: blur(8px);
+.lp-oculto { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.lp-faixa {
+  padding: 10px 0;
+  background: var(--polvo-ink);
+  color: #fff;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  text-align: center;
 }
 
-.lp-topo .container {
+.lp-topo { position: sticky; top: 0; z-index: 10; }
+
+.lp-topo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--polvo-line);
+}
+
+.lp-topo__linha {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-height: 72px;
+  gap: 10px;
+  height: 72px;
 }
 
-.lp-marca { display: flex; align-items: center; gap: 10px; }
+.polvo-marca { display: flex; align-items: center; gap: 11px; margin-right: auto; }
 
-.lp-marca svg { width: 52px; height: auto; }
+.polvo-marca__img { width: 63px; height: 40px; flex-shrink: 0; }
 
-.lp-marca small {
-  display: block;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--polvo-ink-3);
-}
-
-.lp-marca strong {
-  display: block;
-  font-family: var(--polvo-font-display);
-  font-size: 1.35rem;
-  font-weight: 800;
+.polvo-marca__txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   line-height: 1;
+  font-family: var(--polvo-font-display);
+  text-transform: uppercase;
+}
+
+.polvo-marca__txt span { font-size: 0.54rem; font-weight: 700; letter-spacing: 0.17em; color: var(--polvo-ink-3); }
+
+.polvo-marca__txt b { font-size: 1.34rem; font-weight: 900; letter-spacing: 0.005em; color: var(--polvo-ink); }
+
+.lp-nav ul { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; }
+
+.lp-nav a {
+  position: relative;
+  display: block;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.93rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--polvo-ink-2);
+  transition: color 0.2s var(--polvo-ease), background 0.2s var(--polvo-ease);
+}
+
+.lp-nav a:hover { color: var(--polvo-brand); background: var(--polvo-brand-soft); }
+
+.lp-nav a[aria-current="page"] { color: var(--polvo-brand); }
+
+.lp-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--polvo-brand);
+}
+
+.lp-nav .lp-nav__conta { display: none; }
+
+.polvo-header-wpp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--polvo-ok);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(31, 175, 84, 0.3);
+  transition: background 0.2s var(--polvo-ease), transform 0.2s var(--polvo-ease);
+}
+
+.polvo-header-wpp:hover { background: #198f45; color: #fff; transform: translateY(-2px); }
+
+.polvo-header-wpp svg { width: 18px; height: 18px; }
+
+/* Botões redondos: lupa, conta, carrinho e ☰. */
+.lp-redondo {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--polvo-ink-2);
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.2s var(--polvo-ease), border-color 0.2s var(--polvo-ease), background 0.2s var(--polvo-ease);
+}
+
+.lp-redondo:hover,
+.lp-redondo[aria-expanded="true"] { color: var(--polvo-brand); border-color: var(--polvo-brand); background: var(--polvo-surface-2); }
+
+.lp-redondo svg { width: 19px; height: 19px; }
+
+.lp-menu { display: none; }
+
+.lp-menu span { display: block; width: 18px; height: 2px; margin: 1.5px 0; border-radius: 2px; background: currentColor; }
+
+/* Busca: painel aberto pela lupa (a Tray tem sugestões; aqui é a busca simples). */
+.lp-busca {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 16px;
+  z-index: 5;
+  display: none;
+  gap: 8px;
+  width: min(480px, calc(100% - 32px));
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-md);
+  box-shadow: var(--polvo-shadow-md);
+}
+
+.lp-topo--busca .lp-busca { display: flex; }
+
+.lp-busca input[type="search"] {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
+  background: var(--polvo-surface-2);
+  font: inherit;
   color: var(--polvo-ink);
 }
 
-.lp-topo nav { display: flex; align-items: center; gap: 22px; font-weight: 600; color: var(--polvo-ink); }
-
-.lp-topo nav a:hover { color: var(--polvo-brand); }
-
-.lp-topo .polvo-btn { min-height: 44px; padding: 0 20px; font-size: 0.95rem; }
-
-/* ---- Rodapé ----------------------------------------------------------- */
-
-.lp-rodape {
-  padding: 48px 0 28px;
-  background: var(--polvo-ink);
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.95rem;
+.lp-busca input[type="search"]:focus {
+  outline: none;
+  border-color: var(--polvo-brand);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--polvo-brand-soft);
 }
 
-.lp-rodape .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+.lp-busca button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--polvo-brand);
+  color: #fff;
+  cursor: pointer;
+}
+
+.lp-busca button svg { width: 19px; height: 19px; }
+
+/* Até 1180px o menu sai da linha e abre pelo ☰ logo abaixo. */
+@media (max-width: 1180px) {
+  .lp-menu { display: grid; }
+
+  .lp-nav { display: none; }
+
+  .lp-topo--menu .lp-nav {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 10px 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--polvo-line);
+    box-shadow: var(--polvo-shadow-md);
+  }
+
+  .lp-nav ul { flex-direction: column; }
+
+  .lp-nav a[aria-current="page"] { background: var(--polvo-brand-soft); }
+
+  .lp-nav a[aria-current="page"]::after { content: none; }
+}
+
+/* Celular: marca | lupa | carrinho | ☰ (conta vai para o menu; WhatsApp no botão flutuante). */
+@media (max-width: 767px) {
+  .lp-topo__linha { height: 64px; gap: 8px; padding: 0 16px; }
+
+  .polvo-marca__img { width: 54px; height: 34px; }
+
+  .polvo-marca__txt span,
+  .polvo-header-wpp,
+  .lp-conta { display: none; }
+
+  .polvo-marca__txt b { font-size: 1.2rem; }
+
+  .lp-nav .lp-nav__conta { display: block; }
+}
+
+/* ---- Rodapé ----------------------------------------------------------- */
+/* Espelho de css/polvo.css seção 5: sobre | navegação | categorias |
+   institucional | contato. */
+
+.lp-rodape {
+  padding: 56px 0 24px;
+  background: var(--polvo-ink);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.lp-rodape__cols {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr 1fr 1fr 1.4fr;
+  gap: 32px;
+  padding-bottom: 36px;
+}
 
 .lp-rodape h2 {
-  margin-bottom: 12px;
-  font-family: var(--polvo-font-display);
-  font-size: 1rem;
-  font-weight: 800;
+  margin: 0 0 18px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: #fff;
 }
 
 .lp-rodape ul { margin: 0; padding: 0; list-style: none; }
 
-.lp-rodape li { margin-bottom: 8px; }
+.lp-rodape__links li + li { margin-top: 11px; }
+
+.lp-rodape__links a { font-size: 0.93rem; line-height: 1.45; color: rgba(255, 255, 255, 0.72); }
 
 .lp-rodape a:hover { color: #fff; }
 
+.lp-rodape .polvo-marca__txt b { color: #fff; }
+
+.lp-rodape .polvo-marca__txt span { color: #9580b5; }
+
+.lp-rodape__sobre .polvo-marca { display: inline-flex; }
+
+.lp-rodape__sobre p { max-width: 38ch; margin: 18px 0 0; font-size: 0.92rem; line-height: 1.6; }
+
+.polvo-redes { display: flex; gap: 10px; margin-top: 20px; }
+
+.polvo-redes a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  transition: background 0.2s var(--polvo-ease), transform 0.2s var(--polvo-ease);
+}
+
+.lp-rodape .polvo-redes a:hover { background: var(--polvo-brand); color: #fff; transform: translateY(-2px); }
+
+.polvo-redes svg { width: 19px; height: 19px; }
+
+.polvo-rodape-grupo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 201, 30, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 201, 30, 0.12);
+  color: var(--polvo-accent);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.lp-rodape .polvo-rodape-grupo:hover { background: var(--polvo-accent); color: var(--polvo-accent-ink); transform: translateY(-2px); }
+
+.polvo-rodape-grupo svg { width: 14px; height: 14px; }
+
+.lp-rodape__contato li { display: flex; gap: 10px; margin-bottom: 13px; font-size: 0.93rem; line-height: 1.55; }
+
+.lp-rodape__contato svg { flex: none; width: 17px; height: 17px; margin-top: 3px; color: var(--polvo-accent); }
+
+.lp-rodape__contato a { color: rgba(255, 255, 255, 0.72); word-break: break-word; }
+
 .lp-rodape__copy {
-  grid-column: 1 / -1;
-  padding-top: 20px;
+  padding-top: 1.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.lp-rodape__copy a { color: #fff; }
+
+@media (max-width: 991px) {
+  .lp-rodape__cols { grid-template-columns: 1fr 1fr; }
+  .lp-rodape__sobre { grid-column: 1 / -1; }
+}
+
+/* Celular: Navegação e Categorias lado a lado; o resto na largura toda. */
+@media (max-width: 575px) {
+  .lp-rodape__cols { gap: 28px 20px; padding-left: 16px; padding-right: 16px; }
+  .lp-rodape__cols > :nth-child(n+4) { grid-column: 1 / -1; }
+}
+
+/* ---- Botão flutuante de WhatsApp (espelho de .polvo-wpp-fab) ---------- */
+
+.polvo-wpp-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  background: var(--polvo-ok);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(31, 175, 84, 0.42);
+  transition: transform 0.22s var(--polvo-ease);
+}
+
+.polvo-wpp-fab:hover { color: #fff; transform: scale(1.08); }
+
+.polvo-wpp-fab svg { width: 30px; height: 30px; }
+
+.polvo-wpp-fab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--polvo-ok);
+  border-radius: 999px;
+  animation: polvo-pulso 2.4s ease-out infinite;
+}
+
+@keyframes polvo-pulso {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .polvo-wpp-fab::after { animation: none; }
 }
 
 /* ---- Planos (recorrência) --------------------------------------------- */
@@ -137,27 +423,3 @@ h1, h2, h3, p { margin-top: 0; }
 .polvo-plano li::before { content: "✓"; position: absolute; left: 0; color: var(--polvo-ok); font-weight: 800; }
 
 .polvo-planos__nota { margin: 22px 0 0; text-align: center; font-size: 0.9rem; color: var(--polvo-ink-3); }
-
-/* ---- Botão flutuante de WhatsApp ------------------------------------- */
-
-.lp-wpp {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 20;
-  display: grid;
-  place-items: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 999px;
-  background: #1faf54;
-  color: #fff;
-  box-shadow: 0 10px 24px rgba(31, 175, 84, 0.4);
-}
-
-.lp-wpp svg { width: 30px; height: 30px; }
-
-@media (max-width: 767px) {
-  .lp-topo nav .lp-link { display: none; }
-  .lp-marca small { display: none; }
-}

@@ -74,13 +74,13 @@ landing pages" (link na lista de temas), modo **Página em branco**. Essa LP é
 servida **sozinha** (sem layout/CSS do tema, `<head>` vazio, em windows-1252).
 Por isso: conteúdo em `lp/<slug>.json` → `npm run lp` (`server/tema-lp.js`) monta
 `lp/dist/<slug>.html` completo (CSS embutido de `polvo.css` + `_base.css` +
-`polvo-home.css`, cabeçalho/rodapé próprios, contatos de `assets/js/config.js`,
+`polvo-home.css`, cabeçalho/rodapé iguais aos do tema (menu, faixa e links do rodapé lidos de `configs/settings.json`; CSS espelhado em `lp/_base.css`: mudou o cabeçalho/rodapé no `polvo.css`, muda lá também), contatos de `assets/js/config.js`,
 tudo ASCII com entidades). Tipos de seção: cards, passos, planos, faq (ver topo
 de `server/tema-lp.js`). Teste: `server/tema-lp.test.js`.
 - Colar na Tray: servir `lp/dist` em 127.0.0.1:3078 e rodar `lp/colar-na-tray.js`
   (Playwright `browser_run_code_unsafe`); ele cola e salva **sem ativar**.
 - Criadas (todas **Inativas**): condominios=1, escolas=3, recorrencia=5,
-  restaurantes=7, hoteis=9, pets=11. Prévia: `/<slug>?preview=1`.
+  restaurantes=7, hoteis=9, pets=11. Prévia: `/<slug>?preview=1&v=<qualquer>` (a LP sai com cache de 4 h; sem o `&v=` o navegador mostra a versão velha).
 - Ativar (chave "Ativo" no editor da LP) = decisão do usuário, junto com publicar o tema
   (os cards da home já apontam para `/condominios` e `/escolas`).
 - Redirecionar quando o domínio virar (301 no painel da Tray): `/condominios.html`→`/condominios`,
