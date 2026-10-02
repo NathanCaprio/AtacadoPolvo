@@ -25,6 +25,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="{{ font_url }}" rel="stylesheet">
+{# Atacado Polvo: fonte dos títulos (a do corpo vem de settings.configs.font) #}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
 <link href="{{ asset('css/swiper.min.css')       }}" type="text/css" rel="stylesheet" />
 <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
@@ -67,6 +69,9 @@
 {% if 'comparador' in pages.current %}
   <link href="{{ asset('css/page-comparador.css') }}" type="text/css" rel="stylesheet" />
 {% endif %}
+
+{# Atacado Polvo: identidade visual. Depois do CSS do tema e antes do CSS personalizado do painel. #}
+<link href="{{ asset('css/polvo.css') }}" type="text/css" rel="stylesheet" />
 
 {% if settings.configs.custom_css %}
 {% set CDN_URL = asset('')|split('?')[0] %}

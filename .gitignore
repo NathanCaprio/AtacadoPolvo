@@ -17,3 +17,6 @@ desktop.ini
 
 # Cópias do banco e exports (contêm hash de senha dos clientes)
 backups/
+
+# ZIP do tema da Tray gerado por npm run tema-zip (sobe em Ações > Enviar tema)
+tray-tema.zip

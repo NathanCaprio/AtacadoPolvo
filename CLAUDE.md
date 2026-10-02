@@ -20,7 +20,11 @@ npm test       # node --test server/*.test.js testes/*.test.js
 npm run criar-admin -- "Nome" email@x.com
 npm run backup | backups | exportar | restaurar
 npm run fotos  # busca foto para quem não tem no ERP (ver server/fotos.js)
+npm run tema-zip  # empacota tray-tema/ em tray-tema.zip para subir na Tray
 ```
+Sincronização com o ERP **desligada** desde 02/10/2026 (o Empresarius bloqueou
+por excesso de chamadas; credenciais comentadas no `.env`). Não religar: o
+catálogo passa a vir da Tray, que tem integração nativa com o Empresarius.
 
 ## Onde fica cada coisa
 | Quero mudar... | Arquivo |
@@ -44,6 +48,7 @@ npm run fotos  # busca foto para quem não tem no ERP (ver server/fotos.js)
 | Senha (scrypt), sessão, cookie | `server/auth.js` |
 | Schema SQLite / migrações | `server/db.js` (banco em `dados/polvo.db`) |
 | Servidor estático, headers, ETag | `server/server.js` |
+| **Loja Tray (migração em curso)** | `tray-tema/` — ler `tray-tema/CLAUDE.md` (fluxo de envio, onde fica cada coisa, pendências). ZIP: `npm run tema-zip` (`server/tema-zip.js`) |
 
 Páginas: `index`, `produtos`, `calculadora`, `condominios`/`escolas` (SEO),
 `recorrencia` (planos com desconto, origem `recorrencia`), `restaurantes`/`hoteis`/`pets` (SEO discreto: só link na lista Navegação do rodapé, fora do menu),

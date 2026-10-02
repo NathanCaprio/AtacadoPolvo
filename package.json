@@ -12,7 +12,8 @@
     "backups": "node server/backup.js listar",
     "exportar": "node server/backup.js exportar",
     "restaurar": "node server/backup.js restaurar",
-    "fotos": "node server/fotos.js"
+    "fotos": "node server/fotos.js",
+    "tema-zip": "node server/tema-zip.js"
   },
   "engines": {
     "node": ">=22.9"

@@ -1,0 +1,235 @@
+/* =========================================================================
+   Atacado Polvo — camada visual sobre o Tema Padrão 3.0 da Tray.
+
+   Tudo que é nosso fica aqui, para o resto do tema ficar o mais perto
+   possível do original (facilita aplicar atualização da Tray). Cores base
+   vêm de configs/settings.json (painel > Aparência > Cores); este arquivo
+   cuida do que o painel não alcança: fonte de títulos, cabeçalho, rodapé
+   escuro, cartão de produto e botões.
+
+   Tokens iguais aos do site antigo (assets/css/style.css, :root).
+   ========================================================================= */
+
+:root {
+  --polvo-brand: #7b2fe3;
+  --polvo-brand-600: #6a20cc;
+  --polvo-brand-700: #551aa6;
+  --polvo-brand-soft: #f2eafe;
+  --polvo-accent: #ffc91e;
+  --polvo-accent-ink: #4a3300;
+  --polvo-danger: #d6337a;
+  --polvo-ok: #1faf54;
+  --polvo-ink: #1b0733;
+  --polvo-ink-2: #463160;
+  --polvo-ink-3: #6f5c8a;
+  --polvo-surface-2: #f8f5fe;
+  --polvo-line: #e8def7;
+  --polvo-line-strong: #d3c2ec;
+  --polvo-shadow-sm: 0 1px 2px rgba(27, 7, 51, 0.07), 0 1px 3px rgba(27, 7, 51, 0.05);
+  --polvo-shadow-md: 0 4px 14px rgba(27, 7, 51, 0.09), 0 2px 4px rgba(27, 7, 51, 0.05);
+  --polvo-shadow-brand: 0 12px 30px rgba(123, 47, 227, 0.32);
+  --polvo-r-md: 14px;
+  --polvo-r-lg: 22px;
+  --polvo-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --polvo-font-display: "Montserrat", var(--font_family);
+}
+
+/* ---- 1. Tipografia ------------------------------------------------------ */
+
+body {
+  color: var(--polvo-ink-2);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3,
+.title-section,
+.page-title .text,
+.footer .title {
+  font-family: var(--polvo-font-display);
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3,
+.title-section,
+.page-title .text { color: var(--polvo-ink); }
+
+.title-section { font-weight: 800; }
+
+::selection { background: var(--polvo-brand); color: #fff; }
+
+:focus-visible {
+  outline: 3px solid var(--polvo-brand);
+  outline-offset: 2px;
+}
+
+/* ---- 2. Faixa de aviso e cabeçalho ------------------------------------- */
+
+.top-bar {
+  background-color: var(--polvo-ink);
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.header > .bg {
+  border-bottom: 1px solid var(--polvo-line);
+}
+
+.header.fixed .bg {
+  box-shadow: var(--polvo-shadow-md);
+}
+
+.header-search-wrapper .input-search {
+  background: var(--polvo-surface-2);
+  border-color: var(--polvo-line);
+}
+
+.header-search-wrapper .input-search:focus {
+  border-color: var(--polvo-brand);
+  background: #fff;
+}
+
+.header .cart-header .number {
+  background: var(--polvo-accent);
+  color: var(--polvo-accent-ink);
+  font-weight: 700;
+}
+
+.nav .list > li > a {
+  font-weight: 600;
+  color: var(--polvo-ink);
+  transition: color 0.2s var(--polvo-ease);
+}
+
+.nav .list > li > a:hover { color: var(--polvo-brand); }
+
+/* ---- 3. Botões ---------------------------------------------------------- */
+
+.button,
+.product-button,
+.news-button {
+  font-weight: 700;
+  transition: background-color 0.2s var(--polvo-ease), box-shadow 0.2s var(--polvo-ease),
+    transform 0.2s var(--polvo-ease);
+}
+
+.product-button:hover,
+.news-button:hover {
+  box-shadow: var(--polvo-shadow-brand);
+  transform: translateY(-1px);
+}
+
+/* ---- 4. Cartão de produto ---------------------------------------------- */
+
+.product {
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-md);
+  box-shadow: var(--polvo-shadow-sm);
+}
+
+.product:hover {
+  border-color: var(--polvo-line-strong);
+  box-shadow: var(--polvo-shadow-md);
+  transform: translateY(-2px);
+}
+
+.product .space-image {
+  border-radius: calc(var(--polvo-r-md) - 6px);
+  background: var(--polvo-surface-2);
+}
+
+.product .product-info .product-name {
+  font-weight: 600;
+  color: var(--polvo-ink);
+}
+
+.product .product-price .price .current-price {
+  font-family: var(--polvo-font-display);
+  font-weight: 800;
+  color: var(--polvo-brand);
+}
+
+.product .product-price .price .old-price { color: var(--polvo-ink-3); }
+
+/* Selos: amarelo da marca, como o "Mais vendido" do site antigo. */
+.product-tags .tag.text {
+  background-color: var(--polvo-accent);
+  color: var(--polvo-accent-ink);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.product-tags .tag.discount.text {
+  background-color: var(--polvo-danger);
+  color: #fff;
+}
+
+.product-tags .tag.free-shipping.text,
+.product-tags .tag.free_shipping.text {
+  background-color: var(--polvo-ok);
+  color: #fff;
+}
+
+/* ---- 5. Rodapé escuro --------------------------------------------------- */
+
+.footer {
+  --color_footer_bg: var(--polvo-ink);
+  --color_footer_main_font: #fff;
+  --color_footer_second_font: rgba(255, 255, 255, 0.72);
+  --color_footer_highlight: var(--polvo-accent);
+  border-top: 0;
+}
+
+.footer .list a,
+.footer .list span { color: var(--color_footer_second_font); }
+
+.footer .list a:hover { color: #fff; }
+
+.footer .footer-main {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer .footer-main .newsletter .icon-news { color: var(--polvo-accent); }
+
+.footer .footer-main .newsletter .form .field {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.footer .footer-main .newsletter .form .field::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+.footer .footer-main .newsletter .form .news-button {
+  background: var(--polvo-accent);
+  color: var(--polvo-accent-ink);
+}
+
+.footer .title { color: #fff; }
+
+/* Selos de segurança são imagens pensadas para fundo claro. */
+.footer .security-seals li {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px 6px;
+}
+
+.footer .copy {
+  color: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.25rem;
+}
+
+.footer .copy a { color: #fff; }
+
+/* ---- 6. Movimento reduzido --------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .product,
+  .product-button,
+  .news-button { transition: none; }
+
+  .product:hover,
+  .product-button:hover,
+  .news-button:hover { transform: none; }
+}
