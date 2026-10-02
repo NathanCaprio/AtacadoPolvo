@@ -1,0 +1,69 @@
+{
+  "name": "Polvo: categorias em destaque",
+  "template": "snippets/polvo-categories",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 8,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "limpeza", "title": "Limpeza", "description": "Detergentes, desinfetantes, multiuso, ceras e limpadores perfumados.", "link": "" } },
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "roupa", "title": "Lavanderia", "description": "Sabão em pó, líquido e em barra, amaciantes e alvejantes.", "link": "" } },
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "papel", "title": "Papéis", "description": "Papel higiênico, toalha interfolhada e em bobina, guardanapos.", "link": "" } },
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "descartavel", "title": "Descartáveis", "description": "Copos, pratos, talheres, canudos, potes e marmitas.", "link": "" } },
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "saco", "title": "Sacos de Lixo", "description": "Sacos de lixo preto, azul e alvejado, em várias capacidades.", "link": "" } },
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "vassoura", "title": "Vassouras, Rodos e Pás", "description": "Vassouras, rodos, pás de lixo e bruxas.", "link": "" } },
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "balde", "title": "Baldes, Bacias e Mops", "description": "Baldes, bacias, mops e cestos.", "link": "" } },
+        { "type": "polvo_category", "settings": { "enabled": true, "icon": "pano", "title": "Panos e Flanelas", "description": "Panos de chão, perfex, microfibra e flanelas.", "link": "" } }
+      ],
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Catálogo",
+        "title": "Tudo que a limpeza do seu cliente precisa",
+        "subtitle": "Mais de mil itens, da esponja ao galão de 20 litros, para você fechar tudo num pedido só.",
+        "show_categories": true,
+        "categories_label": "Mais categorias:",
+        "button_text": "Explorar o catálogo",
+        "button_link": ""
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_category",
+      "name": "Categoria",
+      "limit": 8,
+      "settings": [
+        {
+          "id": "icon", "type": "select", "label": "Ícone", "default": "limpeza",
+          "options": [
+            { "value": "limpeza", "label": "Piso / limpeza geral" },
+            { "value": "roupa", "label": "Roupa (lavanderia)" },
+            { "value": "papel", "label": "Rolo de papel" },
+            { "value": "descartavel", "label": "Talheres (descartáveis)" },
+            { "value": "saco", "label": "Saco" },
+            { "value": "vassoura", "label": "Vassoura" },
+            { "value": "balde", "label": "Balde" },
+            { "value": "pano", "label": "Pano" },
+            { "value": "gota", "label": "Gota (desinfecção)" },
+            { "value": "sabonete", "label": "Sabonete (higiene)" },
+            { "value": "galao", "label": "Galão (profissional)" },
+            { "value": "caixa", "label": "Caixa (embalagens)" }
+          ]
+        },
+        { "id": "title", "type": "text", "label": "Título", "maxLength": 40 },
+        { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 140 },
+        { "id": "link", "type": "text", "label": "Link", "info": "Link da categoria. Em branco = busca pelo título." }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 60 },
+    { "id": "subtitle", "type": "textarea", "label": "Subtítulo", "maxLength": 200 },
+    { "id": "show_categories", "type": "checkbox", "label": "Mostrar as categorias da loja abaixo dos cards", "default": true },
+    { "id": "categories_label", "type": "text", "label": "Rótulo das categorias", "maxLength": 30 },
+    { "id": "button_text", "type": "text", "label": "Botão: texto", "maxLength": 30, "info": "Em branco = sem o botão" },
+    { "id": "button_link", "type": "text", "label": "Botão: link", "info": "Em branco = todos os produtos" }
+  ]
+}

@@ -1,0 +1,26 @@
+{# Atacado Polvo: resumo de "a empresa" com foto do estoque (configs/editor/sections/home.polvo_about.json). #}
+{% if section.type == 'polvo_about' and section.settings.enabled %}
+{% set s = section.settings %}
+<section class="polvo-secao" id="{{ section.id }}">
+  <div class="container polvo-sobre">
+    <div>
+      {% if s.eyebrow %}<span class="polvo-eyebrow polvo-eyebrow--amarelo">{{ s.eyebrow }}</span>{% endif %}
+      {% if s.title %}<h2 class="polvo-sobre__titulo">{{ s.title }}</h2>{% endif %}
+      {% if s.description %}<p class="polvo-sobre__desc">{{ s.description }}</p>{% endif %}
+      {% if s.button_text and s.button_link %}
+        <a class="polvo-btn polvo-btn--contorno" href="{{ s.button_link }}">
+          {{ s.button_text }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      {% endif %}
+    </div>
+
+    {% if s.image %}
+      <figure class="polvo-sobre__foto">
+        <img src="{{ asset(s.image) }}" alt="{{ s.image_alt }}" width="760" height="1020" loading="lazy" decoding="async">
+        {% if s.caption %}<figcaption>{{ s.caption }}</figcaption>{% endif %}
+      </figure>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

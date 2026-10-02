@@ -1,0 +1,56 @@
+{
+  "name": "Polvo: chamada final",
+  "template": "snippets/polvo-cta",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 4,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "local", "title": "Unidade Medianeira", "text": "Av. Dr. Carlos Barbosa, 931 - Medianeira - Porto Alegre/RS" } },
+        { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "local", "title": "Unidade Bento Gonçalves", "text": "Av. Bento Gonçalves, 5928 - Porto Alegre/RS" } },
+        { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "entrega", "title": "Entrega própria", "text": "Porto Alegre e Região Metropolitana" } },
+        { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "relogio", "title": "Atendimento", "text": "Segunda a sexta, 08h às 18h\nSábado, 09h às 15h" } }
+      ],
+      "settings": {
+        "enabled": true,
+        "title": "Pronto para abastecer?",
+        "description": "Veja os preços, monte o carrinho e finalize em poucos minutos. Prefere ajuda? Chame no WhatsApp que a gente monta o pedido com você.",
+        "button_text": "Ver produtos",
+        "button_link": "",
+        "whatsapp_text": "Falar no WhatsApp",
+        "whatsapp_number": "5551980256547",
+        "whatsapp_message": "Olá! Vim pela loja e gostaria de ajuda com um pedido."
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_cta_info",
+      "name": "Informação",
+      "limit": 4,
+      "settings": [
+        {
+          "id": "icon", "type": "select", "label": "Ícone", "default": "local",
+          "options": [
+            { "value": "local", "label": "Endereço" },
+            { "value": "entrega", "label": "Caminhão (entrega)" },
+            { "value": "relogio", "label": "Relógio (horário)" },
+            { "value": "telefone", "label": "Telefone" }
+          ]
+        },
+        { "id": "title", "type": "text", "label": "Título", "maxLength": 40 },
+        { "id": "text", "type": "textarea", "label": "Texto", "maxLength": 120 }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 60 },
+    { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 240 },
+    { "id": "button_text", "type": "text", "label": "Botão principal: texto", "maxLength": 30, "info": "Em branco = sem o botão" },
+    { "id": "button_link", "type": "text", "label": "Botão principal: link", "info": "Em branco = todos os produtos" },
+    { "id": "whatsapp_text", "type": "text", "label": "Botão WhatsApp: texto", "maxLength": 30, "info": "Em branco = sem o botão" },
+    { "id": "whatsapp_number", "type": "text", "label": "WhatsApp (só números, com 55 e DDD)", "maxLength": 15 },
+    { "id": "whatsapp_message", "type": "text", "label": "Mensagem que já vem escrita", "maxLength": 150 }
+  ]
+}

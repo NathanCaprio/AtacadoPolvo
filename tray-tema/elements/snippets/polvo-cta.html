@@ -1,0 +1,52 @@
+{# Atacado Polvo: chamada final + unidades e horário (configs/editor/sections/home.polvo_cta.json).
+   Base .polvo-cta das landing pages, aqui em caixa com degradê (.polvo-cta--caixa). #}
+{% if section.type == 'polvo_cta' and section.settings.enabled %}
+{% set s = section.settings %}
+{% set icones = {
+  'local': '<path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/>',
+  'entrega': '<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+  'relogio': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  'telefone': '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'
+} %}
+<section class="polvo-secao polvo-secao--cta" id="{{ section.id }}">
+  <div class="container">
+    <div class="polvo-cta polvo-cta--caixa">
+      {% if s.title %}<h2>{{ s.title }}</h2>{% endif %}
+      {% if s.description %}<p>{{ s.description }}</p>{% endif %}
+      <div class="polvo-hero__acoes">
+        {% if s.button_text %}
+          <a class="polvo-btn polvo-btn--claro" href="{{ s.button_link|default(links.search ~ '&palavra_busca=') }}">
+            {{ s.button_text }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        {% endif %}
+        {% if s.whatsapp_text and s.whatsapp_number %}
+          <a class="polvo-btn polvo-btn--contorno" href="{% element 'snippets/polvo-wpp-url' { 'number': s.whatsapp_number, 'message': s.whatsapp_message } %}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+            {{ s.whatsapp_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% set tem_info = false %}
+    {% for block in section.blocks %}
+      {% if block.settings.enabled and block.settings.title %}{% set tem_info = true %}{% endif %}
+    {% endfor %}
+    {% if tem_info %}
+      <ul class="polvo-infos">
+        {% for block in section.blocks %}{% if block.settings.enabled and block.settings.title %}
+          <li id="{{ block.id }}">
+            <span class="polvo-infos__icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">{{ icones[block.settings.icon]|default(icones['local'])|raw }}</svg></span>
+            <div>
+              <strong>{{ block.settings.title }}</strong>
+              {% if block.settings.text %}<span>{{ block.settings.text|nl2br }}</span>{% endif %}
+            </div>
+          </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

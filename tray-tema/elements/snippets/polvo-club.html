@@ -1,0 +1,69 @@
+{# Atacado Polvo: clube de ofertas no grupo do WhatsApp (configs/editor/sections/home.polvo_club.json). #}
+{% if section.type == 'polvo_club' and section.settings.enabled %}
+{% set s = section.settings %}
+{% set raio = '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>' %}
+<section class="polvo-clube" id="{{ section.id }}">
+  <div class="container polvo-clube__grid">
+    <div>
+      {% if s.eyebrow %}
+        <span class="polvo-eyebrow polvo-eyebrow--amarelo">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">{{ raio|raw }}</svg>
+          {{ s.eyebrow }}
+        </span>
+      {% endif %}
+      {% if s.title %}<h2 class="polvo-clube__titulo">{{ s.title }}</h2>{% endif %}
+      {% if s.description %}<p class="polvo-clube__desc">{{ s.description }}</p>{% endif %}
+
+      <ul class="polvo-clube__lista">
+        {% for block in section.blocks %}
+          {% if block.settings.enabled and block.settings.text %}
+            <li id="{{ block.id }}">
+              <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+              {{ block.settings.text }}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      {% if s.button_text and s.button_link %}
+        <a class="polvo-btn polvo-btn--wpp" href="{{ s.button_link }}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+          {{ s.button_text }}
+        </a>
+      {% endif %}
+      {% if s.note %}<p class="polvo-clube__nota">{{ s.note }}</p>{% endif %}
+    </div>
+
+    {% if s.show_mockup %}
+      {# Ilustração de uma conversa do grupo (decorativa). #}
+      <div class="polvo-clube__mock" aria-hidden="true">
+        <div class="polvo-clube__mock-topo">
+          <img src="{{ asset('img/polvo/logo-head.svg') }}" alt="" width="44" height="44">
+          <div>
+            <strong>{{ s.mockup_title }}</strong>
+            <small>Grupo no WhatsApp</small>
+          </div>
+        </div>
+        {% if s.mockup_msg1_title %}
+          <div class="polvo-clube__msg">
+            <strong><svg viewBox="0 0 24 24" fill="currentColor">{{ raio|raw }}</svg> {{ s.mockup_msg1_title }}</strong>
+            {{ s.mockup_msg1_text }}
+          </div>
+        {% endif %}
+        {% if s.mockup_msg2_title %}
+          <div class="polvo-clube__msg">
+            <strong>{{ s.mockup_msg2_title }}</strong>
+            {{ s.mockup_msg2_text }}
+          </div>
+        {% endif %}
+        {% if s.mockup_price_new %}
+          <div class="polvo-clube__preco">
+            {% if s.mockup_price_old %}<span>de <s>{{ s.mockup_price_old }}</s></span>{% endif %}
+            <b>por {{ s.mockup_price_new }}</b>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

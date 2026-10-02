@@ -1,0 +1,41 @@
+{
+  "name": "Polvo: perguntas frequentes",
+  "template": "snippets/polvo-faq",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 10,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Tem pedido mínimo?", "answer": "Sim. O valor mínimo aparece no carrinho antes de você finalizar a compra." } },
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Preciso ter CNPJ para comprar?", "answer": "Não. Vendemos para empresas e para pessoa física. Com CNPJ, a nota sai no nome da empresa." } },
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Quais são as formas de pagamento?", "answer": "Pix, boleto e cartão de crédito, direto no fechamento do pedido aqui na loja." } },
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Em quanto tempo a entrega chega?", "answer": "O prazo aparece no carrinho assim que você informa o CEP. Em Porto Alegre e Região Metropolitana, a entrega é feita pela nossa frota." } },
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Vocês vendem por unidade ou só caixa fechada?", "answer": "Cada produto mostra na página como é vendido: unidade, pacote ou caixa fechada." } },
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Os produtos têm registro na Anvisa?", "answer": "Sim. Os saneantes que vendemos são notificados ou registrados na Anvisa, com rótulo dentro da norma." } }
+      ],
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Dúvidas frequentes",
+        "title": "Antes de fazer o primeiro pedido",
+        "subtitle": ""
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_faq_item",
+      "name": "Pergunta",
+      "limit": 10,
+      "settings": [
+        { "id": "question", "type": "text", "label": "Pergunta", "maxLength": 120 },
+        { "id": "answer", "type": "textarea", "label": "Resposta", "maxLength": 600 }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 70 },
+    { "id": "subtitle", "type": "textarea", "label": "Subtítulo", "maxLength": 200 }
+  ]
+}

@@ -1,7 +1,7 @@
 {# Atacado Polvo: destaque principal da home (configs/editor/sections/home.polvo_hero.json). #}
 {% if section.type == 'polvo_hero' and section.settings.enabled %}
 {% set s = section.settings %}
-{% set link_catalogo = s.button_link|default(links.search ~ '?loja=' ~ store.id ~ '&palavra_busca=') %}
+{% set link_catalogo = s.button_link|default(links.search ~ '&palavra_busca=') %}
 <section class="polvo-hero" id="{{ section.id }}">
   <div class="container polvo-hero__grid">
     <div class="polvo-hero__texto">

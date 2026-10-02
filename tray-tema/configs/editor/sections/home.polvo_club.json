@@ -1,0 +1,59 @@
+{
+  "name": "Polvo: clube de ofertas (WhatsApp)",
+  "template": "snippets/polvo-club",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 4,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_club_item", "settings": { "enabled": true, "text": "Preços exclusivos para quem está no grupo" } },
+        { "type": "polvo_club_item", "settings": { "enabled": true, "text": "Ofertas válidas no prazo informado ou enquanto durar o estoque" } },
+        { "type": "polvo_club_item", "settings": { "enabled": true, "text": "Retire na loja ou peça por app de entrega" } }
+      ],
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Clube de Ofertas Polvo",
+        "title": "Promoções relâmpago direto no seu WhatsApp",
+        "description": "Promoções exclusivas, ofertas relâmpago e oportunidades especiais para nossos clientes, direto no seu celular.",
+        "button_text": "Entrar no grupo de ofertas",
+        "button_link": "https://chat.whatsapp.com/C8QtrJiOFjTISmCfH4oOnW",
+        "note": "Grátis e sem conversa paralela: só a loja envia mensagens.",
+        "show_mockup": true,
+        "mockup_title": "Clube de Ofertas Polvo",
+        "mockup_msg1_title": "Promoção relâmpago",
+        "mockup_msg1_text": "Ofertas novas no grupo, válidas até sábado.",
+        "mockup_msg2_title": "Exclusivo para membros",
+        "mockup_msg2_text": "Ao retirar na loja, avise que é do grupo.",
+        "mockup_price_old": "R$ 33,90",
+        "mockup_price_new": "R$ 24,90"
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_club_item",
+      "name": "Vantagem",
+      "limit": 4,
+      "settings": [
+        { "id": "text", "type": "text", "label": "Texto", "maxLength": 80 }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 70 },
+    { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 240 },
+    { "id": "button_text", "type": "text", "label": "Botão: texto", "maxLength": 40 },
+    { "id": "button_link", "type": "text", "label": "Botão: link do convite do grupo", "info": "https://chat.whatsapp.com/..." },
+    { "id": "note", "type": "text", "label": "Nota abaixo do botão", "maxLength": 100 },
+    { "id": "show_mockup", "type": "checkbox", "label": "Mostrar a ilustração do grupo ao lado", "default": true },
+    { "id": "mockup_title", "type": "text", "label": "Ilustração: nome do grupo", "maxLength": 40 },
+    { "id": "mockup_msg1_title", "type": "text", "label": "Ilustração: mensagem 1 (título)", "maxLength": 40 },
+    { "id": "mockup_msg1_text", "type": "text", "label": "Ilustração: mensagem 1 (texto)", "maxLength": 80 },
+    { "id": "mockup_msg2_title", "type": "text", "label": "Ilustração: mensagem 2 (título)", "maxLength": 40 },
+    { "id": "mockup_msg2_text", "type": "text", "label": "Ilustração: mensagem 2 (texto)", "maxLength": 80 },
+    { "id": "mockup_price_old", "type": "text", "label": "Ilustração: preço antigo", "maxLength": 15 },
+    { "id": "mockup_price_new", "type": "text", "label": "Ilustração: preço da oferta", "maxLength": 15 }
+  ]
+}

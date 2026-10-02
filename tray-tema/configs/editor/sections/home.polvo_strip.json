@@ -1,0 +1,25 @@
+{
+  "name": "Polvo: faixa de chamada",
+  "template": "snippets/polvo-strip",
+  "group": "Conteúdo",
+  "limit": 3,
+  "defaults": {
+    "tray": {
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Pedido recorrente",
+        "title": "Programe a reposição e ganhe até 12% de desconto",
+        "description": "Monte a lista uma vez e receba no dia certo, semanal, quinzenal ou mensal. A lista pode mudar a cada entrega e o plano mensal não tem fidelidade.",
+        "button_text": "Ver os planos",
+        "button_link": "/recorrencia"
+      }
+    }
+  },
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 80 },
+    { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 240 },
+    { "id": "button_text", "type": "text", "label": "Botão: texto", "maxLength": 30, "info": "Em branco = sem o botão" },
+    { "id": "button_link", "type": "text", "label": "Botão: link" }
+  ]
+}

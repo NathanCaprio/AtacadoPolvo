@@ -1,0 +1,31 @@
+{
+  "name": "Polvo: a empresa (resumo)",
+  "template": "snippets/polvo-about",
+  "group": "Conteúdo",
+  "limit": 1,
+  "defaults": {
+    "tray": {
+      "settings": {
+        "enabled": true,
+        "eyebrow": "A empresa",
+        "title": "Uma distribuidora de bairro que cresceu sem perder o telefone do cliente",
+        "description": "Começamos em 2015 atendendo mercearias do bairro. Hoje abastecemos centenas de comércios, condomínios e instituições com o mesmo preço honesto e vendedor que atende no primeiro toque.",
+        "button_text": "Conhecer nossa história",
+        "button_link": "/empresa",
+        "image": "/img/polvo/estoque-medianeira.webp",
+        "image_alt": "Corredor da loja com fardos de papel higiênico e caixas fechadas empilhadas até o teto",
+        "caption": "Estoque próprio nas duas unidades de Porto Alegre."
+      }
+    }
+  },
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 100 },
+    { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 400 },
+    { "id": "button_text", "type": "text", "label": "Botão: texto", "maxLength": 30, "info": "Em branco = sem o botão" },
+    { "id": "button_link", "type": "text", "label": "Botão: link" },
+    { "id": "image", "type": "image_picker", "label": "Foto", "info": "Retrato, por volta de 760x1020 px" },
+    { "id": "image_alt", "type": "text", "label": "Descrição da foto (acessibilidade)", "maxLength": 150 },
+    { "id": "caption", "type": "text", "label": "Legenda sobre a foto", "maxLength": 80 }
+  ]
+}

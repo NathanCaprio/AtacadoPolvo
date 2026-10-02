@@ -34,7 +34,16 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Seções próprias da home (editáveis no painel)
 `home.polvo_hero` (destaque + números), `home.polvo_segments` (cards com ícone
-escolhido numa lista), `home.polvo_steps` (como comprar). Cada uma = JSON em
+escolhido numa lista), `home.polvo_steps` (como comprar), `home.polvo_categories`
+(cards + chips com as categorias reais da loja; card sem link = busca pelo título),
+`home.polvo_strip` (faixa de chamada: recorrência), `home.polvo_club` (grupo de
+ofertas no WhatsApp + ilustração), `home.polvo_about` (a empresa + foto em
+`img/polvo/`), `home.polvo_faq` (`<details>`, mesmo `.polvo-faq` das LPs; respostas
+provisórias, o usuário ajusta) e `home.polvo_cta` (caixa em degradê + unidades/horário).
+Ordem igual à home antiga: hero, marcas, faixa de informações, mais vendidos,
+categorias, como comprar, segmentos, recorrência, clube, novidades, a empresa,
+FAQ, notícias, chamada final. Depoimentos **fora** até o usuário confirmar que
+são clientes reais. Cada uma = JSON em
 `configs/editor/sections/home.<tipo>.json` + `elements/snippets/polvo-*.html`
 (abre com `{% if section.type == '<tipo>' and section.settings.enabled %}`) +
 CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
@@ -42,7 +51,12 @@ CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
 (slideshow, banner_line, banner_grid) ficam **desligados** até haver banners reais.
 Arquivos novos em `configs/` entram normalmente pelo ZIP.
 - Twig: evitar `??` e `?:` (versão da Tray desconhecida); usar `|default(...)`.
-- "Todos os produtos" = `links.search ~ '?loja=' ~ store.id ~ '&palavra_busca='`.
+  Também nada de `filter(x => ...)` nem `for ... if`: `if` dentro do laço.
+- Texto em URL (`?text=`, `palavra_busca=`): sempre por `snippets/polvo-urlencode.html`
+  (a Tray entrega acento como entidade, até nos literais do template).
+- CSS: nada de caractere fora do ASCII em `content:` (a Tray serve o CSS sem
+  UTF-8); usar escape (`"\2013"`).
+- "Todos os produtos" = `links.search ~ '&palavra_busca='` (`links.search` já traz `?loja=`).
 - Preço na página do produto chega por JS (~2 s): esperar `#variacaoPreco` antes de conferir.
 
 ## Landing pages de SEO (criador de LPs da Tray, fora do tema)
@@ -81,6 +95,9 @@ de `server/tema-lp.js`). Teste: `server/tema-lp.test.js`.
 ## Feito / próximo
 - [x] Paleta, Inter + Montserrat, cabeçalho, rodapé escuro, cartão de produto, selos.
 - [x] Home: hero, barra de informações, mais vendidos, segmentos, como comprar, marcas (logos em `img/marcas/`).
+- [x] Cabeçalho em uma linha como o do site antigo.
+- [x] Home completa: categorias, recorrência, clube de ofertas, a empresa, FAQ, chamada final.
+- [ ] Usuário: revisar as respostas do FAQ e confirmar os depoimentos (Renata Alves, Jorge Camargo).
 - [x] Página de produto: preço em destaque (WhatsApp é nativo da Tray, ver acima).
 - [x] Links dos cards de segmento → LPs.
 - [x] LPs de SEO criadas no criador da Tray (inativas).
