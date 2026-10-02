@@ -1,0 +1,28 @@
+{% if section.type == 'about_store' and section.settings.enabled %}
+<section class="section-about-store" id="{{ section.id }}">
+  <div class="container flex align-center justify-center two">
+    {% if section.settings.store_image %}
+    <div class="block-image flex align-center">
+      <img
+        class="lazyload"
+        data-src="{{ asset(section.settings.store_image) }}"
+        src="{{ asset('img/empty.png') }}"
+        alt="{{ section.settings.title }}"
+        width="526px"
+        height="406px"
+      />
+    </div>
+    {% endif %}
+
+    <div class="block-text">
+      {% if section.settings.title %}
+      <h2 class="title">{{ section.settings.title }}</h2>
+      {% endif %} {% if section.settings.description %}
+      <div class="description">{{ section.settings.description }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <link href="{{ asset('css/about-store.css') }}" type="text/css" rel="stylesheet" />
+</section>
+{% endif %}

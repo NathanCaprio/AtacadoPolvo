@@ -1,0 +1,108 @@
+{% set effectiveStock = variant ? variant.stock : product.stock %}
+{% set effectiveAvailable = variant ? (variant.available is defined and variant.available is not null ? variant.available : (effectiveStock > 0 ? 1 : 0)) : product.available %}
+{% set effectiveImages = variant.images | default(product.images) %}
+{% set variantSkuSuffix = '' %}
+{% if variant.Sku is defined and variant.Sku %}
+    {% set skuValues = [] %}
+    {% for sku in variant.Sku %}
+        {% set skuValues = skuValues | merge([sku.value]) %}
+    {% endfor %}
+    {% set variantSkuSuffix = ' - ' ~ skuValues | join(' - ') %}
+{% endif %}
+{% set is_related_block = is_related is defined and is_related %}
+
+{% set hover_class = effectiveAvailable and (effectiveStock > 0 or settings.without_stock_sale) and not product.upon_request ? 'show-down' : '' %}
+
+<div class="product {{ hover_class }}" {{ product.data_tray_ga4 }}>
+
+    {% if pages.current == 'catalog' and settings.compare %}
+        <div class="compare-buttons">
+
+            <a href="{{ links.compare_delete ~ product.id }}" class="flex justify-center align-center {{ not product.compare ? 'compare-hidden' }}" data-compare="remove">
+                <span class="filter-checkbox checked"></span>
+                {{ Translation("remover_comparar") }}
+            </a>
+
+            <a href="{{ links.compare_add ~ product.id }}" class="flex justify-center align-center {{ product.compare ? 'compare-hidden' }}" data-compare="add">
+                <span class="filter-checkbox"></span>
+                {{ Translation("comparar_produto") }}
+            </a>
+
+        </div>
+    {% endif %}
+
+    <div class="image">
+
+        {% set second_image_class = settings.configs.show_second_image_hover and effectiveImages[1] ? 'second' : '' %}
+        {% set image_class        = 'lazyload' %}
+
+        <a href="{{ product.link }}" class="space-image {{ second_image_class }} {{ settings.configs.product_image_format }}">
+
+            <img class="{{ image_class }}" src="{{ asset('img/empty.png') }}" data-src="{{ effectiveImages[0].large }}" alt="{{ product.name }}{{ variantSkuSuffix }}">
+
+            {% if second_image_class %}
+                <img class="{{ image_class }}" src="{{ asset('img/empty.png') }}" data-src="{{ effectiveImages[1].large }}" alt="{{ product.name }}{{ variantSkuSuffix }}">
+            {% endif %}
+        </a>
+
+        {% element 'snippets/product-tags' {
+            'product': product,
+            'variant': variant,
+            'show_tags': show_tags
+        } %}
+
+    </div>
+
+    <a class="product-info" href="{{ product.link }}">
+
+        <div class="product-name">
+            {{ product.name }}{{ variantSkuSuffix }}
+        </div>
+
+        {% if settings.configs.show_ratting %}
+            {% element 'snippets/rating' { 'review': product.ranking } %}
+        {% endif %}
+
+        <div class="product-price">
+            {% if effectiveAvailable and (effectiveStock > 0 or settings.without_stock_sale) and not product.upon_request %}
+
+                {% if is_related_block %}
+
+                    {% element 'snippets/product-price' { 'product': product, 'variant': variant } %}
+
+                {% else %}
+
+                    <div data-module="pricing" data-snippet="snippets/product-price" data-product-id="{{ product.id }}">
+                        <div class="loading-pricing">
+                            Carregando preço ...
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% elseif product.upon_request %}
+
+                {% element 'snippets/product-message' { 'know_more' : 'Sob consulta' } %}
+
+            {% elseif effectiveStock <= 0 %}
+
+                {% element 'snippets/product-unavailable' %}
+
+            {% else %}
+
+                {% element 'snippets/product-unavailable' %}
+
+            {% endif %}
+        </div>
+
+    </a>
+
+    <div class="actions">
+        {% if effectiveAvailable and (effectiveStock > 0 or settings.without_stock_sale) and not product.upon_request %}
+            <a class="product-button" href="{{ product.link }}">
+                {{ settings.configs.buy_button_text_listing }}
+            </a>
+        {% endif %}
+    </div>
+
+</div>

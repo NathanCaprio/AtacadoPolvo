@@ -1,0 +1,22 @@
+{% if section.settings.enabled %}
+    <div class="box" id="{{ section.id }}">
+
+        {% if section.settings.title %}
+            <div class="title">{{ section.settings.title }}</div>
+        {% endif %}
+
+        <div class="overflow">
+            <ul class="list">
+                <li>
+                    <a href="{{ links.contact }}" title="Contato">Contato</a>
+                </li>
+                {% for custom in pages.custom %}
+                    <li>
+                        <a href="{{ custom.url }}" title="{{ custom.name }}">{{ custom.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+{% endif %}

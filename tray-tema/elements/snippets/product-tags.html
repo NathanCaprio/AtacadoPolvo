@@ -1,0 +1,60 @@
+{% if settings.configs.show_tags %}
+
+    {% set effectivePrice = variant ? (variant.calculated_price | default(variant.price)) : product.price %}
+    {% set effectivePriceOffer = variant ? (variant.price_offer | default(0)) : product.price_offer %}
+    {% set discount = effectivePriceOffer > 0 ? (100 - (effectivePriceOffer / effectivePrice) * 100) : false %}
+    {% set replaceTags = {'src=': 'alt="Selo" src='} %}
+
+    {% if product.new or product.featured or product.free_shipping or product.additional_button or discount %}
+        <div class="product-tags">
+            {% if discount %}
+                <div class="tag discount text">
+                    {% if not variant and product.has_variation and product.has_other_prices %} Até {% endif %}
+                    {{ discount | number_format }}% OFF
+                </div>
+            {% endif %}
+
+            {% if product.new %}
+                <div class="tag new {{ settings.configs.use_text_tags ? 'text' : 'image' }}">
+                    {% if settings.configs.use_text_tags %}
+                        {{ settings.configs.tag_new_text ? settings.configs.tag_new_text : 'Novidade' }}
+                    {% else %}
+                        {{ Image('new') | replace(replaceTags) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if product.featured %}
+                <div class="tag featured {{ settings.configs.use_text_tags ? 'text' : 'image' }}">
+                    {% if settings.configs.use_text_tags %}
+                    {{ settings.configs.tag_featured_text ? settings.configs.tag_featured_text : 'Destaque' }}
+                    {% else %}
+                        {{ Image('featured') | replace(replaceTags) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if product.free_shipping %}
+                <div class="tag free-shipping {{ settings.configs.use_text_tags ? 'text' : 'image' }}">
+                    {% if settings.configs.use_text_tags %}
+                        {{ settings.configs.tag_free_shipping_text ? settings.configs.tag_free_shipping_text : 'Frete gratis' }}
+                    {% else %}
+                        {{ Image('free_shipping') | replace(replaceTags) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if product.additional_button %}
+                <div class="tag extra {{ settings.configs.use_text_tags ? 'text' : 'image' }}">
+                    {% if settings.configs.use_text_tags %}
+                        {{ settings.configs.tag_additional_text ? settings.configs.tag_additional_text : 'Adicional' }}
+                    {% else %}
+                        {{ Image('additional_button') | replace(replaceTags) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+{% endif %}

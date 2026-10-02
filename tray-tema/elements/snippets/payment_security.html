@@ -1,0 +1,42 @@
+{% if section.settings.enabled %}
+    <div class="box" id="{{ section.id }}">
+
+        {% if section.settings.show_payment and (paymentMethods.order or paymentMethods.credit) %}
+            {% if section.settings.payment_title %}
+                <div class="title">{{ section.settings.payment_title }}</div>
+            {% endif %}
+            {% element 'snippets/payment-list' %}
+        {% endif %}
+
+        {% if section.settings.show_security %}
+            {% if section.settings.security_title %}
+                <div class="title">{{ section.settings.security_title }}</div>
+            {% endif %}
+            <ul class="security-seals flex f-wrap">
+
+                <li class="google-seal">
+                    <a href="https://transparencyreport.google.com/safe-browsing/search?url={{ store.url }}" target="_blank" rel="noreferrer noopener" title="Google Safe Browsing">
+                        <span class="icon icon-google vertical-align">
+                            <i class="icon path1"></i>
+                            <i class="icon path2"></i>
+                        </span>
+                    </a>
+                </li>
+
+                {% if seals.ebit %}
+                    <li class="ebit-seal">
+                        {{ seals.ebit }}
+                    </li>
+                {% endif %}
+
+                {% if seals.hackersafe %}
+                    <li class="loja-protegida-seal">
+                        {{ seals.hackersafe }}
+                    </li>
+                {% endif %}
+
+            </ul>
+        {% endif %}
+
+    </div>
+{% endif %}

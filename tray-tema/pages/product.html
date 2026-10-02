@@ -1,0 +1,22 @@
+{% set show_installments = settings.configs.show_installments %}
+
+{% if ProgressiveDiscounts %}
+  <div class="progressive-discount-banners">
+    {% for discount in ProgressiveDiscounts %}
+      {% if discount.banner %}
+        <img src="{{ discount.banner }}" alt="{{ discount.name }}" />
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% element 'snippets/breadcrumb' %}
+{% element 'schema' { 'product' : product } %}
+
+<div class="product-wrapper {{ not show_installments ? 'hide-installments' : '' }}">
+  {% for section in settings.content.product %}
+      {% element section.template {
+        'section' : section
+      } %}
+  {% endfor %}
+</div>

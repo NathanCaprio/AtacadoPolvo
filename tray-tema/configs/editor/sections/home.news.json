@@ -1,0 +1,31 @@
+{
+  "name": "Notícias",
+  "template": "snippets/news",
+  "group": "Conteúdo",
+  "limit": 1,
+  "defaults": {
+    "blocks": [],
+    "settings": {
+      "enabled": true,
+      "title": "Notícias",
+      "button_text": "Acessar blog"
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 30,
+      "default": "Notícias"
+    },
+    {
+      "id": "button_text",
+      "type": "text",
+      "label": "Texto do botão",
+      "maxLength": 14,
+      "default": "Acessar"
+    }
+  ]
+}

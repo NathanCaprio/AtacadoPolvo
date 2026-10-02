@@ -1,0 +1,20 @@
+{% if section.settings.enabled %}
+    <div class="block-logo flex align-center justify-center" id="{{ section.id }}">
+
+        {% set logoStore = Image('logo_loja') %}
+        <a class="logo" href="{{ store.url }}" title="{{ store.name }}">
+
+            {% if logoStore %}
+                {{ logoStore | replace({'src=': 'width="222" height="36" src='}) }}
+            {% endif %}
+
+            {% if 'home' in pages.current %}
+                <h1 class="title-store">{{ store.name }}</h1>
+            {% else %}
+                <div class="title-store">{{ store.name }}</div>
+            {% endif %}
+
+        </a>
+
+    </div>
+{% endif %}

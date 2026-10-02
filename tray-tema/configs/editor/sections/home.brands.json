@@ -1,0 +1,144 @@
+{
+  "name": "Marcas",
+  "template": "snippets/brands",
+  "group": "Produtos",
+  "limit": 3,
+  "max_blocks": 10,
+  "defaults": {
+    "blocks": [
+      {
+        "type": "brand_image",
+        "settings": {
+          "enabled": true,
+          "brand_id": "",
+          "image": "/img/settings/marca1.png",
+          "enable_link": false,
+          "custom_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "brand_image",
+        "settings": {
+          "enabled": true,
+          "brand_id": "",
+          "image": "/img/settings/marca2.png",
+          "enable_link": false,
+          "custom_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "brand_image",
+        "settings": {
+          "enabled": true,
+          "brand_id": "",
+          "image": "/img/settings/marca3.png",
+          "enable_link": false,
+          "custom_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "brand_image",
+        "settings": {
+          "enabled": true,
+          "brand_id": "",
+          "image": "/img/settings/marca4.png",
+          "enable_link": false,
+          "custom_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "brand_image",
+        "settings": {
+          "enabled": true,
+          "brand_id": "",
+          "image": "/img/settings/marca5.png",
+          "enable_link": false,
+          "custom_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "brand_image",
+        "settings": {
+          "enabled": true,
+          "brand_id": "",
+          "image": "/img/settings/marca6.png",
+          "enable_link": false,
+          "custom_link": "",
+          "open_new_tab": false
+        }
+      }
+    ],
+    "settings": {
+      "enabled": true,
+      "show_brand_name": false
+    }
+  },
+  "blocks": [
+    {
+      "type": "brand_image",
+      "name": "Marca",
+      "limit": 10,
+      "settings": [
+        {
+          "id": "brand_id",
+          "type": "async_select",
+          "source": "brands",
+          "label": "Marca",
+          "placeholder": "Selecione uma marca",
+          "filter": {
+            "filterParam": "brand"
+          }
+        },
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Imagem da marca",
+          "info": "Tamanho recomendado: 137x120 px"
+        },
+        {
+          "id": "enable_link",
+          "type": "checkbox",
+          "label": "Exibir link da marca",
+          "default": false,
+          "conditions": {
+            "brand_id": "has_value"
+          }
+        },
+        {
+          "id": "custom_link",
+          "type": "text",
+          "label": "Link",
+          "placeholder": "https://exemplo.com.br",
+          "info": "Deixe em branco para usar o link padrão da marca.",
+          "conditions": {
+            "brand_id": "has_value",
+            "enable_link": true
+          }
+        },
+        {
+          "id": "open_new_tab",
+          "type": "checkbox",
+          "label": "Abrir em nova aba",
+          "default": false,
+          "conditions": {
+            "brand_id": "has_value",
+            "enable_link": true
+          }
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "show_brand_name",
+      "type": "checkbox",
+      "label": "Exibir nome da marca",
+      "default": false
+    }
+  ]
+}

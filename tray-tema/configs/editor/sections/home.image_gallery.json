@@ -1,0 +1,129 @@
+{
+  "name": "Galeria de Imagens",
+  "template": "snippets/image-gallery",
+  "group": "Banners",
+  "limit": 5,
+  "max_blocks": 16,
+  "defaults": {
+    "blocks": [
+      {
+        "type": "image_gallery_item",
+        "settings": {
+          "enabled": true,
+          "image": "/img/settings/img-placeholder.svg",
+          "title": "Título da imagem",
+          "button_text": "Ver mais",
+          "button_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "image_gallery_item",
+        "settings": {
+          "enabled": true,
+          "image": "/img/settings/img-placeholder.svg",
+          "title": "Título da imagem",
+          "button_text": "Ver mais",
+          "button_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "image_gallery_item",
+        "settings": {
+          "enabled": true,
+          "image": "/img/settings/img-placeholder.svg",
+          "title": "Título da imagem",
+          "button_text": "Ver mais",
+          "button_link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "image_gallery_item",
+        "settings": {
+          "enabled": true,
+          "image": "/img/settings/img-placeholder.svg",
+          "title": "Título da imagem",
+          "button_text": "Ver mais",
+          "button_link": "",
+          "open_new_tab": false
+        }
+      }
+    ],
+    "settings": {
+      "enabled": true,
+      "title": "Galeria de Imagens",
+      "subtitle": "",
+      "items_per_line": 4
+    }
+  },
+  "blocks": [
+    {
+      "type": "image_gallery_item",
+      "name": "Imagem",
+      "limit": 16,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Imagem",
+          "info": "Tamanho recomendado: 600x600 px",
+          "default": "/img/settings/img-placeholder.svg"
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 100,
+          "default": "Título da imagem"
+        },
+        {
+          "id": "button_text",
+          "type": "text",
+          "label": "Texto do botão",
+          "maxLength": 50,
+          "default": "Ver mais"
+        },
+        {
+          "id": "button_link",
+          "type": "text",
+          "label": "Link do botão",
+          "default": ""
+        },
+        {
+          "id": "open_new_tab",
+          "type": "checkbox",
+          "label": "Abrir link em nova aba",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 60,
+      "default": "Galeria de Imagens"
+    },
+    {
+      "id": "subtitle",
+      "type": "text",
+      "label": "Subtítulo",
+      "maxLength": 60,
+      "default": ""
+    },
+    {
+      "id": "items_per_line",
+      "type": "range",
+      "label": "Imagens por linha",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "imagens",
+      "default": 4
+    }
+  ]
+}

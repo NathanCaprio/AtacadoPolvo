@@ -1,0 +1,28 @@
+{% if section.type == 'reviews' and section.settings.enabled %}
+    {% for pages in pages.custom %}
+        {% if pages.info == "depoimentos_de_clientes" and section.settings.enabled %}
+            <section class="section-avaliacoes slide-has-dots" id="{{ section.id }}">
+                <div class="container">
+
+                    {% if section.settings.title %}
+                        <div class="section-header center">
+                            <h2 class="title-section"> {{ section.settings.title }} </h2>
+                        </div>
+                    {% endif %}
+
+                    {% element 'CustomerReview.reviews' %}
+
+                    <a href="/depoimentos-de-clientes" title="{{ section.settings.button_text }}"
+                    class="botao-commerce flex align-center justify-center center"
+                    >
+                        {{ section.settings.button_text ? section.settings.button_text : 'Ver todos' }}
+                    </a>
+
+                </div>
+
+                <link href="{{ asset('css/reviews.css') }}" type="text/css" rel="stylesheet">
+                <script defer src="{{ asset('js/reviews.js') }}"></script>
+            </section>
+        {% endif %}
+    {% endfor %}
+{% endif %}

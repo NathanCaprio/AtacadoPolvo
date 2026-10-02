@@ -1,0 +1,189 @@
+{
+  "name": "Cabeçalho",
+  "limit": 1,
+  "static": true,
+  "max_blocks": 5,
+  "template": "header",
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": []
+    },
+    {
+      "type": "search",
+      "name": "Busca",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "style",
+          "type": "select",
+          "label": "Estilo de exibição",
+          "options": [
+            {
+              "value": "text-and-icon",
+              "label": "Texto e ícone"
+            },
+            {
+              "value": "icon",
+              "label": "Ícone"
+            }
+          ],
+          "default": "text-and-icon"
+        },
+        {
+          "id": "search_text",
+          "type": "text",
+          "label": "Texto da busca",
+          "maxLength": 35,
+          "default": "Olá, o que você procura?"
+        }
+      ]
+    },
+    {
+      "type": "account_cart",
+      "name": "Minha conta e carrinho",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "account_style",
+          "type": "select",
+          "label": "Estilo de exibição",
+          "options": [
+            {
+              "value": "text-and-icon",
+              "label": "Texto e ícone"
+            },
+            {
+              "value": "icon",
+              "label": "Ícone"
+            }
+          ],
+          "default": "text-and-icon"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_cart_counter",
+          "label": "Mostrar contador",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "custom_icons",
+      "name": "Ícones customizados",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "icon_size",
+          "type": "range",
+          "label": "Tamanho dos ícones",
+          "min": 16,
+          "max": 48,
+          "step": 4,
+          "unit": "px",
+          "default": 36
+        },
+        {
+          "id": "search_icon",
+          "type": "image_picker",
+          "label": "Ícone de busca"
+        },
+        {
+          "id": "user_icon",
+          "type": "image_picker",
+          "label": "Ícone de usuário"
+        },
+        {
+          "id": "cart_icon",
+          "type": "image_picker",
+          "label": "Ícone de carrinho"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "show_message_line",
+      "type": "checkbox",
+      "label": "Mostrar linha de mensagem",
+      "default": true,
+      "info": "Utilize esse espaço para inserir avisos ou promoções"
+    },
+    {
+      "id": "message_line_content",
+      "type": "text",
+      "label": "Conteúdo da linha de mensagem",
+      "maxLength": 110,
+      "default": "Utilize esse espaço para inserir avisos ou promoções"
+    },
+    {
+      "type": "settings_group",
+      "groupId": "menu",
+      "heading": "Menu de navegação",
+      "label": "Configurar menus"
+    },
+    {
+      "id": "navigation",
+      "type": "navigation_menu",
+      "label": "Menu de navegação",
+      "info": "Configure os itens do menu principal da loja. Escolha entre exibir categorias, páginas ou criar um menu personalizado.",
+      "default": {
+        "menuType": "categories",
+        "items": []
+      },
+      "group": "menu"
+    },
+    {
+      "id": "menu_category_levels",
+      "type": "select",
+      "label": "Nível das categorias",
+      "options": [
+        {
+          "value": "first",
+          "label": "Primeiro nível"
+        },
+        {
+          "value": "second",
+          "label": "Segundo nível"
+        },
+        {
+          "value": "third",
+          "label": "Terceiro nível"
+        }
+      ],
+      "info": "Determina quantos níveis de subcategorias serão exibidos no menu.",
+      "default": "third",
+      "conditions": {
+        "navigation.menuType": "categories"
+      },
+      "group": "menu"
+    },
+    {
+      "id": "menu_style",
+      "type": "select",
+      "label": "Estilo do menu",
+      "options": [
+        {
+          "value": "default",
+          "label": "Padrão"
+        },
+        {
+          "value": "hamburger",
+          "label": "Recolhido"
+        }
+      ],
+      "default": "default",
+      "group": "menu"
+    }
+  ]
+}

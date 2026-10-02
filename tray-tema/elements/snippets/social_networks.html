@@ -1,0 +1,53 @@
+{% if section.settings.enabled %}
+    <div class="box social-media" id="{{ section.id }}">
+
+        {% if section.settings.title %}
+            <div class="title">{{ section.settings.title }}</div>
+        {% endif %}
+
+        <div class="flex align-center">
+            {% if settings.configs.facebook %}
+                <a href="{{ settings.configs.facebook }}" title="Facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                    <i class="icon icon-facebook v-align-middle"></i>
+                </a>
+            {% endif %}
+
+            {% if settings.configs.tiktok %}
+                <a href="{{ settings.configs.tiktok }}" title="TikTok" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+                    <i class="icon icon-tiktok v-align-middle"></i>
+                </a>
+            {% endif %}
+
+            {% if settings.configs.instagram %}
+                <a href="{{ settings.configs.instagram }}" title="Instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                    <i class="icon icon-instagram v-align-middle"></i>
+                </a>
+            {% endif %}
+
+            {% if settings.configs.twitter %}
+                <a href="{{ settings.configs.twitter }}" title="X" aria-label="X" target="_blank" rel="noopener noreferrer">
+                    <i class="icon icon-x v-align-middle"></i>
+                </a>
+            {% endif %}
+
+            {% if settings.configs.youtube %}
+                <a href="{{ settings.configs.youtube }}" title="Youtube" aria-label="Youtube" target="_blank" rel="noopener noreferrer">
+                    <i class="icon icon-youtube v-align-middle"></i>
+                </a>
+            {% endif %}
+
+            {% if settings.configs.pinterest %}
+                <a href="{{ settings.configs.pinterest }}" title="Pinterest" aria-label="Pinterest" target="_blank" rel="noopener noreferrer">
+                    <i class="icon icon-pinterest v-align-middle"></i>
+                </a>
+            {% endif %}
+
+            {% if settings.configs.linkedin %}
+                <a href="{{ settings.configs.linkedin }}" title="LinkedIn" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                    <i class="icon icon-linkedin v-align-middle"></i>
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+{% endif %}

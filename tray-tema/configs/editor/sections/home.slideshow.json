@@ -1,0 +1,201 @@
+{
+  "name": "Full banner",
+  "template": "snippets/slideshow",
+  "group": "Banners",
+  "limit": 5,
+  "defaults": {
+    "blocks": [],
+    "settings": {
+      "enabled": true,
+      "show_desktop_slideshow": true,
+      "desktop_position": "home",
+      "show_mobile_slideshow": true,
+      "mobile_position": "mobile"
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "show_desktop_slideshow",
+      "type": "checkbox",
+      "label": "Mostrar banner desktop",
+      "default": true
+    },
+    {
+      "id": "desktop_position",
+      "type": "select",
+      "label": "Posição do banner no desktop",
+      "options": [
+        {
+          "value": "home",
+          "label": "Banner Home Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Banner Home Mobile"
+        },
+        {
+          "value": "footer",
+          "label": "Banner Rodapé"
+        },
+        {
+          "value": "bottom",
+          "label": "Banner Inferior"
+        },
+        {
+          "value": "side",
+          "label": "Banner Lateral"
+        },
+        {
+          "value": "title",
+          "label": "Banner Títulos"
+        },
+        {
+          "value": "showcase",
+          "label": "Banner Vitrine"
+        },
+        {
+          "value": "extra1",
+          "label": "Extra 1"
+        },
+        {
+          "value": "extra2",
+          "label": "Extra 2"
+        },
+        {
+          "value": "extra3",
+          "label": "Extra 3"
+        },
+        {
+          "value": "extra4",
+          "label": "Extra 4"
+        },
+        {
+          "value": "extra5",
+          "label": "Extra 5"
+        },
+        {
+          "value": "extra6",
+          "label": "Extra 6"
+        },
+        {
+          "value": "extra7",
+          "label": "Extra 7"
+        },
+        {
+          "value": "extra8",
+          "label": "Extra 8"
+        },
+        {
+          "value": "extra9",
+          "label": "Extra 9"
+        },
+        {
+          "value": "extra10",
+          "label": "Extra 10"
+        },
+        {
+          "value": "extra11",
+          "label": "Extra 11"
+        },
+        {
+          "value": "extra12",
+          "label": "Extra 12"
+        }
+      ],
+      "default": "home",
+      "info": "Para configurar esse item acesse o [cadastro de banners]({{store-url}}/admin/marketing/banners/)"
+    },
+    {
+      "id": "show_mobile_slideshow",
+      "type": "checkbox",
+      "label": "Mostrar banner em dispositivos móveis",
+      "default": true
+    },
+    {
+      "id": "mobile_position",
+      "type": "select",
+      "label": "Posição do banner em dispositivos móveis",
+      "options": [
+        {
+          "value": "home",
+          "label": "Banner Home Desktop"
+        },
+        {
+          "value": "mobile",
+          "label": "Banner Home Mobile"
+        },
+        {
+          "value": "footer",
+          "label": "Banner Rodapé"
+        },
+        {
+          "value": "bottom",
+          "label": "Banner Inferior"
+        },
+        {
+          "value": "side",
+          "label": "Banner Lateral"
+        },
+        {
+          "value": "title",
+          "label": "Banner Títulos"
+        },
+        {
+          "value": "showcase",
+          "label": "Banner Vitrine"
+        },
+        {
+          "value": "extra1",
+          "label": "Extra 1"
+        },
+        {
+          "value": "extra2",
+          "label": "Extra 2"
+        },
+        {
+          "value": "extra3",
+          "label": "Extra 3"
+        },
+        {
+          "value": "extra4",
+          "label": "Extra 4"
+        },
+        {
+          "value": "extra5",
+          "label": "Extra 5"
+        },
+        {
+          "value": "extra6",
+          "label": "Extra 6"
+        },
+        {
+          "value": "extra7",
+          "label": "Extra 7"
+        },
+        {
+          "value": "extra8",
+          "label": "Extra 8"
+        },
+        {
+          "value": "extra9",
+          "label": "Extra 9"
+        },
+        {
+          "value": "extra10",
+          "label": "Extra 10"
+        },
+        {
+          "value": "extra11",
+          "label": "Extra 11"
+        },
+        {
+          "value": "extra12",
+          "label": "Extra 12"
+        }
+      ],
+      "default": "mobile",
+      "info": "Para configurar esse item acesse o [cadastro de banners]({{store-url}}/admin/marketing/banners/)"
+    }
+  ]
+}

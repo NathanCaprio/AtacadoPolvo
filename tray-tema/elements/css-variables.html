@@ -1,0 +1,61 @@
+<style>
+    html{
+
+        {# Font #}
+            --font_family                               : '{{ settings.configs.font.family }}', {{ settings.configs.font.category }}, sans-serif;
+            --font_weight                               : {{ settings.configs.font.weight|default('400') }};
+            --font_style                                : {{ settings.configs.font.style|default('normal') }};
+
+        {# General new theme #}
+            --color_base                                : {{ settings.configs.color_base                              }};
+            --color_base_hover                          : {{ settings.configs.color_base_hover                        }};
+            --color_base_font                           : {{ settings.configs.color_base_font                         }};
+            --color_highlight                           : {{ settings.configs.color_highlight                         }};
+            --color_highlight_hover                     : {{ settings.configs.color_highlight_hover                   }};
+            --color_highlight_font                      : {{ settings.configs.color_highlight_font                    }};
+            --color_font                                : {{ settings.configs.color_font                              }};
+            --color_font_secondary                      : {{ settings.configs.color_font_secondary                    }};
+            --color_border                              : {{ settings.configs.color_border                            }};
+            --color_background                          : {{ settings.configs.color_background                        }};
+
+        {# Images and icons #}
+            --arrow_select                              : url("data:image/svg+xml,%3Csvg fill='%23{{ settings.text_input|replace({'#': ''}) }}' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 284.929 284.929'%3E%3Cpath d='M282.082,76.511l-14.274-14.273c-1.902-1.906-4.093-2.856-6.57-2.856c-2.471,0-4.661,0.95-6.563,2.856L142.466,174.441 L30.262,62.241c-1.903-1.906-4.093-2.856-6.567-2.856c-2.475,0-4.665,0.95-6.567,2.856L2.856,76.515C0.95,78.417,0,80.607,0,83.082 c0,2.473,0.953,4.663,2.856,6.565l133.043,133.046c1.902,1.903,4.093,2.854,6.567,2.854s4.661-0.951,6.562-2.854L282.082,89.647 c1.902-1.903,2.847-4.093,2.847-6.565C284.929,80.607,283.984,78.417,282.082,76.511z' /%3E%3C/svg%3E%0A");
+
+        {# General olds #}
+            --color_font_medium                         : {{ settings.configs.color_font_secondary                    }};
+            --color_font_dark                           : {{ settings.configs.color_font                              }};
+            --color_font_light                          : {{ settings.configs.color_font                              }};
+            --color_font_inverted                       : {{ settings.configs.color_highlight_font                    }};
+            --color_primary                             : {{ settings.configs.color_base                              }};
+            --color_primary_medium                      : {{ settings.configs.color_base_hover                        }};
+            --color_primary_light                       : {{ settings.configs.color_base_hover                        }};
+            --color_secondary_medium                    : {{ settings.configs.color_highlight                         }};
+            --color_gray_medium                         : {{ settings.configs.color_highlight_hover                   }};
+            --color_gray_dark                           : {{ settings.configs.color_highlight_hover                   }};
+
+        {# Header #}
+            --color_header_bg                           : {{ settings.configs.color_background                        }};
+            --color_header_main_font                    : {{ settings.configs.color_font                              }};
+            --color_header_second_font                  : {{ settings.configs.color_font_secondary                    }};
+            --color_header_highlight                    : {{ settings.configs.color_highlight                         }};
+            --color_header_cart_count                   : {{ settings.configs.color_base                              }};
+            --color_header_details                      : {{ settings.configs.color_base                              }};
+
+        {# Footer #}
+            --color_footer_bg                           : {{ settings.configs.color_background                        }};
+            --color_footer_main_font                    : {{ settings.configs.color_font                              }};
+            --color_footer_second_font                  : {{ settings.configs.color_font_secondary                    }};
+            --color_footer_highlight                    : {{ settings.configs.color_highlight                         }};
+            --color_footer_button                       : {{ settings.configs.color_base                              }};
+            --color_footer_details                      : {{ settings.configs.color_base                              }};
+
+        {# Selos #}
+            --color_seal                                : {{ settings.configs.color_base_font                         }};
+            --color_bg_seal                             : {{ settings.configs.color_base                              }};
+
+        {# Configs gerais #}
+            --border_radius                             : {{ settings.configs.border_radius }};
+            --color_banners                             : color-mix(in srgb, var(--color_background) 90%, black 10%)    ;
+
+    }
+</style>

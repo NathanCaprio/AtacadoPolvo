@@ -1,0 +1,64 @@
+<footer class="footer {% if 'home' not in pages.current %} with-border {% endif %}">
+
+    {% if settings.footer.settings.enabled and settings.footer.settings.show_newsletter %}
+    <div class="footer-main footer-padding">
+        <div class="container">
+
+            <div class="newsletter flex justify-between align-center">
+
+                <div class="info flex align-center">
+                    <i class="icon icon-news v-align-middle"></i>
+                    <div class="text">
+                        {% if settings.footer.settings.newsletter_title %}
+                            <div class="first">{{ settings.footer.settings.newsletter_title }}</div>
+                        {% endif %}
+                        {% if settings.footer.settings.newsletter_subtitle %}
+                            <div class="last">{{ settings.footer.settings.newsletter_subtitle }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <form class="form flex align-center" action="/mvc/store/newsletter/" method="post">
+                    <input type="hidden" name="loja" value="{{ store.id }}">
+                    <input type="text" class="field" name="name" placeholder="Seu nome" required autocomplete="off" >
+                    <input type="email" class="field" name="email" placeholder="Seu e-mail" required spellcheck="false" autocomplete="off">
+                    {% set news_bt_text = settings.footer.settings.newsletter_button_text %}
+                    <button type="submit" class="button news-button" title="{{ news_bt_text ? news_bt_text : 'Eu quero!' }}" aria-label="{{ news_bt_text ? news_bt_text : 'Eu quero!' }}">
+                        <span>{{ news_bt_text ? news_bt_text : 'Eu quero!' }}</span>
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="cols">
+        <div class="container flex justify-between align-start">
+            {% for section in settings.footer.blocks %}
+                {% element 'snippets/' ~ section.type {
+                    'section' : section
+                } %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="copy">
+        <div class="container flex align-center justify-between">
+
+            <div class="text">{{ Translation('ag_mensagem_rodape') }}</div>
+
+            <div class="tray">
+                {% element 'snippets/credits' %}
+                {% if tray.theme_configs.custom_theme_preview and '?editor=1' not in store.current_url and '&editor=1' not in store.current_url %}
+                    <div class="mode-preview">
+                        <a href="/mvc/store/home/reset_opencode_preview?loja={{ store.id }}">Sair modo preview</a>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+</footer>

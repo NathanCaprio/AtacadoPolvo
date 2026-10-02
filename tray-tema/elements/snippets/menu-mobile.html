@@ -1,0 +1,156 @@
+{% set editor_mode = '?editor=1' in store.current_url or '&editor=1' in store.current_url %}
+{% set custom_icons = null %}
+{% for block in settings.header.blocks %}
+    {% if block.type == 'custom_icons' and block.settings.enabled %}
+        {% set custom_icons = block.settings %}
+    {% endif %}
+{% endfor %}
+
+<div id="menu-mobile" class="menu-mobile">
+
+    <div class="close-box close-overlay">
+        <i class="icon icon-times"></i>
+    </div>
+
+    <div class="account flex align-center">
+
+        {% if custom_icons and custom_icons.user_icon %}
+            <img src="{{ asset(custom_icons.user_icon) }}"
+                 alt="Minha conta"
+                 class="account-icon custom-header-icon"
+                 width="{{ custom_icons.icon_size }}"
+                 height="{{ custom_icons.icon_size }}"
+                 loading="eager">
+        {% else %}
+            <i class="account-icon icon icon-login"></i>
+        {% endif %}
+
+        <div class="tray-hide" data-logged-user="false">
+            <span>Minha Conta</span>
+            <div class="login-links">
+                <a href="{{ links.login }}" {% if editor_mode %}data-open-modal="editor"{% endif %} title="Entrar">Entrar</a>
+                <span>/</span>
+                <a href="{{ links.register }}" {% if editor_mode %}data-open-modal="editor"{% endif %} title="Cadastrar">Cadastrar</a>
+            </div>
+        </div>
+
+        <div class="tray-hide" data-logged-user="true">
+            <span class="customer-name">Olá, <span data-customer="name"></span></span>
+            <div class="login-links">
+                <a href="{{ links.central }}" {% if editor_mode %}data-open-modal="editor"{% endif %} title="Minha Conta">Minha conta</a>
+                <span>/</span>
+                <a href="{{ links.logout }}" {% if editor_mode %}data-open-modal="editor"{% endif %} title="Sair">Sair</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-mobile-wrapper">
+        <nav class="nav-mobile">
+            {% set navigation = settings.header.settings.navigation %}
+            {% set menu_type = navigation.menuType | default('categories') %}
+
+            {% if menu_type == 'categories' %}
+                <ul class="list first-level">
+                    {% set menu_level = settings.header.settings.menu_category_levels %}
+                    {% for category in categories %}
+
+                        <li {% if category.children and (menu_level == 'second' or menu_level == 'third') %} class="sub" {% endif %}>
+
+                            <a href="{{ category.link }}">{{ category.name }}</a>
+
+                            {% if category.children and (menu_level == 'second' or menu_level == 'third') %}
+                            <ul class="second-level">
+
+                                <a href="{{ category.link }}">Ver {{ category.name }}</a>
+
+                                {% for level2 in category.children %}
+
+                                    <li {% if level2.children and (menu_level == 'third')%} class="sub" {% endif %}>
+
+                                        <a href="{{ level2.link }}">{{ level2.name }}</a>
+
+                                        {% if level2.children and (menu_level == 'third') %}
+                                        <ul class="third-level">
+                                            {% for level3 in level2.children %}
+                                            <li>
+                                                <a href="{{ level3.link }}">{{ level3.name }}</a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+
+                                    </li>
+
+                                {% endfor %}
+
+                            </ul>
+                            {% endif %}
+
+                        </li>
+
+                    {% endfor %}
+                </ul>
+
+            {% elseif menu_type == 'pages' %}
+                <ul class="list first-level">
+                    <li>
+                        <a href="{{ links.contact }}">Contato</a>
+                    </li>
+                    {% for page in pages.custom %}
+                        <li>
+                            <a href="{{ page.url }}">{{ page.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            {% elseif menu_type == 'custom' %}
+                {% set custom_items = navigation.items | default([]) %}
+                <ul class="list first-level">
+                    {% for item in custom_items %}
+                        <li {% if item.children | length > 0 %} class="sub" {% endif %}>
+
+                            {% set item_url = item.url | default(item.customUrl | default('#')) %}
+                            {% set item_target = item.openInNewTab ? '_blank' : '_self' %}
+                            {% set item_is_external = item_url starts with 'http://' or item_url starts with 'https://' %}
+
+                            <a href="{{ item_url }}" target="{{ item_target }}"{% if item_is_external %} rel="noopener noreferrer external"{% endif %}>{{ item.label }}</a>
+
+                            {% if item.children | length > 0 %}
+                            <ul class="second-level">
+                                {% for child in item.children %}
+                                    <li {% if child.children | length > 0 %} class="sub" {% endif %}>
+
+                                        {% set child_url = child.url | default(child.customUrl | default('#')) %}
+                                        {% set child_target = child.openInNewTab ? '_blank' : '_self' %}
+                                        {% set child_is_external = child_url starts with 'http://' or child_url starts with 'https://' %}
+
+                                        <a href="{{ child_url }}" target="{{ child_target }}"{% if child_is_external %} rel="noopener noreferrer external"{% endif %}>{{ child.label }}</a>
+
+                                        {% if child.children | length > 0 %}
+                                        <ul class="third-level">
+                                            {% for subchild in child.children %}
+                                                {% set subchild_url = subchild.url | default(subchild.customUrl | default('#')) %}
+                                                {% set subchild_target = subchild.openInNewTab ? '_blank' : '_self' %}
+                                                {% set subchild_is_external = subchild_url starts with 'http://' or subchild_url starts with 'https://' %}
+                                                <li>
+                                                    <a href="{{ subchild_url }}" target="{{ subchild_target }}"{% if subchild_is_external %} rel="noopener noreferrer external"{% endif %}>{{ subchild.label }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            {% endif %}
+        </nav>
+    </div>
+
+</div>

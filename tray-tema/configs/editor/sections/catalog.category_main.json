@@ -1,0 +1,30 @@
+{
+  "name": "Principal da Categoria",
+  "limit": 1,
+  "max_blocks": 0,
+  "template": "category-main",
+  "blocks": [],
+  "static": true,
+  "visible": true,
+  "settings": [
+    {
+      "id": "show_filter",
+      "type": "checkbox",
+      "label": "Exibir filtro",
+      "default": true
+    },
+    {
+      "id": "filter_collapsed",
+      "type": "checkbox",
+      "label": "Filtro recolhido por padrão",
+      "default": true
+    },
+    {
+      "id": "filter_price_options",
+      "type": "checkbox",
+      "label": "Filtro com faixa de preço (mínimo e máximo)",
+      "info": "Se desativado, o filtro de preço exibido será o padrão da plataforma",
+      "default": true
+    }
+  ]
+}

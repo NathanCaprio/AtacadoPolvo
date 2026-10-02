@@ -1,0 +1,117 @@
+{
+  "name": "Rodapé",
+  "limit": 1,
+  "static": true,
+  "template": "footer",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "support",
+      "name": "Suporte",
+      "template": "snippets/support",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "default": "Central de atendimento"
+        }
+      ]
+    },
+    {
+      "type": "pages",
+      "name": "Institucional",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "default": "Institucional"
+        }
+      ]
+    },
+    {
+      "type": "payment_security",
+      "name": "Pagamento e Segurança",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "show_payment",
+          "type": "checkbox",
+          "label": "Exibir bloco pagamentos",
+          "default": true
+        },
+        {
+          "id": "payment_title",
+          "type": "text",
+          "label": "Título pagamentos",
+          "default": "Pagamento"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_security",
+          "label": "Exibir bloco segurança",
+          "default": true
+        },
+        {
+          "id": "security_title",
+          "type": "text",
+          "label": "Título segurança",
+          "default": "Segurança"
+        }
+      ]
+    },
+    {
+      "type": "social_networks",
+      "name": "Redes sociais",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "show_newsletter",
+      "type": "checkbox",
+      "label": "Exibir newsletter",
+      "default": true
+    },
+    {
+      "id": "newsletter_title",
+      "type": "text",
+      "label": "Título da newsletter",
+      "maxLength": 30,
+      "default": "Newsletter"
+    },
+    {
+      "id": "newsletter_subtitle",
+      "type": "text",
+      "label": "Subtítulo da newsletter",
+      "maxLength": 40,
+      "default": "Se inscreva na nossa newsletter"
+    },
+    {
+      "id": "newsletter_button_text",
+      "type": "text",
+      "label": "Texto do botão da newsletter",
+      "maxLength": 10,
+      "default": "Acessar"
+    }
+  ]
+}

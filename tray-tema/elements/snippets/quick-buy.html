@@ -1,0 +1,26 @@
+{% if section.settings.enable_quick_buy %}
+    {% if product.available and (product.stock > 0 or settings.without_stock_sale) and not product.upon_request %}
+        <div class="quick-buy">
+            <div class="container">
+                <div class="quick-buy-content flex align-center justify-between">
+                    <div class="quick-buy-left flex align-center">
+                      <div class="quick-buy-image">
+                          <img class="lazyload" data-src="{{ product.images[0].medium }}" alt="{{ product.name }}">
+                      </div>
+                      <div class="quick-buy-name">
+                        {{ product.name }}
+                      </div>
+                    </div>
+                    <div class="quick-buy-right flex align-center">
+                        <div class="quick-buy-price {{ featured_price }}">
+                            {{ productHelper.pricing() }}
+                        </div>
+                        <div class="quick-buy-action quick-top">
+                            <button type="text">Comprar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

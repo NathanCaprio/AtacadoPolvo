@@ -1,0 +1,44 @@
+{% set localPath = asset() | split('?') [0] %}
+<span class="hidden local-path" data-path="{{ localPath }}"></span>
+<span class="hidden whatsapp-checkout-number" data-number="{{ Translation('ag_telefone_3') }}"></span>
+
+{# Theme Scripts #}
+<script src="{{ asset('js/vendor/js.cookie.min.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+<script src="{{ asset('js/sidecart.js') }}"></script>
+<script src="{{ asset('js/whatsapp-checkout.js') }}"></script>
+
+{# Tray scripts #}
+{{ tray.scripts }}
+
+{% if 'catalog' in pages.current or 'search' in pages.current %}
+    <script src="{{ asset('js/page-catalog.js') }}"></script>
+{% endif %}
+
+{% if 'product' in pages.current %}
+    <script src="{{ asset('js/page-product.js') }}"></script>
+    <script src="{{ asset('js/zoom-lens.js') }}"></script>
+{% endif %}
+
+{% if 'depoimentos' in pages.current %}
+    <script src="{{ asset('js/vendor/js.validator.min.js') }}"></script>
+    <script src="{{ asset('js/page-comments.js') }}"></script>
+{% endif %}
+
+{% if 'busca_noticias' in pages.current or 'noticia' in pages.current %}
+    <script src="{{ asset('js/page-news.js') }}"></script>
+{% endif %}
+
+{% if 'newsletter' in pages.current %}
+    <script src="{{ asset('js/page-newsletter.js') }}"></script>
+{% endif %}
+
+{% if 'contact' in pages.current %}
+    <script src="{{ asset('js/page-contact.js') }}"></script>
+{% endif %}
+
+{{
+    html.script({
+        '0' : tray.paths.js ~ 'dist/application.min.js?' ~ utils.assets_version
+    })
+}}

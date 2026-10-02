@@ -1,0 +1,27 @@
+{% set stats = filter_options.prices.stats %}
+{% set sel_prices = filtered_options.price ? filtered_options.price[0] : null %}
+{% set max = stats.max|round(0,'ceil') %}
+{% set min = stats.min <= 0 ? 0 : stats.min|round(0,'floor') %}
+{% set selMin = sel_prices ? sel_prices|split(',')[0] : min %}
+{% set selMax = sel_prices ? sel_prices|split(',')[1] : max %}
+
+<div class="filter-list price-filter">
+    <input id="price-filter-input" type="hidden" {{ not sel_prices ? 'disabled' }} data-min="{{ min }}" data-max="{{ max }}" name="prices[]" value="{{ sel_prices }}">
+    <div class="price-filter-inputs flex align-center justify-between">
+        <label for="price-filter-min" class="filter-label">
+            <span>De</span>
+            <input autocomplete="off" class="text" id="price-filter-min" max="{{ max }}" data-name="min_input" type="text" placeholder="{{ min }}">
+        </label>
+        <label for="price-filter-max" class="filter-label">
+            <span>Até</span>
+            <input autocomplete="off" class="text" id="price-filter-max" max="{{ max }}" data-name="max_input" type="text" placeholder="{{ max }}">
+        </label>
+    </div>
+    <div class="filter-checkbox filter-promotion">
+        <input type="checkbox" class="filter-input" id="promotion" value="1" name="somente_oferta">
+        <label class="filter-label" for="promotion">
+            <span class="filter-name">Somente promoções</span>
+        </label>
+    </div>
+    <span class="error-message"></span>
+</div>

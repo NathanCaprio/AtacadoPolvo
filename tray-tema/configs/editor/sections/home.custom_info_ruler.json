@@ -1,0 +1,155 @@
+{
+  "name": "Barra de informações customizada",
+  "template": "snippets/custom-info-ruler",
+  "group": "Conteúdo",
+  "limit": 5,
+  "max_blocks": 4,
+  "defaults": {
+    "blocks": [
+      {
+        "type": "custom_info_block",
+        "settings": {
+          "enabled": true,
+          "icon": "/img/settings/icon-payment.svg",
+          "title": "Pague parcelado",
+          "description": "no cartão de crédito",
+          "link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "custom_info_block",
+        "settings": {
+          "enabled": true,
+          "icon": "/img/settings/icon-shipping.svg",
+          "title": "Entrega garantida",
+          "description": "para todo o Brasil",
+          "link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "custom_info_block",
+        "settings": {
+          "enabled": true,
+          "icon": "/img/settings/icon-return.svg",
+          "title": "Primeira troca grátis",
+          "description": "em até 30 dias",
+          "link": "",
+          "open_new_tab": false
+        }
+      },
+      {
+        "type": "custom_info_block",
+        "settings": {
+          "enabled": true,
+          "icon": "/img/settings/icon-security.svg",
+          "title": "Compra 100% segura",
+          "description": "seus dados protegidos",
+          "link": "",
+          "open_new_tab": false
+        }
+      }
+    ],
+    "settings": {
+      "enabled": true
+    }
+  },
+  "blocks": [
+    {
+      "type": "custom_info_block",
+      "name": "Bloco de informação",
+      "limit": 4,
+      "settings": [
+        {
+          "id": "icon_type",
+          "type": "select",
+          "label": "Tipo de ícone",
+          "options": [
+            {
+              "value": "image",
+              "label": "Imagem"
+            },
+            {
+              "value": "code",
+              "label": "Código SVG"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "id": "icon",
+          "type": "image_picker",
+          "label": "Ícone",
+          "info": "Tamanho recomendado: 48x48 px",
+          "conditions": {
+            "icon_type": "image"
+          }
+        },
+        {
+          "id": "icon_code",
+          "type": "code",
+          "language": "html",
+          "label": "Código SVG do ícone",
+          "placeholder": "<svg>...</svg>",
+          "info": "Cole o código SVG do ícone",
+          "conditions": {
+            "icon_type": "code"
+          }
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 30,
+          "default": "Título do bloco"
+        },
+        {
+          "id": "description",
+          "type": "text",
+          "label": "Descrição",
+          "maxLength": 30,
+          "default": "Descrição do bloco"
+        },
+        {
+          "id": "link",
+          "type": "text",
+          "label": "Link do banner",
+          "placeholder": "https://exemplo.com/pagina"
+        },
+        {
+          "id": "open_new_tab",
+          "type": "checkbox",
+          "label": "Abrir em nova aba",
+          "default": false,
+          "conditions": {
+            "link": "has_value"
+          }
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 30
+    },
+    {
+      "id": "background_image",
+      "type": "image_picker",
+      "label": "Imagem de fundo",
+      "info": "Tamanho recomendado: 1920x1080 px."
+    },
+    {
+      "id": "fixed_background",
+      "type": "checkbox",
+      "label": "Imagem fixa de fundo",
+      "default": false,
+      "conditions": {
+        "background_image": "has_value"
+      }
+    }
+  ]
+}

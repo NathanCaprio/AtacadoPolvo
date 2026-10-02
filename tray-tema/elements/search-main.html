@@ -1,0 +1,167 @@
+{% set catalog = settings.content.catalog[0] %}
+{% if catalog.settings.enabled %}
+<div class="catalog-block" id="{{ catalog.id }}">
+
+    {% if banner.title %}
+        <div class="banner">
+
+            {% if banners.title.type == "javascript" %}
+
+                <div class="slide-catalog swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for banner in banners.title.slides %}
+                            <div class="item swiper-slide">
+
+                                {% if banner.link %}
+                                    <a href="{{ banner.link }}" {% if banner.target == '_blank' %} target="_blank" rel="noopener noreferrer" {% endif %}>
+                                        <img class="swiper-lazy" data-src="{{ banner.image }}" alt="{{ banner.label }}" />
+                                    </a>
+                                {% else %}
+                                    <img class="swiper-lazy" data-src="{{ banner.image }}" alt="{{ banner.label }}" />
+                                {% endif %}
+
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="dots"></div>
+                </div>
+
+            {% else %}
+
+                {% set link = banners.title.link ? banners.title.tracked_link : null %}
+                {% if link %}
+                    <a href="{{ link }}" {% if banners.title.target == '_blank' %} target="_blank" rel="noopener noreferrer" {% endif %}>
+                        <img src="{{ banners.title.src }}" alt="{{ banners.title.label }}" />
+                    </a>
+                {% else %}
+                    <img src="{{ banners.title.src }}" alt="{{ banners.title.label }}" />
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+    <div class="container">
+        {% element 'snippets/breadcrumb' %}
+    </div>
+
+    {% if search.word %}
+        <h1 class="catalog-name">
+            {{ search.word | capitalize }}
+        </h1>
+    {% else %}
+        <h1 class="catalog-name">Todos os produtos</h1>
+    {% endif %}
+
+    <div class="catalog-cols container flex f-wrap">
+
+        {% if catalog.settings.show_filter %}
+            <div id="sidebar-category" class="sidebar-category">
+
+                <div class="sidebar-mobile-header">
+                    <div class="close-box close-overlay">
+                        <i class="icon icon-times"></i>
+                    </div>
+                    <div class="block-title flex align-center">
+                        Filtros
+                    </div>
+                </div>
+
+                {% element 'smartfilter' {
+                    'section': catalog
+                } %}
+
+            </div>
+        {% endif %}
+
+        <div class="col-content">
+
+            <div class="catalog-header">
+
+                {% if category.small_description %}
+                    <div class="description">
+                        <div class="board_htm">
+                            {{ category.small_description }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="catalog-info flex justify-end align-center f-wrap">
+
+                    {% if products | length > 0 %}
+
+                        {% if catalog.settings.show_filter %}
+                        <div class="button-filter-mobile" data-toggle="overlay-shadow" data-target="#sidebar-category">
+                            Filtrar
+                        </div>
+                        {% endif %}
+
+                        {% if settings.compare %}
+                            <a href="/loja/comparador.php?loja={{store.id}}&IdDep={{category.id}}" class="button-compare">
+                                {{ Translation("comparar_produto") }}
+                            </a>
+                        {% endif %}
+
+                        <div class="system-filter flex justify-center align-center {% if settings.compare %} compare-true {% endif %}">
+
+                            <div class="sort-mobile">
+                                <div class="sort-mobile-button" data-toggle="overlay-shadow" data-target="#sort-panel">
+                                    Ordenar
+                                </div>
+                                <div id="sort-panel" class="sort-panel">
+
+                                    <div class="close-box close-overlay">
+                                        <i class="icon icon-times"></i>
+                                    </div>
+
+                                    <div class="block-title flex align-center">
+                                        Ordenar Produtos
+                                    </div>
+
+                                    <ul class="sort-options"></ul>
+
+                                </div>
+                            </div>
+
+                            {% element 'snippets/filter' %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% if products | length > 0 %}
+
+                <div class="catalog-content">
+                    {% element 'showcase-catalog' {
+                        "products": products
+                    } %}
+                </div>
+
+                {% if paginate.params.pageCount > 1 %}
+                    <div class="catalog-footer flex justify-between align-center">
+                        <div class="results">
+                            Resultado: {{ paginate.params.count }} produto(s) em {{ paginate.params.pageCount }} página(s)
+                        </div>
+                        {% element 'snippets/pagination' %}
+                    </div>
+                {% endif %}
+
+            {% else %}
+
+                <div class="catalog-empty">
+                    {{ Translation('nenhum_resultado') }} :(
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+{% endif %}

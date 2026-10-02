@@ -1,0 +1,137 @@
+{
+  "name": "Barra de informações",
+  "template": "snippets/info-ruler",
+  "group": "Conteúdo",
+  "limit": 5,
+  "max_blocks": 4,
+  "defaults": {
+    "blocks": [
+      {
+        "type": "info_bock_payment",
+        "settings": {
+          "enabled": true,
+          "title": "Pague parcelado",
+          "description": "no cartão de crédito"
+        }
+      },
+      {
+        "type": "info_bock_shipping",
+        "settings": {
+          "enabled": true,
+          "title": "Entrega garantida",
+          "description": "para todo o Brasil"
+        }
+      },
+      {
+        "type": "info_bock_return",
+        "settings": {
+          "enabled": true,
+          "title": "Primeira troca grátis",
+          "description": "em até 30 dias"
+        }
+      },
+      {
+        "type": "info_bock_security",
+        "settings": {
+          "enabled": true,
+          "title": "Compra 100% segura",
+          "description": "seus dados protegidos"
+        }
+      }
+    ],
+    "settings": {
+      "enabled": true
+    }
+  },
+  "blocks": [
+    {
+      "type": "info_bock_payment",
+      "name": "Ícone cartão",
+      "limit": 1,
+      "static": true,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 25,
+          "default": "Pague parcelado"
+        },
+        {
+          "id": "description",
+          "type": "text",
+          "label": "Descrição",
+          "maxLength": 25,
+          "default": "no cartão de crédito"
+        }
+      ]
+    },
+    {
+      "type": "info_bock_shipping",
+      "name": "Ícone caminhão",
+      "limit": 1,
+      "static": true,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 25,
+          "default": "Entrega garantida"
+        },
+        {
+          "id": "description",
+          "type": "text",
+          "label": "Descrição",
+          "maxLength": 25,
+          "default": "para todo o Brasil"
+        }
+      ]
+    },
+    {
+      "type": "info_bock_return",
+      "name": "Ícone devolução",
+      "limit": 1,
+      "static": true,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 25,
+          "default": "Compra 100% segura"
+        },
+        {
+          "id": "description",
+          "type": "text",
+          "label": "Descrição",
+          "maxLength": 25,
+          "default": "seus dados protegidos"
+        }
+      ]
+    },
+    {
+      "type": "info_bock_security",
+      "name": "Ícone cadeado",
+      "limit": 1,
+      "static": true,
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Título",
+          "maxLength": 25,
+          "default": "Compra 100% segura"
+        },
+        {
+          "id": "description",
+          "type": "text",
+          "label": "Descrição",
+          "maxLength": 25,
+          "default": "seus dados protegidos"
+        }
+      ]
+    }
+  ],
+  "settings": []
+}

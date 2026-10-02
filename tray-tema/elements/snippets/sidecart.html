@@ -1,0 +1,25 @@
+{% set editor_mode = '?editor=1' in store.current_url or '&editor=1' in store.current_url %}
+<div id="sidecart" class="cart-sidebar flex flex-column" data-order-bump="{{ settings.configs.enable_order_bump }}">
+    <div>
+        <div class="header-cart flex align-center justify-between">
+            <span>Meu carrinho</span>
+            <div class="close-cart close-box close-overlay">
+                <i class="icon icon-times"></i>
+            </div>
+        </div>
+        <div class="content-cart flex-grow flex flex-column justify-between empty">
+            <div class="list">
+                <div class="error"></div>
+            </div>
+        </div>
+        <div class="footer-cart">
+            <div class="text-info flex align-center justify-end">
+                <div class="total">
+                    <span>Subtotal:</span>
+                    <span class="value"></span>
+                </div>
+            </div>
+            <a href="{{ links.cart }}" rel="nofollow" class="botao-commerce buy" {% if editor_mode %}data-open-modal="editor"{% endif %}>Finalizar pedido</a>
+        </div>
+    </div>
+</div>

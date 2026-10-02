@@ -1,0 +1,64 @@
+{% if section.settings.enabled %}
+
+    {% set email = Translation('ag_email_1') %}
+    {% set whatsappNumber = Translation('ag_telefone_3') %}
+    {% set phone = Translation('ag_telefone_1') %}
+    {% set phone2 = Translation('ag_telefone_2') %}
+    {% set horario = Translation('ag_atendimento') %}
+
+    <div class="box box-infos" id="{{ section.id }}">
+
+        {% if section.settings.title %}
+            <div class="title">{{ section.settings.title }}</div>
+        {% endif %}
+
+        <div class="overflow">
+            <ul class="list">
+
+                {% if phone %}
+                    {% set link = phone | replace({'(': '', ')': '', '-': '', ' ': ''}) %}
+                    <li>
+                        <a href="tel:{{ link }}" title="Telefone: {{ phone }}" class="phone">
+                            <i class="icon icon-phone v-align-middle"></i>
+                            {{ phone }}
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if phone2 %}
+                    {% set link = phone2 | replace({'(': '', ')': '', '-': '', ' ': ''}) %}
+                    <li>
+                        <a href="tel:{{ link }}" title="Telefone: {{ phone2 }}" class="phone">
+                            <i class="icon icon-phone v-align-middle"></i>
+                            {{ phone2 }}
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if whatsappNumber %}
+                    <li>
+                        {% element 'snippets/whatsapp' { 'number': whatsappNumber, 'include_text' : false } %}
+                    </li>
+                {% endif %}
+
+                {% if email %}
+                    <li>
+                        <a href="mailto:{{ email }}" title="Email: {{ email }}" class="bold">
+                            <i class="icon icon-email v-align-middle"></i>
+                            {{ email }}
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if horario %}
+                    <li>
+                        <span>
+                            {{ horario }}
+                        </span>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,272 @@
+{% if section.settings.enabled %}
+<div class="product-form" id="{{ section.id }}">
+
+    <div class="product-loader loader">
+      <div class="spinner">
+        <div class="double-bounce-one"></div>
+        <div class="double-bounce-two"></div>
+      </div>
+      <div class="message">Atualizando informações ...</div>
+    </div>
+
+    {% element 'snippets/product-tags' {
+        'product': product,
+        'show_tags': show_tags
+    } %}
+
+    <h1 class="product-name"> {{ product.name }} </h1>
+
+    <div class="flex align-center justify-between">
+
+      {% if (settings.configs.show_ratting) and (productTabs.comments.container_id == '#coments') %}
+        {% element 'snippets/rating' { 'review': product.ranking, 'total' : true } %}
+      {% endif %}
+
+      {% if section.settings.enable_social_share and utils.is_mobile %}
+        <div class="product-share-mobile">
+            <div class="share-button" data-store="{{ store.name }}" data-product="{{ product.name }}" data-url="{{ product.link }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 0 26 26" width="22" height="22"><path fill-rule="evenodd" d="M19 24a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM19 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 14c-1.77 0-3.315.925-4.204 2.312l-5.355-3.06c.346-.68.559-1.438.559-2.252 0-.503-.097-.979-.235-1.437l5.571-3.183A4.97 4.97 0 0 0 19 10a5 5 0 0 0 5-5 5 5 0 0 0-5-5 5 5 0 0 0-5 5c0 .503.097.979.235 1.438L8.664 9.62A4.973 4.973 0 0 0 5 8a5 5 0 0 0-5 5 5 5 0 0 0 5 5c1.14 0 2.179-.396 3.02-1.038L8 17l6.055 3.46c-.02.18-.055.354-.055.54a5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5Z"/></svg>
+            </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <div class="product-infos">
+      {% set productDetails = productHelper.details() %}
+      {% set productDetails = productDetails
+          |replace({'availability': 'product-info product-availability'})
+      %}
+
+      {{ productDetails|raw }}
+    </div>
+
+    {% if settings.show_product_stock %}
+      {% if product.stock and settings.show_product_stock %}
+        <div class="product-info">Estoque: {{ product.stock }}</div>
+      {% endif %}
+    {% endif %}
+
+    {% if product.additional_message %}
+      <div class="product-additional-message"> {{ product.additional_message }} </div>
+    {% endif %}
+
+    {{ productHelper.icons() }}
+
+    {% if not product.upon_request and product.available and productHelper.wishlist() %}
+      <div class="wishlist" title="Adicionar aos favoritos"> {{ productHelper.wishlist() }} </div>
+    {% endif %}
+
+    {% if product.available and (product.stock > 0 or settings.without_stock_sale) and not product.upon_request %}
+      {% set form_classes = [] %}
+
+        {% if product.is_kit %}
+          {% set form_classes = form_classes | merge(['is-kit']) %}
+        {% endif %}
+
+        {% if productHelper.gifts() %}
+          {% set form_classes = form_classes | merge(['has-gift']) %}
+        {% endif %}
+
+      <form id="form_comprar" {% if form_classes | length> 0 %} class="{{ form_classes | join (' ') }}" {% endif %} method="post"
+        data-app="product.buy-form" data-id="{{ product.id }}" action="{{ links.cart_add ~ product.id }}">
+        <div
+            style="display: none"
+            class="value-max-stock"
+            data-variant="{{ product.has_variation }}"
+        >{{ settings.without_stock_sale ? 999 : product.stock }}</div>
+
+        {% if ProgressiveDiscounts %}
+        <div class="product-progressive-discount">
+
+          <div class="title">
+            PRODUTO COM DESCONTO PROGRESSIVO
+            <div class="tooltip">
+              <i class="icon icon-help"></i>
+              <div class="tooltip-content">
+                Somente o maior desconto será aplicado na finalização do
+                pedido.
+              </div>
+            </div>
+          </div>
+
+          <ul class="discounts">
+            {% for discount in ProgressiveDiscounts %}
+              <li class="discount" data-name="{{ discount.name }}"> {{ discount.description }} </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+        {% endif %}
+
+        {% if product.variants %}
+          <div class="product-variants">
+            <div class="tray-content"> {{ productHelper.variants() }} </div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.size_chart_page %}
+          {% set size_chart_slug = section.settings.size_chart_page|split('/')|last %}
+          {% set size_chart_content = null %}
+          {% set size_chart_page_url = null %}
+          {% for page in pages.custom %}
+            {% if page.slug == size_chart_slug %}
+              {% set size_chart_content = page.conteudo %}
+              {% set size_chart_page_url = page.url %}
+            {% endif %}
+          {% endfor %}
+          {% if size_chart_content %}
+            <div class="product-size-chart">
+              <button type="button" class="size-chart-link" data-size-chart-open>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+                Tabela de medidas
+              </button>
+            </div>
+            <div class="size-chart-modal" id="size-chart-modal" style="display: none;">
+                <div class="size-chart-modal-overlay"></div>
+                <div class="size-chart-modal-content">
+                    <button class="size-chart-modal-close" aria-label="Fechar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="size-chart-modal-container">
+                        {{ size_chart_content|raw }}
+                    </div>
+                </div>
+            </div>
+          {% elseif size_chart_page_url %}
+            <div class="product-size-chart">
+              <a href="{{ size_chart_page_url }}" class="size-chart-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+                Tabela de medidas
+              </a>
+            </div>
+          {% endif %}
+        {% endif %}
+
+        <div class="product-gifts"> {{ productHelper.gifts() }} </div>
+
+        {% if product.is_kit %}
+          <div class="product-kit">
+            <div class="tray-content"> {{ productHelper.kit() }} </div>
+            <div class="variant-error error-message" style="display: none">
+              Por favor, selecione as variações antes de prosseguir.
+            </div>
+          </div>
+        {% endif %}
+
+        {% if product.additional_information %}
+          <div class="product-additional-fields">
+            {{ product.additional_information }}
+            <div class="additional-field-required error-message" style="display: none">
+              Por favor, preencha os campos acima.
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="product-price product-price-tray {{ section.settings.featured_price }}" data-module="pricing" data-snippet="snippets/product_form-price" data-product-id="{{ product.id }}">
+            <div class="loading-pricing">
+              Carregando preço ...
+            </div>
+        </div>
+
+        {% if productHelper.banner() %}
+          {% set batch_promotion = productHelper.banner() %}
+          <div
+            class="product-batch-promotion {% if 'img' not in batch_promotion %} text-promotion {% endif %}"
+          >
+            {{ batch_promotion }}
+          </div>
+        {% endif %}
+
+        {% if productHelper.bonus() and 'idBonusVariacao' in productHelper.bonus() %}
+          <div class="product-reward"> {{ productHelper.bonus() }} </div>
+        {% endif %}
+
+        <div class="actions">
+          <div class="tray-buy-button">
+            {{ productHelper.form() }}
+            <div class="increment-page">
+              <div class="increment low">
+                  <div class="icon">-</div>
+              </div>
+              <div class="increment add">
+                  <div class="icon">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+      {% if productHelper.shipping() %}
+      <div class="product-shipping flex align-center">
+        {{ productHelper.shipping() }}
+
+        <span class="info">Frete e prazo</span>
+
+        <form class="shipping-form">
+          <div class="form-input">
+            <label for="zip" class="sr-only">CEP</label>
+            <input
+              autocomplete="shipping postal-code"
+              type="tel"
+              class="input zip-code-mask"
+              id="zip"
+              name="zip"
+              minlength="9"
+              maxlength="9"
+              placeholder="Insira seu cep"
+              required
+            />
+          </div>
+          <button type="submit" class="submit-shipping"> Calcular </button>
+        </form>
+
+        <div class="result"></div>
+      </div>
+      {% endif %}
+
+      {% if settings.social_position == 1 %}
+        <div class="product-social"> {{ productHelper.social() }} </div>
+      {% endif %}
+
+      {% if section.settings.enable_social_share and not utils.is_mobile %}
+        <div class="product-share">
+          <div class="share-title">Compartilhe este produto</div>
+          <div class="share-buttons flex align-center">
+
+            <div class="share-button">
+              <a href="https://wa.me/?text={{ product.link }}" class="whatsapp-share" rel="noreferrer" target="_blank">
+                <i class="icon icon-whatsapp"></i>
+              </a>
+            </div>
+
+            <div class="share-button">
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{ product.link }}" target="_blank">
+                <i class="icon icon-facebook"></i>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      {% endif %}
+
+    {% else %}
+
+      <form id="form_comprar" {% if form_classes | length > 0 %} class="{{ form_classes | join (' ') }}" {% endif %} method="post"
+        data-app="product.buy-form" data-id="{{ product.id }}" action="{{ links.cart_add ~ product.id }}">
+        {% if product.variants %}
+            <div class="product-variants">
+            <div class="tray-content"> {{ productHelper.variants() }} </div>
+            </div>
+        {% endif %}
+        {# This helper verify if product is available or not and generate the correct html #}
+        <div class="product-not-sale"> {{ productHelper.pricing() }} </div>
+      </form>
+
+    {% endif %}
+</div>
+{% endif %}

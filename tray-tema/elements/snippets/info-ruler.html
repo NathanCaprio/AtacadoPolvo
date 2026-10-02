@@ -1,0 +1,36 @@
+{% if section.type == 'info_ruler' and section.settings.enabled %}
+    <section class="section-info-ruler" id="{{ section.id }}">
+        <div class="swiper-container container">
+            <div class="swiper-wrapper flex justify-between">
+                {% for block in section.blocks %}
+                    {% if block.settings.enabled %}
+                        <div class="swiper-slide item flex justify-center align-center" id="{{ block.id }}">
+                            {% if block.type == 'info_bock_payment' %}
+                                <i class="icon icon-card"></i>
+                            {% elseif block.type == 'info_bock_shipping' %}
+                                <i class="icon icon-truck"></i>
+                            {% elseif block.type == 'info_bock_return' %}
+                                <i class="icon icon-refresh"></i>
+                            {% elseif block.type == 'info_bock_security' %}
+                                <i class="icon icon-security"></i>
+                            {% endif %}
+                            <div class="text">
+                                {% if block.settings.title %}
+                                    <span class="featured">{{ block.settings.title }}</span>
+                                {% endif %}
+                                {% if block.settings.description %}
+                                    {{ block.settings.description }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="dots"></div>
+        </div>
+
+        <link href="{{ asset('css/info-ruler.css') }}" type="text/css" rel="stylesheet">
+        <script defer src="{{ asset('js/info-ruler.js') }}"></script>
+
+    </section>
+{% endif %}

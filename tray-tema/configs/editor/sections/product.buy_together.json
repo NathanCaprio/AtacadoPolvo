@@ -1,0 +1,22 @@
+{
+  "name": "Compre junto",
+  "template": "snippets/buy-together",
+  "limit": 1,
+  "defaults": {
+    "blocks": [],
+    "settings": {
+      "enabled": true,
+      "title": "Compre junto"
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 40,
+      "default": "Compre junto"
+    }
+  ]
+}

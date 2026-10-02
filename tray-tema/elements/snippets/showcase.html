@@ -1,0 +1,129 @@
+
+{% if section.type == 'showcase' and section.settings.enabled %}
+
+    {% set quantity = section.settings.products_quantity | default(8) %}
+    {% set type = section.settings.type %}
+    {% set rand = section.settings.rand %}
+
+    {% if type == 'specific_products' %}
+
+        {% set specificProductIds = section.settings.specific_products | default([]) %}
+        
+        {# Extrair IDs únicos de produtos para buscar na API #}
+        {% set uniqueProductIds = [] %}
+        {% for item in specificProductIds %}
+            {% set parts = item | split('-') %}
+            {% set productId = parts[0] %}
+            {% if productId not in uniqueProductIds %}
+                {% set uniqueProductIds = uniqueProductIds | merge([productId]) %}
+            {% endif %}
+        {% endfor %}
+        
+        {# Buscar produtos da API #}
+        {% if uniqueProductIds | length > 0 %}
+            {% set fetchedProducts = Products({
+                'id': uniqueProductIds,
+                'limit': quantity
+            }) %}
+        {% else %}
+            {% set fetchedProducts = [] %}
+        {% endif %}
+        
+        {# Construir arrays paralelos: produtos e variantIds na ordem selecionada #}
+        {% set products = [] %}
+        {% set variantIds = [] %}
+        {% for item in specificProductIds %}
+            {% set parts = item | split('-') %}
+            {% set productId = parts[0] %}
+            {% set variantId = parts | length > 1 ? parts[1] : '' %}
+            {# Buscar produto correspondente (comparando como string) #}
+            {% for fetchedProduct in fetchedProducts %}
+                {% if (fetchedProduct.id ~ '') == productId %}
+                    {% set products = products | merge([fetchedProduct]) %}
+                    {% set variantIds = variantIds | merge([variantId]) %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+    {% elseif type == 'top_seller' %}
+
+        {% set products = Products({
+            'filter': ['available'],
+            'order' : { 'quantity_sold': 'desc' },
+            'limit' : quantity
+        }) %}
+
+    {% else %}
+
+        {% if rand %}
+
+            {% set products = Products({
+                'filter': [type, 'available'],
+                'limit' : quantity,
+                'order' : 'rand'
+            }) %}
+
+        {% else %}
+
+            {% set products = Products({
+                'filter': [type, 'available'],
+                'limit' : quantity
+            }) %}
+
+        {% endif %}
+
+    {% endif %}
+
+    {% if products | length > 0 %}
+        {% set carousel = section.settings.layout == 'carousel' %}
+        {% set isSpecificProducts = type == 'specific_products' %}
+        {% set autoplay = section.settings.autoplay | default(false) %}
+        {% set autoplayDelay = section.settings.autoplay_delay | default(5) %}
+        <section class="section-showcase {% if carousel %}list-slide{% endif %}" id="{{ section.id }}" {% if carousel and autoplay %}data-autoplay="true" data-autoplay-delay="{{ autoplayDelay * 1000 }}"{% endif %}>
+            <div class="container">
+
+                {% if section.settings.title %}
+                    <div class="section-header center">
+                        <h2 class="title-section"> {{ section.settings.title }} </h2>
+                    </div>
+                {% endif %}
+
+                {% if carousel %}
+                    <div class="swiper-container">
+                {% endif %}
+
+                <div class="list-product {{ carousel ? 'swiper-wrapper' : 'flex f-wrap' }}">
+                    {% for item in products %}
+                        {% set variantId = isSpecificProducts ? variantIds[loop.index0] : '' %}
+                        {% set variantData = null %}
+                        {% if variantId and item.variants %}
+                            {% for variant in item.variants %}
+                                {% if (variant.id ~ '') == variantId %}
+                                    {% set variantData = variant %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <div class="item {{ carousel ? 'swiper-slide' }}" data-product-id="{{ item.id }}" {% if variantId %}data-variant-id="{{ variantId }}"{% endif %}>
+                            {% element 'snippets/product' {
+                                product: item,
+                                variant: variantData
+                            } %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if carousel %}
+                    <div class="dots"></div>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            {% if carousel %}
+                <script defer src="{{ asset('js/slider-product.js') }}"></script>
+            {% endif %}
+
+        </section>
+    {% endif %}
+
+{% endif %}

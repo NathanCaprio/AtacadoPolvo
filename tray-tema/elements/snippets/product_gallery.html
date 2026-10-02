@@ -1,0 +1,75 @@
+{% set showZoom = 'zoom-on' in productHelper.gallery %}
+{% set discount = product.price_offer > 0 ? (100 - (product.price_offer / product.price) * 100) : false %}
+
+{% if section.settings.enabled %}
+<div class="product-gallery{{ showZoom ? ' zoom-true' }}{{ section.settings.style == 'vertical' ? ' vertical flex flex-wrap' : ' horizontal flex flex-column' }}" id="{{ section.id }}">
+
+    <ul
+    class="product-thumbs swiper-carousel {% if product.images | length > 4 %} show-arrows {% endif %}"
+    >
+    <div class="thumbs-list swiper-container hide-dots-desk">
+        <div class="swiper-wrapper">
+            {% if product.images | length > 1 %}
+                {% for images in product.images %}
+                    <li
+                    class="swiper-slide {% if loop.first -%} active {%- endif %}"
+                    data-index="{{ loop.index }}"
+                    >
+                        <div class="thumb">
+                            <img src="{{ images.medium }}" alt="{{ product.name }}" />
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="dots"></div>
+    </div>
+
+    <div class="controls">
+        <div class="prev">
+            <i class="icon icon-arrow-prev"></i>
+        </div>
+        <div class="next">
+            <i class="icon icon-arrow-next"></i>
+        </div>
+    </div>
+    </ul>
+
+    <div class="product-images swiper-container">
+
+        {% if product.video %}
+            <div class="product-video" data-url="{{ product.video }}" aria-label="Ver Vídeo">
+                <i class="icon icon-youtube"></i>
+                <span class="text">Ver Vídeo</span>
+            </div>
+        {% endif %}
+
+        <div class="swiper-wrapper">
+            {% for images in product.images %}
+                <div
+                class="image swiper-slide {% if loop.first -%} active {%- endif %}"
+                data-index="{{ loop.index }}"
+                >
+                    <div class="zoom">
+                        <img
+                            src="{{ images.full }}"
+                            alt="{{ product.name }}"
+                            data-pswp-src="{{ images.full }}"
+                            data-original-image="{{ images.full }}"
+                            class="product-gallery-image"
+                        />
+                        <div class="zoom-lens"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="dots"></div>
+
+    </div>
+
+    {% if settings.social_position == 0 %}
+        <div class="product-social sidepicture"> {{ productHelper.social() }} </div>
+    {% endif %}
+
+</div>
+{% endif %}

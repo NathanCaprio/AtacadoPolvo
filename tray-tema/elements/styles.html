@@ -1,0 +1,77 @@
+{% set font_weight = settings.configs.font.weight|default(400) %}
+{% set font_style = settings.configs.font.style|default('normal') %}
+{% set weights = [400, 600, 700] %}
+{% if font_weight not in weights %}
+  {% set weights = weights|merge([font_weight])|sort %}
+{% endif %}
+{% if font_style == 'italic' %}
+  {% set pairs = [] %}
+  {% for w in weights %}
+    {% set pairs = pairs|merge(['0,' ~ w, '1,' ~ w]) %}
+  {% endfor %}
+  {% set font_spec = 'ital,wght@' ~ pairs|sort|join(';') %}
+{% else %}
+  {% set font_spec = 'wght@' ~ weights|join(';') %}
+{% endif %}
+{% set font_url = 'https://fonts.googleapis.com/css2?family=' ~ settings.configs.font.family|replace({' ': '+'}) ~ ':' ~ font_spec ~ '&display=swap' %}
+
+{# Styles Pre-loads #}
+<link rel="preload" href="{{ font_url }}" as="style" type="text/css">
+<link rel="preload" href="{{ asset('css/fonts/icomoon.woff2')|split('?')[0] }}?v=3.0.2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="{{ asset('css/swiper.min.css') }}" as="style" type="text/css" />
+<link rel="preload" href="{{ asset('css/main.css') }}" as="style" type="text/css" />
+
+{# Theme Style #}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="{{ font_url }}" rel="stylesheet">
+
+<link href="{{ asset('css/swiper.min.css')       }}" type="text/css" rel="stylesheet" />
+<link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
+<link href="{{ asset('css/sidecart.css') }}" type="text/css" rel="stylesheet" />
+
+{% if 'product' in pages.current %}
+  <link href="{{ asset('css/page-product.css') }}" type="text/css" rel="stylesheet" />
+  <link href="{{ asset('css/photoswipe.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'catalog' in pages.current or 'search' in pages.current %}
+  <link href="{{ asset('css/page-catalog.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'search' in pages.current %}
+  <link href="{{ asset('css/page-search.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'contact' in pages.current %}
+  <link href="{{ asset('css/page-contact.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'depoimentos' in pages.current %}
+  <link href="{{ asset('css/page-comments.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'busca_noticias' in pages.current or 'noticia' in pages.current %}
+  <link href="{{ asset('css/news.css') }}" type="text/css" rel="stylesheet" />
+  <link href="{{ asset('css/page-news.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'newsletter' in pages.current %}
+  <link href="{{ asset('css/page-newsletter.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'register' in pages.current %}
+  <link href="{{ asset('css/page-login.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if 'comparador' in pages.current %}
+  <link href="{{ asset('css/page-comparador.css') }}" type="text/css" rel="stylesheet" />
+{% endif %}
+
+{% if settings.configs.custom_css %}
+{% set CDN_URL = asset('')|split('?')[0] %}
+
+<style>
+   {{ settings.configs.custom_css|replace({'{{store-theme-url}}': CDN_URL})|raw }}
+</style>
+{% endif %}

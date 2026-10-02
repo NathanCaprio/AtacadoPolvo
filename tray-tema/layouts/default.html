@@ -1,0 +1,219 @@
+<!doctype html>
+<html
+  lang="pt-br"
+  data-theme-name="{{ settings.theme_info.name }}"
+  data-theme-version=""
+  data-files="{{ utils.assets_version }}"
+  data-store="{{ store.id }}"
+  class="page-{{ pages.current }}"
+>
+  <head>
+
+    {{ html.charset() }}
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="{{ settings.color_primary_medium }}" />
+
+    {% element 'head-metas' %}
+    {% element 'css-variables' %}
+    {% element 'styles' %}
+
+    {{ tray.analytics }}
+    {{ googleTagManager.header(pages.current, tagManagerData) }}
+  </head>
+  <body>
+    {{ googleTagManager.top(pages.current, tagManagerData) }}
+    {% element 'snippets/modals-theme' %}
+
+    <div class="overlay-shadow"></div>
+    {% set header = settings.header.settings %}
+    <div class="application {% if header.enabled and header.show_message_line and header.message_line_content %}with-message-line{% endif %} {% if header.menu_style == 'default' %}menu-default{% endif %}">
+      {% element 'snippets/sidecart' %}
+      {% element 'snippets/menu-mobile' %}
+      {% element 'header' %}
+
+      <main class="site-main">
+        {% if not ('home' in pages.current) %}
+          <div class="page-content {{ pages.current in ['catalog', 'home', 'search'] ? ' not-padding' }}">
+        {% endif %}
+
+        {% if "central" in pages.current %}
+
+          <div class="container">
+            <div class="line-panel flex">
+              {% element 'sidebar-central' %}
+              <div class="col-panel"> {{ content_for_layout }} </div>
+            </div>
+          </div>
+
+        {% elseif 'home' in pages.current %}
+
+          {{ content_for_layout }}
+
+        {% else %}
+
+          {% set special_pages = [ 'listas', 'depoimentos-de-clientes', 'noticias' ] %}
+          {% set title = '' %}
+
+          {% for page in pages.custom %}
+            {% if ('empresa' in page.slug and pages.current == 'company') or (pages.current == page.slug and page.slug not in special_pages) %}
+              {% set title = page.name %}
+            {% endif %}
+          {% endfor %}
+
+          {% if ('catalog' in pages.current) or ('search' in pages.current) %}
+            <div class="{% if title != '' %} is-custom-page {% endif %}">
+          {% else %}
+              <div class="container {% if title != '' %} is-custom-page {% endif %}">
+          {% endif %}
+            {% if title != '' %}
+              <div class="page-title">
+                <span class="text"> {{ title }} </span>
+              </div>
+            {% endif %}
+            {{ content_for_layout }}
+          </div>
+
+        {% endif %}
+
+        {% if not pages.current == 'home' %}
+          </div>
+        {% endif %}
+
+      </main>
+
+      {% element 'footer' %}
+      {% if settings.show_whatsapp_button %}
+        {% element 'snippets/whatsapp'
+          { 'local': 'floating' }
+        %}
+      {% endif %}
+    </div>
+    <div>
+    {% element 'snippets/messages' %}
+</div>
+
+    {% element 'snippets/pageview' %}
+    {% element 'snippets/modal' %}
+    {% element 'scripts' %}
+    {{ store.chat }}
+    {{ googleTagManager.bottom(pages.current, tagManagerData) }}
+
+    {% if '?editor=1' in store.current_url or '&editor=1' in store.current_url %}
+      {% element 'modal-editor' %}
+      <script>
+        window.addEventListener('load', function(){
+          parent.postMessage('iframe-loaded', '{{ store.url}}');
+
+          window.addEventListener('message', function(event){
+
+            const trustedOrigins = [
+              'https://opencode.tray.com.br',
+              'https://studio.tray.com.br',
+              '{{ store.url}}'
+            ];
+
+            if (!trustedOrigins.includes(event.origin)) return;
+
+            if(event.data === 'reload'){
+                console.info('Reloading page from theme editor...');
+                window.location.reload();
+            }
+
+            if (event.data && event.data.type === 'SCROLL_TO_SECTION'){
+                const element = document.getElementById(event.data.sectionId);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+          });
+        });
+
+         // change links to add editor=1 and opencode_theme
+         const pageUrl = new URL(window.location.href);
+         const opencodeTheme = pageUrl.searchParams.get('opencode_theme');
+         const baseUrl = window.location.origin;
+
+         const changeLinks = (elements) => {
+          elements.forEach(link => {
+            if (link.href && link.href.startsWith(baseUrl) && link.target !== '_blank') {
+              try {
+                const url = new URL(link.href);
+                url.searchParams.set('editor', '1');
+                if (opencodeTheme) {
+                 url.searchParams.set('opencode_theme', opencodeTheme);
+                }
+                link.setAttribute('href', url.toString());
+              } catch (e) {
+                console.error('Could not process link:', link, e);
+              }
+            }
+          });
+         }
+
+         changeLinks(document.querySelectorAll('a'));
+
+         const search = document.querySelector('.header-search-wrapper');
+
+         if(search) {
+          const action = search.getAttribute('action');
+          if(action) {
+            search.setAttribute('action', `${action}&opencode_theme=${opencodeTheme}&editor=1`);
+          }
+
+          search.insertAdjacentHTML('beforeend', `<input type="hidden" name="opencode_theme" value="${opencodeTheme}">`);
+          search.insertAdjacentHTML('beforeend', `<input type="hidden" name="editor" value="1">`);
+
+          const handleSuggestionChanges = () => {
+            const suggestion = search.querySelector('.suggestion');
+            if (suggestion) {
+              const links = suggestion.querySelectorAll('a');
+              changeLinks(links);
+            }
+          };
+
+          const observer = new MutationObserver(() => {
+            handleSuggestionChanges();
+          });
+
+          observer.observe(search, {
+            childList: true,
+            subtree: true
+          });
+
+          search.addEventListener('click', (event) => {
+            const suggestionWord = event.target.closest('.suggestion-words');
+            if (suggestionWord) {
+              const modal = document.querySelector('.modal-editor');
+              if (modal) {
+                modal.classList.add('show');
+              }
+            }
+          });
+         }
+       </script>
+       <style>
+        .suggestion-words {
+          position: relative;
+          cursor: pointer;
+
+        }
+
+        .suggestion-words::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+        }
+
+        .suggestion-words * {
+          pointer-events: none;
+        }
+       </style>
+     {% endif %}
+  </body>
+</html>

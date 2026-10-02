@@ -1,0 +1,183 @@
+{% set navigation = settings.header.settings.navigation %}
+{% set menu_type = navigation.menuType | default('categories') %}
+
+<nav id="nav" class="nav {% if settings.header.settings.menu_style == 'hamburger' %}menu-hamburger{% endif %}">
+    <div class="container">
+
+        {% if menu_type == 'categories' %}
+
+            {% set more_quantity = 6 %}
+            {% if categories | length > more_quantity %}
+                {% set show_categories = categories | slice(0, more_quantity) %}
+                {% set more_categories = categories | slice(more_quantity) %}
+            {% else %}
+                {% set show_categories = categories %}
+                {% set more_categories = null %}
+            {% endif %}
+
+            <ul class="list flex {% if categories | length > 4 %} justify-between {% else %} justify-center {% endif %}">
+
+                {% set menu_level = settings.header.settings.menu_category_levels %}
+
+                {% if more_categories %}
+                    <li class="first-level sub">
+
+                        <span role="button" title="Departamentos">
+                            <div class="name">
+                                Todas Categorias
+                            </div>
+                        </span>
+
+                        <ul class="sub-list second-level">
+                            {% for category in more_categories %}
+                                <li>
+                                    <a href="{{ category.link }}" title="{{ category.name }}">{{ category.name }}</a>
+
+                                    {% if category.children and (menu_level == 'second' or menu_level == 'third') %}
+                                    <ul class="sub-list third-level">
+
+                                        {% for level2 in category.children %}
+                                            <li>
+                                                <a href="{{ level2.link }}" title="{{ level2.name }}">{{ level2.name }}</a>
+
+                                                {% if level2.children and (menu_level == 'third') %}
+                                                <ul>
+                                                    {% for level3 in level2.children %}
+                                                    <li>
+                                                        <a href="{{ level3.link }}" title="{{ level3.name }}">
+                                                            {{ level3.name }}
+                                                        </a>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% endif %}
+
+                                            </li>
+                                        {% endfor %}
+
+                                    </ul>
+                                    {% endif %}
+
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                    </li>
+                {% endif %}
+
+                {% for category in show_categories %}
+                    <li class="first-level {%- if category.children and (menu_level == 'second' or menu_level == 'third') %} sub {%- endif %}">
+
+                        <a href="{{ category.link }}" title="{{ category.name }}">
+                            <div class="name">
+                                {{ category.name }}
+                            </div>
+                        </a>
+
+                        {% if category.children and (menu_level == 'second' or menu_level == 'third') %}
+                        <ul class="sub-list second-level">
+
+                            {% for level2 in category.children %}
+
+                                <li {% if level2.children and (menu_level == 'third') %} class="sub" {% endif %}>
+
+                                    <a href="{{ level2.link }}" title="{{ level2.name }}">{{ level2.name }}</a>
+
+                                    {% if level2.children and (menu_level == 'third') %}
+                                    <ul class="sub-list third-level">
+                                        {% for level3 in level2.children %}
+                                        <li>
+                                            <a href="{{ level3.link }}" title="{{ level3.name }}">{{ level3.name }}</a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+                        {% endif %}
+
+                    </li>
+                {% endfor %}
+
+            </ul>
+
+        {% elseif menu_type == 'pages' %}
+
+            <ul class="list flex justify-center">
+                <li class="first-level">
+                    <a href="{{ links.contact }}" title="Contato">
+                        <div class="name">Contato</div>
+                    </a>
+                </li>
+                {% for page in pages.custom %}
+                    <li class="first-level">
+                        <a href="{{ page.url }}" title="{{ page.name }}">
+                            <div class="name">{{ page.name }}</div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        {% elseif menu_type == 'custom' %}
+
+            {% set custom_items = navigation.items | default([]) %}
+
+            <ul class="list flex {% if custom_items | length > 4 %} justify-between {% else %} justify-center {% endif %}">
+
+                {% for item in custom_items %}
+                    <li class="first-level {%- if item.children | length > 0 %} sub {%- endif %}">
+
+                        {% set item_url = item.url | default(item.customUrl | default('#')) %}
+                        {% set item_target = item.openInNewTab ? '_blank' : '_self' %}
+                        {% set item_is_external = item_url starts with 'http://' or item_url starts with 'https://' %}
+
+                        <a href="{{ item_url }}" title="{{ item.label }}" target="{{ item_target }}"{% if item_is_external %} rel="noopener noreferrer external"{% endif %}>
+                            <div class="name">{{ item.label }}</div>
+                        </a>
+
+                        {% if item.children | length > 0 %}
+                        <ul class="sub-list second-level">
+                            {% for child in item.children %}
+                                <li {% if child.children | length > 0 %} class="sub" {% endif %}>
+
+                                    {% set child_url = child.url | default(child.customUrl | default('#')) %}
+                                    {% set child_target = child.openInNewTab ? '_blank' : '_self' %}
+                                    {% set child_is_external = child_url starts with 'http://' or child_url starts with 'https://' %}
+
+                                    <a href="{{ child_url }}" title="{{ child.label }}" target="{{ child_target }}"{% if child_is_external %} rel="noopener noreferrer external"{% endif %}>
+                                        {{ child.label }}
+                                    </a>
+
+                                    {% if child.children | length > 0 %}
+                                    <ul class="sub-list third-level">
+                                        {% for subchild in child.children %}
+                                            {% set subchild_url = subchild.url | default(subchild.customUrl | default('#')) %}
+                                            {% set subchild_target = subchild.openInNewTab ? '_blank' : '_self' %}
+                                            {% set subchild_is_external = subchild_url starts with 'http://' or subchild_url starts with 'https://' %}
+                                            <li>
+                                                <a href="{{ subchild_url }}" title="{{ subchild.label }}" target="{{ subchild_target }}"{% if subchild_is_external %} rel="noopener noreferrer external"{% endif %}>
+                                                    {{ subchild.label }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                    </li>
+                {% endfor %}
+
+            </ul>
+
+        {% endif %}
+
+    </div>
+</nav>

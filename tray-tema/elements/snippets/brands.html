@@ -1,0 +1,72 @@
+{% if section.type == 'brands' and section.settings.enabled %}
+
+    {% set brandIds = [] %}
+    {% for block in section.blocks %}
+        {% if block.type == 'brand_image' and block.settings.enabled and block.settings.brand_id %}
+            {% if block.settings.brand_id not in brandIds %}
+                {% set brandIds = brandIds | merge([block.settings.brand_id]) %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if brandIds | length > 0 %}
+        {% set fetchedBrands = Brands({ 'id': brandIds }) %}
+    {% else %}
+        {% set fetchedBrands = [] %}
+    {% endif %}
+
+    <section class="section-brands" id="{{ section.id }}">
+        <div class="swiper-container slide-brand container">
+
+            <div class="list swiper-wrapper {% if section.blocks | length < 6 %}block-center{% endif %}">
+                {% for block in section.blocks %}
+                    {% if block.type == 'brand_image' and block.settings.enabled %}
+                        {% set brand = null %}
+                        {% for b in fetchedBrands %}
+                            {% if (b.id ~ '') == (block.settings.brand_id ~ '') %}
+                                {% set brand = b %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% set brand_alt = brand ? brand.name : (block.settings.alt is defined ? block.settings.alt : '') %}
+
+                        {% set brand_link = null %}
+                        {% if block.settings.enable_link and brand %}
+                            {% if block.settings.custom_link %}
+                                {% set brand_link = block.settings.custom_link %}
+                            {% else %}
+                                {% set brand_link = '/' ~ brand.slug %}
+                            {% endif %}
+                        {% elseif block.settings.link is defined and block.settings.link %}
+                            {% set brand_link = block.settings.link %}
+                        {% endif %}
+
+                        {% if brand_link %}
+                            <a href="{{ brand_link }}" class="box-brand swiper-slide"
+                            {% if block.settings.open_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                            id="{{ block.id }}">
+                                <img class="lazyload" data-src="{{ asset(block.settings.image) }}" alt="{{ brand_alt }}" width="188" height="103">
+                                {% if section.settings.show_brand_name and brand_alt %}
+                                    <span class="brand-name">{{ brand_alt }}</span>
+                                {% endif %}
+                            </a>
+                        {% else %}
+                            <span class="box-brand swiper-slide" id="{{ block.id }}">
+                                <img class="lazyload" data-src="{{ asset(block.settings.image) }}" alt="{{ brand_alt }}" width="188" height="103">
+                                {% if section.settings.show_brand_name and brand_alt %}
+                                    <span class="brand-name">{{ brand_alt }}</span>
+                                {% endif %}
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="dots"></div>
+
+        </div>
+
+        <link href="{{ asset('css/brands.css') }}" type="text/css" rel="stylesheet">
+        <script defer src="{{ asset('js/brands.js') }}"></script>
+
+    </section>
+{% endif %}

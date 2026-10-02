@@ -1,0 +1,34 @@
+{
+  "name": "Produtos relacionados",
+  "template": "snippets/related-products",
+  "limit": 1,
+  "max_blocks": 0,
+  "defaults": {
+    "blocks": [],
+    "settings": {
+      "enabled": true,
+      "title": "Produtos relacionados",
+      "layout": "carousel"
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 40,
+      "default": "Produtos relacionados"
+    },
+    {
+      "id": "layout",
+      "type": "select",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grade" },
+        { "value": "carousel", "label": "Carrossel" }
+      ],
+      "default": "carousel"
+    }
+  ]
+}

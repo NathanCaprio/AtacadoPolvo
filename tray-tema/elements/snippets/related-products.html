@@ -1,0 +1,36 @@
+{% if product.related_products and section.settings.enabled %}
+    {% set carousel = section.settings.layout == 'carousel' %}
+
+    <div class="section-product-related {% if carousel %}list-slide{% endif %}" id="{{ section.id }}">
+        <div class="container">
+
+            {% if section.settings.title %}
+                <div class="section-header center">
+                    <h2 class="title-section"> {{ section.settings.title }} </h2>
+                </div>
+            {% endif %}
+
+            {% if carousel %}
+                <div class="swiper-container hide-dots-desk">
+            {% endif %}
+
+            <div class="list-product {{ carousel ? 'swiper-wrapper' : 'flex f-wrap' }}">
+                {% for item in product.related_products %}
+                    <div class="item {{ carousel ? 'swiper-slide' }}">
+                        {% element 'snippets/product' {
+                            product : item,
+                            variant: null,
+                            'is_related': true
+                        } %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if carousel %}
+                <div class="dots"></div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endif %}

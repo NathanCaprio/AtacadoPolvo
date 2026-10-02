@@ -1,0 +1,93 @@
+{% if section.type == 'video' and section.settings.enabled %}
+
+    <link href="{{ asset('css/video.css') }}" type="text/css" rel="stylesheet">
+
+    {% set youtubeUrl = section.settings.youtube_url %}
+    {% set autoplay = section.settings.autoplay %}
+    
+    {% set videoId = '' %}
+    
+    {% if youtubeUrl %}
+        {% if 'watch?v=' in youtubeUrl %}
+            {% set videoId = youtubeUrl | split('watch?v=') | last | split('&') | first %}
+        
+        {% elseif 'youtu.be/' in youtubeUrl %}
+            {% set videoId = youtubeUrl | split('youtu.be/') | last | split('?') | first %}
+        
+        {% elseif 'embed/' in youtubeUrl %}
+            {% set videoId = youtubeUrl | split('embed/') | last | split('?') | first %}
+        {% endif %}
+    {% endif %}
+
+    {% if videoId %}
+        <section class="section-video" id="{{ section.id }}" data-autoplay="{{ autoplay ? 'true' : 'false' }}">
+            <div class="video-wrapper">
+                
+                {% if autoplay %}
+                    <div class="video-background" data-video-id="{{ videoId }}">
+                        <div class="video-player-container">
+                            <div class="video-player" id="video-player-{{ section.id }}"></div>
+                        </div>
+                        
+                        <div class="video-overlay"></div>
+                        
+                        <div class="video-content">
+                            {% if section.settings.title %}
+                                <h2 class="video-title">{{ section.settings.title }}</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                {% else %}
+                    <div class="video-thumbnail" data-video-id="{{ videoId }}">
+                        <img 
+                            src="https://img.youtube.com/vi/{{ videoId }}/maxresdefault.jpg" 
+                            alt="{{ section.settings.title | default('Vídeo') }}"
+                            class="video-thumbnail-img"
+                        >
+                        <div class="video-overlay"></div>
+                        
+                        <div class="video-content">
+                            {% if section.settings.title %}
+                                <h2 class="video-title">{{ section.settings.title }}</h2>
+                            {% endif %}
+                            {% if section.settings.subtitle %}
+                                <p class="video-subtitle">{{ section.settings.subtitle }}</p>
+                            {% endif %}
+                            
+                            <div class="video-play-button">
+                                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                                    <circle cx="40" cy="40" r="40" fill="rgba(255,255,255,0.9)"/>
+                                    <path d="M32 25L55 40L32 55V25Z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+            </div>
+        </section>
+
+        {% if not autoplay %}
+            <div class="video-modal" id="video-modal-{{ section.id }}" style="display: none;">
+                <div class="video-modal-overlay"></div>
+                <div class="video-modal-content">
+                    <button class="video-modal-close" aria-label="Fechar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="video-modal-container">
+                        <div class="video-container">
+                            <div id="video-iframe-{{ section.id }}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <script defer src="{{ asset('js/video.js') }}"></script>
+    {% endif %}
+
+{% endif %}

@@ -1,0 +1,137 @@
+{
+  "name": "Linha de banners",
+  "template": "snippets/banner-line",
+  "group": "Banners",
+  "limit": 5,
+  "max_blocks": 4,
+  "defaults": {
+    "blocks": [
+      {
+        "type": "banner_line_item",
+        "settings": {
+          "enabled": true,
+          "position": "extra1"
+        }
+      },
+      {
+        "type": "banner_line_item",
+        "settings": {
+          "enabled": true,
+          "position": "extra2"
+        }
+      },
+      {
+        "type": "banner_line_item",
+        "settings": {
+          "enabled": true,
+          "position": "extra3"
+        }
+      },
+      {
+        "type": "banner_line_item",
+        "settings": {
+          "enabled": true,
+          "position": "extra4"
+        }
+      }
+    ],
+    "settings": {
+      "enabled": true
+    }
+  },
+  "blocks": [
+    {
+      "type": "banner_line_item",
+      "name": "Banner",
+      "limit": 4,
+      "static": true,
+      "settings": [
+        {
+          "id": "position",
+          "type": "select",
+          "label": "Posição banner",
+          "options": [
+            {
+              "value": "home",
+              "label": "Banner Home Desktop"
+            },
+            {
+              "value": "mobile",
+              "label": "Banner Home Mobile"
+            },
+            {
+              "value": "footer",
+              "label": "Banner Rodapé"
+            },
+            {
+              "value": "bottom",
+              "label": "Banner Inferior"
+            },
+            {
+              "value": "side",
+              "label": "Banner Lateral"
+            },
+            {
+              "value": "title",
+              "label": "Banner Títulos"
+            },
+            {
+              "value": "showcase",
+              "label": "Banner Vitrine"
+            },
+            {
+              "value": "extra1",
+              "label": "Extra 1"
+            },
+            {
+              "value": "extra2",
+              "label": "Extra 2"
+            },
+            {
+              "value": "extra3",
+              "label": "Extra 3"
+            },
+            {
+              "value": "extra4",
+              "label": "Extra 4"
+            },
+            {
+              "value": "extra5",
+              "label": "Extra 5"
+            },
+            {
+              "value": "extra6",
+              "label": "Extra 6"
+            },
+            {
+              "value": "extra7",
+              "label": "Extra 7"
+            },
+            {
+              "value": "extra8",
+              "label": "Extra 8"
+            },
+            {
+              "value": "extra9",
+              "label": "Extra 9"
+            },
+            {
+              "value": "extra10",
+              "label": "Extra 10"
+            },
+            {
+              "value": "extra11",
+              "label": "Extra 11"
+            },
+            {
+              "value": "extra12",
+              "label": "Extra 12"
+            }
+          ],
+          "info": "Essa seção não suporta banner tipo carrossel de imagens. Para configurá-lo, acesse o [cadastro de banners]({{store-url}}/admin/marketing/banners/)"
+        }
+      ]
+    }
+  ],
+  "settings": []
+}

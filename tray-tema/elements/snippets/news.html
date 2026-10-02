@@ -1,0 +1,32 @@
+{% if section.type == 'news' and section.settings.enabled %}
+    {% for page in pages.custom %}
+        {% if page.slug == "noticias" and section.settings.enabled %}
+            <section class="section-news slide-has-dots" id="{{ section.id }}" data-empty-image="{{ asset('img/empty.png') }}">
+                <div class="container">
+
+                    {% if section.settings.title  %}
+                        <div class="section-header center">
+                            <h2 class="title-section">{{ section.settings.title }}</h2>
+                        </div>
+                    {% endif %}
+
+                    <div class="news-content swiper-container hide-dots-desk">
+                        <div class="swiper-wrapper"></div>
+                        <div class="dots"></div>
+                    </div>
+
+                    <a href="/noticias" title="{{ section.settings.button_text }}"
+                    class="botao-commerce flex align-center justify-center center"
+                    >
+                        {{ section.settings.button_text ? section.settings.button_text : 'Acessar blog' }}
+                    </a>
+
+                </div>
+
+                <link href="{{ asset('css/news.css') }}" type="text/css" rel="stylesheet">
+                <script defer src="{{ asset('js/news.js') }}"></script>
+
+            </section>
+        {% endif %}
+    {% endfor %}
+{% endif %}

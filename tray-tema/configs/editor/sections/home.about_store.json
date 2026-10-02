@@ -1,0 +1,49 @@
+{
+  "name": "Sobre a loja",
+  "template": "snippets/about-store",
+  "group": "Conteúdo",
+  "limit": 5,
+  "defaults": {
+    "tray": {
+      "blocks": [],
+      "settings": {
+        "enabled": true,
+        "store_image": "/img/settings/about_store.svg",
+        "title": "Sobre a sua loja",
+        "description": "Conte um pouco sobre a história da sua loja e o que a motivou a nascer! Esse tipo de conteúdo gera proximidade com seus clientes, transmitindo confiança e credibilidade. Quando os consumidores conhecem mais sobre a sua trajetória e seus valores, sentem-se mais seguros para comprar, aumentando as chances de conversão e fidelização."
+      }
+    },
+    "bagy": {
+      "blocks": [],
+      "settings": {
+        "enabled": true,
+        "store_image": "/img/settings/about_store_bagy.svg",
+        "title": "Sobre a sua loja",
+        "description": "Conte um pouco sobre a história da sua loja e o que a motivou a nascer! Esse tipo de conteúdo gera proximidade com seus clientes, transmitindo confiança e credibilidade. Quando os consumidores conhecem mais sobre a sua trajetória e seus valores, sentem-se mais seguros para comprar, aumentando as chances de conversão e fidelização."
+      }
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "store_image",
+      "type": "image_picker",
+      "label": "Imagem",
+      "info": "Tamanho recomendado: 525x405 px"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 30,
+      "default": "Sobre a loja"
+    },
+    {
+      "id": "description",
+      "type": "rich_text",
+      "label": "Descrição",
+      "maxLength": 500,
+      "default": "Texto sobre a sua loja"
+    }
+  ]
+}

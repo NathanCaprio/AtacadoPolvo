@@ -1,0 +1,32 @@
+{% if image %}
+    {% set item = {
+        link   : image.link ? (image.tracked_link ? image.tracked_link : image.link) : null,
+        src    : image.image ? image.image : image.src,
+        alt    : image.label ? image.label : (image.alt ? image.alt : 'Banner'),
+        target : image.target,
+        width  : image.width,
+        height : image.height
+    } %}
+
+    {% set lazy_class = 'lazyload' %}
+    <{{ item.link ? 'a href="'~ item.link ~'"' : 'span' }}
+        {% if item.target == '_blank' %} target="_blank" rel="noopener noreferrer"{% endif %}
+        class="item-image"
+        {% if item.link %}aria-label="{{ item.alt ? item.alt : 'Banner' }}"{% endif %}
+    >
+        <img
+            {% if isFirstSlide and location == 'banner-home' %}
+                {% if (type == 'desktop' and not utils.is_mobile) or (type == 'mobile' and utils.is_mobile) %}
+                    src="{{ item.src }}" fetchpriority="high" decoding="sync"
+                {% else %}
+                    class="{{ lazy_class }}" src="{{ asset('img/empty.png') }}" data-src="{{ item.src }}"
+                {% endif %}
+            {% else %}
+                class="{{ lazy_class }}" src="{{ asset('img/empty.png') }}" data-src="{{ item.src }}"
+            {% endif %}
+            alt="{{ item.alt ? item.alt : 'Banner' }}" width="{{ item.width }}" height="{{ item.height }}"
+            {% if location == 'banner-home' and item.width and item.height %}style="aspect-ratio: {{ item.width }} / {{ item.height }};"{% endif %}
+        >
+    </{{ item.link ? 'a' : 'span' }}>
+
+{% endif %}

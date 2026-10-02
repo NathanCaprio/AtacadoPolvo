@@ -1,0 +1,17 @@
+{% if section.type == 'banner_grid' and section.settings.enabled %}
+    <section class="section-banners-grid banner" id="{{ section.id }}">
+        <div class="container flex justify-between 1-big-2-half">
+            {% for block in section.blocks %}
+                {% if block.settings.enabled and block.settings.position %}
+                    <div class="item" id="{{ block.id }}">
+                        {% element 'snippets/banner' {
+                            image    : attribute(banners, block.settings.position),
+                            notLazy  : true,
+                            padding  : true
+                        } %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}

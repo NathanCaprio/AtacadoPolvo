@@ -1,0 +1,98 @@
+{% if section.type == 'slideshow' and section.settings.enabled %}
+
+    {% set home_desktop = section.settings.desktop_position ? attribute(banners, section.settings.desktop_position) : null %}
+    {% set home_mobile = section.settings.mobile_position ? attribute(banners, section.settings.mobile_position) : null %}
+    <section class="section-slideshow banner" id="{{ section.id }}">
+
+        {% if home_desktop and section.settings.show_desktop_slideshow %}
+            {% if home_desktop.type == 'javascript' %}
+
+                {% set slideConfigsDesktop = { 'stopOnHover' : home_desktop.stop_over, 'timer' : home_desktop.interval } %}
+                <div class="banner-desktop swiper-container" data-settings="{{ slideConfigsDesktop | json_encode() | escape }}">
+                    <div class="swiper-wrapper">
+                        {% for slide in home_desktop.slides %}
+                            {% set lazyIndex = loop.index == 1 ? false : true %}
+                            {# Para desktop: primeiro slide carrega direto, demais usam lazy loading #}
+                            {% set isFirstSlide = loop.index == 1 %}
+                            <div class="swiper-slide item">
+                                {% element 'snippets/banner' {
+                                    image    : slide,
+                                    swiper   : lazyIndex,
+                                    isFirstSlide : isFirstSlide,
+                                    padding  : true,
+                                    location : 'banner-home',
+                                    type     : 'desktop'
+                                } %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="dots">
+                        {% for list in home_desktop.slides %}
+                            <div class="dot{{ loop.index == 1 ? ' dot-active' }}"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="item banner-desktop">
+                    {% element 'snippets/banner' {
+                        image : home_desktop,
+                        swiper : false,
+                        padding : true,
+                        location : 'banner-home',
+                        type     : 'desktop'
+                    } %}
+                </div>
+
+            {% endif %}
+        {% endif %}
+
+        {% if home_mobile and section.settings.show_mobile_slideshow %}
+            {% if home_mobile.type == 'javascript' %}
+
+                {% set slideConfigsMobile = { 'stopOnHover' : home_mobile.stop_over, 'timer' : home_mobile.interval } %}
+                <div class="banner-mobile swiper-container" data-settings="{{ slideConfigsMobile | json_encode() | escape }}">
+                    <div class="swiper-wrapper">
+                        {% for slide in home_mobile.slides %}
+                            {% set lazyIndex = loop.index == 1 ? false : true %}
+                            {# Para mobile: primeiro slide carrega direto, demais usam lazy loading #}
+                            {% set isFirstSlide = loop.index == 1 %}
+                            <div class="swiper-slide item">
+                                {% element 'snippets/banner' {
+                                    image    : slide,
+                                    swiper   : lazyIndex,
+                                    isFirstSlide : isFirstSlide,
+                                    padding  : true,
+                                    location : 'banner-home',
+                                    type     : 'mobile'
+                                } %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="dots">
+                        {% for list in home_mobile.slides %}
+                            <div class="dot{{ loop.index == 1 ? ' dot-active' }}"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="item banner-mobile">
+                    {% element 'snippets/banner' {
+                        image : home_mobile,
+                        swiper : false,
+                        padding : true,
+                        location : 'banner-home',
+                        type     : 'mobile'
+                    } %}
+                </div>
+
+            {% endif %}
+        {% endif %}
+
+        <script defer src="{{ asset('js/slideshow.js') }}"></script>
+
+    </section>
+{% endif %}

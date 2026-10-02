@@ -1,0 +1,32 @@
+{% set enabled_blocks_count = 0 %}
+{% set first_block_type = '' %}
+{% for section in section.blocks %}
+  {% if section.settings.enabled %}
+    {% set enabled_blocks_count = enabled_blocks_count + 1 %}
+    {% if enabled_blocks_count == 1 %}
+      {% set first_block_type = section.type %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% set block_class = enabled_blocks_count == 1 ? 'block-one' : 'block-two' %}
+{% set product_form_first_class = first_block_type == 'product_form' ? 'product-form-first' : '' %}
+{% set quick_buy_featured_price = '' %}
+
+{% if section.settings.enabled %}
+<div class="product-box {{ block_class }} {{ product_form_first_class }}" id="{{ section.id }}">
+  {% for section in section.blocks %}
+    {% if section.type == 'product_form' %}
+      {% set quick_buy_featured_price = section.settings.featured_price %}
+    {% endif %}
+    {% element 'snippets/' ~ section.type {
+      'section' : section
+    } %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% element 'snippets/quick-buy' {
+    'section': section,
+    'featured_price': quick_buy_featured_price
+} %}

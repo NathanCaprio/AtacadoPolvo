@@ -1,0 +1,74 @@
+{
+  "name": "Avaliações da loja customizadas",
+  "template": "snippets/custom-reviews",
+  "group": "Conteúdo",
+  "limit": 5,
+  "max_blocks": 16,
+  "defaults": {
+    "blocks": [
+      {
+        "type": "custom_review",
+        "settings": {
+          "enabled": true,
+          "image": "/img/settings/img-placeholder.svg",
+          "relevance": 5,
+          "description": "Excelente experiência de compra! Os produtos chegaram antes do prazo, muito bem embalados e exatamente como descrito no site. O atendimento foi atencioso e tirou todas as minhas dúvidas. Com certeza voltarei a comprar e recomendo para todos!",
+          "name": "Insira o nome do cliente/empresa"
+        }
+      }
+    ],
+    "settings": {
+      "enabled": true,
+      "title": "Depoimentos"
+    }
+  },
+  "blocks": [
+    {
+      "type": "custom_review",
+      "name": "Avaliação",
+      "limit": 16,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Imagem da avaliação",
+          "info": "Tamanho recomendado: 400x400 px",
+          "default": "/img/settings/img-placeholder.svg"
+        },
+        {
+          "id": "relevance",
+          "type": "range",
+          "label": "Relevância",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "unit": "estrelas",
+          "default": 5
+        },
+        {
+          "id": "description",
+          "type": "textarea",
+          "label": "Depoimento",
+          "maxLength": 500,
+          "default": "Excelente experiência de compra! Os produtos chegaram antes do prazo, muito bem embalados e exatamente como descrito no site. O atendimento foi atencioso e tirou todas as minhas dúvidas. Com certeza voltarei a comprar e recomendo para todos!"
+        },
+        {
+          "id": "name",
+          "type": "text",
+          "label": "Nome do cliente/empresa",
+          "maxLength": 50,
+          "default": "Insira o nome do cliente/empresa"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 30,
+      "default": "Depoimentos"
+    }
+  ]
+}

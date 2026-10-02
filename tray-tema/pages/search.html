@@ -1,0 +1,61 @@
+<div class="catalog-block">
+
+    {% if banner.title %}
+        <div class="banner-catalog">
+
+            {% if banners.title.type == "javascript" %}
+
+                <div class="slide-catalog swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for banner in banners.title.slides %}
+                            <div class="item swiper-slide">
+
+                                {% if banner.link %}
+                                    <a href="{{ banner.link }}" {% if banner.target == '_blank' %} target="_blank" rel="noopener noreferrer" {% endif %}>
+                                        <img class="swiper-lazy" data-src="{{ banner.image }}" alt="{{ banner.label }}" />
+                                    </a>
+                                {% else %}
+                                    <img class="swiper-lazy" data-src="{{ banner.image }}" alt="{{ banner.label }}" />
+                                {% endif %}
+
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="dots"></div>
+                </div>
+
+            {% else %}
+
+                {% set link = banners.title.link ? banners.title.tracked_link : null %}
+                {% if link %}
+                    <a href="{{ link }}" {% if banners.title.target == '_blank' %} target="_blank" rel="noopener noreferrer" {% endif %}>
+                        <img src="{{ banners.title.src }}" alt="{{ banners.title.label }}" />
+                    </a>
+                {% else %}
+                    <img src="{{ banners.title.src }}" alt="{{ banners.title.label }}" />
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+    <div class="container">
+        {% element 'snippets/breadcrumb' %}
+    </div>
+
+    {% if search.word %}
+        <h1 class="catalog-name">
+            {{ search.word | capitalize }}
+        </h1>
+    {% else %}
+        <h1 class="catalog-name">Todos os produtos</h1>
+    {% endif %}
+
+    {% for section in settings.content.catalog %}
+        {% element section.template {
+          'section' : section
+        } %}
+    {% endfor %}
+
+</div>

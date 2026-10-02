@@ -1,0 +1,31 @@
+{% set effectivePrice = variant ? (variant.calculated_price | default(variant.price)) : product.price %}
+{% set effectivePriceOffer = variant ? (variant.price_offer | default(0)) : product.price_offer %}
+{% set current_price = effectivePriceOffer > 0 ? effectivePriceOffer : effectivePrice %}
+{% set old_price     = effectivePriceOffer > 0 ? effectivePrice : false %}
+{% set show_installments = settings.configs.show_installments %}
+
+{% if not variant and product.has_variation and product.has_other_prices %}
+    <span class="product-has-variants">
+        {{ Translation('a_partir_de') }}
+    </span>
+{% endif %}
+
+<div class="price display-cash">
+
+    {% if old_price %}
+        <span class="old-price">
+            {{ settings.currency }} {{ old_price | currency }}
+        </span>
+    {% endif %}
+
+    <span class="current-price">
+        {{ settings.currency }} {{ current_price | currency }}
+    </span>
+
+    {% if show_installments and product.payment %}
+      <div class="product-installments">
+        {{ product.payment|striptags('<br>') }}
+      </div>
+    {% endif %}
+
+</div>

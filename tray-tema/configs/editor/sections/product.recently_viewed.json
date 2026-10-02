@@ -1,0 +1,22 @@
+{
+  "name": "Produtos visualizados recentemente",
+  "template": "snippets/recently-viewed",
+  "limit": 1,
+  "defaults": {
+    "blocks": [],
+    "settings": {
+      "enabled": true,
+      "title": "Produtos visualizados"
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 40,
+      "default": "Produtos visualizados"
+    }
+  ]
+}

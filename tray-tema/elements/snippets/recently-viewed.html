@@ -1,0 +1,21 @@
+{% if settings.history_position and section.settings.enabled %}
+    <div class="section-products-history list-slide" id="{{ section.id }}" data-image-format="{{ settings.configs.product_image_format }}" data-payment="{{ settings.configs.show_installments }}">
+        <div class="container">
+
+            {% if section.settings.title %}
+                <div class="section-header center">
+                    <h2 class="title-section"> {{ section.settings.title }} </h2>
+                </div>
+            {% endif %}
+
+            <div class="products-history-wrapper">
+                <div class="swiper-container">
+                    <div class="list-product swiper-wrapper">
+                    </div>
+                    <div class="dots"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endif %}

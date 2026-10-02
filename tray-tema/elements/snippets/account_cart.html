@@ -1,0 +1,77 @@
+{% if section.settings.enabled %}
+    {% set editor_mode = '?editor=1' in store.current_url or '&editor=1' in store.current_url %}
+    {% set custom_icons = null %}
+    {% for block in settings.header.blocks %}
+        {% if block.type == 'custom_icons' and block.settings.enabled %}
+            {% set custom_icons = block.settings %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="account_cart flex align-center {% if section.settings.account_style == 'icon' and section.settings.show_cart_counter == false %}without-text-icon{% endif %}" id="{{ section.id }}">
+
+        <div class="account flex align-center {% if section.settings.account_style == 'text-and-icon' %}text-icon{% endif %}">
+
+            {% if section.settings.account_style == 'icon' %}
+                {% if custom_icons and custom_icons.user_icon %}
+                    <img src="{{ asset(custom_icons.user_icon) }}" 
+                         alt="Minha conta" 
+                         class="account-icon custom-header-icon"
+                         width="{{ custom_icons.icon_size }}" 
+                         height="{{ custom_icons.icon_size }}"
+                         loading="eager">
+                {% else %}
+                    <i class="account-icon icon icon-login"></i>
+                {% endif %}
+            {% else %}
+                {% if custom_icons and custom_icons.user_icon %}
+                    <img src="{{ asset(custom_icons.user_icon) }}" 
+                         alt="Minha conta" 
+                         class="account-icon custom-header-icon"
+                         width="{{ custom_icons.icon_size }}" 
+                         height="{{ custom_icons.icon_size }}"
+                         loading="eager">
+                {% else %}
+                    <i class="account-icon icon icon-login"></i>
+                {% endif %}
+
+                <div class="tray-hide" data-logged-user="false">
+                    <a href="{{ links.central }}" title="Minha conta" {% if editor_mode %}data-open-modal="editor"{% endif %}>Minha conta</a>
+                </div>
+
+                <div class="tray-hide" data-logged-user="true">
+                    <span class="customer-name">Olá, <span data-customer="name"></span></span>
+                </div>
+            {% endif %}
+
+            <div class="modal-white tray-hide" data-logged-user="false">
+                <a class="login" href="{{ links.login }}" {% if editor_mode %}data-open-modal="editor"{% endif %}>Entrar</a>
+                <a class="register" href="{{ links.register }}" {% if editor_mode %}data-open-modal="editor"{% endif %}>Cadastrar</a>
+            </div>
+
+            <div class="modal-white tray-hide" data-logged-user="true">
+                <a class="login" href="{{ links.central }}" {% if editor_mode %}data-open-modal="editor"{% endif %}>Minha conta</a>
+                <a class="register" href="{{ links.logout }}" {% if editor_mode %}data-open-modal="editor"{% endif %}>Sair</a>
+            </div>
+
+        </div>
+
+        <a href="{{ links.cart }}" class="cart-header {% if section.settings.show_cart_counter %}with-item{% endif %}" data-toggle="overlay-shadow" data-target="#sidecart">
+            {% if custom_icons and custom_icons.cart_icon %}
+                <img src="{{ asset(custom_icons.cart_icon) }}" 
+                     alt="Carrinho" 
+                     class="custom-header-icon v-align-middle"
+                     width="{{ custom_icons.icon_size }}" 
+                     height="{{ custom_icons.icon_size }}"
+                     loading="eager">
+            {% else %}
+                <i class="icon icon-cart v-align-middle"></i>
+            {% endif %}
+            {% if section.settings.show_cart_counter %}
+                <span class="number" data-cart="amount" data-moeda="{{ settings.currency }}">0</span>
+            {% else %}
+                <span class="only-bullet"></span>
+            {% endif %}
+        </a>
+
+    </div>
+{% endif %}

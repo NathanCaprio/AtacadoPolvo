@@ -1,0 +1,74 @@
+{% if section.type == 'custom_reviews' and section.settings.enabled %}
+    <link href="{{ asset('css/custom-reviews.css') }}" type="text/css" rel="stylesheet">
+    <section class="section-custom-reviews slide-has-dots" id="{{ section.id }}">
+        <div class="container">
+
+            {% if section.settings.title %}
+                <div class="section-header center">
+                    <h2 class="title-section">{{ section.settings.title }}</h2>
+                </div>
+            {% endif %}
+
+            <div class="custom-reviews-carousel">
+                <div class="swiper-button-prev">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <path d="M24 30L14 20l10-10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for block in section.blocks %}
+                            {% if block.type == 'custom_review' and block.settings.enabled %}
+                                <div class="swiper-slide">
+                                    <div class="review-item">
+                                        <div class="quote-icon quote-start">
+                                            <svg viewBox="0 0 100 100" width="80" height="80">
+                                                <path d="M20 40c0-11 9-20 20-20v10c-5.5 0-10 4.5-10 10v5h10v35H20V40zm40 0c0-11 9-20 20-20v10c-5.5 0-10 4.5-10 10v5h10v35H60V40z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+
+                                        {% if block.settings.image %}
+                                            <div class="review-image">
+                                                <img src="{{ asset(block.settings.image) }}" alt="Imagem do cliente/empresa" loading="lazy">
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="review-rating">
+                                            {% for i in (1..5) %}
+                                                <svg class="star {% if i <= block.settings.relevance %}active{% endif %}" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                                </svg>
+                                            {% endfor %}
+                                        </div>
+
+                                        <blockquote class="review-description" cite="">{{ block.settings.description }}</blockquote>
+
+                                        <h4 class="review-name">{{ block.settings.name }}</h4>
+
+                                        <div class="quote-icon quote-end">
+                                            <svg viewBox="0 0 100 100" width="80" height="80">
+                                                <path d="M80 60c0 11-9 20-20 20V70c5.5 0 10-4.5 10-10v-5H60V20h20v40zM40 60c0 11-9 20-20 20V70c5.5 0 10-4.5 10-10v-5H20V20h20v40z" fill="currentColor"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="swiper-pagination"></div>
+                </div>
+
+                <div class="swiper-button-next">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <path d="M16 10l10 10-10 10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+            </div>
+
+        </div>
+
+        <script defer src="{{ asset('js/custom-reviews.js') }}"></script>
+    </section>
+{% endif %}

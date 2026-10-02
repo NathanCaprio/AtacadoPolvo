@@ -1,0 +1,331 @@
+[
+  {
+    "name": "Geral",
+    "settings": [
+      {
+        "id": "border_radius",
+        "type": "radio",
+        "label": "Raio das bordas",
+        "default": "50px",
+        "options": [
+          {
+            "value": "50px",
+            "label": "Arredondado"
+          },
+          {
+            "value": "8px",
+            "label": "Pouco arredondado"
+          },
+          {
+            "value": "0px",
+            "label": "Quadrado"
+          }
+        ],
+        "info": "Escolha o estilo dos botões, pesquisa e campos de input da sua loja."
+      },
+      {
+        "id": "show_second_image_hover",
+        "type": "checkbox",
+        "label": "Mostrar segunda imagem ao passar o mouse",
+        "default": true,
+        "info": "Mostra a segunda imagem dos produtos ao passar o mouse sobre a imagem principal"
+      },
+      {
+        "id": "product_image_format",
+        "type": "select",
+        "label": "Formato da imagem do produto",
+        "options": [
+          {
+            "label": "Quadrada",
+            "value": "image-square"
+          },
+          {
+            "label": "Retrato",
+            "value": "image-vertical"
+          },
+          {
+            "label": "Paisagem",
+            "value": "image-horizontal"
+          }
+        ],
+        "default": "image-square",
+        "info": "Formato de exibição da imagem do produto nas vitrines"
+      },
+      {
+        "id": "buy_button_text_listing",
+        "type": "text",
+        "label": "Texto do botão comprar",
+        "maxLength": 15,
+        "default": "Comprar",
+        "info": "Texto do botão comprar nas vitrines e listagens"
+      },
+      {
+        "id": "show_ratting",
+        "type": "checkbox",
+        "label": "Mostrar avaliação de produtos",
+        "default": true,
+        "info": "Ao habilitar essa opção a avaliação de produtos será exibida nas vitrines e listagens"
+      },
+      {
+        "id": "enable_order_bump",
+        "type": "checkbox",
+        "label": "Exibir Produtos Recomendados no carrinho lateral",
+        "default": true,
+        "info": "Exibe um carrossel de produtos recomendados no carrinho lateral"
+      }
+    ]
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "standard_images",
+        "label": "Logo",
+        "content": "logo_loja",
+        "info": "Logo da loja cadastrada em [Imagens Padrões]({{store-url}}/adm/cores/cores.php?aba=imagens)"
+      },
+      {
+        "type": "standard_images",
+        "label": "Logo mobile",
+        "content": "logo_mobile",
+        "info": "Logo da loja cadastrada em [Imagens Padrões]({{store-url}}/adm/cores/cores.php?aba=imagens)"
+      },
+      {
+        "type": "standard_images",
+        "label": "Favicon",
+        "content": "favicon",
+        "info": "Favicon da loja cadastrada em [Imagens Padrões]({{store-url}}/adm/cores/cores.php?aba=imagens)"
+      }
+    ]
+  },
+  {
+    "name": "Tipografia",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Escolha a tipografia ideal para sua loja. A tipografia escolhida será aplicada nos títulos e textos da loja."
+      },
+      {
+        "id": "font",
+        "type": "font_picker",
+        "label": "Família de fontes",
+        "default": {
+          "family": "Outfit",
+          "category": "sans-serif",
+          "weights": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900
+          ],
+          "styles": [
+            "normal"
+          ],
+          "weight": 400,
+          "style": "normal"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Cores",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Personalize sua loja com as cores da sua marca."
+      },
+      {
+        "id": "color_base",
+        "type": "color_picker",
+        "label": "Cor base",
+        "default": "#0975D4"
+      },
+      {
+        "id": "color_base_hover",
+        "type": "color_picker",
+        "label": "Cor base com sobreposição mouse",
+        "default": "#0F5999 "
+      },
+      {
+        "id": "color_base_font",
+        "type": "color_picker",
+        "label": "Cor do texto sobre a cor base",
+        "default": "#FFFFFF"
+      },
+      {
+        "id": "color_highlight",
+        "type": "color_picker",
+        "label": "Cor de destaque",
+        "default": "#C43651"
+      },
+      {
+        "id": "color_highlight_hover",
+        "type": "color_picker",
+        "label": "Cor de destaque com sobreposição mouse",
+        "default": "#963144"
+      },
+      {
+        "id": "color_highlight_font",
+        "type": "color_picker",
+        "label": "Cor do texto sobre a cor de destaque",
+        "default": "#FFFFFF"
+      },
+      {
+        "id": "color_font",
+        "type": "color_picker",
+        "label": "Cor principal dos textos",
+        "default": "#232323"
+      },
+      {
+        "id": "color_font_secondary",
+        "type": "color_picker",
+        "label": "Cor de apoio dos textos",
+        "default": "#353535"
+      },
+      {
+        "id": "color_border",
+        "type": "color_picker",
+        "label": "Cor das bordas",
+        "default": "#EDEDED"
+      },
+      {
+        "id": "color_background",
+        "type": "color_picker",
+        "label": "Cor do fundo",
+        "default": "#FFFFFF"
+      }
+    ]
+  },
+  {
+    "name": "Selos",
+    "settings": [
+      {
+        "id": "show_tags",
+        "type": "checkbox",
+        "label": "Mostrar selos",
+        "default": true,
+        "info": "Ao habilitar essa opção os selos serão exibidos nas vitrines e listagens"
+      },
+      {
+        "id": "use_text_tags",
+        "type": "checkbox",
+        "label": "Usar selos com texto",
+        "default": true,
+        "info": "Ao habilitar essa opção os selos serão exibidos com texto ao invés de imagens"
+      },
+      {
+        "type": "paragraph",
+        "content": "Personalize os selos da sua loja."
+      },
+      {
+        "id": "tag_new_text",
+        "type": "text",
+        "label": "Selo produto novo",
+        "maxLength": 15,
+        "default": "Novidade"
+      },
+      {
+        "id": "tag_featured_text",
+        "type": "text",
+        "label": "Selo produto em destaque",
+        "maxLength": 15,
+        "default": "Destaque"
+      },
+      {
+        "id": "tag_free_shipping_text",
+        "type": "text",
+        "label": "Selo frete grátis",
+        "maxLength": 15,
+        "default": "Frete grátis"
+      },
+      {
+        "id": "tag_additional_text",
+        "type": "text",
+        "label": "Selo adicional",
+        "maxLength": 15,
+        "default": "Adicional"
+      }
+    ]
+  },
+  {
+    "name": "Redes sociais",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Informe os links das suas redes sociais para que seus clientes possam te encontrar."
+      },
+      {
+        "id": "instagram",
+        "type": "text",
+        "label": "Instagram",
+        "placeholder": "https://www.instagram.com/user/"
+      },
+      {
+        "id": "tiktok",
+        "type": "text",
+        "label": "TikTok",
+        "placeholder": "https://www.tiktok.com/@user/"
+      },
+      {
+        "id": "facebook",
+        "type": "text",
+        "label": "Facebook",
+        "placeholder": "https://pt-br.facebook.com/user/"
+      },
+      {
+        "id": "twitter",
+        "type": "text",
+        "label": "Twitter / X",
+        "placeholder": "https://x.com/user/"
+      },
+      {
+        "id": "pinterest",
+        "type": "text",
+        "label": "Pinterest",
+        "placeholder": "https://br.pinterest.com/user/"
+      },
+      {
+        "id": "youtube",
+        "type": "text",
+        "label": "Youtube",
+        "placeholder": "https://www.youtube.com/user/"
+      },
+      {
+        "id": "linkedin",
+        "type": "text",
+        "label": "LinkedIn",
+        "placeholder": "https://br.linkedin.com/in/user/"
+      }
+    ]
+  },
+  {
+    "name": "Pagamentos",
+    "settings": [
+      {
+        "id": "show_installments",
+        "type": "checkbox",
+        "label": "Mostrar opções de parcelamento",
+        "default": true,
+        "info": "Ative esta opção para mostrar as opções de parcelamento abaixo do valor do produto."
+      }
+    ]
+  },
+  {
+    "name": "Estilo Customizado",
+    "settings": [
+      {
+        "id": "custom_css",
+        "type": "code",
+        "language": "css",
+        "label": "CSS customizado",
+        "placeholder": "body { background-color: #000; }",
+        "info": "Adicione CSS personalizado para estilizar sua loja."
+      }
+    ]
+  }
+]

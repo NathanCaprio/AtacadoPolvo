@@ -1,0 +1,28 @@
+{% if section.settings.enabled %}
+    {% set custom_icons = null %}
+    {% for block in settings.header.blocks %}
+        {% if block.type == 'custom_icons' and block.settings.enabled %}
+            {% set custom_icons = block.settings %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="search-wrapper" id="{{ section.id }}">
+        <form class="header-search-wrapper {% if section.settings.style == 'icon' %}open-search{% endif %}" action="{{ links.search }}" method="get" data-search="suggestion">
+            <input type="hidden" name="loja" value="{{ store.id }}">
+            <input class="input-search" placeholder="{{ section.settings.search_text }}" spellcheck="false" autocomplete="off" data-input="suggestion" type="text"  name="palavra_busca">
+            <button class="button-search" aria-label="Buscar">
+                {% if custom_icons and custom_icons.search_icon %}
+                    <img src="{{ asset(custom_icons.search_icon) }}" 
+                         alt="Buscar" 
+                         class="custom-header-icon"
+                         width="{{ custom_icons.icon_size }}" 
+                         height="{{ custom_icons.icon_size }}"
+                         loading="eager">
+                {% else %}
+                    <i class="icon icon-search"></i>
+                {% endif %}
+            </button>
+            <div class="suggestion is-hidden" data-container="suggestion"></div>
+        </form>
+    </div>
+{% endif %}

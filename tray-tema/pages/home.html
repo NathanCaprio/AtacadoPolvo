@@ -1,0 +1,5 @@
+{% for section in settings.content.home %}
+    {% element section.template {
+      'section' : section
+    } %}
+{% endfor %}

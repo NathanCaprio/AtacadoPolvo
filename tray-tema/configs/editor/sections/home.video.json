@@ -1,0 +1,65 @@
+{
+  "name": "Vídeo",
+  "template": "snippets/video",
+  "group": "Multimídia",
+  "limit": 5,
+  "defaults": {
+    "tray": {
+      "blocks": [],
+      "settings": {
+        "enabled": true,
+        "title": "Conheça nossos produtos",
+        "subtitle": "Veja o que temos de melhor para você",
+        "youtube_url": "https://www.youtube.com/watch?v=k4kD2XiK1cE",
+        "autoplay": false
+      }
+    },
+    "bagy": {
+      "blocks": [],
+      "settings": {
+        "enabled": true,
+        "title": "Conheça nossos produtos",
+        "subtitle": "Veja o que temos de melhor para você",
+        "youtube_url": "https://www.youtube.com/watch?v=403PhODHD1Y",
+        "autoplay": false
+      }
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "default": "",
+      "placeholder": "Digite o título"
+    },
+    {
+      "id": "autoplay",
+      "type": "checkbox",
+      "label": "Reprodução automática",
+      "default": false,
+      "info": "Quando ativo, o vídeo roda de fundo sem som."
+    },
+    {
+      "id": "subtitle",
+      "type": "text",
+      "label": "Subtítulo",
+      "default": "",
+      "placeholder": "Digite o subtítulo",
+      "conditions": {
+        "autoplay": false
+      }
+    },
+    {
+      "id": "youtube_url",
+      "type": "text",
+      "label": "Link do vídeo do YouTube",
+      "default": "https://www.youtube.com/watch?v=k4kD2XiK1cE",
+      "placeholder": "https://www.youtube.com/watch?v=...",
+      "info": "Cole o link completo do YouTube.",
+      "pattern": "^(https?:\\/\\/)?(www\\.)?((youtube\\.com\\/watch\\?v=)|(youtu\\.be\\/)|(youtube\\.com\\/embed\\/))[a-zA-Z0-9_-]+",
+      "patternMessage": "Insira um link válido do YouTube (ex: https://www.youtube.com/watch?v=...)"
+    }
+  ]
+}

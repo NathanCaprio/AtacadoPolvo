@@ -1,0 +1,86 @@
+{
+  "name": "Produto",
+  "template": "snippets/product-main",
+  "limit": 1,
+  "max_blocks": 2,
+  "static": true,
+  "visible": true,
+  "blocks": [
+    {
+      "type": "product_gallery",
+      "name": "Galeria do produto",
+      "static": true,
+      "visible": true,
+      "limit": 1,
+      "settings": [
+        {
+          "id": "style",
+          "type": "select",
+          "label": "Estilo",
+          "options": [
+            {
+              "value": "vertical",
+              "label": "Vertical"
+            },
+            {
+              "value": "horizontal",
+              "label": "Horizontal"
+            }
+          ],
+          "default": "vertical",
+          "info": "**Atenção:** No mobile, o bloco **Galeria do produto** sempre será exibido primeiro."
+        }
+      ]
+    },
+    {
+      "type": "product_form",
+      "name": "Formulário do produto",
+      "limit": 1,
+      "static": true,
+      "visible": true,
+      "settings": [
+        {
+          "id": "featured_price",
+          "type": "select",
+          "label": "Preço em destaque",
+          "options": [
+            {
+              "value": "normal",
+              "label": "Normal"
+            },
+            {
+              "value": "discount_payment",
+              "label": "Pagamento com desconto"
+            }
+          ],
+          "default": "normal",
+          "info": "**Atenção:** Configure também no [XML de produtos]({{store-url}}/admin/marketing/product-xmls) o preço para validação dos mecanismos de busca."
+        },
+        {
+          "id": "enable_social_share",
+          "type": "checkbox",
+          "label": "Habilitar compartilhamento redes sociais",
+          "default": false,
+          "info": "Permite compartilhar o produto no WhatsApp e Facebook."
+        },
+        {
+          "id": "size_chart_page",
+          "type": "async_select",
+          "source": "custom_pages",
+          "label": "Tabela de medidas",
+          "placeholder": "Selecione uma página",
+          "info": "Selecione a página personalizada com a tabela de medidas. O conteúdo será exibido em um modal. Para gerenciar as páginas, acesse o [cadastro de páginas internas]({{store-url}}/admin/store/pages/index)."
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "enable_quick_buy",
+      "type": "checkbox",
+      "label": "Habilitar compra rápida",
+      "default": false,
+      "info": "Habilita o bloco flutuante de compra rápida"
+    }
+  ]
+}

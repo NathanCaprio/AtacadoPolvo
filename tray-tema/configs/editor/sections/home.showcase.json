@@ -1,0 +1,147 @@
+{
+  "name": "Vitrine",
+  "template": "snippets/showcase",
+  "group": "Produtos",
+  "limit": 3,
+  "max_blocks": 4,
+  "defaults": {
+    "tray": {
+      "blocks": [],
+      "settings": {
+        "enabled": true,
+        "type": "new",
+        "title": "Lançamentos",
+        "layout": "grid",
+        "products_quantity": 4,
+        "rand": true,
+        "autoplay": false,
+        "autoplay_delay": 5
+      }
+    },
+    "bagy": {
+      "blocks": [],
+      "settings": {
+        "enabled": true,
+        "type": "new",
+        "title": "Lançamentos",
+        "layout": "carousel",
+        "products_quantity": 4,
+        "rand": true,
+        "autoplay": true,
+        "autoplay_delay": 5
+      }
+    }
+  },
+  "blocks": [],
+  "settings": [
+    {
+      "id": "type",
+      "type": "select",
+      "label": "Tipo da vitrine",
+      "options": [
+        {
+          "label": "Mais vendidos",
+          "value": "top_seller"
+        },
+        {
+          "label": "Lançamentos",
+          "value": "new"
+        },
+        {
+          "label": "Destaques",
+          "value": "featured"
+        },
+        {
+          "label": "Frete Grátis",
+          "value": "free_shipping"
+        },
+        {
+          "label": "Promoções",
+          "value": "promotion"
+        },
+        {
+          "label": "Produtos específicos",
+          "value": "specific_products"
+        }
+      ]
+    },
+    {
+      "id": "specific_products",
+      "type": "product_list",
+      "label": "Produtos específicos",
+      "default": [],
+      "info": "Selecione os produtos que deseja exibir nesta vitrine",
+      "maxProducts": 16,
+      "conditions": {
+        "type": "specific_products"
+      }
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "default": "Vitrine"
+    },
+    {
+      "id": "layout",
+      "type": "select",
+      "label": "Layout",
+      "options": [
+        {
+          "label": "Grid",
+          "value": "grid"
+        },
+        {
+          "label": "Carrossel",
+          "value": "carousel"
+        }
+      ],
+      "default": "carousel"
+    },
+    {
+      "id": "products_quantity",
+      "type": "range",
+      "label": "Quantidade de produtos",
+      "min": 4,
+      "max": 16,
+      "step": 4,
+      "unit": "produtos",
+      "default": 8,
+      "conditions": {
+        "type": "!specific_products"
+      }
+    },
+    {
+      "id": "rand",
+      "type": "checkbox",
+      "label": "Exibir produtos em ordem aleatória",
+      "default": true,
+      "conditions": {
+        "type": "!specific_products"
+      }
+    },
+    {
+      "id": "autoplay",
+      "type": "checkbox",
+      "label": "Loop automático",
+      "default": false,
+      "conditions": {
+        "layout": "carousel"
+      }
+    },
+    {
+      "id": "autoplay_delay",
+      "type": "range",
+      "label": "Tempo de troca (segundos)",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "s",
+      "default": 5,
+      "conditions": {
+        "layout": "carousel",
+        "autoplay": true
+      }
+    }
+  ]
+}

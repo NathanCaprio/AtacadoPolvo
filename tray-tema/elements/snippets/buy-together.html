@@ -1,0 +1,10 @@
+{% if section.settings.enabled and productHelper.bundle() %}
+    <div class="section-buy-together compre-junto" id="{{ section.id }}">
+        {% if section.settings.title %}
+            <div class="section-header center">
+                <h2 class="title-section"> {{ section.settings.title }} </h2>
+            </div>
+        {% endif %}
+        <div class="product-cross-sell"> {{ productHelper.bundle() }} </div>
+    </div>
+{% endif %}

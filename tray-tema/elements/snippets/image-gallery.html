@@ -1,0 +1,42 @@
+{% if section.type == 'image_gallery' and section.settings.enabled %}
+    <link href="{{ asset('css/image-gallery.css') }}" type="text/css" rel="stylesheet">
+    <section class="section-image-gallery" id="{{ section.id }}" style="--items-per-line: {{ section.settings.items_per_line }};">
+        <div class="container">
+
+            {% if section.settings.title or section.settings.subtitle %}
+                <div class="section-header center">
+                    {% if section.settings.title %}
+                        <h2 class="title-section">{{ section.settings.title }}</h2>
+                    {% endif %}
+                    {% if section.settings.subtitle %}
+                        <p class="subtitle-section">{{ section.settings.subtitle }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="image-gallery-grid">
+            {% for block in section.blocks %}
+                {% if block.type == 'image_gallery_item' and block.settings.enabled %}
+                    <div class="image-gallery-item"
+                         id="{{ block.id }}"
+                         data-gallery-src="{{ asset(block.settings.image) }}"
+                         data-gallery-title="{{ block.settings.title }}"
+                         data-button-text="{{ block.settings.button_text }}"
+                         data-button-link="{{ block.settings.button_link }}"
+                         data-new-tab="{% if block.settings.open_new_tab %}true{% endif %}">
+                        <div class="image-gallery-item__image">
+                            <img src="{{ asset(block.settings.image) }}"
+                                 alt="{{ block.settings.title }}"
+                                 loading="lazy">
+                            <div class="image-gallery-item__overlay"></div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <script defer src="{{ asset('js/image-gallery.js') }}"></script>
+    </section>
+{% endif %}

@@ -1,0 +1,53 @@
+{% set header = settings.header.settings %}
+{% if header.enabled and header.show_message_line and header.message_line_content %}
+<div class="top-bar">
+    <div class="container flex justify-center align-center">
+        <span class="message">
+            {{ header.message_line_content }}
+        </span>
+    </div>
+</div>
+{% endif %}
+
+<header class="header">
+
+    <div class="bg">
+        {% set searchClass = '' %}
+        {% set lineClass = '' %}
+
+        {% for block in settings.header.blocks %}
+            {% if block.type == 'search' %}
+                {% if block.settings.enabled == false %}
+                    {% set searchClass = 'justify-center' %}
+                {% elseif block.settings.style == 'icon' %}
+                    {% set searchClass = 'small-search' %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if (settings.header.blocks[0].settings.enabled and settings.header.blocks[2].settings.enabled)
+            and settings.header.blocks[1].settings.enabled
+            and settings.header.blocks[1].type == 'logo'
+        %}
+            {% set lineClass = 'logo-second-position' %}
+        {% endif %}
+
+        <div class="line flex align-center container {{searchClass}}{% if header.menu_style == 'hamburger' %} with-menu-hamburger{% endif %}{% if lineClass %} {{ lineClass }}{% endif %}"
+        >
+            {% for section in settings.header.blocks %}
+
+                {% if loop.first %}
+                    {% element 'snippets/header-menu' %}
+                {% endif %}
+
+                {% element 'snippets/' ~ section.type {
+                    'section' : section
+                } %}
+
+            {% endfor %}
+        </div>
+    </div>
+
+    {% element 'snippets/menu' %}
+
+</header>
