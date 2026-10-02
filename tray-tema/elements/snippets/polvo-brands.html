@@ -1,0 +1,74 @@
+{# Atacado Polvo: faixa de marcas rolando, igual à do site antigo (configs/editor/sections/home.polvo_brands.json).
+   O JS duplica a lista e move o trilho (pausa com o mouse em cima, dá para arrastar).
+   Sem JS ou com "reduzir movimento", os logos ficam parados e quebram linha. #}
+{% if section.type == 'polvo_brands' and section.settings.enabled %}
+{% set s = section.settings %}
+<section class="polvo-marcas" id="{{ section.id }}"{% if s.title %} aria-label="{{ s.title }}"{% endif %}>
+  {% if s.title %}<p class="polvo-marcas__titulo container">{{ s.title }}</p>{% endif %}
+  <div class="polvo-marcas__viewport">
+    <div class="polvo-marcas__trilho">
+      <ul class="polvo-marcas__lista">
+        {% for block in section.blocks %}
+          {% if block.settings.enabled and block.settings.image %}
+            <li id="{{ block.id }}"><img src="{{ asset(block.settings.image) }}" alt="{{ block.settings.alt }}" height="56" decoding="async"></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+    var secao = document.getElementById('{{ section.id }}');
+    var trilho = secao && secao.querySelector('.polvo-marcas__trilho');
+    var lista = trilho && trilho.querySelector('.polvo-marcas__lista');
+    if (!lista || !lista.children.length) return;
+
+    // Cópia para emendar a volta sem salto; leitor de tela lê cada marca uma vez.
+    var copia = lista.cloneNode(true);
+    copia.setAttribute('aria-hidden', 'true');
+    copia.querySelectorAll('img').forEach(function (img) { img.alt = ''; });
+    trilho.appendChild(copia);
+    secao.classList.add('polvo-marcas--ativo');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // requestAnimationFrame (e não animação CSS) para o arraste continuar de onde o trilho está.
+    // Velocidade constante: 4 s por logo.
+    var viewport = secao.querySelector('.polvo-marcas__viewport');
+    var x = 0, volta = 0, parado = false, arraste = null, anterior = 0;
+    function medir() { volta = lista.offsetWidth; }
+    medir();
+    window.addEventListener('resize', medir);
+    lista.querySelectorAll('img').forEach(function (img) { img.addEventListener('load', medir); });
+
+    function quadro(t) {
+        var dt = anterior ? Math.min(t - anterior, 100) : 0;
+        anterior = t;
+        if (!parado && !arraste && volta) x -= dt * volta / (lista.children.length * 4000);
+        if (volta) x = ((x % volta) - volta) % volta;
+        trilho.style.transform = 'translateX(' + x + 'px)';
+        requestAnimationFrame(quadro);
+    }
+    requestAnimationFrame(quadro);
+
+    viewport.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') parado = true; });
+    viewport.addEventListener('pointerleave', function () { parado = false; });
+    viewport.addEventListener('pointerdown', function (e) {
+        arraste = { id: e.pointerId, inicio: e.clientX, x0: x };
+        viewport.setPointerCapture(e.pointerId);
+        viewport.classList.add('arrastando');
+    });
+    viewport.addEventListener('pointermove', function (e) {
+        if (arraste && e.pointerId === arraste.id) x = arraste.x0 + e.clientX - arraste.inicio;
+    });
+    function soltar(e) {
+        if (!arraste || e.pointerId !== arraste.id) return;
+        arraste = null;
+        viewport.classList.remove('arrastando');
+    }
+    viewport.addEventListener('pointerup', soltar);
+    viewport.addEventListener('pointercancel', soltar);
+})();
+</script>
+{% endif %}

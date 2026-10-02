@@ -390,12 +390,92 @@
 
 .polvo-btn--claro:hover { color: var(--polvo-brand-700); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(27, 7, 51, 0.25); }
 
-/* ---- Marcas (bloco nativo da Tray, logo abaixo do hero) ----------------- */
-/* "section." para vencer o brands.css, que carrega depois (logos de até 120px). */
+/* ---- Marcas (polvo-brands.html): faixa rolando, igual à do site antigo --- */
 
-section.section-brands { padding: 18px 0 22px; border-bottom: 1px solid var(--polvo-line); }
+.polvo-marcas {
+  padding: 28px 0;
+  border-top: 1px solid var(--polvo-line);
+  border-bottom: 1px solid var(--polvo-line);
+}
 
-section.section-brands .box-brand img { max-height: 64px; }
+.polvo-marcas__titulo {
+  margin: 0 auto 20px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--polvo-ink-3);
+}
+
+.polvo-marcas__viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.polvo-marcas__trilho { display: flex; width: max-content; }
+
+.polvo-marcas__lista {
+  display: flex;
+  align-items: center;
+  gap: clamp(36px, 5vw, 64px);
+  margin: 0;
+  padding: 0 clamp(18px, 2.5vw, 32px);
+  list-style: none;
+}
+
+.polvo-marcas__lista img {
+  display: block;
+  width: auto;
+  height: 56px;
+  max-width: 160px;
+  object-fit: contain;
+  opacity: 0.85;
+  transition: transform 0.25s var(--polvo-ease), opacity 0.25s var(--polvo-ease);
+}
+
+.polvo-marcas__lista li:hover img { opacity: 1; transform: scale(1.06); }
+
+.polvo-marcas--ativo .polvo-marcas__viewport { cursor: grab; touch-action: pan-y; user-select: none; }
+
+.polvo-marcas--ativo .polvo-marcas__viewport.arrastando { cursor: grabbing; }
+
+.polvo-marcas--ativo .polvo-marcas__lista img { -webkit-user-drag: none; pointer-events: none; }
+
+/* Sem JS: sem cópia nem rolagem, a lista quebra linha centralizada. */
+.polvo-marcas:not(.polvo-marcas--ativo) .polvo-marcas__trilho { width: auto; justify-content: center; }
+
+.polvo-marcas:not(.polvo-marcas--ativo) .polvo-marcas__lista { flex-wrap: wrap; justify-content: center; row-gap: 20px; }
+
+@media (max-width: 760px) {
+  .polvo-marcas__lista img { height: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .polvo-marcas--ativo .polvo-marcas__trilho { width: auto; justify-content: center; }
+  .polvo-marcas--ativo .polvo-marcas__lista { flex-wrap: wrap; justify-content: center; row-gap: 20px; }
+  .polvo-marcas--ativo .polvo-marcas__lista[aria-hidden="true"] { display: none; }
+}
+
+/* ---- Revelação ao rolar (polvo-reveal.html marca os alvos) -------------- */
+
+[data-polvo-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s var(--polvo-ease), transform 0.6s var(--polvo-ease);
+}
+
+[data-polvo-reveal].is-in { opacity: 1; transform: none; }
+
+/* .polvo-cat e .polvo-card já têm transição de hover: junta as duas. */
+.polvo-cat[data-polvo-reveal],
+.polvo-card[data-polvo-reveal] {
+  transition: opacity 0.6s var(--polvo-ease), transform 0.6s var(--polvo-ease), box-shadow 0.2s var(--polvo-ease);
+}
+
+.polvo-cat[data-polvo-reveal].is-in:hover,
+.polvo-card[data-polvo-reveal].is-in:hover { transform: translateY(-3px); }
 
 /* ---- Categorias (polvo-categories.html) --------------------------------- */
 

@@ -1,0 +1,198 @@
+{
+  "name": "Polvo: marcas (faixa rolando)",
+  "template": "snippets/polvo-brands",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 30,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/ype.png",
+            "alt": "Ypê"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/bombril.svg",
+            "alt": "Bombril"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/qboa.png",
+            "alt": "Qboa"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/brilhante.webp",
+            "alt": "Brilhante"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/gota-limpa.png",
+            "alt": "Gota Limpa"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/atrius.png",
+            "alt": "Atrius"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/saif.png",
+            "alt": "Saif"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/veja.png",
+            "alt": "Veja"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/florax.png",
+            "alt": "Florax Premium"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/bompack.png",
+            "alt": "Bompack"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/jimo.svg",
+            "alt": "Jimo"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/coala.png",
+            "alt": "Coala"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/elgin.svg",
+            "alt": "Elgin"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/nobre.png",
+            "alt": "Nobre"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/higifort.png",
+            "alt": "Higifort"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/copozan.png",
+            "alt": "Copozan"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/toksuave.png",
+            "alt": "Tok Suave"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/plasvale.png",
+            "alt": "Plasvale"
+          }
+        },
+        {
+          "type": "polvo_brand",
+          "settings": {
+            "enabled": true,
+            "image": "/img/marcas/alklin.png",
+            "alt": "Alklin"
+          }
+        }
+      ],
+      "settings": {
+        "enabled": true,
+        "title": "Marcas que você encontra aqui"
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_brand",
+      "name": "Marca",
+      "limit": 30,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Logo",
+          "info": "PNG/SVG com fundo transparente, por volta de 300x240 px"
+        },
+        {
+          "id": "alt",
+          "type": "text",
+          "label": "Nome da marca",
+          "maxLength": 40
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Título",
+      "maxLength": 60
+    }
+  ]
+}

@@ -40,14 +40,18 @@ escolhido numa lista), `home.polvo_steps` (como comprar), `home.polvo_categories
 ofertas no WhatsApp + ilustração), `home.polvo_about` (a empresa + foto em
 `img/polvo/`), `home.polvo_faq` (`<details>`, mesmo `.polvo-faq` das LPs; respostas
 provisórias, o usuário ajusta) e `home.polvo_cta` (caixa em degradê + unidades/horário).
-Ordem igual à home antiga: hero, marcas, faixa de informações, mais vendidos,
+`home.polvo_brands` (faixa de logos rolando com título, JS no próprio snippet; logos em
+`img/marcas/`). Animações ao rolar + contadores do hero: `snippets/polvo-reveal.html`
+(incluído no fim de `pages/home.html`; alvos marcados por seletor, sem `data-*` nos snippets).
+Ordem igual à home antiga: hero, marcas, mais vendidos,
 categorias, como comprar, segmentos, recorrência, clube, novidades, a empresa,
 FAQ, notícias, chamada final. Depoimentos **fora** até o usuário confirmar que
 são clientes reais. Cada uma = JSON em
 `configs/editor/sections/home.<tipo>.json` + `elements/snippets/polvo-*.html`
 (abre com `{% if section.type == '<tipo>' and section.settings.enabled %}`) +
 CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
-`configs/settings.json` → `current.content.home`. Banners de exemplo da Tray
+`configs/settings.json` → `current.content.home`. Seções nativas desligadas: `brands` (carrossel com bolinhas) e `info_ruler`
+("Pague como preferir", não existia no site antigo). Banners de exemplo da Tray
 (slideshow, banner_line, banner_grid) ficam **desligados** até haver banners reais.
 Arquivos novos em `configs/` entram normalmente pelo ZIP.
 - Twig: evitar `??` e `?:` (versão da Tray desconhecida); usar `|default(...)`.
