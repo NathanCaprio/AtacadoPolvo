@@ -104,6 +104,9 @@ de `server/tema-lp.js`). Teste: `server/tema-lp.test.js`.
 - A CSP/regras do site antigo (sem inline) **não** valem aqui; o tema da Tray usa `<style>`/`<script>` inline.
 
 ## Feito / próximo
+Lista do que falta para publicar (tema x painel): `tray-tema/PUBLICAR.md`.
+- Carrinho: "Finalizar pedido" vai para o checkout da Tray; o `js/whatsapp-checkout.js` (herdado do tema publicado) está desligado em `elements/scripts.html`. Newsletter do rodapé oculta (`show_newsletter: false`).
+
 - [x] Paleta, Inter + Montserrat, cabeçalho, rodapé escuro, cartão de produto, selos.
 - [x] Home: hero, barra de informações, mais vendidos, segmentos, como comprar, marcas (logos em `img/marcas/`).
 - [x] Cabeçalho em uma linha como o do site antigo.

@@ -1,12 +1,14 @@
 {% set localPath = asset() | split('?') [0] %}
 <span class="hidden local-path" data-path="{{ localPath }}"></span>
-<span class="hidden whatsapp-checkout-number" data-number="{{ Translation('ag_telefone_3') }}"></span>
 
 {# Theme Scripts #}
 <script src="{{ asset('js/vendor/js.cookie.min.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('js/sidecart.js') }}"></script>
-<script src="{{ asset('js/whatsapp-checkout.js') }}"></script>
+{# Atacado Polvo: 'Finalizar pedido' do carrinho vai para o checkout da Tray (a loja vende com preço).
+   O whatsapp-checkout.js (veio do tema publicado) trocava o checkout pelo WhatsApp; para religar,
+   voltar esta linha e o <span class="hidden whatsapp-checkout-number" data-number="{{ Translation('ag_telefone_3') }}"> acima.
+<script src="{{ asset('js/whatsapp-checkout.js') }}"></script> #}
 
 {# Tray scripts #}
 {{ tray.scripts }}
