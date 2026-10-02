@@ -18,7 +18,10 @@ nada no ERP.** O site só faz login e leitura.
 - **Preço, custo e estoque não são gravados nem enviados ao site.** O site
   mostra "preço sob consulta" e trata tudo como disponível.
 - Fotos: ficam no S3 do ERP (públicas). Foto cadastrada no ERP aparece no
-  site na próxima sincronização. Sem foto, o site usa a ilustração.
+  site na próxima sincronização. Sem foto no ERP, vale a da busca automática
+  (`npm run fotos`, `server/fotos.js`: Bing Imagens, salva em
+  `assets/img/produtos/<uuid>.jpg`, escondível pelo painel); sem nenhuma das
+  duas, o site usa a ilustração. A busca não fala com o ERP.
 - Se o ERP falhar (fora do ar, lista vazia, metade das fichas sem resposta,
   login recusado), o catálogo anterior continua no ar e o erro aparece no
   painel, aba **Catálogo (ERP)**, que também tem o botão "Sincronizar agora".

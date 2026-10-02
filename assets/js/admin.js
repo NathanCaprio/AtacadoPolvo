@@ -924,7 +924,24 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
   function filtrarProdutos() {
     const termo = semAcento($('#prod-busca').value.trim());
     const soAjustados = $('#prod-ajustados').checked;
-    return produtosSite.filter(p => (!soAjustados || p.nome || p.descricao) && casaBusca(p, termo));
+    const soBusca = $('#prod-busca-foto').checked;
+    return produtosSite.filter(p => (!soAjustados || p.nome || p.descricao) &&
+      (!soBusca || fotoDaBusca(p)) && casaBusca(p, termo));
+  }
+
+  // Foto achada pela busca automática só conta quando o ERP não tem foto.
+  const fotoDaBusca = p => !p.fotoErp && !!p.fotoBusca;
+
+  function celulaFoto(p) {
+    const td = el('td');
+    if (p.fotoErp) { td.textContent = 'do ERP'; return td; }
+    if (!p.fotoBusca) { td.textContent = '—'; return td; }
+    const img = el('img', 'prod-mini' + (p.fotoOculta ? ' is-oculta' : ''));
+    img.src = p.fotoBusca;
+    img.alt = '';
+    img.loading = 'lazy';
+    td.append(img, el('div', 'email', p.fotoOculta ? 'busca · escondida' : 'busca'));
+    return td;
   }
 
   function linhaProduto(p) {
@@ -933,7 +950,7 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     const tdNome = el('td');
     tdNome.append(el('div', 'nome', p.nome || p.nomeAuto),
       el('div', 'email', p.nome ? 'nome escrito no painel' : 'automático'));
-    tr.append(tdNome, el('td', '', p.grupo), el('td', '', p.descricao ? 'Sim' : '—'));
+    tr.append(tdNome, el('td', '', p.grupo), el('td', '', p.descricao ? 'Sim' : '—'), celulaFoto(p));
     const tdAcoes = el('td');
     const caixa = el('div', 'acoes');
     caixa.append(botao('Editar', 'btn--ghost', () => abrirProduto(p)));
@@ -946,10 +963,12 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     if (!produtosSite) return;
     const lista = filtrarProdutos();
     preencher($('#linhas-produtos'), lista.slice(0, limiteProdutos), linhaProduto,
-      produtosSite.length ? 'Nenhum produto encontrado.' : 'Nenhum produto sincronizado do ERP ainda.', 5);
+      produtosSite.length ? 'Nenhum produto encontrado.' : 'Nenhum produto sincronizado do ERP ainda.', 6);
     const ajustados = produtosSite.filter(p => p.nome || p.descricao).length;
+    const daBusca = produtosSite.filter(p => fotoDaBusca(p) && !p.fotoOculta).length;
     $('#prod-contagem').textContent =
-      `${lista.length} de ${produtosSite.length} · ${ajustados} com nome ou descrição do painel`;
+      `${lista.length} de ${produtosSite.length} · ${ajustados} com nome ou descrição do painel` +
+      ` · ${daBusca} com foto da busca`;
     $('#prod-mais').hidden = lista.length <= limiteProdutos;
   }
 
@@ -969,6 +988,7 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     esperaBusca = setTimeout(voltarAoInicio, 150);
   });
   $('#prod-ajustados').addEventListener('change', voltarAoInicio);
+  $('#prod-busca-foto').addEventListener('change', voltarAoInicio);
   $('#prod-mais').addEventListener('click', () => { limiteProdutos += PAGINA_PRODUTOS; desenharProdutos(); });
 
   const editorProduto = $('#editor-produto');
@@ -992,15 +1012,20 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     $('#pe-nome').placeholder = p.nomeAuto;   // mostra o que fica se deixar vazio
     $('#pe-desc').value = p.descricao;
     $('#pe-ver').href = `produto.html?id=${encodeURIComponent(p.id)}`;
+    $('#pe-foto').hidden = !fotoDaBusca(p);
+    if (fotoDaBusca(p)) $('#pe-foto-img').src = p.fotoBusca;
+    $('#pe-foto-oculta').checked = p.fotoOculta;
     contarDescricao();
     editorProduto.showModal();
   }
 
   async function salvarProduto(nome, descricao) {
+    const corpo = { nome, descricao };
+    if (fotoDaBusca(produtoAberto)) corpo.fotoOculta = $('#pe-foto-oculta').checked;
     try {
       const r = await window.API.pedir(`/api/admin/produtos/${encodeURIComponent(produtoAberto.erpId)}`,
-        { metodo: 'PUT', corpo: { nome, descricao } });
-      Object.assign(produtoAberto, { nome: r.nome, descricao: r.descricao });
+        { metodo: 'PUT', corpo });
+      Object.assign(produtoAberto, { nome: r.nome, descricao: r.descricao, fotoOculta: r.fotoOculta });
       editorProduto.close();
       desenharProdutos();
       mostrarAviso(r.nome || r.descricao ? 'Produto atualizado no site.' : 'Produto voltou ao nome automático.');

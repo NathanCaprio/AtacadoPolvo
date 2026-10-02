@@ -27,7 +27,7 @@ const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
 
-let processo, erpFalso, BASE, banco;
+let processo, erpFalso, BASE, banco, pastaFotos;
 
 /* ---- ERP falso ------------------------------------------------------------ */
 
@@ -212,6 +212,13 @@ before(async () => {
   await new Promise(ok => erpFalso.listen(0, '127.0.0.1', ok));
 
   banco = path.join(os.tmpdir(), `polvo-erp-${process.pid}-${Date.now()}.db`);
+  // Fotos da busca automática: uma para quem já tem foto no ERP (o ERP
+  // vence), uma para quem não tem, e lixo que não pode virar foto.
+  pastaFotos = fs.mkdtempSync(path.join(os.tmpdir(), 'polvo-fotos-'));
+  for (const n of ['aaaaaaaa-0000-0000-0000-000000000001.jpg', 'aaaaaaaa-0000-0000-0000-000000000004.jpg',
+                   'aaaaaaaa-0000-0000-0000-000000000002.txt', 'aaaaaaaa 0000.jpg']) {
+    fs.writeFileSync(path.join(pastaFotos, n), 'x');
+  }
   const porta = await portaLivre();
   BASE = `http://127.0.0.1:${porta}`;
 
@@ -224,6 +231,7 @@ before(async () => {
       ERP_EMAIL: 'site@polvo.test',
       ERP_SENHA: 'senha-do-site',
       ERP_AUTO: '0',              // cada teste dispara a sua rodada
+      FOTOS_PRODUTOS: pastaFotos,
       BACKUP_AUTO: '0',
       LIMITE_CADASTRO: '500',
       LIMITE_LOGIN: '500'
@@ -244,6 +252,7 @@ after(() => {
   for (const sufixo of ['', '-wal', '-shm']) {
     try { fs.unlinkSync(banco + sufixo); } catch { /* pode não existir */ }
   }
+  if (pastaFotos) fs.rmSync(pastaFotos, { recursive: true, force: true });
 });
 
 /* ---- Testes ----------------------------------------------------------------- */
@@ -441,6 +450,45 @@ describe('catálogo do ERP', () => {
     for (const [metodo, rota] of erp.chamadas.slice(chamadasAntes)) {
       assert.ok(metodo === 'GET' || rota === '/api/Auth/Login', `chamada proibida ao ERP: ${metodo} ${rota}`);
     }
+  });
+
+  test('foto da busca automática: só sem foto no ERP, e o painel esconde', async () => {
+    const ID = 'aaaaaaaa-0000-0000-0000-000000000004';
+    const caminho = `/api/admin/produtos/${ID}`;
+    const admin = await novoAdmin();
+    const s = await sincronizar(admin);
+    assert.equal(s.historico[0].situacao, 'ok', s.historico[0].mensagem);
+
+    const ver = async () => rodarCatalogo((await criarCliente()('/catalogo-erp.js')).texto)
+      .window.CATALOGO.produtos;
+    let produtos = await ver();
+    assert.equal(produtos.find(p => p.id === '7891').foto, S3 + 'foto1.jpg', 'a foto do ERP vence');
+    assert.equal(produtos.find(p => p.id === '7894').foto, `/assets/img/produtos/${ID}.jpg`);
+    assert.equal(produtos.find(p => p.id === '7892').foto, undefined, '.txt não é foto');
+
+    const lista = (await admin('/api/admin/produtos')).dados.produtos;
+    const item = lista.find(p => p.erpId === ID);
+    assert.deepEqual([item.fotoErp, item.fotoBusca, item.fotoOculta],
+      [false, `/assets/img/produtos/${ID}.jpg`, false]);
+    assert.equal(lista.find(p => p.id === '7891').fotoErp, true);
+
+    const anon = criarCliente();
+    assert.equal((await anon(caminho, { metodo: 'PUT', corpo: { fotoOculta: true } })).status, 401);
+    assert.equal((await admin(caminho, { metodo: 'PUT', corpo: { fotoOculta: 'sim' } })).status, 400);
+
+    const r = await admin(caminho, { metodo: 'PUT', corpo: { nome: '', descricao: '', fotoOculta: true } });
+    assert.equal(r.status, 200, JSON.stringify(r.dados));
+    assert.equal(r.dados.fotoOculta, true);
+    produtos = await ver();
+    assert.equal(produtos.find(p => p.id === '7894').foto, undefined, 'escondida volta à ilustração');
+
+    // "Voltar ao automático" mexe só em nome e descrição: a foto segue escondida.
+    await admin(caminho, { metodo: 'PUT', corpo: { nome: '', descricao: '' } });
+    assert.equal((await admin('/api/admin/produtos')).dados.produtos.find(p => p.erpId === ID).fotoOculta, true);
+
+    await admin(caminho, { metodo: 'PUT', corpo: { fotoOculta: false } });
+    produtos = await ver();
+    assert.equal(produtos.find(p => p.id === '7894').foto, `/assets/img/produtos/${ID}.jpg`);
   });
 
   test('calculadora ligada a produtos do ERP: grava só no site e sai no catálogo', async () => {

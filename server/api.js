@@ -38,7 +38,7 @@
      GET    /api/admin/erp             situação da sincronização com o ERP
      POST   /api/admin/erp/sincronizar dispara uma sincronização agora
      GET    /api/admin/produtos        produtos do ERP com nome/descrição do site
-     PUT    /api/admin/produtos/:erpId nome e descrição no site (só no nosso banco)
+     PUT    /api/admin/produtos/:erpId nome, descrição e foto oculta no site (só no nosso banco)
      GET    /api/admin/calculadora     itens da calculadora ligados a produtos do ERP
      PUT    /api/admin/calculadora/:item   liga o item (c01...) a um produto
      DELETE /api/admin/calculadora/:item   volta o item ao genérico
@@ -1239,7 +1239,8 @@ async function ajustarProdutoSite(req, res, erpId) {
   if (!admin) return;
   const r = erp.ajustarProduto(erpId, await lerJson(req), admin.id);
   if (r.erro) return erro(res, r.status, r.erro);
-  registrar(req, admin, 'produto_editado', erpId, r.produto.nome || `nome automático (${r.produto.nomeAuto})`);
+  registrar(req, admin, 'produto_editado', erpId, (r.produto.nome || `nome automático (${r.produto.nomeAuto})`) +
+    (r.produto.fotoOculta ? ' · foto da busca escondida' : ''));
   json(res, 200, r.produto);
 }
 

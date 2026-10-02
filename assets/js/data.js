@@ -151,8 +151,9 @@ window.artProduto = function (tipo, cor) {
   </svg>`;
 };
 
-/* Imagem do produto: a foto do ERP quando existe, senao a ilustracao.
-   A URL ja chega filtrada pelo servidor (so o S3 do ERP passa). */
+/* Imagem do produto: a foto do ERP ou a da busca automatica (server/fotos.js),
+   senao a ilustracao.
+   A URL ja chega filtrada pelo servidor (so o S3 do ERP ou /assets/ passa). */
 window.imagemProduto = function (p, cor) {
   return p && p.foto
     ? `<img class="prod-foto" src="${p.foto}" alt="" loading="lazy" decoding="async">`

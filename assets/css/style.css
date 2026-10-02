@@ -5154,6 +5154,36 @@ section.marcas {
   margin: -6px 0 16px;
   overflow-wrap: anywhere;
 }
+/* Foto achada pela busca automática (fundo branco: a foto de loja quase
+   sempre tem, e no tema escuro ela ficaria num quadrado solto) */
+.pe-foto {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.pe-foto[hidden] {
+  display: none;
+}
+.pe-foto img,
+.prod-mini {
+  flex: none;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.pe-foto img {
+  width: 96px;
+  height: 96px;
+}
+.prod-mini {
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+.prod-mini.is-oculta {
+  opacity: 0.35;
+}
 .prod-filtro {
   display: inline-flex;
   align-items: center;

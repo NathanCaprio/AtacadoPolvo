@@ -30,6 +30,8 @@
 'use strict';
 
 const crypto = require('node:crypto');
+const fs = require('node:fs');
+const path = require('node:path');
 const zlib = require('node:zlib');
 const { db } = require('./db');
 
@@ -39,6 +41,25 @@ const URL_ERP = (process.env.ERP_URL || 'https://empresarius.azurewebsites.net/a
 // para o site (e é este o domínio liberado no CSP do server.js).
 const ORIGEM_FOTOS = 'https://empresarius.s3.sa-east-1.amazonaws.com';
 const FOTO_RE = /^https:\/\/empresarius\.s3\.sa-east-1\.amazonaws\.com\/[A-Za-z0-9._~\/-]+$/;
+
+// Fotos achadas na internet pela busca automática (server/fotos.js), para
+// quem não tem foto no ERP: um arquivo por produto, com o uuid do ERP no
+// nome, servido de assets/. A foto do ERP, quando existe, sempre vence.
+const PASTA_FOTOS = process.env.FOTOS_PRODUTOS || path.join(__dirname, '..', 'assets', 'img', 'produtos');
+const URL_FOTOS = '/assets/img/produtos/';
+const ARQUIVO_FOTO = /^([A-Za-z0-9-]{1,64})\.(jpg|png|webp)$/;
+
+/** Map erp_id -> URL da foto da busca. Pasta ausente = nenhuma foto. */
+function fotosDaBusca() {
+  const mapa = new Map();
+  let nomes = [];
+  try { nomes = fs.readdirSync(PASTA_FOTOS); } catch { return mapa; }
+  for (const n of nomes) {
+    const m = ARQUIVO_FOTO.exec(n);
+    if (m) mapa.set(m[1], URL_FOTOS + n);
+  }
+  return mapa;
+}
 
 const PARALELO = 3;              // fichas abertas ao mesmo tempo
 const TEMPO_LIMITE = 30_000;     // ms por chamada ao ERP
@@ -405,9 +426,10 @@ function idsDoSite(linhas) {
 function montarCatalogo() {
   const linhas = db.prepare(`
     SELECT e.erp_id, e.codigo, e.nome, e.grupo, e.categoria, e.unidade, e.fotos,
-           s.nome AS nome_site, s.descricao
+           s.nome AS nome_site, s.descricao, s.foto_oculta
       FROM produtos_erp e LEFT JOIN produtos_site s ON s.erp_id = e.erp_id`).all();
   if (!linhas.length) return null;
+  const daBusca = fotosDaBusca();
 
   const porChave = new Map(GRUPOS.map(g => [g.erp, g]));
   const categorias = new Map();
@@ -443,6 +465,7 @@ function montarCatalogo() {
     };
     if (l.descricao) p.texto = l.descricao;     // página do produto; o card segue com desc
     if (fotos.length) p.foto = fotos[0];
+    else if (daBusca.has(l.erp_id) && !l.foto_oculta) p.foto = daBusca.get(l.erp_id);
     return p;
   });
 
@@ -537,11 +560,13 @@ const textoLivre = s => String(s || '').replace(/[<>]/g, '').replace(/"/g, '″'
 
 function produtosParaPainel() {
   const linhas = db.prepare(`
-    SELECT e.erp_id, e.codigo, e.nome, e.grupo, e.unidade, s.nome AS nome_site, s.descricao, s.atualizado
+    SELECT e.erp_id, e.codigo, e.nome, e.grupo, e.unidade, e.fotos, s.nome AS nome_site, s.descricao,
+           s.foto_oculta, s.atualizado
       FROM produtos_erp e LEFT JOIN produtos_site s ON s.erp_id = e.erp_id
      ORDER BY e.nome`).all();
   const idDe = idsDoSite(linhas);
   const grupos = new Map(GRUPOS.map(g => [g.erp, g.nome]));
+  const daBusca = fotosDaBusca();
   return linhas.map(l => ({
     id: idDe(l),
     erpId: l.erp_id,
@@ -552,6 +577,9 @@ function produtosParaPainel() {
     nome: l.nome_site || '',
     caixa: unidadeSite(l.unidade),
     descricao: l.descricao || '',
+    fotoErp: l.fotos !== '[]',
+    fotoBusca: daBusca.get(l.erp_id) || '',   // vale só quando o ERP não tem foto
+    fotoOculta: !!l.foto_oculta,
     atualizado: l.atualizado || null
   }));
 }
@@ -563,6 +591,9 @@ function ajustarProduto(erpId, corpo, por) {
   if ([corpo.nome, corpo.descricao].some(v => v != null && typeof v !== 'string')) {
     return { status: 400, erro: 'Nome e descrição precisam ser texto.' };
   }
+  if (corpo.fotoOculta != null && typeof corpo.fotoOculta !== 'boolean') {
+    return { status: 400, erro: 'fotoOculta precisa ser verdadeiro ou falso.' };
+  }
 
   const nomeAuto = nomeSite(atual.nome);
   let nome = limpo(corpo.nome);
@@ -573,15 +604,21 @@ function ajustarProduto(erpId, corpo, por) {
     return { status: 400, erro: `A descrição pode ter até ${LIMITE_DESCRICAO} caracteres.` };
   }
 
-  if (!nome && !descricao) {
+  // Sem fotoOculta no corpo, fica como estava ("Voltar ao automático" mexe
+  // só em nome e descrição).
+  const antes = db.prepare('SELECT foto_oculta FROM produtos_site WHERE erp_id = ?').get(erpId);
+  const fotoOculta = corpo.fotoOculta == null ? !!(antes && antes.foto_oculta) : corpo.fotoOculta;
+
+  if (!nome && !descricao && !fotoOculta) {
     db.prepare('DELETE FROM produtos_site WHERE erp_id = ?').run(erpId);
   } else {
-    db.prepare(`INSERT INTO produtos_site (erp_id, nome, descricao, por) VALUES (?, ?, ?, ?)
+    db.prepare(`INSERT INTO produtos_site (erp_id, nome, descricao, foto_oculta, por) VALUES (?, ?, ?, ?, ?)
                 ON CONFLICT(erp_id) DO UPDATE SET nome = excluded.nome, descricao = excluded.descricao,
-                  atualizado = datetime('now'), por = excluded.por`).run(erpId, nome, descricao, por);
+                  foto_oculta = excluded.foto_oculta, atualizado = datetime('now'), por = excluded.por`)
+      .run(erpId, nome, descricao, fotoOculta ? 1 : 0, por);
   }
   publico = null;                              // o site vê na próxima página
-  return { produto: { erpId, nomeAuto, nome, descricao } };
+  return { produto: { erpId, nomeAuto, nome, descricao, fotoOculta } };
 }
 
 /* ---- 6. Calculadora de consumo ligada a produtos do ERP ---------------------
@@ -638,6 +675,6 @@ function desligarItem(item) {
 }
 
 module.exports = {
-  sincronizar, agendar, situacao, configurado, arquivosPublicos, ORIGEM_FOTOS,
+  sincronizar, agendar, situacao, configurado, arquivosPublicos, ORIGEM_FOTOS, PASTA_FOTOS,
   produtosParaPainel, ajustarProduto, ligacoesCalculadora, ligarItem, desligarItem
 };

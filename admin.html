@@ -273,6 +273,7 @@
         <input class="input u-mw-320" id="prod-busca" type="search" autocomplete="off"
           placeholder="Buscar por nome ou código…">
         <label class="prod-filtro"><input type="checkbox" id="prod-ajustados"> Só os ajustados</label>
+        <label class="prod-filtro"><input type="checkbox" id="prod-busca-foto"> Só com foto da busca</label>
         <span id="prod-contagem" role="status"></span>
       </div>
       <div class="tabela-wrap">
@@ -283,6 +284,7 @@
               <th>Nome no site</th>
               <th>Grupo</th>
               <th>Descrição</th>
+              <th>Foto</th>
               <th class="u-ta-right">Ações</th>
             </tr>
           </thead>
@@ -517,6 +519,14 @@
       <textarea class="input" id="pe-desc" rows="7" maxlength="1500"
         placeholder="Para que serve, rendimento, diluição, onde usar…"></textarea>
       <span class="hint" id="pe-conta"></span></div>
+    <div class="field pe-foto" id="pe-foto" hidden>
+      <img id="pe-foto-img" alt="Foto achada pela busca automática" width="96" height="96">
+      <div>
+        <label class="prod-filtro"><input type="checkbox" id="pe-foto-oculta"> Esconder esta foto no site</label>
+        <span class="hint">Achada na internet pela busca automática, porque o ERP não tem foto deste
+          produto. Escondida, o site volta a mostrar a ilustração.</span>
+      </div>
+    </div>
 
     <div class="barra-acoes proposta-acoes">
       <a class="btn btn--ghost" id="pe-ver" target="_blank" rel="noopener">Ver no site</a>

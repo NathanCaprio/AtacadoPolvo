@@ -11,7 +11,8 @@
     "backup": "node server/backup.js",
     "backups": "node server/backup.js listar",
     "exportar": "node server/backup.js exportar",
-    "restaurar": "node server/backup.js restaurar"
+    "restaurar": "node server/backup.js restaurar",
+    "fotos": "node server/fotos.js"
   },
   "engines": {
     "node": ">=22.9"

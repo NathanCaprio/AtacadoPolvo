@@ -145,6 +145,7 @@ db.exec(`
     erp_id     TEXT PRIMARY KEY,
     nome       TEXT NOT NULL DEFAULT '',     -- vazio = nome automático
     descricao  TEXT NOT NULL DEFAULT '',
+    foto_oculta INTEGER NOT NULL DEFAULT 0,  -- 1 = esconde a foto da busca automática
     atualizado TEXT NOT NULL DEFAULT (datetime('now')),
     por        INTEGER REFERENCES clientes(id) ON DELETE SET NULL
   );
@@ -256,6 +257,12 @@ function migrar() {
   }
   db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_orc_token
              ON orcamentos(token) WHERE token IS NOT NULL`);
+
+  // Foto achada pela busca automática (server/fotos.js) que o painel mandou
+  // esconder: o arquivo fica, o site volta para a ilustração.
+  if (!colunas('produtos_site').includes('foto_oculta')) {
+    db.exec('ALTER TABLE produtos_site ADD COLUMN foto_oculta INTEGER NOT NULL DEFAULT 0');
+  }
 }
 
 migrar();

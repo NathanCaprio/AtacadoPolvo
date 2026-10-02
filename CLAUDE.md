@@ -19,6 +19,7 @@ npm start      # http://127.0.0.1:3000 (PORTA=8080 para trocar); lê .env (crede
 npm test       # node --test server/*.test.js testes/*.test.js
 npm run criar-admin -- "Nome" email@x.com
 npm run backup | backups | exportar | restaurar
+npm run fotos  # busca foto para quem não tem no ERP (ver server/fotos.js)
 ```
 
 ## Onde fica cada coisa
@@ -26,6 +27,7 @@ npm run backup | backups | exportar | restaurar
 |---|---|
 | Telefone, WhatsApp, endereço, redes | `assets/js/config.js` (único lugar; injetado via `data-site`, `data-wpp`, `data-tel`...) |
 | Catálogo de produtos | vem do ERP: `server/erp.js` (sync, grupos→categorias) → `/catalogo-erp.js`; `assets/js/data.js` = exemplo + itens da calculadora. Ver `INTEGRACAO-ERP.md` |
+| Foto de produto sem foto no ERP | `npm run fotos` (`server/fotos.js`, busca no Bing) → `assets/img/produtos/<uuid>.jpg`; foto do ERP vence; painel esconde (`produtos_site.foto_oculta`); revisão visual com `--folha`/`--revisar` |
 | Nome/descrição de produto no site | painel, aba "Produtos no site" → tabela `produtos_site` (nunca no ERP); acentos automáticos em `ACENTOS` (`server/erp.js`) |
 | Coeficientes da calculadora | `assets/js/consumo.js` (novo segmento: bloco em `SEGMENTOS` + lista `SEGMENTOS` em `server/api.js`; id novo em `add()` também entra em `ITENS`) |
 | Item da calculadora → produto do ERP | painel, aba "Calculadora" → tabela `calculadora_ligacoes`; troca feita em `linhaDoItem` (`consumo.js`, usado também por `consumo-evento.js`) |
