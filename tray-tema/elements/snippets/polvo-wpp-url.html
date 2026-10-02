@@ -1,0 +1,14 @@
+{#- Atacado Polvo: link wa.me com mensagem. A Tray entrega os textos (do painel e até
+    os literais do template) com acento em entidade HTML (&aacute;); sem esta troca
+    a mensagem chega ao WhatsApp como "Ol&aacute;". Mesma tabela de snippets/whatsapp.html.
+    Uso: href="{% element 'snippets/polvo-wpp-url' { 'number': '5551...', 'message': '...' } %}" -#}
+{%- set polvo_entidades = {
+    '%26aacute%3B': '%C3%A1', '%26agrave%3B': '%C3%A0', '%26acirc%3B': '%C3%A2', '%26atilde%3B': '%C3%A3',
+    '%26eacute%3B': '%C3%A9', '%26ecirc%3B': '%C3%AA', '%26iacute%3B': '%C3%AD', '%26oacute%3B': '%C3%B3',
+    '%26ocirc%3B': '%C3%B4', '%26otilde%3B': '%C3%B5', '%26uacute%3B': '%C3%BA', '%26ccedil%3B': '%C3%A7',
+    '%26Aacute%3B': '%C3%81', '%26Agrave%3B': '%C3%80', '%26Acirc%3B': '%C3%82', '%26Atilde%3B': '%C3%83',
+    '%26Eacute%3B': '%C3%89', '%26Ecirc%3B': '%C3%8A', '%26Iacute%3B': '%C3%8D', '%26Oacute%3B': '%C3%93',
+    '%26Ocirc%3B': '%C3%94', '%26Otilde%3B': '%C3%95', '%26Uacute%3B': '%C3%9A', '%26Ccedil%3B': '%C3%87'
+} -%}
+{%- set polvo_numero = number | replace({'(': '', ')': '', ' ': '', '-': '', '+': ''}) -%}
+https://wa.me/{{ polvo_numero }}{% if message %}?text={{ message | url_encode | replace(polvo_entidades) }}{% endif -%}

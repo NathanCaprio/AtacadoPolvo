@@ -27,7 +27,7 @@
           </a>
         {% endif %}
         {% if s.whatsapp_text and s.whatsapp_number %}
-          <a class="polvo-btn polvo-btn--contorno" href="https://wa.me/{{ s.whatsapp_number }}?text={{ s.whatsapp_message|url_encode }}" target="_blank" rel="noopener">
+          <a class="polvo-btn polvo-btn--contorno" href="{% element 'snippets/polvo-wpp-url' { 'number': s.whatsapp_number, 'message': s.whatsapp_message } %}" target="_blank" rel="noopener">
             {{ s.whatsapp_text }}
           </a>
         {% endif %}

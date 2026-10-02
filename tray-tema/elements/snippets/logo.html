@@ -1,12 +1,10 @@
 {% if section.settings.enabled %}
     <div class="block-logo flex align-center justify-center" id="{{ section.id }}">
 
-        {% set logoStore = Image('logo_loja') %}
-        <a class="logo" href="{{ store.url }}" title="{{ store.name }}">
+        {# Atacado Polvo: marca fixa no tema (polvo-marca.html) no lugar do logo do painel. #}
+        <a class="logo polvo-marca" href="{{ store.url }}" title="{{ store.name }}">
 
-            {% if logoStore %}
-                {{ logoStore | replace({'src=': 'width="222" height="36" src='}) }}
-            {% endif %}
+            {% element 'snippets/polvo-marca' %}
 
             {% if 'home' in pages.current %}
                 <h1 class="title-store">{{ store.name }}</h1>

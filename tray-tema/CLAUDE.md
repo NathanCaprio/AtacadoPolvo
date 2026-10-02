@@ -26,7 +26,9 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 | Cores base / fonte do corpo / raio | `configs/settings.json` → `current.configs` (vira `--color_*` em `elements/css-variables.html`) |
 | Esqueleto da página | `layouts/default.html` |
 | Home (seções arrastáveis) | `pages/home.html` + `configs/editor/sections/home.*.json` + `elements/snippets/*.html` |
-| Cabeçalho / rodapé | `elements/header.html`, `elements/footer.html` (+ blocos em `snippets/`) |
+| Cabeçalho (uma linha: marca, menu, Orçamento, lupa, conta, carrinho) | `elements/header.html` (menu dentro da `.line`) + `snippets/polvo-marca.html` (logo-head.svg fixo, ignora o logo do painel) + `snippets/polvo-header-acoes.html` (lupa abre a busca da Tray como painel, botão WhatsApp, marca a página atual); CSS em `polvo.css` seção 2. Menu = "Menu personalizado" em `settings.json` → `header.settings.navigation`. Até 1180px o menu vai para o ☰ |
+| Rodapé | `elements/footer.html` (+ blocos em `snippets/`) |
+| Link de WhatsApp com mensagem | `snippets/polvo-wpp-url.html` (a Tray entrega acento como entidade: `Ol&aacute;`; ele converte) |
 | Cartão de produto / preço / selos | `elements/snippets/product.html`, `product-price.html`, `product-tags.html` |
 | Página de produto | `pages/product.html`, `elements/product-main.html` |
 
@@ -66,10 +68,12 @@ de `server/tema-lp.js`). Teste: `server/tema-lp.test.js`.
 ## Fica com o usuário no painel (não é tema)
 - Telefone/WhatsApp/e-mail do rodapé = dados da loja (hoje (51) 99526-6894 e e-mail pessoal; o oficial é (51) 98025-6547, ver `assets/js/config.js`).
 - Botão flutuante de WhatsApp = recurso nativo ("Ative o botão de WhatsApp na sua loja").
-- Logo, banners e texto da faixa do topo ("Utilize esse espaço…").
+- Banners. Texto da faixa do topo: `settings.json` → `header.settings.message_line_content` (editável no painel).
+- Número do botão "Orçamento" do cabeçalho = WhatsApp dos dados da loja (`ag_telefone_3`), o mesmo do rodapé.
 
 ## Regras
 - Mexer o mínimo nos arquivos da Tray (facilita atualizar o tema); o nosso vai em `polvo.css` e em arquivos novos.
+- `.container` vai até 1200px entre 1025 e 1919px (Tray: 75%), como o `--wrap` do site antigo.
 - Tokens do site antigo: `--polvo-*` no topo de `polvo.css` (iguais a `assets/css/style.css`).
 - `main.css` é minificado (70 KB): achar seletor com `grep -o '\.seletor[^}]*}' css/main.css`.
 - A CSP/regras do site antigo (sem inline) **não** valem aqui; o tema da Tray usa `<style>`/`<script>` inline.

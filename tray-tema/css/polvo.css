@@ -70,37 +70,411 @@ h1, h2, h3,
   letter-spacing: 0.02em;
 }
 
-.header > .bg {
+/* Largura do site antigo (--wrap: 1200px). A Tray usa 75% da tela entre 1025 e
+   1919px (1013px numa tela de 1366), onde a linha do cabeçalho não cabe. */
+@media (min-width: 1025px) and (max-width: 1919px) {
+  .container { max-width: max(75%, 1200px); }
+}
+
+/* Uma linha só, como no site antigo: marca | menu | Orçamento | lupa | conta | carrinho.
+   Estrutura: elements/header.html (menu dentro da .line) + snippets/polvo-marca.html
+   e polvo-header-acoes.html. O desfoque fica no ::before: backdrop-filter no
+   próprio .header prenderia elementos position:fixed lá dentro. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid var(--polvo-line);
 }
 
+.header > .bg,
 .header.fixed .bg {
-  box-shadow: var(--polvo-shadow-md);
+  background: transparent;
+  box-shadow: none;
 }
 
-.header-search-wrapper .input-search {
-  background: var(--polvo-surface-2);
-  border-color: var(--polvo-line);
+.header.fixed::before { box-shadow: var(--polvo-shadow-md); }
+
+.header .line,
+.header.fixed .line {
+  position: relative;
+  height: 72px;
+  gap: 10px;
 }
 
-.header-search-wrapper .input-search:focus {
+.header .line > *:not(.header-menu),
+.header .line > .header-menu { margin: 0; }
+
+/* Marca */
+.header .block-logo {
+  order: 0;
+  width: auto;
+  margin-right: auto;
+}
+
+.header .logo.polvo-marca {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.header .logo .polvo-marca__img {
+  width: 63px;
+  height: 40px;
+  max-height: none;
+  flex-shrink: 0;
+}
+
+.polvo-marca__txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1;
+  font-family: var(--polvo-font-display);
+  text-transform: uppercase;
+}
+
+.polvo-marca__txt span {
+  font-size: 0.54rem;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  color: var(--polvo-ink-3);
+}
+
+.polvo-marca__txt b {
+  font-size: 1.34rem;
+  font-weight: 900;
+  letter-spacing: 0.005em;
+  color: var(--polvo-ink);
+}
+
+/* O nome da loja continua no HTML (h1 da home) só para leitores de tela e buscadores. */
+.header .logo .title-store {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Menu */
+.header .line > .nav,
+.header.fixed .line > .nav {
+  order: 1;
+  position: static;
+  z-index: auto;
+  transform: none;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+  height: auto;
+}
+
+.header .nav > .container {
+  width: auto;
+  max-width: none;
+  padding: 0;
+}
+
+.header .nav .list {
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.header .nav .list > li > a {
+  height: auto;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.93rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--polvo-ink-2);
+  transition: color 0.2s var(--polvo-ease), background 0.2s var(--polvo-ease);
+}
+
+.header .nav .list > li > a:hover {
+  color: var(--polvo-brand);
+  background: var(--polvo-brand-soft);
+}
+
+.header .nav .list > li > a[aria-current="page"] { color: var(--polvo-brand); }
+
+.header .nav .list > li > a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--polvo-brand);
+}
+
+/* Botões redondos: lupa, carrinho e ☰ (mesmo .icon-btn do site antigo). */
+.polvo-lupa,
+.header .cart-header,
+.header .cart-header.with-item,
+.header .line > .header-menu {
+  width: 40px;
+  min-width: 0;
+  margin: 0;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--polvo-ink-2);
+  cursor: pointer;
+  transition: color 0.2s var(--polvo-ease), border-color 0.2s var(--polvo-ease), background 0.2s var(--polvo-ease);
+}
+
+.polvo-lupa:hover,
+.polvo-lupa[aria-expanded="true"],
+.header .cart-header:hover,
+.header .line > .header-menu:hover {
+  color: var(--polvo-brand);
   border-color: var(--polvo-brand);
+  background: var(--polvo-surface-2);
+  opacity: 1;
+}
+
+.polvo-lupa { order: 3; }
+.polvo-lupa svg { width: 19px; height: 19px; }
+
+/* Conta + carrinho (bloco nativo da Tray) */
+.header .account_cart {
+  order: 4;
+  gap: 10px;
+}
+
+.header .account {
+  position: relative;
+  min-width: 0;
+  height: 40px;
+  padding: 0 14px 0 10px;
+  gap: 6px;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
   background: #fff;
 }
 
+.header .account:hover { border-color: var(--polvo-brand); }
+
+.header .account .account-icon {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--polvo-ink-2);
+}
+
+.header .account a,
+.header .account .customer-name {
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--polvo-ink);
+}
+
+.header .account .modal-white {
+  top: 100%;
+  border-top-color: var(--polvo-brand);
+  border-radius: 0 0 12px 12px;
+}
+
+/* Sem espaço para "Minha conta": vira botão redondo; Entrar/Cadastrar seguem no hover. */
+@media (max-width: 1439px) {
+  .header .account {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .header .account > div:not(.modal-white) { display: none; }
+}
+
+.header .cart-header .icon {
+  font-size: 1.25rem;
+  color: inherit;
+}
+
 .header .cart-header .number {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 0.72rem;
   background: var(--polvo-accent);
   color: var(--polvo-accent-ink);
   font-weight: 700;
 }
 
-.nav .list > li > a {
-  font-weight: 600;
-  color: var(--polvo-ink);
-  transition: color 0.2s var(--polvo-ease);
+/* WhatsApp "Orçamento" */
+.polvo-header-wpp {
+  order: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--polvo-ok);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(31, 175, 84, 0.3);
+  transition: background 0.2s var(--polvo-ease), transform 0.2s var(--polvo-ease);
 }
 
-.nav .list > li > a:hover { color: var(--polvo-brand); }
+.polvo-header-wpp:hover {
+  background: #198f45;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.polvo-header-wpp svg { width: 18px; height: 18px; }
+
+/* ☰: só aparece quando o menu não cabe na linha. */
+.header .line > .header-menu {
+  order: 5;
+  display: none;
+  max-width: none;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  overflow: visible;
+}
+
+.header-menu .header-menu-icon {
+  width: 18px;
+  height: 12px;
+  margin: 0;
+}
+
+.header-menu .header-menu-icon div { background-color: currentColor; }
+
+/* Busca: o formulário da Tray (sugestões incluídas) vira um painel aberto pela lupa. */
+.header .search-wrapper {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 16px;
+  z-index: 5;
+  display: none;
+  width: min(480px, calc(100% - 32px));
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-md);
+  box-shadow: var(--polvo-shadow-md);
+}
+
+.header.polvo-busca-aberta .search-wrapper { display: block; }
+
+.header .header-search-wrapper { margin: 0; }
+
+.header .header-search-wrapper .input-search {
+  background: var(--polvo-surface-2);
+  border-color: var(--polvo-line);
+}
+
+.header .header-search-wrapper .input-search:focus {
+  outline: none;
+  border-color: var(--polvo-brand);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--polvo-brand-soft);
+}
+
+.header .suggestion {
+  left: 0;
+  right: 0;
+  min-width: 0;
+  max-width: none;
+  margin-top: 8px;
+  border: 1px solid var(--polvo-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.header .suggestion-title {
+  background: var(--polvo-brand);
+  font: 700 0.8rem/24px var(--polvo-font-display);
+}
+
+/* Espaço que a página reserva para o cabeçalho fixo (Tray: 170/212px com a linha do menu). */
+@media (min-width: 768px) {
+  .application,
+  .application.menu-default { padding-top: 72px; }
+
+  .application.with-message-line,
+  .application.with-message-line.menu-default { padding-top: 114px; }
+}
+
+/* Telas até 1180px: o menu sai da linha e abre pelo ☰ logo abaixo (JS da Tray: .show-nav). */
+@media (max-width: 1180px) {
+  .header .line > .header-menu { display: grid; }
+
+  .header .line > .nav,
+  .header.fixed .line > .nav { display: none; }
+
+  .header .line > .nav.show-nav {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 10px 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--polvo-line);
+    box-shadow: var(--polvo-shadow-md);
+  }
+
+  .header .nav .list {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header .nav .list > li > a { justify-content: flex-start; }
+
+  .header .nav .list > li > a[aria-current="page"] { background: var(--polvo-brand-soft); }
+
+  .header .nav .list > li > a[aria-current="page"]::after { content: none; }
+}
+
+/* Celular: marca | lupa | carrinho | ☰ (conta e WhatsApp ficam na gaveta e no botão flutuante). */
+@media (max-width: 767px) {
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 10; /* abaixo da sombra (19) e da gaveta (20) da Tray */
+  }
+
+  .header .line,
+  .header.fixed .line {
+    flex-wrap: nowrap;
+    height: 64px;
+    padding-top: 0;
+    padding-bottom: 0;
+    gap: 8px;
+  }
+
+  .header .block-logo { width: auto; }
+
+  .header .logo .polvo-marca__img { width: 54px; height: 34px; }
+
+  .polvo-marca__txt span,
+  .polvo-header-wpp { display: none; }
+
+  .polvo-marca__txt b { font-size: 1.2rem; }
+}
 
 /* ---- 3. Botões ---------------------------------------------------------- */
 
