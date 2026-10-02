@@ -58,6 +58,17 @@
     return e;
   }
 
+  // Produto do catálogo abre a página dele em outra aba (o cliente não perde
+  // o orçamento); item avulso, escrito pela loja, fica só texto.
+  function nomeProduto(id, nome) {
+    if (!id || String(id).startsWith('avulso-')) return document.createTextNode(nome);
+    const a = el('a', 'prod-link', nome);
+    a.href = `produto.html?id=${encodeURIComponent(id)}`;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    return a;
+  }
+
   /* ---- Desenho ------------------------------------------------------------ */
 
   function desenhar() {
@@ -89,7 +100,9 @@
 
       const tr = el('tr');
       const tdNome = el('td');
-      tdNome.append(el('div', 'nome', item.nome));
+      const nome = el('div', 'nome');
+      nome.append(nomeProduto(item.id, item.nome));
+      tdNome.append(nome);
       if (item.caixa) tdNome.append(el('div', 'email', item.caixa));
       tr.append(tdNome);
 

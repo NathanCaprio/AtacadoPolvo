@@ -193,7 +193,7 @@
       return `<div class="qi">
         <div class="qi-art">${window.imagemProduto(p, corDe(p.cat))}</div>
         <div class="qi-info">
-          <b>${p.nome}</b>
+          <b><a class="prod-link" href="produto.html?id=${encodeURIComponent(p.id)}">${p.nome}</a></b>
           <span>${p.caixa}</span>
         </div>
         <div class="qty">

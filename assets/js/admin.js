@@ -46,6 +46,17 @@
     return n;
   };
 
+  // Nome de produto do catálogo vira link para a página dele (nova aba, para
+  // não perder o que está aberto no painel). Item avulso fica só texto.
+  const nomeProduto = (id, nome) => {
+    if (!id || String(id).startsWith('avulso-')) return document.createTextNode(nome);
+    const a = el('a', 'prod-link', nome);
+    a.href = `produto.html?id=${encodeURIComponent(id)}`;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    return a;
+  };
+
   /* ---- Métricas ---------------------------------------------------------- */
 
   // Ordem proposital: o que precisa de ação vem primeiro.
@@ -386,7 +397,7 @@
     const ul = el('ul', 'itens-lista');
     for (const i of o.itens.slice(0, 6)) {
       const li = el('li');
-      li.append(el('b', null, `${i.qtd}x `), document.createTextNode(i.nome));
+      li.append(el('b', null, `${i.qtd}x `), nomeProduto(i.id, i.nome));
       ul.append(li);
     }
     if (o.itens.length > 6) ul.append(el('li', null, `+${o.itens.length - 6} item(ns)`));
@@ -500,7 +511,9 @@
     for (const item of itensEd) {
       const tr = el('tr');
       const tdNome = el('td');
-      tdNome.append(el('div', 'nome', item.nome));
+      const nome = el('div', 'nome');
+      nome.append(nomeProduto(item.id, item.nome));
+      tdNome.append(nome);
       if (item.caixa) tdNome.append(el('div', 'email', item.caixa));
       tr.append(tdNome);
 
@@ -948,8 +961,9 @@ ${obs ? `<div class="obs">${esc(obs)}</div>` : ''}
     const tr = el('tr');
     tr.append(el('td', 'num', p.codigo || '—'));
     const tdNome = el('td');
-    tdNome.append(el('div', 'nome', p.nome || p.nomeAuto),
-      el('div', 'email', p.nome ? 'nome escrito no painel' : 'automático'));
+    const nome = el('div', 'nome');
+    nome.append(nomeProduto(p.id, p.nome || p.nomeAuto));
+    tdNome.append(nome, el('div', 'email', p.nome ? 'nome escrito no painel' : 'automático'));
     tr.append(tdNome, el('td', '', p.grupo), el('td', '', p.descricao ? 'Sim' : '—'), celulaFoto(p));
     const tdAcoes = el('td');
     const caixa = el('div', 'acoes');
