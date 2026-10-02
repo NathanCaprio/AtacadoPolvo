@@ -150,6 +150,17 @@ h1, h2, h3,
 
 .product .product-price .price .old-price { color: var(--polvo-ink-3); }
 
+/* Preço na página do produto (bloco que a Tray injeta em .product-price-tray). */
+.product-price-tray #produto_preco .PrecoPrincipal,
+.product-price-tray #produto_preco #variacaoPreco {
+  font-family: var(--polvo-font-display);
+  font-weight: 800;
+  color: var(--polvo-brand);
+}
+
+.product-price-tray.normal #produto_preco .PrecoPrincipal,
+.product-price-tray.normal #produto_preco #variacaoPreco { font-size: 2rem; }
+
 /* Selos: amarelo da marca, como o "Mais vendido" do site antigo. */
 .product-tags .tag.text {
   background-color: var(--polvo-accent);

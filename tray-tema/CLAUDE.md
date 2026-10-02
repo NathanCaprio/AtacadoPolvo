@@ -30,6 +30,24 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 | Cartão de produto / preço / selos | `elements/snippets/product.html`, `product-price.html`, `product-tags.html` |
 | Página de produto | `pages/product.html`, `elements/product-main.html` |
 
+## Seções próprias da home (editáveis no painel)
+`home.polvo_hero` (destaque + números), `home.polvo_segments` (cards com ícone
+escolhido numa lista), `home.polvo_steps` (como comprar). Cada uma = JSON em
+`configs/editor/sections/home.<tipo>.json` + `elements/snippets/polvo-*.html`
+(abre com `{% if section.type == '<tipo>' and section.settings.enabled %}`) +
+CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
+`configs/settings.json` → `current.content.home`. Banners de exemplo da Tray
+(slideshow, banner_line, banner_grid) ficam **desligados** até haver banners reais.
+Arquivos novos em `configs/` entram normalmente pelo ZIP.
+- Twig: evitar `??` e `?:` (versão da Tray desconhecida); usar `|default(...)`.
+- "Todos os produtos" = `links.search ~ '?loja=' ~ store.id ~ '&palavra_busca='`.
+- Preço na página do produto chega por JS (~2 s): esperar `#variacaoPreco` antes de conferir.
+
+## Fica com o usuário no painel (não é tema)
+- Telefone/WhatsApp/e-mail do rodapé = dados da loja (hoje (51) 99526-6894 e e-mail pessoal; o oficial é (51) 98025-6547, ver `assets/js/config.js`).
+- Botão flutuante de WhatsApp = recurso nativo ("Ative o botão de WhatsApp na sua loja").
+- Logo, banners e texto da faixa do topo ("Utilize esse espaço…").
+
 ## Regras
 - Mexer o mínimo nos arquivos da Tray (facilita atualizar o tema); o nosso vai em `polvo.css` e em arquivos novos.
 - Tokens do site antigo: `--polvo-*` no topo de `polvo.css` (iguais a `assets/css/style.css`).
@@ -38,6 +56,7 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Feito / próximo
 - [x] Paleta, Inter + Montserrat, cabeçalho, rodapé escuro, cartão de produto, selos.
-- [ ] Seções da home (hero, segmentos, diferenciais, marcas).
-- [ ] Página de produto com preço; WhatsApp (dados em `assets/js/config.js` do site antigo).
+- [x] Home: hero, barra de informações, mais vendidos, segmentos, como comprar, marcas (logos em `img/marcas/`).
+- [x] Página de produto: preço em destaque (WhatsApp é nativo da Tray, ver acima).
+- [ ] Links dos cards de segmento (apontar para as LPs quando existirem).
 - [ ] LPs de SEO (condomínios, escolas, recorrência, restaurantes, hotéis, pets) + redirecionar URLs antigas (`/produtos.html` etc.).

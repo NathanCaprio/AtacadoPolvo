@@ -1,0 +1,42 @@
+{# Atacado Polvo: segmentos de clientes (configs/editor/sections/home.polvo_segments.json). #}
+{% if section.type == 'polvo_segments' and section.settings.enabled %}
+{% set s = section.settings %}
+{% set icones = {
+  'predio': '<path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20M9 21v-5h6v5M9 7h.01M15 7h.01M9 11h.01M15 11h.01"/>',
+  'escola': '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+  'loja': '<path d="M3 9l1.5-5h15L21 9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v9h14v-9M10 21v-5h4v5"/>',
+  'restaurante': '<path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7s1 4 3.5 4"/>',
+  'hotel': '<path d="M2 20V8M22 20v-6a3 3 0 0 0-3-3H10v9M2 16h20"/><circle cx="6.5" cy="12" r="2"/>',
+  'pet': '<circle cx="5" cy="10" r="2"/><circle cx="9.5" cy="5.5" r="2"/><circle cx="14.5" cy="5.5" r="2"/><circle cx="19" cy="10" r="2"/><path d="M8 17c0-2.5 1.8-5 4-5s4 2.5 4 5c0 2-1.5 3-4 3s-4-1-4-3z"/>'
+} %}
+<section class="polvo-secao" id="{{ section.id }}">
+  <div class="container">
+    <div class="polvo-secao__cabeca">
+      {% if s.eyebrow %}<span class="polvo-eyebrow">{{ s.eyebrow }}</span>{% endif %}
+      {% if s.title %}<h2 class="polvo-secao__titulo">{{ s.title }}</h2>{% endif %}
+      {% if s.subtitle %}<p class="polvo-secao__sub">{{ s.subtitle }}</p>{% endif %}
+    </div>
+
+    <div class="polvo-segmentos">
+      {% for block in section.blocks %}
+        {% if block.settings.enabled %}
+          {% set b = block.settings %}
+          <article class="polvo-card" id="{{ block.id }}">
+            <span class="polvo-card__icone" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{{ icones[b.icon]|default(icones['predio'])|raw }}</svg>
+            </span>
+            <h3 class="polvo-card__titulo">{{ b.title }}</h3>
+            {% if b.description %}<p class="polvo-card__texto">{{ b.description }}</p>{% endif %}
+            {% if b.link and b.link_text %}
+              <a class="polvo-card__link" href="{{ b.link }}"{% if 'http' in b.link %} target="_blank" rel="noopener"{% endif %}>
+                {{ b.link_text }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            {% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

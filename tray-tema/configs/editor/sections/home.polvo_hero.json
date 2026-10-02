@@ -1,0 +1,52 @@
+{
+  "name": "Polvo: destaque principal",
+  "template": "snippets/polvo-hero",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 3,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_stat", "settings": { "enabled": true, "number": "+400", "label": "itens em estoque" } },
+        { "type": "polvo_stat", "settings": { "enabled": true, "number": "24h", "label": "prazo médio de entrega" } },
+        { "type": "polvo_stat", "settings": { "enabled": true, "number": "+850", "label": "clientes atendidos" } }
+      ],
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Atacado e distribuição desde 2015",
+        "title": "Limpeza no atacado com",
+        "title_highlight": "preço que cabe no seu giro",
+        "description": "Linha completa de produtos de limpeza, descartáveis e utensílios para mercados, condomínios, restaurantes, escolas e revendedores. Compra direto da distribuidora, sem intermediário, com entrega própria.",
+        "image": "/img/polvo/mascote.svg",
+        "button_text": "Ver catálogo completo",
+        "button_link": "",
+        "whatsapp_text": "Falar no WhatsApp",
+        "whatsapp_number": "5551980256547",
+        "whatsapp_message": "Olá! Vim pela loja e gostaria de ajuda com um pedido."
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_stat",
+      "name": "Número em destaque",
+      "limit": 3,
+      "settings": [
+        { "id": "number", "type": "text", "label": "Número", "maxLength": 8, "default": "+400" },
+        { "id": "label", "type": "text", "label": "Legenda", "maxLength": 30, "default": "itens em estoque" }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 50 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 60 },
+    { "id": "title_highlight", "type": "text", "label": "Título (parte colorida)", "maxLength": 60 },
+    { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 300 },
+    { "id": "image", "type": "image_picker", "label": "Imagem", "info": "Tamanho recomendado: 680x440 px (PNG ou SVG com fundo transparente)" },
+    { "id": "button_text", "type": "text", "label": "Botão principal: texto", "maxLength": 30 },
+    { "id": "button_link", "type": "text", "label": "Botão principal: link", "info": "Em branco = todos os produtos" },
+    { "id": "whatsapp_text", "type": "text", "label": "Botão WhatsApp: texto", "maxLength": 30, "info": "Em branco = sem o botão" },
+    { "id": "whatsapp_number", "type": "text", "label": "WhatsApp (só números, com 55 e DDD)", "maxLength": 15 },
+    { "id": "whatsapp_message", "type": "text", "label": "Mensagem que já vem escrita", "maxLength": 150 }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Polvo: como comprar (passos)",
+  "template": "snippets/polvo-steps",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 4,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_step", "settings": { "enabled": true, "title": "Escolha os produtos", "description": "Busque no catálogo ou pelas categorias e coloque no carrinho as quantidades que você precisa." } },
+        { "type": "polvo_step", "settings": { "enabled": true, "title": "Pague como preferir", "description": "Pix, boleto ou cartão, com nota fiscal no seu CNPJ ou CPF." } },
+        { "type": "polvo_step", "settings": { "enabled": true, "title": "Acompanhe o pedido", "description": "Confirmação e andamento por e-mail e na sua conta, do pagamento até a entrega." } },
+        { "type": "polvo_step", "settings": { "enabled": true, "title": "Receba com nota", "description": "Nossa frota entrega no endereço combinado, com nota fiscal e conferência no ato." } }
+      ],
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Como comprar",
+        "title": "Quatro passos e o pedido está na rua",
+        "subtitle": "Prefere falar com gente de verdade? O WhatsApp continua aberto para montar o pedido com você."
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_step",
+      "name": "Passo",
+      "limit": 4,
+      "settings": [
+        { "id": "title", "type": "text", "label": "Título", "maxLength": 30 },
+        { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 160 }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 60 },
+    { "id": "subtitle", "type": "textarea", "label": "Subtítulo", "maxLength": 200 }
+  ]
+}

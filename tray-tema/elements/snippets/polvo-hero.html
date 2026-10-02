@@ -1,0 +1,55 @@
+{# Atacado Polvo: destaque principal da home (configs/editor/sections/home.polvo_hero.json). #}
+{% if section.type == 'polvo_hero' and section.settings.enabled %}
+{% set s = section.settings %}
+{% set link_catalogo = s.button_link|default(links.search ~ '?loja=' ~ store.id ~ '&palavra_busca=') %}
+<section class="polvo-hero" id="{{ section.id }}">
+  <div class="container polvo-hero__grid">
+    <div class="polvo-hero__texto">
+      {% if s.eyebrow %}
+        <span class="polvo-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+          {{ s.eyebrow }}
+        </span>
+      {% endif %}
+
+      <h1 class="polvo-hero__titulo">
+        {{ s.title }}
+        {% if s.title_highlight %}<span class="polvo-grad">{{ s.title_highlight }}</span>{% endif %}
+      </h1>
+
+      {% if s.description %}<p class="polvo-hero__texto-apoio">{{ s.description }}</p>{% endif %}
+
+      <div class="polvo-hero__acoes">
+        {% if s.button_text %}
+          <a class="polvo-btn polvo-btn--primario" href="{{ link_catalogo }}">
+            {{ s.button_text }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        {% endif %}
+        {% if s.whatsapp_text and s.whatsapp_number %}
+          <a class="polvo-btn polvo-btn--contorno" href="https://wa.me/{{ s.whatsapp_number }}?text={{ s.whatsapp_message|url_encode }}" target="_blank" rel="noopener">
+            {{ s.whatsapp_text }}
+          </a>
+        {% endif %}
+      </div>
+
+      {% if section.blocks|length %}
+        <ul class="polvo-hero__numeros">
+          {% for block in section.blocks %}
+            {% if block.settings.enabled %}
+              <li id="{{ block.id }}"><strong>{{ block.settings.number }}</strong><span>{{ block.settings.label }}</span></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    {% if s.image %}
+      <div class="polvo-hero__arte" aria-hidden="true">
+        <span class="polvo-hero__mancha"></span>
+        <img src="{{ asset(s.image) }}" alt="" width="340" height="218" fetchpriority="high">
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

@@ -1,0 +1,25 @@
+{# Atacado Polvo: como comprar em passos (configs/editor/sections/home.polvo_steps.json). #}
+{% if section.type == 'polvo_steps' and section.settings.enabled %}
+{% set s = section.settings %}
+<section class="polvo-secao polvo-secao--tinta" id="{{ section.id }}">
+  <div class="container">
+    <div class="polvo-secao__cabeca">
+      {% if s.eyebrow %}<span class="polvo-eyebrow">{{ s.eyebrow }}</span>{% endif %}
+      {% if s.title %}<h2 class="polvo-secao__titulo">{{ s.title }}</h2>{% endif %}
+      {% if s.subtitle %}<p class="polvo-secao__sub">{{ s.subtitle }}</p>{% endif %}
+    </div>
+
+    <ol class="polvo-passos">
+      {% for block in section.blocks %}
+        {% if block.settings.enabled %}
+          <li class="polvo-passo" id="{{ block.id }}">
+            <span class="polvo-passo__num" aria-hidden="true">{{ loop.index }}</span>
+            <h3 class="polvo-passo__titulo">{{ block.settings.title }}</h3>
+            {% if block.settings.description %}<p class="polvo-passo__texto">{{ block.settings.description }}</p>{% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}

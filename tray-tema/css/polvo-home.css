@@ -1,0 +1,280 @@
+/* =========================================================================
+   Atacado Polvo — seções próprias da home (snippets/polvo-*.html).
+   Carregado só na home (elements/styles.html). Tokens --polvo-* vêm de
+   polvo.css.
+   ========================================================================= */
+
+/* ---- Peças comuns ------------------------------------------------------- */
+
+.polvo-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--polvo-brand-soft);
+  color: var(--polvo-brand-700);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.polvo-eyebrow svg { width: 14px; height: 14px; }
+
+.polvo-grad {
+  display: block;
+  background: linear-gradient(90deg, var(--polvo-brand-600), #c026d3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.polvo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: transform 0.2s var(--polvo-ease), box-shadow 0.2s var(--polvo-ease),
+    background-color 0.2s var(--polvo-ease), border-color 0.2s var(--polvo-ease);
+}
+
+.polvo-btn svg { width: 18px; height: 18px; }
+
+.polvo-btn--primario {
+  background: var(--polvo-brand);
+  color: #fff;
+  box-shadow: var(--polvo-shadow-brand);
+}
+
+.polvo-btn--primario:hover { background: var(--polvo-brand-600); color: #fff; transform: translateY(-2px); }
+
+.polvo-btn--contorno {
+  border: 2px solid var(--polvo-line-strong);
+  color: var(--polvo-ink);
+  background: #fff;
+}
+
+.polvo-btn--contorno:hover { border-color: var(--polvo-brand); color: var(--polvo-brand); }
+
+.polvo-secao { padding: 72px 0; }
+
+.polvo-secao--tinta { background: var(--polvo-surface-2); }
+
+.polvo-secao__cabeca {
+  max-width: 680px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.polvo-secao__titulo {
+  margin: 14px 0 10px;
+  font-family: var(--polvo-font-display);
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.12;
+  color: var(--polvo-ink);
+}
+
+.polvo-secao__sub { color: var(--polvo-ink-3); font-size: 1.05rem; line-height: 1.6; }
+
+/* ---- Hero --------------------------------------------------------------- */
+
+.polvo-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 64px 0 72px;
+  background:
+    radial-gradient(60% 50% at 0% 0%, rgba(123, 47, 227, 0.08), transparent 70%),
+    radial-gradient(40% 40% at 100% 0%, rgba(255, 201, 30, 0.12), transparent 70%);
+}
+
+.polvo-hero__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.polvo-hero__titulo {
+  margin: 22px 0 18px;
+  font-family: var(--polvo-font-display);
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--polvo-ink);
+}
+
+.polvo-hero__texto-apoio {
+  max-width: 34em;
+  color: var(--polvo-ink-3);
+  font-size: 1.15rem;
+  line-height: 1.65;
+}
+
+.polvo-hero__acoes { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+
+.polvo-hero__numeros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 44px;
+  margin: 36px 0 0;
+  padding: 26px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--polvo-line);
+}
+
+.polvo-hero__numeros strong {
+  display: block;
+  font-family: var(--polvo-font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--polvo-ink);
+}
+
+.polvo-hero__numeros span { font-size: 0.85rem; color: var(--polvo-ink-3); }
+
+.polvo-hero__arte {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+}
+
+.polvo-hero__mancha {
+  position: absolute;
+  inset: 8% 4%;
+  border-radius: 46% 54% 52% 48% / 55% 45% 55% 45%;
+  background: radial-gradient(circle at 50% 50%, rgba(123, 47, 227, 0.22), rgba(192, 38, 211, 0.08) 60%, transparent 75%);
+  filter: blur(6px);
+}
+
+.polvo-hero__arte img { position: relative; width: min(100%, 380px); height: auto; }
+
+/* ---- Segmentos ---------------------------------------------------------- */
+
+.polvo-segmentos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+.polvo-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-lg);
+  background: #fff;
+  box-shadow: var(--polvo-shadow-sm);
+  transition: transform 0.2s var(--polvo-ease), box-shadow 0.2s var(--polvo-ease);
+}
+
+.polvo-card:hover { transform: translateY(-3px); box-shadow: var(--polvo-shadow-md); }
+
+.polvo-card__icone {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 18px;
+  border-radius: var(--polvo-r-md);
+  background: var(--polvo-brand-soft);
+  color: var(--polvo-brand);
+}
+
+.polvo-card__icone svg { width: 26px; height: 26px; }
+
+.polvo-card__titulo {
+  margin: 0 0 8px;
+  font-family: var(--polvo-font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--polvo-ink);
+}
+
+.polvo-card__texto { flex-grow: 1; margin: 0; color: var(--polvo-ink-3); line-height: 1.6; }
+
+.polvo-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  font-weight: 700;
+  color: var(--polvo-brand);
+}
+
+.polvo-card__link svg { width: 16px; height: 16px; transition: transform 0.2s var(--polvo-ease); }
+
+.polvo-card__link:hover svg { transform: translateX(3px); }
+
+/* ---- Passos ------------------------------------------------------------- */
+
+.polvo-passos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.polvo-passo {
+  padding: 26px;
+  border-radius: var(--polvo-r-lg);
+  background: #fff;
+  border: 1px solid var(--polvo-line);
+}
+
+.polvo-passo__num {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  background: var(--polvo-accent);
+  color: var(--polvo-accent-ink);
+  font-family: var(--polvo-font-display);
+  font-weight: 800;
+}
+
+.polvo-passo__titulo {
+  margin: 0 0 6px;
+  font-family: var(--polvo-font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--polvo-ink);
+}
+
+.polvo-passo__texto { margin: 0; color: var(--polvo-ink-3); line-height: 1.6; }
+
+/* ---- Celular / tablet --------------------------------------------------- */
+
+@media (max-width: 991px) {
+  .polvo-passos { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 767px) {
+  /* O .container do tema tem só 10px de lado no celular. */
+  .polvo-hero > .container,
+  .polvo-secao > .container { padding-left: 16px; padding-right: 16px; }
+  .polvo-hero { padding: 36px 0 48px; }
+  .polvo-hero__grid { grid-template-columns: 1fr; gap: 8px; }
+  .polvo-hero__arte { order: -1; min-height: 200px; }
+  .polvo-hero__arte img { width: 240px; }
+  .polvo-hero__texto-apoio { font-size: 1rem; }
+  .polvo-hero__acoes .polvo-btn { flex: 1 1 100%; justify-content: center; }
+  .polvo-secao { padding: 52px 0; }
+  .polvo-passos { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .polvo-btn, .polvo-card, .polvo-card__link svg { transition: none; }
+  .polvo-btn:hover, .polvo-card:hover { transform: none; }
+}

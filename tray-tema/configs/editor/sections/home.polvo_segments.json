@@ -1,0 +1,54 @@
+{
+  "name": "Polvo: segmentos de clientes",
+  "template": "snippets/polvo-segments",
+  "group": "Conteúdo",
+  "limit": 2,
+  "max_blocks": 6,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_segment", "settings": { "enabled": true, "icon": "predio", "title": "Condomínios", "description": "Nota fiscal no CNPJ do condomínio, entrega programada na portaria e reposição mensal sem dor de cabeça para o síndico.", "link": "", "link_text": "Ver produtos para condomínios" } },
+        { "type": "polvo_segment", "settings": { "enabled": true, "icon": "escola", "title": "Escolas", "description": "Produtos com procedência para banheiro de alto uso, refeitório e pátio, com entrega programada pelo calendário escolar.", "link": "", "link_text": "Ver produtos para escolas" } },
+        { "type": "polvo_segment", "settings": { "enabled": true, "icon": "loja", "title": "Mercados e revenda", "description": "Caixa fechada com margem para revender, reposição semanal na rota e aviso antes de reajuste de preço.", "link": "", "link_text": "Falar com o comercial" } }
+      ],
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Para o seu segmento",
+        "title": "Cada cliente tem um consumo diferente",
+        "subtitle": "Condomínio, escola e revenda não compram igual. Montamos o abastecimento para o seu caso."
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_segment",
+      "name": "Segmento",
+      "limit": 6,
+      "settings": [
+        {
+          "id": "icon",
+          "type": "select",
+          "label": "Ícone",
+          "default": "predio",
+          "options": [
+            { "value": "predio", "label": "Prédio (condomínio)" },
+            { "value": "escola", "label": "Escola" },
+            { "value": "loja", "label": "Loja (mercado/revenda)" },
+            { "value": "restaurante", "label": "Restaurante" },
+            { "value": "hotel", "label": "Hotel" },
+            { "value": "pet", "label": "Pet" }
+          ]
+        },
+        { "id": "title", "type": "text", "label": "Título", "maxLength": 30 },
+        { "id": "description", "type": "textarea", "label": "Texto", "maxLength": 200 },
+        { "id": "link_text", "type": "text", "label": "Texto do link", "maxLength": 40 },
+        { "id": "link", "type": "text", "label": "Link", "info": "Categoria, página ou https://wa.me/... Em branco = sem link." }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 60 },
+    { "id": "subtitle", "type": "textarea", "label": "Subtítulo", "maxLength": 200 }
+  ]
+}
