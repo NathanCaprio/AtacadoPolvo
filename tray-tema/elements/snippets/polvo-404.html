@@ -1,0 +1,42 @@
+{# Atacado Polvo: página "não encontrado", como a 404.html do site antigo.
+   A Tray manda para /sem-resultados-na-busca tanto o endereço que não existe quanto a busca
+   sem resultado, então o texto serve aos dois e a página traz um campo de busca.
+   Entra no lugar do aviso padrão (layouts/default.html). CSS em polvo-home.css ("Não encontrado"). #}
+{% set seta = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' %}
+<section class="polvo-404">
+  <div class="container">
+    <img class="polvo-404__mascote" src="{{ asset('img/polvo/mascote.svg') }}" alt="" width="220" height="141">
+    <span class="polvo-eyebrow">Nada por aqui</span>
+    <h1 class="polvo-404__titulo">Isso escapou por entre os tentáculos</h1>
+    <p class="polvo-404__texto">A página ou o produto que você procurou não está aqui (ou mudou de lugar). Tente outra palavra ou siga por um dos caminhos abaixo.</p>
+
+    <form class="polvo-404__busca" action="{{ links.search }}" method="get" role="search">
+      <input type="hidden" name="loja" value="{{ store.id }}">
+      <input type="text" name="palavra_busca" placeholder="Ex.: detergente, saco de lixo, papel toalha" aria-label="Buscar produtos" autocomplete="off">
+      <button type="submit" class="polvo-btn polvo-btn--primario">Buscar</button>
+    </form>
+
+    <div class="polvo-hero__acoes polvo-404__acoes">
+      <a class="polvo-btn polvo-btn--primario" href="{{ links.home|default('/') }}">Voltar para a home</a>
+      <a class="polvo-btn polvo-btn--contorno" href="{{ links.search ~ '&palavra_busca=' }}">Ver todos os produtos</a>
+    </div>
+
+    <div class="polvo-404__cards">
+      <a class="polvo-cat" href="/condominios">
+        <h3 class="polvo-cat__titulo">Para condomínios</h3>
+        <p class="polvo-cat__texto">Nota fiscal no CNPJ, entrega na portaria e reposição programada.</p>
+        <span class="polvo-card__link">Ver página {{ seta|raw }}</span>
+      </a>
+      <a class="polvo-cat" href="/escolas">
+        <h3 class="polvo-cat__titulo">Para escolas</h3>
+        <p class="polvo-cat__texto">Produtos com procedência e entrega programada pelo calendário escolar.</p>
+        <span class="polvo-card__link">Ver página {{ seta|raw }}</span>
+      </a>
+      <a class="polvo-cat" href="{{ links.contact }}">
+        <h3 class="polvo-cat__titulo">Falar com a gente</h3>
+        <p class="polvo-cat__texto">Telefone, WhatsApp, horários e os endereços das duas unidades.</p>
+        <span class="polvo-card__link">Ver página {{ seta|raw }}</span>
+      </a>
+    </div>
+  </div>
+</section>

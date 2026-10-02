@@ -56,6 +56,11 @@
           {# Atacado Polvo: "A empresa" vem do tema (conteúdo do site antigo), não do texto do painel. #}
           {% element 'snippets/polvo-empresa' %}
 
+        {% elseif 'sem-resultados-na-busca' in store.current_url %}
+
+          {# Atacado Polvo: endereço inexistente e busca sem resultado caem aqui (redirecionamento da Tray). #}
+          {% element 'snippets/polvo-404' %}
+
         {% elseif pages.current == 'contact' %}
 
           {# Atacado Polvo: contato como no site antigo. O formulário da Tray fica no meio, sem mudar a
