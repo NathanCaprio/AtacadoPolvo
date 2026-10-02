@@ -1,7 +1,8 @@
 /* =========================================================================
-   Atacado Polvo — seções próprias da home (snippets/polvo-*.html).
-   Carregado só na home (elements/styles.html). Tokens --polvo-* vêm de
-   polvo.css.
+   Atacado Polvo — seções próprias da home (snippets/polvo-*.html) e das
+   landing pages (HTML em tray-tema/lp/, colado no criador de LPs da Tray).
+   Carregado em todas as páginas (elements/styles.html). Tokens --polvo-*
+   vêm de polvo.css.
    ========================================================================= */
 
 /* ---- Peças comuns ------------------------------------------------------- */
@@ -254,6 +255,89 @@
 
 .polvo-passo__texto { margin: 0; color: var(--polvo-ink-3); line-height: 1.6; }
 
+/* ---- Landing pages ------------------------------------------------------ */
+
+/* Hero sem imagem (LP: o HTML colado não tem acesso ao asset() do tema). */
+.polvo-hero__grid--unico { grid-template-columns: 1fr; max-width: 860px; }
+
+/* Faixa de garantias logo abaixo do hero da LP. */
+.polvo-selos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.polvo-selos li {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--polvo-line);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--polvo-ink-2);
+}
+
+/* Cards sem ícone (problemas, kit). */
+.polvo-card--simples { padding: 24px; }
+
+.polvo-card--alerta { border-top: 4px solid var(--polvo-danger); }
+
+/* Perguntas frequentes com <details> (abre sem JS). */
+.polvo-faq { max-width: 820px; margin: 0 auto; }
+
+.polvo-faq details {
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-md);
+  background: #fff;
+  margin-bottom: 12px;
+}
+
+.polvo-faq summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 18px 22px;
+  font-weight: 700;
+  color: var(--polvo-ink);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.polvo-faq summary::-webkit-details-marker { display: none; }
+
+.polvo-faq summary::after { content: "+"; font-size: 1.4rem; line-height: 1; color: var(--polvo-brand); }
+
+.polvo-faq details[open] summary::after { content: "–"; }
+
+.polvo-faq details p { margin: 0; padding: 0 22px 20px; color: var(--polvo-ink-3); line-height: 1.65; }
+
+/* Faixa escura de chamada final. */
+.polvo-cta {
+  padding: 64px 0;
+  background: var(--polvo-ink);
+  color: #fff;
+  text-align: center;
+}
+
+.polvo-cta h2 {
+  margin: 0 0 12px;
+  font-family: var(--polvo-font-display);
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  font-weight: 800;
+  color: #fff;
+}
+
+.polvo-cta p { margin: 0 auto 28px; max-width: 560px; color: rgba(255, 255, 255, 0.75); }
+
+.polvo-cta .polvo-hero__acoes { justify-content: center; }
+
+.polvo-cta .polvo-btn--contorno { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.35); }
+
+.polvo-cta .polvo-btn--contorno:hover { border-color: var(--polvo-accent); color: var(--polvo-accent); }
+
 /* ---- Celular / tablet --------------------------------------------------- */
 
 @media (max-width: 991px) {
@@ -263,7 +347,8 @@
 @media (max-width: 767px) {
   /* O .container do tema tem só 10px de lado no celular. */
   .polvo-hero > .container,
-  .polvo-secao > .container { padding-left: 16px; padding-right: 16px; }
+  .polvo-secao > .container,
+  .polvo-cta > .container { padding-left: 16px; padding-right: 16px; }
   .polvo-hero { padding: 36px 0 48px; }
   .polvo-hero__grid { grid-template-columns: 1fr; gap: 8px; }
   .polvo-hero__arte { order: -1; min-height: 200px; }

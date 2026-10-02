@@ -1,0 +1,85 @@
+{
+  "titulo": "Material de Limpeza para Restaurantes em Porto Alegre — Atacado Polvo",
+  "descricao": "Fornecedor de material de limpeza e descartáveis para restaurantes, bares e lanchonetes em Porto Alegre. Desengordurante, detergente e concentrados a preço de atacado, com nota fiscal e entrega programada.",
+  "hero": {
+    "eyebrow": "Para donos, gerentes e chefs",
+    "titulo": "Cozinha limpa e salão impecável com material de limpeza",
+    "destaque": "a preço de atacado",
+    "texto": "Desengordurante que dá conta da coifa, detergente que rende na pia e descartável que não acaba no meio do almoço. Tudo num fornecedor só, com entrega programada em Porto Alegre.",
+    "whatsapp": "Olá! Tenho um restaurante e quero um orçamento de material de limpeza.",
+    "selos": ["Restaurantes, bares e lanchonetes", "Padarias e confeitarias", "Cozinhas industriais", "Redes e franquias"]
+  },
+  "secoes": [
+    {
+      "tipo": "cards",
+      "eyebrow": "O problema",
+      "titulo": "Na cozinha profissional, limpeza é custo fixo — e vistoria",
+      "sub": "Gordura pesada, louça o dia inteiro e banheiro de cliente: o consumo de um restaurante não para.",
+      "alerta": true,
+      "itens": [
+        { "titulo": "Margem apertada", "texto": "Comprar produto de limpeza no mercado, em frasco pequeno e toda semana, come a margem que já é curta no ramo." },
+        { "titulo": "Vigilância sanitária", "texto": "Na fiscalização, o saneante precisa ter registro e a rotina de higienização precisa existir de verdade, não só no papel." },
+        { "titulo": "Falta no pico", "texto": "Acabou o guardanapo ou o saco de lixo numa sexta à noite, com o salão cheio e ninguém para sair e comprar." },
+        { "titulo": "Produto que não rende", "texto": "Detergente fraco e desengordurante que não tira a gordura da coifa fazem a equipe gastar o dobro de produto e de tempo." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "Como a Polvo resolve",
+      "titulo": "Parceiro da sua cozinha, não só mais um fornecedor",
+      "sub": "A gente entende o ritmo de restaurante e monta o abastecimento junto com você.",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Produtos de qualidade", "texto": "Saneantes regularizados e marcas conhecidas. Ficha técnica à disposição para a vistoria e para o manual de boas práticas." },
+        { "titulo": "Preço competitivo", "texto": "Preço de distribuidora e concentrado em galão, que rende muito mais por real gasto do que o frasco de varejo." },
+        { "titulo": "Entrega rápida e programada", "texto": "Frota própria, com entrega de manhã, antes da abertura, para não disputar espaço com o fornecedor de alimentos." },
+        { "titulo": "Atendimento sem burocracia", "texto": "Um vendedor fixo no WhatsApp, que conhece a sua cozinha e responde no mesmo dia. Sem protocolo e sem fila." },
+        { "titulo": "Nota fiscal certinha", "texto": "Nota no CNPJ do restaurante, para lançar na contabilidade e separar o custo de limpeza do custo de insumo." },
+        { "titulo": "Reposição programada", "texto": "Pedido semanal ou quinzenal, ajustado ao movimento da casa, com reforço antes de feriado e de fim de ano." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "O que entra no pedido",
+      "titulo": "Solução completa, da cozinha ao salão",
+      "sub": "Da coifa ao banheiro do cliente, num fornecedor só.",
+      "itens": [
+        { "titulo": "Cozinha e louças", "texto": "Detergente, desengordurante para coifa, chapa e fogão industrial, lava-louças e limpa-inox para bancada.", "busca": "desengordurante" },
+        { "titulo": "Descartáveis e papéis", "texto": "Guardanapo, papel toalha, copos e saco de lixo reforçado para cozinha e salão.", "busca": "guardanapo" },
+        { "titulo": "Utensílios e acessórios", "texto": "Esponja, fibra, pano, luva, rodo e balde para a rotina de limpeza da equipe.", "busca": "esponja" },
+        { "titulo": "Higiene da equipe", "texto": "Sabonete líquido e álcool em gel para a lavagem de mãos na cozinha e no salão.", "busca": "sabonete" },
+        { "titulo": "Banheiro dos clientes", "texto": "Desinfetante, água sanitária e desodorizador para banheiro que é cartão de visita da casa.", "busca": "desinfetante" },
+        { "titulo": "Linha profissional", "texto": "Concentrados em galão de 5L e 20L para diluir na hora. É onde o restaurante mais economiza por litro.", "busca": "galão" }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "eyebrow": "Como funciona",
+      "titulo": "Do orçamento à entrega no restaurante",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Manda a lista", "texto": "No WhatsApp: a lista da cozinha, uma foto do estoque ou só o número de refeições por dia. Ou compre direto aqui na loja." },
+        { "titulo": "Recebe o orçamento", "texto": "Item a item, com preço por unidade e por caixa, para comparar com o que você paga hoje." },
+        { "titulo": "Aprova e agenda", "texto": "Você confirma e combina o horário de entrega, antes da abertura ou fora do pico." },
+        { "titulo": "Programa a reposição", "texto": "Ajustamos a quantidade ao movimento real da casa e avisamos antes de cada reposição." }
+      ]
+    },
+    {
+      "tipo": "faq",
+      "eyebrow": "Dúvidas frequentes",
+      "titulo": "O que o dono de restaurante sempre pergunta",
+      "itens": [
+        { "pergunta": "Os produtos podem ser usados na cozinha, perto de alimento?", "resposta": "Sim. Trabalhamos com saneantes regularizados e indicamos para cada área (bancada, louça, piso, coifa) o produto certo, com a diluição e o enxágue recomendados. A ficha técnica vai junto quando você precisar para a vigilância sanitária ou para o manual de boas práticas." },
+        { "pergunta": "Vocês emitem nota fiscal no CNPJ do restaurante?", "resposta": "Sim. A nota sai no CNPJ do restaurante, o que permite lançar a compra na contabilidade e acompanhar o custo de limpeza separado do custo de alimento." },
+        { "pergunta": "Dá para receber antes de o restaurante abrir?", "resposta": "Sim. Combinamos a entrega no horário que não atrapalha a cozinha, normalmente de manhã, antes do preparo do almoço." },
+        { "pergunta": "Tem pedido mínimo?", "resposta": "O preço de atacado vale por volume. Ao pedir o orçamento, conte o porte da casa e a frequência de compra, e montamos o pedido que faz sentido para o seu movimento." },
+        { "pergunta": "Vocês atendem rede ou franquia com várias unidades?", "resposta": "Sim. Cada unidade recebe entrega separada por endereço, com nota e conferência por loja, e a condição comercial considera o volume total da rede." },
+        { "pergunta": "A equipe sabe usar concentrado?", "resposta": "Passamos a tabela de diluição de cada produto e, se quiser, orientamos a equipe na primeira entrega. Diluir certo é o que faz o galão render e o custo cair de verdade." }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Peça o orçamento do seu restaurante",
+    "texto": "Resposta no mesmo dia útil, nota no CNPJ do restaurante e entrega antes da abertura ou fora do horário de pico."
+  }
+}

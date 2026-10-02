@@ -43,6 +43,26 @@ Arquivos novos em `configs/` entram normalmente pelo ZIP.
 - "Todos os produtos" = `links.search ~ '?loja=' ~ store.id ~ '&palavra_busca='`.
 - Preço na página do produto chega por JS (~2 s): esperar `#variacaoPreco` antes de conferir.
 
+## Landing pages de SEO (criador de LPs da Tray, fora do tema)
+A criação de LP pelo editor do tema foi **descontinuada**; agora é o "Criador de
+landing pages" (link na lista de temas), modo **Página em branco**. Essa LP é
+servida **sozinha** (sem layout/CSS do tema, `<head>` vazio, em windows-1252).
+Por isso: conteúdo em `lp/<slug>.json` → `npm run lp` (`server/tema-lp.js`) monta
+`lp/dist/<slug>.html` completo (CSS embutido de `polvo.css` + `_base.css` +
+`polvo-home.css`, cabeçalho/rodapé próprios, contatos de `assets/js/config.js`,
+tudo ASCII com entidades). Tipos de seção: cards, passos, planos, faq (ver topo
+de `server/tema-lp.js`). Teste: `server/tema-lp.test.js`.
+- Colar na Tray: servir `lp/dist` em 127.0.0.1:3078 e rodar `lp/colar-na-tray.js`
+  (Playwright `browser_run_code_unsafe`); ele cola e salva **sem ativar**.
+- Criadas (todas **Inativas**): condominios=1, escolas=3, recorrencia=5,
+  restaurantes=7, hoteis=9, pets=11. Prévia: `/<slug>?preview=1`.
+- Ativar (chave "Ativo" no editor da LP) = decisão do usuário, junto com publicar o tema
+  (os cards da home já apontam para `/condominios` e `/escolas`).
+- Redirecionar quando o domínio virar (301 no painel da Tray): `/condominios.html`→`/condominios`,
+  `/escolas.html`→`/escolas`, `/recorrencia.html`→`/recorrencia`, `/restaurantes.html`→`/restaurantes`,
+  `/hoteis.html`→`/hoteis`, `/pets.html`→`/pets`, `/produtos.html`→busca vazia, `/index.html`→`/`.
+  Sem LP ainda: sobre, contato, blog (4 artigos), calculadoras, black friday.
+
 ## Fica com o usuário no painel (não é tema)
 - Telefone/WhatsApp/e-mail do rodapé = dados da loja (hoje (51) 99526-6894 e e-mail pessoal; o oficial é (51) 98025-6547, ver `assets/js/config.js`).
 - Botão flutuante de WhatsApp = recurso nativo ("Ative o botão de WhatsApp na sua loja").
@@ -58,5 +78,7 @@ Arquivos novos em `configs/` entram normalmente pelo ZIP.
 - [x] Paleta, Inter + Montserrat, cabeçalho, rodapé escuro, cartão de produto, selos.
 - [x] Home: hero, barra de informações, mais vendidos, segmentos, como comprar, marcas (logos em `img/marcas/`).
 - [x] Página de produto: preço em destaque (WhatsApp é nativo da Tray, ver acima).
-- [ ] Links dos cards de segmento (apontar para as LPs quando existirem).
-- [ ] LPs de SEO (condomínios, escolas, recorrência, restaurantes, hotéis, pets) + redirecionar URLs antigas (`/produtos.html` etc.).
+- [x] Links dos cards de segmento → LPs.
+- [x] LPs de SEO criadas no criador da Tray (inativas).
+- [ ] Usuário: ativar LPs + publicar tema + redirecionamentos 301 (lista acima).
+- [ ] Páginas sem equivalente ainda: sobre, contato, blog, calculadoras.

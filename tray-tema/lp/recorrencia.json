@@ -1,0 +1,68 @@
+{
+  "titulo": "Pedido Recorrente de Material de Limpeza com Desconto em Porto Alegre — Atacado Polvo",
+  "descricao": "Assinatura de material de limpeza para empresas, condomínios, escolas e restaurantes em Porto Alegre. Entrega programada semanal, quinzenal ou mensal, com até 12% de desconto sobre o preço de atacado.",
+  "hero": {
+    "eyebrow": "Pedido recorrente",
+    "titulo": "Monte a lista uma vez e receba no dia certo,",
+    "destaque": "com até 12% de desconto",
+    "texto": "Material de limpeza, descartáveis e higiene com entrega programada semanal, quinzenal ou mensal em Porto Alegre. Quanto maior o compromisso, maior o desconto sobre o preço de atacado.",
+    "whatsapp": "Olá! Quero montar um pedido recorrente de material de limpeza com desconto.",
+    "selos": ["Empresas e escritórios", "Condomínios", "Escolas", "Restaurantes", "Hotéis e pousadas", "Pet shops"]
+  },
+  "secoes": [
+    {
+      "tipo": "cards",
+      "eyebrow": "Por que recorrente",
+      "titulo": "Você já compra todo mês. Só não está ganhando desconto por isso",
+      "sub": "Quem sabe o que consome não precisa pedir orçamento do zero a cada vez.",
+      "itens": [
+        { "titulo": "Desconto garantido", "texto": "O compromisso vira previsibilidade para a gente, e a previsibilidade vira desconto na sua nota." },
+        { "titulo": "Nunca mais falta", "texto": "A entrega chega antes de acabar. Ninguém da equipe precisa sair para comprar papel toalha às pressas." },
+        { "titulo": "Menos estoque parado", "texto": "Entrega semanal ou quinzenal no ritmo do consumo, sem ocupar o depósito com o mês inteiro." },
+        { "titulo": "Zero retrabalho", "texto": "Sem pedir três orçamentos todo mês. A lista está pronta; você só ajusta o que mudou." }
+      ]
+    },
+    {
+      "tipo": "planos",
+      "eyebrow": "Planos",
+      "titulo": "Escolha o compromisso, a gente dá o desconto",
+      "sub": "A frequência de entrega você escolhe à parte, em qualquer plano: semanal, quinzenal ou mensal.",
+      "tinta": true,
+      "nota": "Desconto sobre o preço de atacado da tabela no dia da entrega. Pedido mínimo por entrega: R$ 300,00. Rede, franquia ou volume alto? Montamos um plano sob medida, com condição pelo volume total.",
+      "itens": [
+        { "nome": "Mensal", "prazo": "Sem fidelidade", "desconto": "5% de desconto", "texto": "Para testar a recorrência sem compromisso.", "lista": ["Entrega semanal, quinzenal ou mensal", "Lista ajustável até 2 dias úteis antes de cada entrega", "Pula ou cancela quando quiser, sem multa", "Aviso pelo WhatsApp antes de cada entrega"] },
+        { "nome": "Semestral", "prazo": "Compromisso de 6 meses", "desconto": "8% de desconto", "texto": "O equilíbrio entre desconto e flexibilidade.", "destaque": true, "lista": ["Tudo do plano Mensal", "Prioridade na rota de entrega", "Revisão da lista com o vendedor a cada 3 meses", "Mesmo vendedor do começo ao fim"] },
+        { "nome": "Anual", "prazo": "Compromisso de 12 meses", "desconto": "12% de desconto", "texto": "O maior desconto, para quem já sabe o que consome.", "lista": ["Tudo do plano Semestral", "Resumo de consumo por item a cada trimestre", "Reajuste de tabela avisado com 30 dias de antecedência", "Reforço fora do calendário com o mesmo desconto"] }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "eyebrow": "Como funciona",
+      "titulo": "Do primeiro pedido à entrega no piloto automático",
+      "itens": [
+        { "titulo": "Monta a lista", "texto": "Com o vendedor no WhatsApp, a partir do que você já compra." },
+        { "titulo": "Escolhe plano e frequência", "texto": "Mensal, semestral ou anual; entrega semanal, quinzenal ou mensal, no dia da semana que for melhor." },
+        { "titulo": "Recebe com desconto", "texto": "Cada entrega chega com nota fiscal e o desconto do plano já aplicado." },
+        { "titulo": "Ajusta quando precisar", "texto": "Mudou o consumo? Troque itens, quantidades ou a frequência até 2 dias úteis antes da entrega." }
+      ]
+    },
+    {
+      "tipo": "faq",
+      "eyebrow": "Dúvidas frequentes",
+      "titulo": "O que perguntam antes de assinar",
+      "tinta": true,
+      "itens": [
+        { "pergunta": "Sobre qual preço o desconto é aplicado?", "resposta": "Sobre o preço de atacado da nossa tabela no dia da entrega, em todos os itens do pedido recorrente. Você recebe o orçamento com o preço cheio e o preço com desconto lado a lado, para ver a economia item a item." },
+        { "pergunta": "Posso mudar os itens de um mês para o outro?", "resposta": "Pode. A lista é sua: acrescente, tire ou troque itens até 2 dias úteis antes da entrega, direto com o vendedor no WhatsApp. O desconto do plano vale para a lista que for entregue." },
+        { "pergunta": "E se eu precisar pular uma entrega?", "resposta": "É só avisar antes. No plano Mensal, pular ou cancelar não tem custo. Nos planos Semestral e Anual, a entrega pulada é remarcada dentro do período do plano." },
+        { "pergunta": "Tem pedido mínimo por entrega?", "resposta": "Sim, o mesmo pedido mínimo da loja vale para cada entrega do plano. Se o consumo for pequeno, a entrega mensal costuma resolver; se for grande, a quinzenal ou a semanal evita estoque parado." },
+        { "pergunta": "Como funciona o pagamento?", "resposta": "Cada entrega sai com a sua nota fiscal, e a forma de pagamento é combinada na adesão. Não existe cobrança antecipada do período inteiro." },
+        { "pergunta": "O que acontece no fim do compromisso?", "resposta": "Avisamos antes do fim do período. Você escolhe renovar no mesmo plano, trocar de plano ou seguir comprando sem recorrência." }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Peça a proposta do seu pedido recorrente",
+    "texto": "Devolvemos a lista com o preço cheio e o preço com o desconto do plano, item a item. Você só assina depois de aprovar."
+  }
+}

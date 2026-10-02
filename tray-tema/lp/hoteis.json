@@ -1,0 +1,85 @@
+{
+  "titulo": "Material de Limpeza para Hotéis e Pousadas em Porto Alegre — Atacado Polvo",
+  "descricao": "Fornecedor de material de limpeza e lavanderia para hotéis, pousadas e hostels em Porto Alegre. Produtos para quartos, enxoval, café da manhã e áreas comuns, com preço de atacado e nota fiscal.",
+  "hero": {
+    "eyebrow": "Para gerentes e governança",
+    "titulo": "Quarto limpo, hóspede satisfeito, com material de limpeza",
+    "destaque": "a preço de atacado",
+    "texto": "Limpeza é o item que o hóspede mais comenta na avaliação. Produtos para quarto, banheiro, enxoval e café da manhã, com entrega programada pela ocupação do hotel em Porto Alegre.",
+    "whatsapp": "Olá! Trabalho em um hotel e quero um orçamento de material de limpeza.",
+    "selos": ["Hotéis e pousadas", "Hostels", "Flats e apart-hotéis", "Redes com várias unidades"]
+  },
+  "secoes": [
+    {
+      "tipo": "cards",
+      "eyebrow": "O problema",
+      "titulo": "Cada quarto virado consome produto — e a conta chega todo mês",
+      "sub": "Troca de enxoval, banheiro de hóspede e café da manhã: o consumo de um hotel acompanha a ocupação, não o calendário.",
+      "alerta": true,
+      "itens": [
+        { "titulo": "Custo por quarto alto", "texto": "Comprar no varejo, em frasco pequeno e várias vezes no mês, é o jeito mais caro de abastecer a governança." },
+        { "titulo": "Avaliação do hóspede", "texto": "Um banheiro com cheiro ruim ou uma toalha encardida viram comentário no site de reservas e custam a próxima diária." },
+        { "titulo": "Falta na alta temporada", "texto": "Ocupação cheia, feriado prolongado e o papel higiênico acaba justo quando não dá para sair e comprar." },
+        { "titulo": "Enxoval que desgasta", "texto": "Produto de lavanderia errado encardece o branco e estraga o tecido antes da hora, e o enxoval é caro de repor." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "Como a Polvo resolve",
+      "titulo": "Parceiro da sua governança, não só mais um fornecedor",
+      "sub": "A gente entende o consumo de hotelaria e monta o abastecimento junto com você.",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Produtos de qualidade", "texto": "Saneantes regularizados e marcas conhecidas, com ficha técnica à disposição quando precisar apresentar." },
+        { "titulo": "Preço competitivo", "texto": "Preço de distribuidora e concentrado em galão, que baixa o custo de limpeza por quarto ocupado." },
+        { "titulo": "Entrega rápida e programada", "texto": "Frota própria, com reforço antes da alta temporada, de feriado e de evento na cidade." },
+        { "titulo": "Atendimento sem burocracia", "texto": "Um vendedor fixo no WhatsApp, que conhece o hotel e responde no mesmo dia. Sem protocolo e sem fila." },
+        { "titulo": "Nota fiscal certinha", "texto": "Nota no CNPJ do hotel ou da administradora, com orçamento formal quando a rede exige cotação." },
+        { "titulo": "Reposição pela ocupação", "texto": "Pedido ajustado ao número de quartos e à taxa de ocupação, para não sobrar estoque nem faltar produto." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "O que entra no pedido",
+      "titulo": "Solução completa para cada área do hotel",
+      "sub": "Do quarto do hóspede à lavanderia, num fornecedor só.",
+      "itens": [
+        { "titulo": "Lavanderia e enxoval", "texto": "Sabão líquido e em pó, amaciante, alvejante e tira-manchas para lençol, toalha e roupão.", "busca": "sabão" },
+        { "titulo": "Banheiros dos quartos", "texto": "Desinfetante, limpa-azulejo, removedor de tártaro e desodorizador para o banheiro que o hóspede avalia.", "busca": "desinfetante" },
+        { "titulo": "Quartos e áreas comuns", "texto": "Multiuso, limpa-vidros, lustra-móveis e limpador perfumado para quarto, corredor e recepção.", "busca": "multiuso" },
+        { "titulo": "Descartáveis e papéis", "texto": "Papel higiênico, papel toalha, copos e saco de lixo para os quartos e as áreas comuns.", "busca": "papel higiênico" },
+        { "titulo": "Café da manhã", "texto": "Detergente, desengordurante e limpa-inox para a cozinha e o buffet do café da manhã.", "busca": "detergente" },
+        { "titulo": "Linha profissional", "texto": "Concentrados em galão de 5L e 20L para a governança diluir. É onde o hotel mais economiza por litro.", "busca": "galão" }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "eyebrow": "Como funciona",
+      "titulo": "Do orçamento à entrega no hotel",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Manda a lista", "texto": "No WhatsApp: a planilha da governança, a lista de reposição ou só o número de quartos. Ou compre direto aqui na loja." },
+        { "titulo": "Recebe o orçamento", "texto": "Item a item, com preço por unidade e por caixa, no formato que a gerência precisa aprovar." },
+        { "titulo": "Aprova e agenda", "texto": "Você confirma e combina a entrega pela doca ou pela entrada de serviço, no horário que não cruza com o hóspede." },
+        { "titulo": "Programa pela ocupação", "texto": "Ajustamos a quantidade à ocupação real e avisamos antes de cada reposição e da alta temporada." }
+      ]
+    },
+    {
+      "tipo": "faq",
+      "eyebrow": "Dúvidas frequentes",
+      "titulo": "O que a governança sempre pergunta",
+      "itens": [
+        { "pergunta": "Vocês têm produtos para a lavanderia do hotel?", "resposta": "Sim. Sabão líquido e em pó, amaciante, alvejante sem cloro e tira-manchas, em embalagem de atacado. Indicamos a dosagem para cada tipo de peça, para o enxoval durar mais." },
+        { "pergunta": "Vocês emitem nota fiscal no CNPJ do hotel?", "resposta": "Sim. A nota sai no CNPJ do hotel ou da administradora, o que permite lançar a compra na contabilidade e acompanhar o custo por quarto." },
+        { "pergunta": "Dá para programar a entrega pela ocupação?", "resposta": "Sim. Montamos o pedido pelo número de quartos e pela ocupação média, com reforço antes da alta temporada, de feriados e de eventos na cidade." },
+        { "pergunta": "Vocês fornecem amenities para os quartos?", "resposta": "O foco é limpeza, lavanderia, descartáveis e higiene, como sabonete líquido para dispenser e papel higiênico. Conte no pedido o que o hotel usa hoje e dizemos o que conseguimos atender." },
+        { "pergunta": "Vocês entregam em mais de uma unidade?", "resposta": "Sim. Redes e grupos com mais de um hotel recebem entrega separada por endereço, com nota e conferência por unidade, e condição comercial pelo volume total." },
+        { "pergunta": "A equipe de governança sabe usar concentrado?", "resposta": "Passamos a tabela de diluição de cada produto e, se quiser, orientamos a equipe na primeira entrega. Diluir certo é o que faz o galão render e o custo cair de verdade." }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Peça o orçamento do seu hotel",
+    "texto": "Resposta no mesmo dia útil, nota no CNPJ do hotel e entrega pela entrada de serviço, sem cruzar com o hóspede."
+  }
+}

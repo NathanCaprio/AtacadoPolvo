@@ -20,3 +20,6 @@ backups/
 
 # ZIP do tema da Tray gerado por npm run tema-zip (sobe em Ações > Enviar tema)
 tray-tema.zip
+
+# LPs montadas por npm run lp (coladas no criador de LPs da Tray)
+tray-tema/lp/dist/

@@ -1,0 +1,163 @@
+/* Base das landing pages da Tray. A LP "página em branco" é servida sozinha
+   (sem o layout nem o CSS do tema), então aqui vai o mínimo que o tema daria:
+   reset, container, tipografia, cabeçalho e rodapé. O resto vem de
+   css/polvo.css (tokens) e css/polvo-home.css (seções), embutidos pelo
+   server/tema-lp.js. */
+
+:root { --font_family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font_family);
+  font-size: 16px;
+  line-height: 1.5;
+  background: #fff;
+}
+
+img, svg { max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, p { margin-top: 0; }
+
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* ---- Cabeçalho -------------------------------------------------------- */
+
+.lp-topo {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--polvo-line);
+  backdrop-filter: blur(8px);
+}
+
+.lp-topo .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+}
+
+.lp-marca { display: flex; align-items: center; gap: 10px; }
+
+.lp-marca svg { width: 52px; height: auto; }
+
+.lp-marca small {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--polvo-ink-3);
+}
+
+.lp-marca strong {
+  display: block;
+  font-family: var(--polvo-font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--polvo-ink);
+}
+
+.lp-topo nav { display: flex; align-items: center; gap: 22px; font-weight: 600; color: var(--polvo-ink); }
+
+.lp-topo nav a:hover { color: var(--polvo-brand); }
+
+.lp-topo .polvo-btn { min-height: 44px; padding: 0 20px; font-size: 0.95rem; }
+
+/* ---- Rodapé ----------------------------------------------------------- */
+
+.lp-rodape {
+  padding: 48px 0 28px;
+  background: var(--polvo-ink);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+}
+
+.lp-rodape .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+
+.lp-rodape h2 {
+  margin-bottom: 12px;
+  font-family: var(--polvo-font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.lp-rodape ul { margin: 0; padding: 0; list-style: none; }
+
+.lp-rodape li { margin-bottom: 8px; }
+
+.lp-rodape a:hover { color: #fff; }
+
+.lp-rodape__copy {
+  grid-column: 1 / -1;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ---- Planos (recorrência) --------------------------------------------- */
+
+.polvo-planos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+
+.polvo-plano {
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-lg);
+  background: #fff;
+  box-shadow: var(--polvo-shadow-sm);
+}
+
+.polvo-plano--destaque { border: 2px solid var(--polvo-brand); box-shadow: var(--polvo-shadow-brand); }
+
+.polvo-plano__nome { margin: 0; font-family: var(--polvo-font-display); font-size: 1.3rem; font-weight: 800; color: var(--polvo-ink); }
+
+.polvo-plano__prazo { margin: 4px 0 14px; font-size: 0.85rem; color: var(--polvo-ink-3); }
+
+.polvo-plano__desconto { margin: 0 0 8px; font-family: var(--polvo-font-display); font-size: 1.6rem; font-weight: 800; color: var(--polvo-brand); }
+
+.polvo-plano__texto { color: var(--polvo-ink-3); }
+
+.polvo-plano ul { margin: 8px 0 0; padding: 16px 0 0; border-top: 1px solid var(--polvo-line); list-style: none; }
+
+.polvo-plano li { position: relative; padding-left: 22px; margin-bottom: 8px; color: var(--polvo-ink-2); font-size: 0.95rem; }
+
+.polvo-plano li::before { content: "✓"; position: absolute; left: 0; color: var(--polvo-ok); font-weight: 800; }
+
+.polvo-planos__nota { margin: 22px 0 0; text-align: center; font-size: 0.9rem; color: var(--polvo-ink-3); }
+
+/* ---- Botão flutuante de WhatsApp ------------------------------------- */
+
+.lp-wpp {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  background: #1faf54;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(31, 175, 84, 0.4);
+}
+
+.lp-wpp svg { width: 30px; height: 30px; }
+
+@media (max-width: 767px) {
+  .lp-topo nav .lp-link { display: none; }
+  .lp-marca small { display: none; }
+}

@@ -21,6 +21,7 @@ npm run criar-admin -- "Nome" email@x.com
 npm run backup | backups | exportar | restaurar
 npm run fotos  # busca foto para quem não tem no ERP (ver server/fotos.js)
 npm run tema-zip  # empacota tray-tema/ em tray-tema.zip para subir na Tray
+npm run lp        # monta as landing pages da Tray (tray-tema/lp/*.json -> lp/dist/)
 ```
 Sincronização com o ERP **desligada** desde 02/10/2026 (o Empresarius bloqueou
 por excesso de chamadas; credenciais comentadas no `.env`). Não religar: o

@@ -1,0 +1,83 @@
+{
+  "titulo": "Material de Limpeza para Escolas em Porto Alegre — Atacado Polvo",
+  "descricao": "Fornecedor de material de limpeza para escolas em Porto Alegre. Produtos com registro, preço de atacado, nota fiscal e entrega programada pelo calendário escolar. Peça o orçamento.",
+  "hero": {
+    "eyebrow": "Para diretores e mantenedores",
+    "titulo": "Diretor, facilite o dia a dia da escola com material de limpeza",
+    "destaque": "a preço de atacado",
+    "texto": "Escola limpa, organizada e bem cuidada sem estourar o orçamento. Produtos com procedência para banheiro, sala, refeitório e pátio, com entrega programada pelo calendário escolar em Porto Alegre.",
+    "whatsapp": "Olá! Trabalho em uma escola e quero um orçamento de material de limpeza.",
+    "selos": ["Produtos com registro e ficha técnica", "Nota fiscal no CNPJ da escola", "Entrega pelo calendário escolar", "Porto Alegre e região"]
+  },
+  "secoes": [
+    {
+      "tipo": "cards",
+      "eyebrow": "O problema",
+      "titulo": "Manter a escola limpa é caro, e a verba não cresce junto",
+      "sub": "O consumo de uma escola não se parece com o de uma casa: banheiro de alto uso, refeitório e pátio gastam todo dia.",
+      "alerta": true,
+      "itens": [
+        { "titulo": "Orçamento apertado", "texto": "Comprar no varejo, em quantidade pequena e várias vezes no mês, é o jeito mais caro de abastecer uma escola." },
+        { "titulo": "Produto sem procedência", "texto": "Onde circula criança, saneante sem registro não é opção. E, quando a vigilância pede a ficha técnica, ela precisa existir." },
+        { "titulo": "Falta no meio do bimestre", "texto": "Acabou o papel toalha numa quarta-feira e alguém da equipe precisa sair no meio do expediente para comprar." },
+        { "titulo": "Burocracia na compra", "texto": "Orçamento que demora, fornecedor que não emite nota do jeito certo e processo que trava na secretaria." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "Como a Polvo resolve",
+      "titulo": "Parceiro da sua escola, não só mais um fornecedor",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Produtos de qualidade", "texto": "Saneantes regularizados e marcas conhecidas. Ficha técnica e laudo à disposição quando a escola precisar apresentar." },
+        { "titulo": "Preço competitivo", "texto": "Preço de distribuidora e concentrado em galão, que rende muito mais por real gasto do que o frasco de varejo." },
+        { "titulo": "Entrega rápida e programada", "texto": "Frota própria, com reforço antes da volta às aulas e entrega em horário que não atrapalha o movimento de alunos." },
+        { "titulo": "Atendimento sem burocracia", "texto": "Um vendedor fixo no WhatsApp, que conhece a escola e responde no mesmo dia. Sem protocolo e sem fila." },
+        { "titulo": "Nota fiscal certinha", "texto": "Nota no CNPJ da escola ou da mantenedora, e orçamento formal quando o processo exige empenho ou três cotações." },
+        { "titulo": "Calendário escolar", "texto": "Abastecimento por bimestre ou semestre, ajustado ao número de alunos e ao ritmo real de consumo da escola." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "O que entra no pedido",
+      "titulo": "Solução completa para cada ambiente da escola",
+      "itens": [
+        { "titulo": "Banheiros dos alunos", "texto": "Desinfetante, água sanitária e removedor de tártaro para banheiro de alto uso, que precisa de limpeza várias vezes ao dia.", "busca": "desinfetante" },
+        { "titulo": "Higiene dos alunos", "texto": "Sabonete líquido para dispenser, álcool em gel para as salas e higienizante de ambiente para a rotina diária.", "busca": "sabonete" },
+        { "titulo": "Descartáveis e papéis", "texto": "Papel higiênico, papel toalha interfolha para dispenser, guardanapo do refeitório e saco de lixo para as salas e o pátio.", "busca": "papel toalha" },
+        { "titulo": "Cozinha e refeitório", "texto": "Detergente, desengordurante para a coifa e o fogão industrial, lava-louças e limpa-inox para a cozinha da merenda.", "busca": "detergente" },
+        { "titulo": "Salas, corredores e pátio", "texto": "Multiuso, limpador perfumado e cera para o piso das salas, dos corredores e da quadra coberta.", "busca": "multiuso" },
+        { "titulo": "Linha profissional", "texto": "Concentrados em galão de 5L e 20L para a equipe de limpeza diluir. É onde a escola mais economiza por litro.", "busca": "galão" }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "eyebrow": "Como funciona",
+      "titulo": "Do orçamento à entrega na escola",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Manda a lista", "texto": "No WhatsApp: a planilha da secretaria, a lista da equipe de limpeza ou só o número de alunos e turnos. Ou compre direto aqui na loja." },
+        { "titulo": "Recebe o orçamento", "texto": "Item a item, no formato que a escola precisa para a direção, a mantenedora ou o processo de compra." },
+        { "titulo": "Aprova e agenda", "texto": "Você confirma e combina o melhor horário de entrega, fora do movimento de entrada e saída dos alunos." },
+        { "titulo": "Programa o bimestre", "texto": "Ajustamos a quantidade ao consumo real da escola e avisamos antes de cada reposição." }
+      ]
+    },
+    {
+      "tipo": "faq",
+      "eyebrow": "Dúvidas frequentes",
+      "titulo": "O que a direção sempre pergunta",
+      "itens": [
+        { "pergunta": "Os produtos têm registro para uso em escola?", "resposta": "Sim. Trabalhamos com saneantes regularizados e fornecedores rastreáveis. Quando a escola precisa apresentar ficha técnica ou laudo do produto para a vigilância sanitária ou para a mantenedora, enviamos junto com o orçamento." },
+        { "pergunta": "Vocês emitem nota fiscal no CNPJ da escola?", "resposta": "Sim. A nota sai no CNPJ da escola ou da mantenedora, o que permite lançar a compra na contabilidade e prestar contas à direção ou ao conselho." },
+        { "pergunta": "Dá para programar a entrega pelo calendário escolar?", "resposta": "Sim. Programamos o abastecimento por bimestre ou semestre, com reforço antes da volta às aulas e entregas fora do horário de maior movimento de alunos." },
+        { "pergunta": "Como funciona para escola pública, com empenho?", "resposta": "Emitimos o orçamento formal com a descrição e o preço de cada item, no formato que a secretaria precisa para o processo de compra, a cotação ou o empenho." },
+        { "pergunta": "Vocês entregam em mais de uma unidade?", "resposta": "Sim. Redes com mais de uma escola recebem entrega separada por endereço, com nota e conferência por unidade, e condição comercial pelo volume total." },
+        { "pergunta": "A equipe de limpeza sabe usar concentrado?", "resposta": "Passamos a tabela de diluição de cada produto e, se a escola quiser, orientamos a equipe na primeira entrega. Diluir certo é o que faz o galão render e o custo cair de verdade." }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Peça o orçamento da sua escola",
+    "texto": "Resposta no mesmo dia útil, nota no CNPJ da escola ou da mantenedora e entrega fora do horário de aula."
+  }
+}

@@ -72,9 +72,8 @@
 
 {# Atacado Polvo: identidade visual. Depois do CSS do tema e antes do CSS personalizado do painel. #}
 <link href="{{ asset('css/polvo.css') }}" type="text/css" rel="stylesheet" />
-{% if 'home' in pages.current %}
-  <link href="{{ asset('css/polvo-home.css') }}" type="text/css" rel="stylesheet" />
-{% endif %}
+{# Seções do Polvo: home e landing pages (criador de LPs da Tray cola HTML com essas classes). #}
+<link href="{{ asset('css/polvo-home.css') }}" type="text/css" rel="stylesheet" />
 
 {% if settings.configs.custom_css %}
 {% set CDN_URL = asset('')|split('?')[0] %}

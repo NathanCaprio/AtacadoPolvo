@@ -1,0 +1,85 @@
+{
+  "titulo": "Material de Limpeza para Pet Shops e Clínicas Veterinárias em Porto Alegre — Atacado Polvo",
+  "descricao": "Fornecedor de material de limpeza para pet shops, banho e tosa, clínicas veterinárias e hotéis para cães em Porto Alegre. Desinfetantes, lavanderia e descartáveis a preço de atacado, com nota fiscal.",
+  "hero": {
+    "eyebrow": "Para pet shops e clínicas veterinárias",
+    "titulo": "Ambiente limpo e sem cheiro para os pets com material de limpeza",
+    "destaque": "a preço de atacado",
+    "texto": "Desinfecção do canil, toalha do banho e tosa lavada todo dia e piso que precisa secar rápido. Produtos com procedência e orientação de uso em ambiente com animais, com entrega programada em Porto Alegre.",
+    "whatsapp": "Olá! Tenho um pet shop/clínica e quero um orçamento de material de limpeza.",
+    "selos": ["Pet shops e banho e tosa", "Clínicas veterinárias", "Hotéis e creches para cães", "Canis e gatis"]
+  },
+  "secoes": [
+    {
+      "tipo": "cards",
+      "eyebrow": "O problema",
+      "titulo": "Com animal circulando, a limpeza não pode parar — nem errar",
+      "sub": "Pelo, odor e desinfecção entre um atendimento e outro: o consumo de um negócio pet é diário e específico.",
+      "alerta": true,
+      "itens": [
+        { "titulo": "Consumo alto", "texto": "Desinfetante, papel toalha e saco de lixo saem todo dia. Comprar no varejo multiplica o custo do banho e da consulta." },
+        { "titulo": "Segurança dos animais", "texto": "Nem todo saneante é adequado para onde o animal pisa, deita e lambe. Produto errado ou mal diluído vira problema de saúde." },
+        { "titulo": "Cheiro que o cliente sente", "texto": "O tutor entra e sente o cheiro antes de ver a loja. Odor mal resolvido é a primeira impressão que fica." },
+        { "titulo": "Toalha que não acaba de lavar", "texto": "Toalha do banho e tosa e manta do canil vão para a máquina todo dia, e o produto de lavanderia pesa na conta." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "Como a Polvo resolve",
+      "titulo": "Parceiro do seu negócio pet, não só mais um fornecedor",
+      "sub": "A gente entende a rotina de pet shop e clínica e monta o abastecimento junto com você.",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Produtos com procedência", "texto": "Saneantes regularizados, com ficha técnica e orientação de diluição e tempo de ação para uso em ambiente com animais." },
+        { "titulo": "Preço competitivo", "texto": "Preço de distribuidora e concentrado em galão, que rende muito mais por real gasto do que o frasco de varejo." },
+        { "titulo": "Entrega rápida e programada", "texto": "Frota própria, com entrega no horário de menor movimento de banho e de consulta." },
+        { "titulo": "Atendimento sem burocracia", "texto": "Um vendedor fixo no WhatsApp, que conhece o seu negócio e responde no mesmo dia. Sem protocolo e sem fila." },
+        { "titulo": "Nota fiscal certinha", "texto": "Nota no CNPJ do pet shop ou da clínica, para lançar na contabilidade e separar o custo de limpeza." },
+        { "titulo": "Reposição programada", "texto": "Pedido semanal ou quinzenal, ajustado ao número de banhos, atendimentos e hospedagens." }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "O que entra no pedido",
+      "titulo": "Solução completa para cada área do negócio pet",
+      "sub": "Do canil ao balcão de atendimento, num fornecedor só.",
+      "itens": [
+        { "titulo": "Desinfecção", "texto": "Desinfetante e água sanitária para canil, baia, sala de banho e consultório, com a diluição certa para cada área.", "busca": "desinfetante" },
+        { "titulo": "Lavanderia", "texto": "Sabão líquido e em pó, alvejante e tira-manchas para toalha do banho e tosa, manta e caminha.", "busca": "sabão" },
+        { "titulo": "Descartáveis e papéis", "texto": "Papel toalha, papel higiênico e saco de lixo reforçado para a rotina de limpeza.", "busca": "papel toalha" },
+        { "titulo": "Utensílios e acessórios", "texto": "Rodo, vassoura, balde, pano e luva para a equipe limpar entre um atendimento e outro.", "busca": "rodo" },
+        { "titulo": "Higiene da equipe", "texto": "Sabonete líquido e álcool em gel para a lavagem de mãos entre um animal e outro.", "busca": "sabonete" },
+        { "titulo": "Linha profissional", "texto": "Concentrados em galão de 5L e 20L para diluir na hora. É onde o negócio pet mais economiza por litro.", "busca": "galão" }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "eyebrow": "Como funciona",
+      "titulo": "Do orçamento à entrega no seu negócio",
+      "tinta": true,
+      "itens": [
+        { "titulo": "Manda a lista", "texto": "No WhatsApp: a lista da equipe, uma foto do estoque ou só o número de banhos e atendimentos por semana. Ou compre direto aqui na loja." },
+        { "titulo": "Recebe o orçamento", "texto": "Item a item, com preço por unidade e por caixa, e a indicação de uso de cada produto." },
+        { "titulo": "Aprova e agenda", "texto": "Você confirma e combina o horário de entrega de menor movimento." },
+        { "titulo": "Programa a reposição", "texto": "Ajustamos a quantidade ao consumo real e avisamos antes de cada reposição." }
+      ]
+    },
+    {
+      "tipo": "faq",
+      "eyebrow": "Dúvidas frequentes",
+      "titulo": "O que o dono de pet shop sempre pergunta",
+      "itens": [
+        { "pergunta": "Os produtos são seguros para os animais?", "resposta": "Trabalhamos com saneantes regularizados e passamos a diluição, o tempo de ação e o enxágue de cada um. A regra de ouro é respeitar a diluição e deixar o ambiente secar antes de o animal voltar. Desinfetante à base de fenol, como os de pinho, não é indicado em ambiente com gatos, e avisamos isso na indicação." },
+        { "pergunta": "Vocês emitem nota fiscal no CNPJ do pet shop ou da clínica?", "resposta": "Sim. A nota sai no CNPJ do negócio, o que permite lançar a compra na contabilidade e acompanhar o custo de limpeza separado do custo de insumo." },
+        { "pergunta": "Tem produto para tirar o cheiro do ambiente?", "resposta": "Sim. A combinação que funciona é limpar primeiro, desinfetar na diluição certa e só então perfumar. Montamos a rotina com os produtos do catálogo e indicamos a ordem de uso para a equipe." },
+        { "pergunta": "Atendem clínica e hospital veterinário?", "resposta": "Sim, para limpeza, desinfecção de ambiente, lavanderia e descartáveis. Produtos de uso clínico e o descarte de resíduo de serviço de saúde seguem regras próprias; conte o que a clínica usa hoje e dizemos o que conseguimos atender." },
+        { "pergunta": "Vocês entregam em mais de uma unidade?", "resposta": "Sim. Redes com mais de uma loja ou clínica recebem entrega separada por endereço, com nota e conferência por unidade, e condição comercial pelo volume total." },
+        { "pergunta": "A equipe sabe usar concentrado?", "resposta": "Passamos a tabela de diluição de cada produto e, se quiser, orientamos a equipe na primeira entrega. Com animal no ambiente, diluir certo é questão de custo e de segurança." }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Peça o orçamento do seu pet shop ou clínica",
+    "texto": "Resposta no mesmo dia útil, nota no CNPJ do negócio e indicação de diluição e uso em ambiente com animais."
+  }
+}

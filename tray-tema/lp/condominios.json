@@ -1,0 +1,174 @@
+{
+  "titulo": "Material de Limpeza para Condomínios em Porto Alegre — Atacado Polvo",
+  "descricao": "Fornecedor de material de limpeza para condomínios em Porto Alegre. Preço de atacado, nota fiscal, entrega programada na portaria e vendedor fixo para o síndico. Peça o orçamento.",
+  "hero": {
+    "eyebrow": "Para síndicos e administradoras",
+    "titulo": "Material de limpeza para condomínio",
+    "destaque": "com preço de atacado em Porto Alegre",
+    "texto": "Abasteça o prédio inteiro num pedido só — da portaria à garagem. Nota fiscal em nome do condomínio, entrega programada na portaria e um vendedor fixo que atende no WhatsApp, sem call center.",
+    "whatsapp": "Olá! Sou síndico(a) e quero um orçamento de material de limpeza para o condomínio.",
+    "selos": [
+      "Nota fiscal no CNPJ do condomínio",
+      "24h de prazo médio de entrega",
+      "Entrega na portaria com hora marcada",
+      "Porto Alegre e região"
+    ]
+  },
+  "secoes": [
+    {
+      "tipo": "cards",
+      "eyebrow": "O problema",
+      "titulo": "A compra de limpeza do condomínio trava sempre nos mesmos pontos",
+      "sub": "Se você é síndico, provavelmente já passou por pelo menos três destes.",
+      "alerta": true,
+      "itens": [
+        {
+          "titulo": "Compra fracionada sai caro",
+          "texto": "Comprar no mercado do bairro toda semana consome a verba de manutenção e ninguém consegue prever o gasto do mês."
+        },
+        {
+          "titulo": "Prestação de contas sem nota",
+          "texto": "Recibo solto e cupom de mercado complicam a aprovação na assembleia e o trabalho da administradora."
+        },
+        {
+          "titulo": "Zelador sem material no meio do mês",
+          "texto": "Acaba o desinfetante numa segunda e a limpeza da área comum para. Sem reposição programada, isso vira rotina."
+        },
+        {
+          "titulo": "Ninguém responde o orçamento",
+          "texto": "Você manda a lista para três fornecedores e recebe uma resposta, três dias depois, sem os itens que importam."
+        }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "Como a Polvo resolve",
+      "titulo": "Um fornecedor só, com previsibilidade de custo",
+      "sub": "Você fecha o abastecimento do mês inteiro numa conversa e sabe exatamente quanto vai gastar.",
+      "tinta": true,
+      "itens": [
+        {
+          "titulo": "Nota fiscal no CNPJ",
+          "texto": "Toda entrega sai com nota em nome do condomínio. A prestação de contas fecha sozinha e a administradora lança direto."
+        },
+        {
+          "titulo": "Entrega na portaria",
+          "texto": "Frota própria, em dia e turno combinados com o zelador. Sem transportadora, sem caixa extraviada, sem surpresa no prazo."
+        },
+        {
+          "titulo": "Vendedor fixo no WhatsApp",
+          "texto": "A mesma pessoa atende o condomínio sempre. Você manda a lista, recebe o orçamento e resolve — sem repetir a história toda vez."
+        },
+        {
+          "titulo": "Produto com procedência",
+          "texto": "Saneante com registro e fornecedor rastreável. O que entra no condomínio tem origem conhecida e laudo quando exigido."
+        },
+        {
+          "titulo": "Reposição programada",
+          "texto": "Depois do primeiro pedido, já sabemos o giro do prédio e avisamos você antes de o material acabar."
+        },
+        {
+          "titulo": "Preço de distribuidora",
+          "texto": "Compramos direto da indústria em volume. O condomínio paga preço de atacado mesmo comprando para um prédio só."
+        }
+      ]
+    },
+    {
+      "tipo": "cards",
+      "eyebrow": "O que entra no pedido",
+      "titulo": "O kit que abastece o condomínio inteiro",
+      "sub": "Da portaria à garagem, sem precisar de um segundo fornecedor.",
+      "itens": [
+        {
+          "titulo": "Áreas comuns e hall",
+          "texto": "Multiuso, limpador perfumado, cera para piso frio, lustra-móveis e limpa-vidros para a portaria.",
+          "busca": "multiuso"
+        },
+        {
+          "titulo": "Banheiros e vestiários",
+          "texto": "Desinfetante, água sanitária, removedor de tártaro e desodorizador para os banheiros de uso comum.",
+          "busca": "desinfetante"
+        },
+        {
+          "titulo": "Descartáveis e lixo",
+          "texto": "Saco de lixo reforçado para as lixeiras da garagem e da coleta seletiva, papel higiênico e papel toalha.",
+          "busca": "saco de lixo"
+        },
+        {
+          "titulo": "Utensílios da zeladoria",
+          "texto": "Vassoura, rodo, balde, pano, esponja, luva e MOP — o que o zelador gasta e some do almoxarifado.",
+          "busca": "vassoura"
+        },
+        {
+          "titulo": "Linha profissional",
+          "texto": "Concentrados em galão de 5L e 20L para garagem, lixeira e área externa. Rende muito mais por real gasto.",
+          "busca": "galão"
+        },
+        {
+          "titulo": "Higiene da portaria",
+          "texto": "Sabonete líquido, álcool em gel e higienizante para portaria, salão de festas e academia.",
+          "busca": "sabonete"
+        }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "eyebrow": "Como funciona",
+      "titulo": "Do primeiro contato à entrega na portaria",
+      "tinta": true,
+      "itens": [
+        {
+          "titulo": "Manda a lista",
+          "texto": "No WhatsApp, do jeito que você tem: planilha, foto do caderno do zelador ou só o pedido de sempre. Ou compre direto aqui na loja."
+        },
+        {
+          "titulo": "Recebe o orçamento",
+          "texto": "Item a item, com preço por unidade e por caixa, no mesmo dia útil. Serve para levar à assembleia."
+        },
+        {
+          "titulo": "Aprova e agenda",
+          "texto": "Você confirma, combina o dia e o turno com o zelador e recebe a nota fiscal do condomínio."
+        },
+        {
+          "titulo": "Repõe sem pensar",
+          "texto": "Passamos a conhecer o giro do prédio e avisamos você antes de faltar material."
+        }
+      ]
+    },
+    {
+      "tipo": "faq",
+      "eyebrow": "Dúvidas frequentes",
+      "titulo": "O que o síndico sempre pergunta",
+      "itens": [
+        {
+          "pergunta": "Vocês emitem nota fiscal para o condomínio?",
+          "resposta": "Sim. Toda compra sai com nota fiscal em nome do condomínio, com o CNPJ, o que facilita a prestação de contas na assembleia e o lançamento na contabilidade da administradora."
+        },
+        {
+          "pergunta": "Qual é o pedido mínimo?",
+          "resposta": "O mínimo é combinado conforme o porte do condomínio. Na prática, um abastecimento mensal padrão já passa do mínimo com folga. Se o prédio for pequeno, ajustamos a frequência para compensar."
+        },
+        {
+          "pergunta": "A entrega é feita na portaria?",
+          "resposta": "Sim. Entregamos com frota própria direto na portaria ou no depósito do condomínio, em dia e turno combinados com o zelador. Sem transportadora e sem precisar retirar."
+        },
+        {
+          "pergunta": "Consigo um orçamento para apresentar na assembleia?",
+          "resposta": "Sim. Montamos um orçamento detalhado por item, com preço unitário e por caixa e prazo de validade, no formato que você precisa para comparar com outros fornecedores ou levar para aprovação."
+        },
+        {
+          "pergunta": "Vocês atendem administradoras com vários condomínios?",
+          "resposta": "Sim. Atendemos administradoras com carteira de condomínios, com condição comercial por volume e entregas separadas por endereço, cada uma com a sua nota."
+        },
+        {
+          "pergunta": "E se o produto não servir para o prédio?",
+          "resposta": "A gente troca. Também dá para começar com uma quantidade menor de um item novo antes de colocá-lo no pedido fixo — assim o zelador testa sem o condomínio comprar uma caixa inteira."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Peça o orçamento do seu condomínio",
+    "texto": "Mande a lista no WhatsApp e receba o orçamento item a item no mesmo dia útil."
+  }
+}
