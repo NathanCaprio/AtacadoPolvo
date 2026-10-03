@@ -17,7 +17,12 @@ async (page) => {
   const BASE = 'https://nathansilva.commercesuite.com.br';
   const LPS = [
     ['condominios', 'Condomínios', 1], ['escolas', 'Escolas', 3], ['recorrencia', 'Recorrência', 5],
-    ['restaurantes', 'Restaurantes', 7], ['hoteis', 'Hotéis e pousadas', 9], ['pets', 'Pets', 11]
+    ['restaurantes', 'Restaurantes', 7], ['hoteis', 'Hotéis e pousadas', 9], ['pets', 'Pets', 11],
+    ['blog', 'Blog', 13], ['blackfriday', 'Black Friday', 15],
+    ['blog-quanto-material-limpeza-por-m2', 'Blog: quanto comprar por m²', 17],
+    ['blog-material-limpeza-condominio-checklist-mensal', 'Blog: checklist do condomínio', 19],
+    ['blog-como-escolher-fornecedor-material-limpeza-atacado', 'Blog: como escolher fornecedor', 21],
+    ['blog-diferenca-produto-limpeza-profissional-domestico', 'Blog: profissional x doméstico', 23]
   ];
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], { origin: BASE });
   await page.goto(BASE + '/studio-app/?platform=tray');

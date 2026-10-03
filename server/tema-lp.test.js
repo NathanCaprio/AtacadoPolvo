@@ -24,7 +24,7 @@ test('toda LP monta só com ASCII, com título, descrição e seções', () => {
     assert.doesNotMatch(html, /[^\x00-\x7f]/, `${nome}: caractere fora do ASCII`);
     assert.match(html, /<title>[^<]{20,}<\/title>/, `${nome}: sem <title>`);
     assert.match(html, /<meta name="description" content="[^"]{50,}">/, `${nome}: sem descrição`);
-    assert.match(html, /<h1 class="polvo-hero__titulo">/, `${nome}: sem hero`);
+    assert.match(html, /<h1 class="(polvo-hero__titulo|lp-artigo__titulo)">/, `${nome}: sem h1`);
     assert.match(html, /wa\.me\/\d{12,13}\?text=/, `${nome}: sem link de WhatsApp`);
     const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
     assert.doesNotMatch(css, /&#\d+;/, `${nome}: entidade HTML dentro do <style>`);
@@ -45,4 +45,28 @@ test('cabeçalho e rodapé da LP seguem o tema (menu e links do settings.json)',
   assert.ok(html.includes(`class="polvo-rodape-grupo" href="${grupo}"`), 'sem grupo de ofertas no rodapé');
   assert.match(html, /<a class="polvo-wpp-fab" href="https:\/\/wa\.me\//, 'sem botão flutuante');
   assert.strictEqual((html.match(/id="polvo-logo"/g) || []).length, 1, 'logo deve entrar uma vez só (symbol)');
+});
+
+test('artigo do blog: JSON-LD válido e só ASCII, "Leia também" e link de volta ao blog', () => {
+  const html = fs.readFileSync(path.join(DIST, 'blog-quanto-material-limpeza-por-m2.html'), 'utf8');
+  const ld = JSON.parse(html.match(/<script type="application\/ld\+json">([^<]*)<\/script>/)[1]);
+  assert.strictEqual(ld['@type'], 'Article');
+  assert.match(ld.headline, /m²/, 'acento do JSON-LD deve voltar como caractere (\\u), não entidade');
+  assert.match(html, /<p class="lp-artigo__meta"><a href="\/blog">Blog<\/a>/);
+  assert.match(html, /<nav class="lp-artigo__relacionados"[\s\S]*?href="\/blog-/);
+  assert.doesNotMatch(html, /calculadora/i, 'calculadora está desligada');
+});
+
+test('índice do blog lista todo artigo com título do próprio JSON', () => {
+  const html = fs.readFileSync(path.join(DIST, 'blog.html'), 'utf8');
+  const artigos = fs.readdirSync(path.join(DIST, '..')).filter(f => /^blog-.*\.json$/.test(f));
+  assert.ok(artigos.length >= 4);
+  for (const f of artigos) assert.ok(html.includes(`href="/${f.slice(0, -5)}"`), `blog sem ${f}`);
+});
+
+test('noindex só na LP que pede (Black Friday), com contagem', () => {
+  const bf = fs.readFileSync(path.join(DIST, 'blackfriday.html'), 'utf8');
+  assert.match(bf, /<meta name="robots" content="noindex">/);
+  assert.match(bf, /<div class="lp-contagem" data-alvo="2026-/);
+  assert.doesNotMatch(fs.readFileSync(path.join(DIST, 'condominios.html'), 'utf8'), /noindex/);
 });

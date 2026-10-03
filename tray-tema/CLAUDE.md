@@ -78,19 +78,25 @@ servida **sozinha** (sem layout/CSS do tema, `<head>` vazio, em windows-1252).
 Por isso: conteúdo em `lp/<slug>.json` → `npm run lp` (`server/tema-lp.js`) monta
 `lp/dist/<slug>.html` completo (CSS embutido de `polvo.css` + `_base.css` +
 `polvo-home.css`, cabeçalho/rodapé iguais aos do tema (menu, faixa e links do rodapé lidos de `configs/settings.json`; CSS espelhado em `lp/_base.css`: mudou o cabeçalho/rodapé no `polvo.css`, muda lá também), contatos de `assets/js/config.js`,
-tudo ASCII com entidades). Tipos de seção: cards, passos, planos, faq (ver topo
-de `server/tema-lp.js`). Teste: `server/tema-lp.test.js`.
+tudo ASCII com entidades). Tipos de seção: cards, passos, planos, faq, posts (ver topo
+de `server/tema-lp.js`). Artigo do blog = JSON com bloco `artigo` no lugar de hero/secoes
+(corpo em HTML, JSON-LD Article); `blog.json` lista os artigos (`posts`, título/resumo vêm do
+JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linha em `colar-na-tray.js`.
+`noindex: true` e `hero.contagem` (Black Friday). Teste: `server/tema-lp.test.js`.
 - Colar na Tray: servir `lp/dist` em 127.0.0.1:3078 e rodar `lp/colar-na-tray.js`
   (Playwright `browser_run_code_unsafe`); ele cola e salva **sem ativar**.
 - Criadas (todas **Inativas**): condominios=1, escolas=3, recorrencia=5,
-  restaurantes=7, hoteis=9, pets=11. Prévia: `/<slug>?preview=1&v=<qualquer>` (a LP sai com cache de 4 h; sem o `&v=` o navegador mostra a versão velha).
+  restaurantes=7, hoteis=9, pets=11, blog=13, blackfriday=15, blog-quanto-material-limpeza-por-m2=17,
+  blog-material-limpeza-condominio-checklist-mensal=19, blog-como-escolher-fornecedor-material-limpeza-atacado=21,
+  blog-diferenca-produto-limpeza-profissional-domestico=23. Prévia: `/<slug>?preview=1&v=<qualquer>` (a LP sai com cache de 4 h; sem o `&v=` o navegador mostra a versão velha).
 - Ativar (chave "Ativo" no editor da LP) = decisão do usuário, junto com publicar o tema
   (os cards da home já apontam para `/condominios` e `/escolas`).
 - Redirecionar quando o domínio virar (301 no painel da Tray): `/condominios.html`→`/condominios`,
   `/escolas.html`→`/escolas`, `/recorrencia.html`→`/recorrencia`, `/restaurantes.html`→`/restaurantes`,
-  `/hoteis.html`→`/hoteis`, `/pets.html`→`/pets`, `/produtos.html`→busca vazia, `/index.html`→`/`.
-  "A empresa" foi para o tema (/empresa, não é LP). Sem equivalente ainda: blog (4 artigos),
-  calculadoras, black friday. Política de privacidade: **não** copiar a antiga (descreve o
+  `/hoteis.html`→`/hoteis`, `/pets.html`→`/pets`, `/blog.html`→`/blog`, `/blackfriday.html`→`/blackfriday`,
+  `/blog-<slug>.html`→`/blog-<slug>` (os 4 artigos), `/produtos.html`→busca vazia, `/index.html`→`/`.
+  "A empresa" foi para o tema (/empresa, não é LP). Sem equivalente: calculadoras (desligadas no
+  site antigo; o texto dos artigos que citava a calculadora virou convite para o WhatsApp). Política de privacidade: **não** copiar a antiga (descreve o
   servidor/ERP do site antigo, não a Tray); precisa de texto novo, decisão do usuário.
 
 ## Fica com o usuário no painel (não é tema)
@@ -119,4 +125,5 @@ Lista do que falta para publicar (tema x painel): `tray-tema/PUBLICAR.md`.
 - [x] Links dos cards de segmento → LPs.
 - [x] LPs de SEO criadas no criador da Tray (inativas).
 - [ ] Usuário: ativar LPs + publicar tema + redirecionamentos 301 (lista acima).
-- [ ] Páginas sem equivalente ainda: sobre, contato, blog, calculadoras.
+- [x] Blog (índice + 4 artigos) e Black Friday como LPs (inativas); "Blog" no rodapé (Navegação).
+- [ ] Calculadoras: sem equivalente (desligadas também no site antigo).

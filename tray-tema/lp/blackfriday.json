@@ -1,0 +1,76 @@
+{
+  "titulo": "Black Friday Atacado Polvo — Ofertas em Material de Limpeza em Porto Alegre",
+  "descricao": "Black Friday do Atacado Polvo: condições especiais em material de limpeza, descartáveis e higiene para empresas, condomínios e escolas em Porto Alegre. Peça seu orçamento no WhatsApp.",
+  "noindex": true,
+  "hero": {
+    "eyebrow": "Black Friday Atacado Polvo",
+    "titulo": "Estoque de fim de ano, com",
+    "destaque": "condição de Black Friday",
+    "texto": "Papel, descartáveis, produtos de limpeza e higiene com condição especial para empresas, condomínios, escolas e quem revende. Fale com o vendedor e garanta o pedido antes de acabar.",
+    "whatsapp": "Olá! Vim pela página da Black Friday e quero um orçamento.",
+    "contagem": "2026-11-27T00:00:00-03:00",
+    "selos": [
+      "Empresas e escritórios",
+      "Condomínios",
+      "Escolas",
+      "Restaurantes",
+      "Hotéis e pousadas",
+      "Pet shops"
+    ]
+  },
+  "secoes": [
+    {
+      "tipo": "cards",
+      "eyebrow": "Por que aproveitar agora",
+      "titulo": "Compra de fim de ano, no melhor momento do preço",
+      "sub": "Dezembro e janeiro pedem mais material, e a Black Friday é a janela para abastecer com desconto.",
+      "itens": [
+        {
+          "titulo": "Condição por tempo limitado",
+          "texto": "Preço especial válido só durante a Black Friday, enquanto durar o estoque separado para a campanha."
+        },
+        {
+          "titulo": "Abasteça o fim de ano",
+          "texto": "Compre agora o que vai precisar em dezembro e janeiro, sem pagar mais caro depois."
+        },
+        {
+          "titulo": "Atacado de verdade",
+          "texto": "Preço de atacado o ano todo, e ainda mais forte na Black Friday."
+        },
+        {
+          "titulo": "Atendimento direto",
+          "texto": "Sem intermediário: fala com o vendedor no WhatsApp e já sai com o orçamento fechado."
+        }
+      ]
+    },
+    {
+      "tipo": "passos",
+      "eyebrow": "Orçamento da Black Friday",
+      "titulo": "Conta o que você precisa, a gente aplica a condição",
+      "sub": "Sem compromisso: você só fecha depois de ver o preço.",
+      "tinta": true,
+      "itens": [
+        {
+          "titulo": "Manda a lista",
+          "texto": "No WhatsApp: a lista, uma foto do estoque ou só o que vai faltar em dezembro e janeiro."
+        },
+        {
+          "titulo": "Recebe o orçamento",
+          "texto": "Resposta no mesmo dia útil, com a condição de Black Friday aplicada item a item."
+        },
+        {
+          "titulo": "Aprova e recebe",
+          "texto": "Entrega pela nossa frota em Porto Alegre e Região, com nota fiscal no CNPJ da empresa."
+        },
+        {
+          "titulo": "Continua economizando",
+          "texto": "Gostou do preço? Programe a reposição no pedido recorrente e ganhe até 12% de desconto o ano todo."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Garanta o pedido da Black Friday",
+    "texto": "Resposta no mesmo dia útil, dentro do horário comercial. Condição válida enquanto durar o estoque da campanha."
+  }
+}

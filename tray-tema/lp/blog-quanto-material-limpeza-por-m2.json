@@ -1,0 +1,48 @@
+{
+  "titulo": "Quanto de material de limpeza comprar por m²? Guia prático — Atacado Polvo",
+  "descricao": "Descubra como calcular o consumo mensal de produtos de limpeza a partir da área do imóvel, com exemplos práticos para empresas, condomínios e comércios.",
+  "artigo": {
+    "categoria": "Compras e estoque",
+    "titulo": "Quanto de material de limpeza comprar por m²? Guia prático",
+    "resumo": "Como calcular o consumo mensal de produtos de limpeza a partir da área do imóvel, sem sobrar nem faltar estoque.",
+    "data": "2026-09-28",
+    "whatsapp": "Olá! Li o artigo sobre consumo por m² e quero ajuda para calcular o material do meu espaço.",
+    "corpo": [
+      "<p>Comprar material de limpeza \"no olhômetro\" é a causa mais comum de dois problemas opostos: faltar detergente na metade do mês ou fechar o estoque com papel toalha parado há três meses. A boa notícia é que dá para estimar o consumo com bastante precisão a partir de dois números: a área do imóvel e o tipo de uso do espaço.</p>",
+      "<h2>Por que usar a área como base de cálculo</h2>",
+      "<p>A área limpa é o fator que mais influencia o gasto de produtos de superfície, como desinfetante, álcool e detergente multiuso. Um escritório de 200 m² e uma loja de 200 m² com muito fluxo de clientes não consomem a mesma quantidade — mas a área ainda é o melhor ponto de partida antes de ajustar pelo tipo de uso.</p>",
+      "<h3>Referência geral por 100 m² de área limpa por mês</h3>",
+      "<ul>",
+      "<li><strong>Desinfetante concentrado:</strong> 2 a 4 litros, dependendo da diluição recomendada no rótulo.</li>",
+      "<li><strong>Detergente multiuso:</strong> 1 a 2 litros para superfícies e bancadas.</li>",
+      "<li><strong>Álcool 70%:</strong> 1 a 3 litros, mais alto em ambientes com maçanetas e superfícies de contato frequente.</li>",
+      "<li><strong>Pano de chão e panos multiuso:</strong> 4 a 6 unidades, considerando desgaste e reposição.</li>",
+      "<li><strong>Papel toalha e papel higiênico:</strong> varia com o número de pessoas circulando, não só com a área — veja o próximo tópico.</li>",
+      "</ul>",
+      "<h2>Quando a área não é suficiente: ajuste pelo número de pessoas</h2>",
+      "<p>Descartáveis como papel higiênico, papel toalha e sabonete líquido dependem muito mais do fluxo de pessoas do que da metragem. Um banheiro de 6 m² usado por 80 pessoas por dia consome muito mais papel do que uma sala de 60 m² com duas pessoas fixas. Para esses itens, estime pelo número de usuários e não pela área.</p>",
+      "<blockquote>Regra prática: use a área para produtos de superfície (desinfetante, detergente, álcool) e o número de pessoas para descartáveis de banheiro e copa.</blockquote>",
+      "<h2>Exemplo de cálculo para um condomínio de 800 m² de áreas comuns</h2>",
+      "<p>Considerando hall, garagem, salão de festas e escadaria somando 800 m², a estimativa mensal fica em torno de 16 a 32 litros de desinfetante concentrado e 8 a 16 litros de detergente multiuso, além dos descartáveis calculados pelo número de moradores e visitantes que circulam pelas áreas comuns.</p>"
+    ],
+    "chamada": {
+      "texto": "Quer a lista pronta para o seu espaço?",
+      "botao": "Mandar a metragem no WhatsApp",
+      "url": "whatsapp"
+    },
+    "relacionados": [
+      {
+        "titulo": "Checklist mensal de material de limpeza para condomínio",
+        "url": "/blog-material-limpeza-condominio-checklist-mensal"
+      },
+      {
+        "titulo": "Como escolher um fornecedor de material de limpeza no atacado",
+        "url": "/blog-como-escolher-fornecedor-material-limpeza-atacado"
+      }
+    ]
+  },
+  "cta": {
+    "titulo": "Precisa abastecer o seu negócio?",
+    "texto": "Preço de atacado, entrega própria em Porto Alegre e Região Metropolitana e nota fiscal em cada pedido. Compre direto na loja ou peça o orçamento no WhatsApp."
+  }
+}

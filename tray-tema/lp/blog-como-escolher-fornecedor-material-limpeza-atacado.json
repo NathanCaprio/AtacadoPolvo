@@ -1,0 +1,48 @@
+{
+  "titulo": "Como escolher um fornecedor de material de limpeza no atacado — Atacado Polvo",
+  "descricao": "Sete critérios para avaliar um distribuidor de material de limpeza antes de trocar de fornecedor: preço real, nota fiscal, prazo, mínimo de pedido e mais.",
+  "artigo": {
+    "categoria": "Fornecedores",
+    "titulo": "Como escolher um fornecedor de material de limpeza no atacado",
+    "resumo": "Sete critérios para avaliar um distribuidor antes de trocar de fornecedor — do preço à nota fiscal.",
+    "data": "2026-09-28",
+    "whatsapp": "Olá! Li o artigo \"Como escolher um fornecedor de material de limpeza no atacado\" e quero um orçamento.",
+    "corpo": [
+      "<p>Trocar de fornecedor dá trabalho, então vale fazer essa escolha com critério em vez de ficar pulando de distribuidor em distribuidor atrás do menor preço do mês. Estes são os sete pontos que realmente diferenciam um bom fornecedor de material de limpeza no atacado.</p>",
+      "<h2>1. Preço de atacado real, não só desconto de vitrine</h2>",
+      "<p>Compare o preço por litro ou por unidade de uso, não o preço do galão. Um produto concentrado mais caro por galão pode sair mais barato por litro de solução pronta do que um \"genérico\" já diluído.</p>",
+      "<h2>2. Nota fiscal e CNPJ</h2>",
+      "<p>Empresas, condomínios e escolas precisam de nota fiscal para lançar a despesa na contabilidade e prestar contas. Fornecedor que só emite recibo é sinal de alerta, não economia.</p>",
+      "<h2>3. Prazo de entrega compatível com o seu consumo</h2>",
+      "<p>Se o seu estoque de segurança é de uma semana, um fornecedor que entrega em cinco dias úteis não serve. Pergunte o prazo médio real, não o prometido no primeiro contato.</p>",
+      "<h2>4. Pedido mínimo e frequência</h2>",
+      "<p>Fornecedores de atacado costumam ter pedido mínimo. Verifique se ele é compatível com o seu ritmo de compra — pedir demais para atingir o mínimo é tão ruim quanto pagar caro no varejo.</p>",
+      "<h2>5. Atendimento direto, sem intermediário</h2>",
+      "<p>Um vendedor fixo que conhece o seu histórico de pedidos resolve trocas e urgências muito mais rápido do que um canal genérico de atendimento.</p>",
+      "<h2>6. Procedência e registro dos produtos</h2>",
+      "<p>Saneantes precisam ter registro e procedência rastreável. Isso importa tanto para a segurança de quem usa quanto para eventuais fiscalizações em empresas e condomínios.</p>",
+      "<h2>7. Capacidade de crescer junto com você</h2>",
+      "<p>Se a sua demanda pode dobrar em alguns meses, vale perguntar antecipadamente se o fornecedor sustenta esse volume sem quebrar o prazo de entrega.</p>",
+      "<blockquote>Na dúvida, peça um orçamento comparativo com os itens que você mais compra e avalie preço, prazo e nota fiscal lado a lado — não decida só pelo total da proposta.</blockquote>"
+    ],
+    "chamada": {
+      "texto": "Quer comparar com um orçamento real?",
+      "botao": "Ver o catálogo e pedir orçamento",
+      "url": "/loja/busca.php?loja=1544153&palavra_busca="
+    },
+    "relacionados": [
+      {
+        "titulo": "Quanto de material de limpeza comprar por m²? Guia prático",
+        "url": "/blog-quanto-material-limpeza-por-m2"
+      },
+      {
+        "titulo": "Produto de limpeza profissional x doméstico: qual a diferença",
+        "url": "/blog-diferenca-produto-limpeza-profissional-domestico"
+      }
+    ]
+  },
+  "cta": {
+    "titulo": "Precisa abastecer o seu negócio?",
+    "texto": "Preço de atacado, entrega própria em Porto Alegre e Região Metropolitana e nota fiscal em cada pedido. Compre direto na loja ou peça o orçamento no WhatsApp."
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "titulo": "Checklist mensal de material de limpeza para condomínio — Atacado Polvo",
+  "descricao": "Lista completa de material de limpeza que todo síndico deve conferir antes de fechar o pedido do mês: superfícies, banheiros, garagem e áreas comuns.",
+  "artigo": {
+    "categoria": "Condomínios",
+    "titulo": "Checklist mensal de material de limpeza para condomínio",
+    "resumo": "A lista que todo síndico deveria ter em mãos antes de fechar o pedido do mês, item por item.",
+    "data": "2026-09-28",
+    "whatsapp": "Olá! Li o artigo \"Checklist mensal de material de limpeza para condomínio\" e quero um orçamento.",
+    "corpo": [
+      "<p>Fechar o pedido de material de limpeza do condomínio \"de memória\" quase sempre resulta em item esquecido — geralmente sabão em pó da lavanderia comum ou saco de lixo da garagem. Um checklist fixo, revisado todo mês pelo zelador ou síndico, resolve isso em cinco minutos.</p>",
+      "<h2>Área comum: hall, elevador e escadaria</h2>",
+      "<ul>",
+      "<li>Desinfetante concentrado para pisos e corrimãos</li>",
+      "<li>Álcool 70% para botoeira do elevador e maçanetas</li>",
+      "<li>Pano multiuso e rodo</li>",
+      "<li>Limpa-vidros para portas e espelhos do hall</li>",
+      "</ul>",
+      "<h2>Banheiros de uso comum e vestiário de funcionários</h2>",
+      "<ul>",
+      "<li>Papel higiênico e papel toalha</li>",
+      "<li>Sabonete líquido para as saboneteiras</li>",
+      "<li>Desinfetante para vasos sanitários</li>",
+      "<li>Desodorizador de ambiente</li>",
+      "</ul>",
+      "<h2>Garagem e áreas externas</h2>",
+      "<ul>",
+      "<li>Detergente neutro ou desengordurante para manchas de óleo</li>",
+      "<li>Sacos de lixo reforçados (verificar a capacidade em litros da lixeira)</li>",
+      "<li>Vassourão e pá de lixo</li>",
+      "</ul>",
+      "<h2>Salão de festas e áreas de lazer</h2>",
+      "<ul>",
+      "<li>Detergente multiuso para bancadas e churrasqueira</li>",
+      "<li>Esponjas e panos de prato para a copa do salão</li>",
+      "<li>Toalhas de papel para a pia</li>",
+      "</ul>",
+      "<h2>Lavanderia comum, quando existir</h2>",
+      "<ul>",
+      "<li>Sabão em pó ou líquido compatível com as máquinas</li>",
+      "<li>Amaciante, se estiver previsto no regimento</li>",
+      "</ul>",
+      "<blockquote>Dica: peça ao fornecedor um pedido fixo mensal com essa lista. Depois de dois ou três meses ele já ajusta as quantidades pelo giro real do seu prédio, sem você precisar recalcular nada.</blockquote>",
+      "<h2>Não sabe a quantidade certa de cada item?</h2>",
+      "<p>Se o condomínio nunca fez esse controle, comece pela área das partes comuns: mande a metragem e o número de apartamentos no WhatsApp que sugerimos a quantidade de cada item.</p>"
+    ],
+    "chamada": {
+      "texto": "Quer um orçamento com essa lista pronta para o seu condomínio?",
+      "botao": "Ver a página para condomínios",
+      "url": "/condominios"
+    },
+    "relacionados": [
+      {
+        "titulo": "Quanto de material de limpeza comprar por m²? Guia prático",
+        "url": "/blog-quanto-material-limpeza-por-m2"
+      },
+      {
+        "titulo": "Como escolher um fornecedor de material de limpeza no atacado",
+        "url": "/blog-como-escolher-fornecedor-material-limpeza-atacado"
+      }
+    ]
+  },
+  "cta": {
+    "titulo": "Precisa abastecer o seu negócio?",
+    "texto": "Preço de atacado, entrega própria em Porto Alegre e Região Metropolitana e nota fiscal em cada pedido. Compre direto na loja ou peça o orçamento no WhatsApp."
+  }
+}

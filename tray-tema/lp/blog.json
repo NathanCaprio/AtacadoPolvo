@@ -1,0 +1,28 @@
+{
+  "titulo": "Blog do Atacado Polvo — Dicas de limpeza e gestão de compras",
+  "descricao": "Guias práticos para quem compra material de limpeza para empresa, condomínio ou revenda: consumo por m², checklist do síndico, como escolher fornecedor e linha profissional.",
+  "hero": {
+    "eyebrow": "Blog",
+    "titulo": "Dicas de limpeza e gestão de compras",
+    "destaque": "para o seu negócio",
+    "texto": "Guias práticos para quem compra material de limpeza para empresa, condomínio ou revenda — sem enrolação, direto ao ponto.",
+    "whatsapp": "Olá! Vim pelo blog e quero um orçamento de material de limpeza."
+  },
+  "secoes": [
+    {
+      "tipo": "posts",
+      "eyebrow": "Artigos",
+      "titulo": "Para ler antes de fechar o próximo pedido",
+      "itens": [
+        { "url": "/blog-quanto-material-limpeza-por-m2", "tag": "Compras" },
+        { "url": "/blog-material-limpeza-condominio-checklist-mensal", "tag": "Condomínios" },
+        { "url": "/blog-como-escolher-fornecedor-material-limpeza-atacado", "tag": "Fornecedores" },
+        { "url": "/blog-diferenca-produto-limpeza-profissional-domestico", "tag": "Produtos" }
+      ]
+    }
+  ],
+  "cta": {
+    "titulo": "Precisa abastecer o seu negócio?",
+    "texto": "Preço de atacado, entrega própria em Porto Alegre e Região Metropolitana e nota fiscal em cada pedido. Compre direto na loja ou peça o orçamento no WhatsApp."
+  }
+}

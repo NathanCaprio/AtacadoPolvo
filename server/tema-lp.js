@@ -19,10 +19,20 @@
          { tipo: "passos", eyebrow, titulo, sub?, tinta?, itens: [{ titulo, texto }] },
          { tipo: "planos", eyebrow, titulo, sub?, nota?,
            itens: [{ nome, prazo, desconto, texto, lista[], destaque? }] },
-         { tipo: "faq", eyebrow, titulo, itens: [{ pergunta, resposta }] } ],
-       cta: { titulo, texto } }
+         { tipo: "faq", eyebrow, titulo, itens: [{ pergunta, resposta }] },
+         { tipo: "posts", eyebrow, titulo, itens: [{ url: "/<artigo>", tag }] } ],
+       cta: { titulo, texto },
+       noindex? }                              true = <meta robots noindex>
    "whatsapp" do hero é a mensagem que já vem escrita no WhatsApp (vale
-   também para o botão da faixa final).
+   também para o botão da faixa final). hero.selos é opcional; hero.contagem
+   (data ISO) põe a contagem regressiva no hero.
+
+   Artigo do blog: no lugar de hero/secoes, um bloco "artigo"
+     artigo: { categoria, titulo, resumo, data, whatsapp,
+               corpo: [linhas de HTML],          confiável, vai como está
+               chamada?: { texto, botao, url },  url "whatsapp" = WhatsApp
+               relacionados: [{ titulo, url }] }
+   "posts" do índice do blog lê título e resumo do JSON do próprio artigo.
    ========================================================================= */
 
 'use strict';
@@ -88,8 +98,53 @@ const SECOES = {
         <summary>${esc(i.pergunta)}</summary>
         <p>${esc(i.resposta)}</p>
       </details>`).join('')}
+    </div>`,
+  posts: s => `<div class="polvo-segmentos">${s.itens.map(i => {
+    const a = lerConteudo(i.url.replace(/^\//, '')).artigo;
+    if (!a) throw new Error(`posts: ${i.url} não é artigo`);
+    return `
+      <article class="polvo-card polvo-card--simples lp-post">
+        <span class="lp-post__tag">${esc(i.tag || a.categoria)}</span>
+        <h3 class="polvo-card__titulo"><a href="${esc(i.url)}">${esc(a.titulo)}</a></h3>
+        <p class="polvo-card__texto">${esc(a.resumo)}</p>
+        <a class="polvo-card__link" href="${esc(i.url)}" aria-hidden="true" tabindex="-1">Ler o artigo ${SETA}</a>
+      </article>`;
+  }).join('')}
     </div>`
 };
+
+/** Contagem regressiva do hero (o número é preenchido pelo SCRIPT_CONTAGEM). */
+const contagem = alvo => `<div class="lp-contagem" data-alvo="${esc(alvo)}" aria-label="Tempo até o início da campanha">
+        ${['dias', 'horas', 'min', 'seg'].map(u => `<div><strong>00</strong><span>${u}</span></div>`).join('')}
+      </div>`;
+
+/** Página de artigo do blog: meta, título, corpo, chamada e "Leia também". */
+function artigo(a, linkWpp) {
+  const ch = a.chamada;
+  const chamada = ch ? `
+    <div class="lp-artigo__chamada">
+      <p>${esc(ch.texto)}</p>
+      <a class="polvo-btn ${ch.url === 'whatsapp' ? 'polvo-btn--wpp' : 'polvo-btn--primario'}" href="${ch.url === 'whatsapp' ? linkWpp : esc(ch.url)}"${ch.url === 'whatsapp' ? ' target="_blank" rel="noopener"' : ''}>${esc(ch.botao)}</a>
+    </div>` : '';
+  const relacionados = a.relacionados && a.relacionados.length ? `
+    <nav class="lp-artigo__relacionados" aria-label="Leia também">
+      <h2>Leia também</h2>
+      <ul>${a.relacionados.map(r => `
+        <li><a href="${esc(r.url)}">${esc(r.titulo)}</a></li>`).join('')}
+      </ul>
+    </nav>` : '';
+  return `<section class="polvo-secao lp-artigo">
+  <div class="container">
+  <article class="lp-artigo__wrap">
+    <p class="lp-artigo__meta"><a href="/blog">Blog</a> · ${esc(a.categoria)}</p>
+    <h1 class="lp-artigo__titulo">${esc(a.titulo)}</h1>
+    <div class="lp-artigo__corpo">
+      ${a.corpo.join('\n      ')}
+    </div>${chamada}${relacionados}
+  </article>
+  </div>
+</section>`;
+}
 
 /** HTML das seções a partir do JSON da LP. */
 function corpoDaLp(lp, linkWpp) {
@@ -98,14 +153,23 @@ function corpoDaLp(lp, linkWpp) {
         <a class="polvo-btn polvo-btn--primario" href="${linkWpp}" target="_blank" rel="noopener">Pedir orçamento no WhatsApp</a>
         <a class="polvo-btn polvo-btn--contorno" href="${BUSCA}">Ver catálogo completo</a>
       </div>`;
+  const cta = `<section class="polvo-cta">
+  <div class="container">
+    <h2>${esc(lp.cta.titulo)}</h2>
+    <p>${esc(lp.cta.texto)}</p>
+    ${botoes}
+  </div>
+</section>`;
+  if (lp.artigo) return [artigo(lp.artigo, linkWpp), cta].join('\n\n');
   const hero = `<section class="polvo-hero">
   <div class="container polvo-hero__grid polvo-hero__grid--unico">
     <div class="polvo-hero__texto">
       <span class="polvo-eyebrow">${esc(h.eyebrow)}</span>
       <h1 class="polvo-hero__titulo">${esc(h.titulo)} <span class="polvo-grad">${esc(h.destaque)}</span></h1>
       <p class="polvo-hero__texto-apoio">${esc(h.texto)}</p>
+      ${h.contagem ? contagem(h.contagem) : ''}
       ${botoes}
-      <ul class="polvo-selos">${h.selos.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      ${h.selos ? `<ul class="polvo-selos">${h.selos.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
     </div>
   </div>
 </section>`;
@@ -118,19 +182,12 @@ function corpoDaLp(lp, linkWpp) {
   </div>
 </section>`;
   });
-  const cta = `<section class="polvo-cta">
-  <div class="container">
-    <h2>${esc(lp.cta.titulo)}</h2>
-    <p>${esc(lp.cta.texto)}</p>
-    ${botoes}
-  </div>
-</section>`;
   return [hero, ...secoes, cta].join('\n\n');
 }
 
 function lerConteudo(nome) {
   const lp = JSON.parse(fs.readFileSync(path.join(PASTA, nome + '.json'), 'utf8'));
-  for (const c of ['titulo', 'descricao', 'hero', 'secoes', 'cta']) {
+  for (const c of ['titulo', 'descricao', 'cta', ...(lp.artigo ? [] : ['hero', 'secoes'])]) {
     if (!lp[c]) throw new Error(`${nome}.json: falta "${c}"`);
   }
   return lp;
@@ -320,10 +377,40 @@ const SCRIPT = `(function () {
   });
 })();`;
 
+/* Contagem do hero: zera quando passa da data (a LP sai do ar na mão). */
+const SCRIPT_CONTAGEM = `(function () {
+  var caixa = document.querySelector('.lp-contagem');
+  var alvo = new Date(caixa.getAttribute('data-alvo')).getTime();
+  var nums = caixa.querySelectorAll('strong');
+  function dois(n) { return (n < 10 ? '0' : '') + n; }
+  function atualizar() {
+    var d = Math.max(0, alvo - Date.now());
+    var v = [Math.floor(d / 864e5), Math.floor(d % 864e5 / 36e5), Math.floor(d % 36e5 / 6e4), Math.floor(d % 6e4 / 1e3)];
+    for (var i = 0; i < 4; i++) nums[i].textContent = dois(v[i]);
+  }
+  atualizar();
+  setInterval(atualizar, 1000);
+})();`;
+
+/** JSON-LD só com ASCII: no <script> entidade HTML não vale, então acento vira \\uXXXX. */
+const jsonLd = obj => `<script type="application/ld+json">${JSON.stringify(obj)
+  .replace(/[^\x00-\x7f]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'))
+  .replace(/</g, '\\u003c')}</script>`;
+
 function documento(nome, s) {
   const lp = lerConteudo(nome);
   const t = tema();
-  const wppLp = linkWpp(s, lp.hero.whatsapp);
+  const wppLp = linkWpp(s, (lp.artigo || lp.hero).whatsapp);
+  const a = lp.artigo;
+  const extras = [
+    lp.noindex ? '<meta name="robots" content="noindex">' : '',
+    a ? jsonLd({
+      '@context': 'https://schema.org', '@type': 'Article',
+      headline: a.titulo, description: a.resumo, datePublished: a.data,
+      author: { '@type': 'Organization', name: 'Atacado Polvo' },
+      publisher: { '@type': 'Organization', name: 'Atacado Polvo' }
+    }) : ''
+  ].filter(Boolean).map(x => x + '\n').join('');
 
   const html = `<!doctype html>
 <html lang="pt-br">
@@ -332,7 +419,7 @@ function documento(nome, s) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(lp.titulo)}</title>
 <meta name="description" content="${esc(lp.descricao)}">
-<meta name="theme-color" content="#7b2fe3">
+${extras}<meta name="theme-color" content="#7b2fe3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
@@ -349,7 +436,7 @@ ${corpoDaLp(lp, wppLp)}
 ${rodape(s, t)}
 <a class="polvo-wpp-fab" href="${linkWpp(s, 'Olá! Vim pela loja e gostaria de ajuda.')}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">${ICONE.wpp}</a>
 <script>
-${SCRIPT}
+${SCRIPT}${lp.hero && lp.hero.contagem ? '\n' + SCRIPT_CONTAGEM : ''}
 </script>
 </body>
 </html>
