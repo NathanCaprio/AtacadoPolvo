@@ -852,6 +852,30 @@ h1, h2, h3,
   background: var(--polvo-surface-2);
 }
 
+/* "Enviar pelo WhatsApp": segunda opção, abaixo do "Finalizar pedido". */
+.cart-sidebar .polvo-cart-wpp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  margin-top: 10px;
+  border: 1.5px solid var(--polvo-ok);
+  border-radius: 999px;
+  background: #fff;
+  color: #198f45;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.cart-sidebar .polvo-cart-wpp:hover {
+  background: var(--polvo-ok);
+  color: #fff;
+}
+
+.cart-sidebar .polvo-cart-wpp svg { width: 20px; height: 20px; }
+
 /* ---- 7. Movimento reduzido --------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {

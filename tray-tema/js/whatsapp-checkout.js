@@ -1,66 +1,51 @@
- /**
- * Redireciona o "Fechar pedido" do sidecart para o WhatsApp com os itens do carrinho,
- * em vez de seguir para o checkout nativo da Tray.
+/**
+ * Atacado Polvo: botão "Enviar pelo WhatsApp" do carrinho lateral (snippets/sidecart.html).
+ * Monta a mensagem com os itens da gaveta e abre o WhatsApp da loja; o "Finalizar pedido"
+ * continua indo para o checkout da Tray. Acento no código vai como %XX: a Tray serve o JS sem
+ * UTF-8 e "Olá" literal chega como "OlÃ¡".
  */
 (function () {
-  function onlyDigits(value) {
-    return (value || '').replace(/\D/g, '');
+  function texto(el) {
+    return el ? el.textContent.replace(/\s+/g, ' ').trim() : '';
   }
 
-  function buildOrderMessage() {
-    var lines = ['Olá! Gostaria de fechar o pedido abaixo:', ''];
-    var items = document.querySelectorAll('#sidecart .box-cart');
+  function montarMensagem() {
+    var linhas = [decodeURIComponent('Ol%C3%A1! Gostaria de fazer o pedido abaixo:'), ''];
+    var itens = document.querySelectorAll('#sidecart .box-cart');
 
-    items.forEach(function (item, index) {
-      var nameEl = item.querySelector('.info-product a');
-      var qtyEl = item.querySelector('.info-product .qnt');
-      var priceEl = item.querySelector('.info-product .price');
-      var variantsEl = item.querySelector('.info-product .variants');
+    itens.forEach(function (item) {
+      var nome = texto(item.querySelector('.info-product .name')) || 'Produto';
+      var variacao = texto(item.querySelector('.info-product .variants'));
+      var qtd = texto(item.querySelector('.info-product .quantity-value')) || '1';
+      var preco = texto(item.querySelector('.info-product .line-down .price'));
 
-      var name = nameEl ? nameEl.textContent.trim() : 'Produto';
-      var qty = qtyEl ? qtyEl.textContent.trim() : '';
-      var price = priceEl ? priceEl.textContent.trim() : '';
-      var variants = variantsEl ? variantsEl.textContent.trim() : '';
-
-      var line = (index + 1) + '. ' + name;
-      if (variants) line += ' (' + variants + ')';
-      if (qty) line += ' - ' + qty;
-      if (price) line += ' - ' + price;
-
-      lines.push(line);
+      var linha = '- ' + qtd + 'x ' + nome;
+      if (variacao) linha += ' (' + variacao + ')';
+      if (preco) linha += decodeURIComponent(' %E2%80%94 ') + preco + ' cada';
+      linhas.push(linha);
     });
 
-    var subtotalEl = document.querySelector('#sidecart .footer-cart .text-info .value');
-    if (subtotalEl && subtotalEl.textContent.trim()) {
-      lines.push('');
-      lines.push('Subtotal: ' + subtotalEl.textContent.trim());
+    var subtotal = texto(document.querySelector('#sidecart .footer-cart .total .value'));
+    if (subtotal) {
+      linhas.push('');
+      linhas.push('Subtotal: ' + subtotal);
     }
 
-    return lines.join('\n');
+    return linhas.join('\n');
   }
 
-  function handleCheckoutClick(event) {
-    var trigger = event.target.closest('#sidecart .footer-cart a.buy');
-    if (!trigger) return;
+  document.addEventListener('click', function (event) {
+    var botao = event.target.closest && event.target.closest('#sidecart .polvo-cart-wpp');
+    if (!botao) return;
 
-    // Dentro do editor de temas o clique deve abrir o modal de preview, não redirecionar.
-    if (trigger.dataset.openModal === 'editor') return;
+    // No editor de temas o clique abre o modal de pré-visualização.
+    if (botao.dataset.openModal === 'editor') return;
 
-    var numberEl = document.querySelector('.whatsapp-checkout-number');
-    var number = numberEl ? onlyDigits(numberEl.dataset.number) : '';
-
-    // Sem WhatsApp cadastrado na loja, mantém o link original (checkout nativo).
-    if (!number) return;
-
-    var items = document.querySelectorAll('#sidecart .box-cart');
-    if (!items.length) return;
+    // Carrinho vazio: segue o link puro (conversa sem mensagem).
+    if (!document.querySelector('#sidecart .box-cart')) return;
 
     event.preventDefault();
-
-    var message = buildOrderMessage();
-    var url = 'https://wa.me/55' + number + '?text=' + encodeURIComponent(message);
-    window.location.href = url;
-  }
-
-  document.addEventListener('click', handleCheckoutClick);
+    var url = 'https://wa.me/' + botao.dataset.number + '?text=' + encodeURIComponent(montarMensagem());
+    window.open(url, '_blank', 'noopener');
+  });
 })();

@@ -5,10 +5,9 @@
 <script src="{{ asset('js/vendor/js.cookie.min.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="{{ asset('js/sidecart.js') }}"></script>
-{# Atacado Polvo: 'Finalizar pedido' do carrinho vai para o checkout da Tray (a loja vende com preço).
-   O whatsapp-checkout.js (veio do tema publicado) trocava o checkout pelo WhatsApp; para religar,
-   voltar esta linha e o <span class="hidden whatsapp-checkout-number" data-number="{{ Translation('ag_telefone_3') }}"> acima.
-<script src="{{ asset('js/whatsapp-checkout.js') }}"></script> #}
+{# Atacado Polvo: 'Finalizar pedido' do carrinho vai para o checkout da Tray (a loja vende com preço);
+   o botão 'Enviar pelo WhatsApp' ao lado manda os itens pelo WhatsApp da loja. #}
+<script src="{{ asset('js/whatsapp-checkout.js') }}"></script>
 
 {# Tray scripts #}
 {{ tray.scripts }}
