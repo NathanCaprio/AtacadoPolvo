@@ -5,19 +5,20 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Fluxo (sempre este)
 1. Editar aqui → `npm run tema-zip` (raiz) → gera `tray-tema.zip` (fora do git).
-2. Subir na **cópia de trabalho, tema 3560443** ("Cópia tema 3521907…", não publicada):
+2. Subir na **cópia de trabalho, tema 3521907** ("Cópia tema 3512519…", não publicada):
    painel → Aparência da loja (`/studio-app/?platform=tray`) → link "Editar HTML"
-   da cópia (`a[href="/studio-app/themes/3560443/code"]`) → Ações → Enviar tema →
+   da cópia (`a[href="/studio-app/themes/3521907/code"]`) → Ações → Enviar tema →
    Procurar arquivo → Enviar (o botão do diálogo; escolher o arquivo não envia). Resultado sai no console (Pusher): "Upload de Zip
    finalizado com sucesso." (~20 s).
-3. Conferir em `https://nathansilva.commercesuite.com.br?loja=1544153&opencode_theme=ab9ec62e-5e89-49cc-8f53-b2fff4524948`.
+3. Conferir em `https://nathansilva.commercesuite.com.br?loja=1544153&opencode_theme=6e4a6bd6-51ff-4231-93a0-a0050fe737fe`.
 4. Commit. **Publicar** a cópia só o usuário decide.
 
 - Tray **recusa ZIP parcial** ("estrutura inválida"): sempre o tema inteiro.
 - Envio só substitui arquivos de mesmo nome; arquivo apagado aqui continua lá.
-- Publicado (02/10/2026) = 3521907, a cópia anterior; publicado não tem "Editar HTML", então correção
-  vai na 3560443 e só entra no ar quando o usuário publicar. Ao publicar, a Tray cria cópia nova: atualizar
-  o código e o `opencode_theme` acima. "Genesis" (3512519) é o tema antigo. **"agrada dev" não é deste projeto — nunca mexer.**
+- Publicado (02/10/2026, 23:49) = 3560443; publicado não tem "Editar HTML", então correção vai na
+  3521907 e só entra no ar quando o usuário publicar. A 3521907 ficou **atrás** da publicada: o próximo
+  envio de ZIP (tema inteiro) já iguala. Ao publicar, as duas cópias trocam de papel: atualizar o código
+  e o `opencode_theme` acima (link "Pré-visualizar" do Editar HTML da cópia). "Genesis" (3512519) é o tema antigo. **"agrada dev" não é deste projeto — nunca mexer.**
 - Login no painel tem reCAPTCHA: o usuário entra na janela do Playwright.
 - Pelo editor web não dá para criar/apagar arquivos em `pages/`, `layouts/`, `configs/` (pelo ZIP dá para enviar).
 
@@ -85,11 +86,11 @@ JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linh
 `noindex: true` e `hero.contagem` (Black Friday). Teste: `server/tema-lp.test.js`.
 - Colar na Tray: servir `lp/dist` em 127.0.0.1:3078 e rodar `lp/colar-na-tray.js`
   (Playwright `browser_run_code_unsafe`); ele cola e salva **sem ativar**.
-- Criadas (todas **Inativas**): condominios=1, escolas=3, recorrencia=5,
+- Criadas (todas **ativas** desde 02/10/2026, menos a blackfriday): condominios=1, escolas=3, recorrencia=5,
   restaurantes=7, hoteis=9, pets=11, blog=13, blackfriday=15, blog-quanto-material-limpeza-por-m2=17,
   blog-material-limpeza-condominio-checklist-mensal=19, blog-como-escolher-fornecedor-material-limpeza-atacado=21,
   blog-diferenca-produto-limpeza-profissional-domestico=23. Prévia: `/<slug>?preview=1&v=<qualquer>` (a LP sai com cache de 4 h; sem o `&v=` o navegador mostra a versão velha).
-- Ativar (chave "Ativo" no editor da LP) = decisão do usuário, junto com publicar o tema
+- Ativar = checkbox "Ativo" do editor da LP (`.sidebar-edit-blank__section-status`, clicar no `label`) + Salvar. Decisão do usuário
   (os cards da home já apontam para `/condominios` e `/escolas`).
 - Redirecionar quando o domínio virar (301 no painel da Tray): `/condominios.html`→`/condominios`,
   `/escolas.html`→`/escolas`, `/recorrencia.html`→`/recorrencia`, `/restaurantes.html`→`/restaurantes`,
@@ -124,6 +125,7 @@ Lista do que falta para publicar (tema x painel): `tray-tema/PUBLICAR.md`.
 - [x] Página de produto: preço em destaque (WhatsApp é nativo da Tray, ver acima).
 - [x] Links dos cards de segmento → LPs.
 - [x] LPs de SEO criadas no criador da Tray (inativas).
-- [ ] Usuário: ativar LPs + publicar tema + redirecionamentos 301 (lista acima).
+- [x] LPs ativas e tema publicado (02/10/2026). Black Friday inativa até perto da campanha.
+- [ ] Usuário: redirecionamentos 301 quando o domínio virar (lista acima).
 - [x] Blog (índice + 4 artigos) e Black Friday como LPs (inativas); "Blog" no rodapé (Navegação).
 - [ ] Calculadoras: sem equivalente (desligadas também no site antigo).

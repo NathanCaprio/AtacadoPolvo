@@ -38,11 +38,11 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 
 ### No dia
 - [x] Publicar a cópia 3521907 (publicada em 02/10/2026).
-- [ ] Publicar a cópia 3560443: carrinho lateral com - / + e a lixeira consertada. **Urgente:**
-      na 3521907 publicada a lixeira da gaveta não remove ao clicar no ícone.
-- [ ] Ativar as LPs: condominios, escolas, recorrencia, restaurantes, hoteis, pets, **blog** e os
-      4 artigos (blog-...). A **blackfriday** (noindex, contagem até 27/11) só perto da campanha. Até lá,
-      "Condomínios" e "Escolas" do menu e os links "Para…" do rodapé caem em "não encontrado".
+- [x] Publicar a cópia 3560443 (02/10/2026, 23:49): carrinho com - / + e lixeira consertada
+      (conferido na loja publicada, em sessão anônima).
+- [x] LPs ativas (02/10/2026): condominios, escolas, recorrencia, restaurantes, hoteis, pets, blog e
+      os 4 artigos; todas respondem 200 em sessão anônima.
+- [ ] Ativar a **blackfriday** (noindex, contagem até 27/11) perto da campanha.
 - [ ] Domínio próprio e os redirecionamentos 301 (lista em `tray-tema/CLAUDE.md`).
 - [ ] Conferir numa **janela anônima**. A Tray manda o navegador guardar as páginas por 4 h,
       então quem já abriu uma página pode continuar vendo a versão velha por um tempo.
@@ -58,8 +58,8 @@ Corrigido nesta rodada (já na cópia 3521907):
 - [x] Newsletter do rodapé oculta (`show_newsletter` no `settings.json`; volta pelo painel).
 - [x] LPs com o cabeçalho, o rodapé e o botão flutuante novos (recoladas, inativas).
 
-Na cópia 3560443 (falta **enviar o ZIP** e publicar):
-- [ ] Link "Blog" na coluna Navegação do rodapé (`npm run tema-zip` e enviar; as LPs já têm).
+Publicado na 3560443:
+- [x] Link "Blog" na coluna Navegação do rodapé (`npm run tema-zip` e enviar; as LPs já têm).
 - [x] Carrinho lateral: quantidade com - e + (como no tema Roupas Térmicas), aviso quando falta
       estoque, lixeira removendo com um clique só; visual da gaveta de orçamento do site antigo.
 
