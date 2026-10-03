@@ -768,7 +768,91 @@ h1, h2, h3,
   .polvo-wpp-fab::after { animation: none; }
 }
 
-/* ---- 6. Movimento reduzido --------------------------------------------- */
+/* ---- 6. Carrinho lateral ------------------------------------------------ */
+/* Gaveta da Tray (snippets/sidecart.html + js/sidecart.js) com a cara da
+   gaveta de orçamento do site antigo: itens separados por linha e
+   quantidade em pílula (- 3 +). */
+
+.cart-sidebar { max-width: 420px; }
+
+.header-cart {
+  font-family: var(--polvo-font-display);
+  color: var(--polvo-ink);
+  text-transform: none;
+}
+
+.cart-sidebar .item {
+  margin-bottom: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--polvo-line);
+}
+
+.box-cart .box-image {
+  border-radius: var(--polvo-r-md);
+  background: var(--polvo-surface-2);
+  overflow: hidden;
+}
+
+.box-cart .info-product a.name {
+  font-family: var(--polvo-font-display);
+  color: var(--polvo-ink);
+}
+
+.box-cart .info-product .line-down { align-items: center; }
+
+.box-cart .info-product .remove { opacity: 0.55; }
+.box-cart .info-product .remove:hover { opacity: 1; color: var(--polvo-danger); }
+
+.box-cart .quantity-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-right: 10px;
+  padding: 2px;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
+}
+
+.box-cart .quantity-button {
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--polvo-ink-2);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.box-cart .quantity-button:hover:not(:disabled) {
+  background: var(--polvo-surface-2);
+  color: var(--polvo-brand);
+}
+
+.box-cart .quantity-button:disabled { cursor: not-allowed; opacity: 0.35; }
+
+.box-cart .quantity-value {
+  min-width: 26px;
+  text-align: center;
+  font-size: 0.87rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.box-cart .info-product .errorStock { color: var(--polvo-danger); }
+.box-cart .info-product .errorStock:not(:empty) { margin-top: 6px; }
+
+.cart-sidebar .footer-cart {
+  margin: 1rem -2rem -2rem;
+  padding: 18px 2rem 2rem;
+  border-top: 1px solid var(--polvo-line);
+  background: var(--polvo-surface-2);
+}
+
+/* ---- 7. Movimento reduzido --------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   .product,

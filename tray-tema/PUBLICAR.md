@@ -37,7 +37,9 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       pequeno. Dá para acertar a cor e o logo nas configurações do checkout.
 
 ### No dia
-- [ ] Publicar a cópia 3521907.
+- [x] Publicar a cópia 3521907 (publicada em 02/10/2026).
+- [ ] Publicar a cópia 3560443: carrinho lateral com - / + e a lixeira consertada. **Urgente:**
+      na 3521907 publicada a lixeira da gaveta não remove ao clicar no ícone.
 - [ ] Ativar as 6 LPs (condominios, escolas, recorrencia, restaurantes, hoteis, pets). Até lá,
       "Condomínios" e "Escolas" do menu e os links "Para…" do rodapé caem em "não encontrado".
 - [ ] Domínio próprio e os redirecionamentos 301 (lista em `tray-tema/CLAUDE.md`).
@@ -54,6 +56,10 @@ Corrigido nesta rodada (já na cópia 3521907):
       `elements/scripts.html` e dá para religar se você quiser pedido pelo WhatsApp.
 - [x] Newsletter do rodapé oculta (`show_newsletter` no `settings.json`; volta pelo painel).
 - [x] LPs com o cabeçalho, o rodapé e o botão flutuante novos (recoladas, inativas).
+
+Na cópia 3560443 (falta publicar):
+- [x] Carrinho lateral: quantidade com - e + (como no tema Roupas Térmicas), aviso quando falta
+      estoque, lixeira removendo com um clique só; visual da gaveta de orçamento do site antigo.
 
 Pendente, depende de você:
 - [ ] CNPJ no rodapé, se for pelo tema (ver acima).
