@@ -115,6 +115,7 @@ JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linh
 
 ## Feito / próximo
 Lista do que falta para publicar (tema x painel): `tray-tema/PUBLICAR.md`.
+Cadastro de produtos na Tray (30 feitos à mão, categorias, cuidados com o ERP, plano de importar por planilha): `tray-tema/PRODUTOS.md`.
 - Carrinho: "Finalizar pedido" vai para o checkout da Tray; abaixo dele, "Enviar pelo WhatsApp" (`.polvo-cart-wpp` em `sidecart.html`, número `ag_telefone_3`) manda os itens pelo WhatsApp da loja: mensagem em `js/whatsapp-checkout.js`, CSS em `polvo.css` seção 6. Newsletter do rodapé oculta (`show_newsletter: false`).
 
 - [x] Paleta, Inter + Montserrat, cabeçalho, rodapé escuro, cartão de produto, selos.
