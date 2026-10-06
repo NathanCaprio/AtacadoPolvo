@@ -559,6 +559,27 @@ h1, h2, h3,
   color: #fff;
 }
 
+/* Busca/categorias: 4 por fileira com a barra de filtros ao lado (Tray: 3). Até 1180px fica o
+   da Tray (3, e 2 até 1024px), senão o cartão aperta demais o botão. */
+@media (min-width: 1181px) {
+  .catalog-cols .sidebar-category + .col-content .showcase-catalog .list-product .item {
+    width: 25%;
+  }
+
+  /* cartão de ~230px: "Adicionar ao carrinho" em 16px encostava nas bordas do botão */
+  .catalog-cols .sidebar-category + .col-content .showcase-catalog .product .actions {
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
+  }
+
+  .catalog-cols .sidebar-category + .col-content .showcase-catalog .product-button {
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    height: 44px;
+  }
+}
+
 /* ---- 5. Rodapé escuro --------------------------------------------------- */
 
 .footer {
