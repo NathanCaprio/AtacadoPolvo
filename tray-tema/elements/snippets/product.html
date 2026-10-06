@@ -99,9 +99,17 @@
 
     <div class="actions">
         {% if effectiveAvailable and (effectiveStock > 0 or settings.without_stock_sale) and not product.upon_request %}
-            <a class="product-button" href="{{ product.link }}">
-                {{ settings.configs.buy_button_text_listing }}
-            </a>
+            {# Atacado Polvo: sem variação (ou com a variação já escolhida na vitrine) adiciona direto e abre
+               o carrinho lateral (js/polvo-adicionar.js); com variação a escolher, vai para a página do produto. #}
+            {% if not product.has_variation or variant %}
+                <a class="product-button polvo-adicionar" href="{{ product.link }}" data-produto="{{ product.id }}" {% if variant %}data-variante="{{ variant.id }}"{% endif %}>
+                    Adicionar ao carrinho
+                </a>
+            {% else %}
+                <a class="product-button" href="{{ product.link }}">
+                    Escolher opção
+                </a>
+            {% endif %}
         {% endif %}
     </div>
 

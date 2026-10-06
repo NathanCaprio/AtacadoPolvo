@@ -493,6 +493,12 @@ h1, h2, h3,
 
 /* ---- 4. Cartão de produto ---------------------------------------------- */
 
+/* "Adicionar ao carrinho" enquanto a API responde (js/polvo-adicionar.js) */
+.product-button.is-carregando {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .product {
   border: 1px solid var(--polvo-line);
   border-radius: var(--polvo-r-md);
