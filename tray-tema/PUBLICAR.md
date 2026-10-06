@@ -43,7 +43,12 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [x] LPs ativas (02/10/2026): condominios, escolas, recorrencia, restaurantes, hoteis, pets, blog e
       os 4 artigos; todas respondem 200 em sessão anônima.
 - [ ] Ativar a **blackfriday** (noindex, contagem até 27/11) perto da campanha.
-- [ ] Domínio próprio e os redirecionamentos 301 (lista em `tray-tema/CLAUDE.md`).
+- [x] Domínio próprio (06/10/2026): www.atacadopolvo.com.br com SSL (até 04/01/2027); sem www e http
+      dão 301 para https://www; canonical já aponta para o domínio novo.
+- [ ] Redirecionamentos 301 (lista em `tray-tema/CLAUDE.md`): hoje `/condominios.html` etc. dão 302
+      para `/sem-resultados-na-busca`.
+- [ ] Sitemap: o da Tray ainda lista `nathansilva.commercesuite.com.br`; conferir se regenera e
+      depois enviar `https://www.atacadopolvo.com.br/sitemap.xml` no Google Search Console.
 - [ ] Conferir numa **janela anônima**. A Tray manda o navegador guardar as páginas por 4 h,
       então quem já abriu uma página pode continuar vendo a versão velha por um tempo.
 
