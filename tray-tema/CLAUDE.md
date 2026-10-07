@@ -17,7 +17,7 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 - Envio só substitui arquivos de mesmo nome; arquivo apagado aqui continua lá.
 - Enviar ZIP sem abrir a janela de arquivo: `page.locator('input[type=file]').last().setInputFiles(...)` e depois o botão "Enviar" do diálogo.
 - Na lista de temas, conferir **qual está publicado** antes de clicar em "Publicar" (o card do topo é o publicado).
-- Publicado (07/10/2026) = 3560443. **Atenção:** o ZIP enviado pelo /code do tema publicado entra no ar na hora (foi o que aconteceu em 06/10); correção vai na
+- Publicado (07/10/2026) = 3560443. **Não é possível editar um tema que já está publicado** (o menu dele não tem "Editar HTML" e o /code responde "Tema está publicado"). É necessário **duplicar o tema publicado** (Mais opções → Duplicar tema): a cópia exibe a opção **Editar HTML**, e depois sobe o ZIP de novo nela e publica. Por isso a correção vai na
   3521907 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
   (no domínio antigo dá "unauthorized"). Ao publicar, as duas cópias trocam de papel: atualizar o código
   e o `opencode_theme` acima (link "Pré-visualizar" do Editar HTML da cópia). "Genesis" (3512519) é o tema antigo. **"agrada dev" não é deste projeto — nunca mexer.**
