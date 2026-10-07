@@ -42,6 +42,7 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 | Cartão de produto / preço / selos | `elements/snippets/product.html`, `product-price.html`, `product-tags.html` |
 | Página de produto | `pages/product.html`, `elements/product-main.html` |
 | Carrinho lateral (gaveta) | `snippets/sidecart.html` + `js/sidecart.js` (minificado, da Tray; nosso: botões -/+ em `updateProductQuantity`, lixeira por `closest()`, porque o `Ne()` do tema só pega clique no próprio elemento) + `polvo.css` seção 6. Kits e barra de frete grátis do tema Roupas Térmicas **não** vieram |
+| Link de carrinho (`/?carrinho=produto:qtd,produto-variacao:qtd`) | `js/polvo-carrinho-link.js`: botão discreto "Copiar link do carrinho" na gaveta (todos veem; no celular abre o compartilhar) e, ao abrir o link, adiciona pela `/web_api/cart/` só o que falta até a qtd do link (reabrir não dobra), limpa a URL e abre a gaveta. Preço = o da loja na hora; kits/compre junto não entram |
 
 ## Seções próprias da home (editáveis no painel)
 `home.polvo_hero` (destaque + números), `home.polvo_segments` (cards com ícone

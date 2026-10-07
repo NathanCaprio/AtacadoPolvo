@@ -903,6 +903,51 @@ h1, h2, h3,
 
 .cart-sidebar .polvo-cart-wpp svg { width: 20px; height: 20px; }
 
+/* Link do carrinho: discreto, só texto pequeno sob os botões */
+.cart-sidebar .polvo-cart-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: #6b7280;
+  font: inherit;
+  font-size: .8125rem;
+  cursor: pointer;
+}
+
+.cart-sidebar .polvo-cart-link:hover span { text-decoration: underline; }
+.cart-sidebar .polvo-cart-link svg { width: 14px; height: 14px; }
+.cart-sidebar .polvo-cart-link.is-carregando { opacity: .6; cursor: wait; }
+.cart-sidebar .content-cart.empty ~ .footer-cart .polvo-cart-link { display: none; }
+
+.polvo-cart-copia { position: fixed; top: -1000px; opacity: 0; }
+
+/* Aviso de quem abriu um link de carrinho */
+.polvo-cart-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 100000;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: #1f2937;
+  color: #fff;
+  font-size: .9375rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+
+.polvo-cart-toast.is-visivel { opacity: 1; transform: translate(-50%, 0); }
+
 /* ---- 7. Movimento reduzido --------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
