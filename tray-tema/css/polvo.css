@@ -674,6 +674,13 @@ h1, h2, h3,
   padding: 4px 6px;
 }
 
+/* Selo do Google: o tema sobe o ícone (margin-top -1.5rem) e ele ficava no topo da caixa.
+   O glifo tem 80px com folga igual em cima e embaixo: -12px nos dois lados centraliza
+   e deixa a caixa com a altura do "Loja protegida". */
+.footer .google-seal a { display: flex; align-items: center; }
+
+.footer .google-seal span { margin: -12px 0; }
+
 .footer .copy {
   color: rgba(255, 255, 255, 0.6);
   border-top: 1px solid rgba(255, 255, 255, 0.1);

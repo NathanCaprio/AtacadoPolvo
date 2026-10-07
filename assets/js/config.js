@@ -46,7 +46,7 @@ window.SITE = {
   uf2: 'RS',
 
   // --- Institucional --------------------------------------------------------
-  razaoSocial: 'Nickolas Antonio Costa Caprio da Silva', // nome fantasia: Atacado da Limpeza Polvo
+  razaoSocial: 'Atacado da Limpeza Polvo', // aparece no rodapé; razão social (nome do titular) fica fora do site
   cnpj: '37.418.777/0001-80',
   fundacao: 2020,                          // CNPJ aberto em 15/06/2020
 
