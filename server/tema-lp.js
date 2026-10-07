@@ -412,6 +412,13 @@ function documento(nome, s) {
     }) : ''
   ].filter(Boolean).map(x => x + '\n').join('');
 
+  // Favicon embutido em data URI: a LP é servida sozinha e o caminho dos arquivos do tema muda a cada publicação.
+  function favicons() {
+    const png = (n) => 'data:image/png;base64,' + fs.readFileSync(path.join(RAIZ, 'tray-tema', 'img', 'polvo', n)).toString('base64');
+    return `<link rel="icon" type="image/png" sizes="48x48" href="${png('favicon-48.png')}">
+<link rel="apple-touch-icon" href="${png('apple-touch-icon.png')}">`;
+  }
+
   const html = `<!doctype html>
 <html lang="pt-br">
 <head>
@@ -420,6 +427,7 @@ function documento(nome, s) {
 <title>${esc(lp.titulo)}</title>
 <meta name="description" content="${esc(lp.descricao)}">
 ${extras}<meta name="theme-color" content="#7b2fe3">
+${favicons()}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
