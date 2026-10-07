@@ -12,6 +12,8 @@
   var MAX_ITENS = 60;
   var MAX_QTD = 9999;
 
+  var t = decodeURIComponent;
+
   function sessao() {
     return document.documentElement.getAttribute('data-session');
   }
@@ -131,7 +133,7 @@
       })
       .catch(function (erro) {
         console.error('Erro ao gerar link do carrinho:', erro);
-        voltar('Não deu para copiar');
+        voltar(t('N%C3%A3o deu para copiar'));
       })
       .then(function () { botao.classList.remove('is-carregando'); });
   });
@@ -190,10 +192,10 @@
       .then(function () {
         abrirCarrinho();
         if (falhas) {
-          avisar(falhas + (falhas > 1 ? ' itens do link não puderam ser adicionados'
-            : ' item do link não pôde ser adicionado') + ' (sem estoque ou indisponível).', 7000);
+          avisar(falhas + (falhas > 1 ? t(' itens do link n%C3%A3o puderam ser adicionados')
+            : t(' item do link n%C3%A3o p%C3%B4de ser adicionado')) + t(' (sem estoque ou indispon%C3%ADvel).'), 7000);
         } else {
-          avisar('Pronto! Os itens estão no seu carrinho.', 3500);
+          avisar(t('Pronto! Os itens est%C3%A3o no seu carrinho.'), 3500);
         }
       });
   }
