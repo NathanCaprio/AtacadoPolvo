@@ -452,12 +452,6 @@
   .polvo-marcas__lista img { height: 34px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .polvo-marcas--ativo .polvo-marcas__trilho { width: auto; justify-content: center; }
-  .polvo-marcas--ativo .polvo-marcas__lista { flex-wrap: wrap; justify-content: center; row-gap: 20px; }
-  .polvo-marcas--ativo .polvo-marcas__lista[aria-hidden="true"] { display: none; }
-}
-
 /* ---- Revelação ao rolar (polvo-reveal.html marca os alvos) -------------- */
 
 [data-polvo-reveal] {
@@ -1207,10 +1201,6 @@
   .polvo-404__busca .polvo-btn { padding: 0 20px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .polvo-404__mascote { animation: none; }
-}
-
 /* ---- Celular / tablet --------------------------------------------------- */
 
 @media (max-width: 991px) {
@@ -1235,6 +1225,6 @@
 @media (prefers-reduced-motion: reduce) {
   .polvo-btn, .polvo-card, .polvo-card__link svg { transition: none; }
   .polvo-btn:hover, .polvo-card:hover { transform: none; }
-  .polvo-hero__mancha, .polvo-hero__arte img { animation: none; }
-  .polvo-bolha { display: none; }
+  /* Mascote, mancha, bolhas e faixa de marcas animam mesmo com "reduzir movimento":
+     o Windows liga isso ao desligar "Efeitos de animação" e o site parecia quebrado. */
 }
