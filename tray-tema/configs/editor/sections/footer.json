@@ -193,7 +193,7 @@
       "type": "text",
       "label": "Linha final (depois de © ano)",
       "maxLength": 120,
-      "default": "Atacado Polvo — CNPJ 00.000.000/0001-00",
+      "default": "Atacado da Limpeza Polvo — Nickolas Antonio Costa Caprio da Silva — CNPJ 37.418.777/0001-80",
       "info": "Vale só se a mensagem do rodapé (dados da loja) estiver vazia."
     }
   ]

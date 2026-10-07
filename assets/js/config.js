@@ -46,9 +46,9 @@ window.SITE = {
   uf2: 'RS',
 
   // --- Institucional --------------------------------------------------------
-  razaoSocial: 'Atacado Polvo',            // CONFERIR (razão social completa)
-  cnpj: '00.000.000/0001-00',              // CONFERIR
-  fundacao: 2015,                          // CONFERIR
+  razaoSocial: 'Nickolas Antonio Costa Caprio da Silva', // nome fantasia: Atacado da Limpeza Polvo
+  cnpj: '37.418.777/0001-80',
+  fundacao: 2015,                          // CONFERIR: CNPJ aberto em 15/06/2020
 
   // --- Horários -------------------------------------------------------------
   horarioSemana: 'Segunda a sexta, 08h às 18h',

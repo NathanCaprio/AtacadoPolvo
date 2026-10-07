@@ -14,7 +14,7 @@
 // - Monaco: colar via área de transferência (ClipboardEvent sintético não funciona).
 // IDS: id da LP no criador (null = criar).
 async (page) => {
-  const BASE = 'https://nathansilva.commercesuite.com.br';
+  const BASE = 'https://www.atacadopolvo.com.br';
   const LPS = [
     ['condominios', 'Condomínios', 1], ['escolas', 'Escolas', 3], ['recorrencia', 'Recorrência', 5],
     ['restaurantes', 'Restaurantes', 7], ['hoteis', 'Hotéis e pousadas', 9], ['pets', 'Pets', 11],

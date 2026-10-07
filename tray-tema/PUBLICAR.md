@@ -30,8 +30,7 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       devoluções, Segurança). Ainda estão com o texto padrão da Tray; o de Envio, por exemplo,
       promete "em até 2 dias úteis". O título "Seguranca" está sem cedilha.
 - [ ] **Política de privacidade** nova (a do site antigo descreve o servidor antigo, não serve).
-- [ ] **CNPJ do rodapé.** Hoje aparece o provisório "CNPJ 00.000.000/0001-00". Preencha a
-      "mensagem do rodapé" no painel ou me passe o CNPJ que eu ponho no tema.
+- [x] **CNPJ do rodapé** (06/10/2026): 37.418.777/0001-80 com a razão social, no tema e nas LPs.
 - [ ] **FAQ e depoimentos.** Revisar as respostas do FAQ da home e confirmar os depoimentos.
 - [ ] **Checkout (opcional).** O carrinho e o checkout da Tray usam roxo-escuro e o logo
       pequeno. Dá para acertar a cor e o logo nas configurações do checkout.
