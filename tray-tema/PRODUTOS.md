@@ -94,25 +94,32 @@ código): `.playwright-mcp/vincular.js` (fora do git).
   dígitos, "579" → 5,79); categoria = "Adicionar categoria principal" →
   Selecionar (ou "+ Adicionar nova categoria").
 
-## Jeito mais fácil para muitos produtos: importar planilha
+## Feito em 07/10/2026: +469 por planilha (loja com 500, o limite do plano), todos vinculados
 
-O painel tem **Produtos → Lista → Mais opções → "Importar produtos do Excel"**
-(também "Exportar produtos").
+- **Seleção** (`ferramentas/planilha-produtos.js`): ativos no ERP, fora os 31
+  que já existiam; prioridade com estoque **e** foto, depois proporcional ao
+  tamanho de cada categoria e, dentro dela, maior valor em estoque.
+- **Dados:** preço, estoque, marca e NCM vieram da resposta de
+  `Produtos/ListMercadoriasToSelect` que a própria tela de vínculo do ERP já
+  carrega (lida pelo navegador, sem chamada nova ao ERP). Nome = `nomeSite`
+  ou `produtos_site.nome`; categoria = grupo do site (`GRUPOS`).
+  Referência = código do ERP; EAN só quando o código é GTIN válido.
+- **Fotos:** do ERP (S3) ou de `assets/img/produtos/` pelo endereço
+  `raw.githubusercontent.com/NathanCaprio/AtacadoPolvo/main/...` (repo
+  público). A Tray copia para o CDN dela. Foto do ERP em WebP fica de fora.
+- **Peso/medidas estimados pelo nome** (5L → ~5,4 kg etc.; sem volume = 300 g).
+- **Importação:** Importar produtos do Excel → modelo "Polvo - ERP" (colunas
+  A–P na ordem da planilha, identificador = Referência, "Nenhuma ação" para os
+  que não estão no arquivo). 459 entraram de primeira; 10 da categoria nova
+  "Embalagens" falharam ("Unexpected api response") e entraram no reenvio.
+- **Vínculo:** `ferramentas/vincular-erp.js` (Playwright, na tela Lojas
+  Virtuais → Tray → Produtos). Códigos curtos (11, 964, 990, 9002) não acham
+  pela busca: buscar pelo nome do ERP e conferir o código no resultado.
+  Produto com "mensagem de alerta" no ERP abre um aviso (Ok) antes de salvar.
+- **Fora (558):** lista em `produtos-fora-da-tray.csv` na raiz (fora do git,
+  tem preços). 281 sem foto (quase todos os Sacos de Lixo), 156 couberam mas
+  não entraram pelo limite, 77 sem estoque, 34 sem estoque e sem foto, 10 com
+  foto WebP.
 
-Plano:
-1. Baixar o modelo de planilha na tela de importação da Tray (colunas exatas).
-2. Preencher a partir de `dados/polvo.db` (1.058 produtos): nome do site,
-   código de barras como Referência/EAN, categoria (grupo do site), descrição
-   de `produtos_site` se houver.
-3. **Preço e estoque:** a base local não tem preço. Usar o botão **"exportar"**
-   da lista de Produtos do Empresarius (um clique, só leitura, traz tudo) em
-   vez de abrir ficha por ficha.
-4. **Fotos:** a planilha costuma pedir o *endereço* da imagem. As do ERP têm
-   endereço público (S3); as de `assets/img/produtos/` só depois que tiverem
-   endereço público.
-5. Revisar a planilha e subir na Tray.
-
-**Antes de importar em massa, confirmar com o suporte da Tray/Empresarius:**
-- se a integração nativa casa os produtos por Referência/EAN;
-- se a própria integração envia os produtos do ERP para a Tray. Se enviar,
-  importar os 1.058 antes pode gerar **produtos duplicados**.
+Para crescer (plano maior): gerar de novo a planilha com `LIMITE_NOVOS`
+maior; quem já está na loja é atualizado (mesma Referência), não duplica.
