@@ -580,6 +580,55 @@ h1, h2, h3,
   }
 }
 
+/* Vitrine em carrossel: o swiper mede o slide pela largura do .swiper-container, mas o
+   .list-product tem margem -10px dos lados; tudo andava 10px e aparecia a beira do 5º cartão. */
+.list-slide .list-product.swiper-wrapper { margin-left: 0; margin-right: 0; }
+
+/* Setas das vitrines (js/polvo-setas.js). O .swiper-container tem 40px embaixo para as bolinhas. */
+.polvo-carrossel { position: relative; }
+
+.polvo-seta {
+  position: absolute;
+  top: calc(50% - 20px);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--polvo-line);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--polvo-shadow-md);
+  font-size: 14px;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color .2s, border-color .2s;
+}
+
+.polvo-seta .icon { color: var(--polvo-brand); }
+
+.polvo-seta:hover { background: var(--polvo-brand); border-color: var(--polvo-brand); }
+
+.polvo-seta:hover .icon { color: #fff; }
+
+.polvo-seta:focus-visible { outline: 2px solid var(--polvo-brand); outline-offset: 2px; }
+
+.polvo-seta--prev { left: -22px; }
+
+.polvo-seta--next { right: -22px; }
+
+/* Sem sobra fora do container: a seta encosta por dentro, em cima da beira do cartão. */
+@media (max-width: 1519px) {
+  .polvo-seta--prev { left: 0; }
+  .polvo-seta--next { right: 0; }
+}
+
+@media (max-width: 767px) {
+  .polvo-seta { width: 36px; height: 36px; font-size: 12px; }
+}
+
 /* ---- 5. Rodapé escuro --------------------------------------------------- */
 
 .footer {
