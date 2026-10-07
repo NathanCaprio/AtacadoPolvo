@@ -5,18 +5,20 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Fluxo (sempre este)
 1. Editar aqui → `npm run tema-zip` (raiz) → gera `tray-tema.zip` (fora do git).
-2. Subir na **cópia de trabalho, tema 3560443** ("Cópia tema 3521907…", não publicada):
+2. Subir na **cópia de trabalho, tema 3521907** ("Cópia tema 3512519…", não publicada; igualada à publicada em 06/10/2026):
    painel → Aparência da loja (`/studio-app/?platform=tray`) → link "Editar HTML"
-   da cópia (`a[href="/studio-app/themes/3560443/code"]`) → Ações → Enviar tema →
+   da cópia (`a[href="/studio-app/themes/3521907/code"]`) → Ações → Enviar tema →
    Procurar arquivo → Enviar (o botão do diálogo; escolher o arquivo não envia). Resultado sai no console (Pusher): "Upload de Zip
    finalizado com sucesso." (~20 s).
-3. Conferir em `https://www.atacadopolvo.com.br?loja=1544153&opencode_theme=ab9ec62e-5e89-49cc-8f53-b2fff4524948`.
+3. Conferir em `https://www.atacadopolvo.com.br?loja=1544153&opencode_theme=6e4a6bd6-51ff-4231-93a0-a0050fe737fe`.
 4. Commit. **Publicar** a cópia só o usuário decide.
 
 - Tray **recusa ZIP parcial** ("estrutura inválida"): sempre o tema inteiro.
 - Envio só substitui arquivos de mesmo nome; arquivo apagado aqui continua lá.
-- Publicado (06/10/2026, 20:37) = 3521907; publicado não tem "Editar HTML", então correção vai na
-  3560443 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
+- Enviar ZIP sem abrir a janela de arquivo: `page.locator('input[type=file]').last().setInputFiles(...)` e depois o botão "Enviar" do diálogo.
+- Na lista de temas, conferir **qual está publicado** antes de clicar em "Publicar" (o card do topo é o publicado).
+- Publicado (06/10/2026, 20:45) = 3560443. **Atenção:** o ZIP enviado pelo /code do tema publicado entra no ar na hora (foi o que aconteceu em 06/10); correção vai na
+  3521907 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
   (no domínio antigo dá "unauthorized"). Ao publicar, as duas cópias trocam de papel: atualizar o código
   e o `opencode_theme` acima (link "Pré-visualizar" do Editar HTML da cópia). "Genesis" (3512519) é o tema antigo. **"agrada dev" não é deste projeto — nunca mexer.**
 - Login no painel tem reCAPTCHA: o usuário entra na janela do Playwright.
