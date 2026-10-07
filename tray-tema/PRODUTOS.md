@@ -65,6 +65,16 @@ a categoria aparece gravada.
 | 7896540903214 | Gel Adesivo Sanitário Gota Limpa Lavanda - 7 Aplicações | Sanitários | 13,90 |
 | 7898586261365 | Escova de Chão 40cm Dalcin com Cabo | Vassouras, Rodos e Pás | 24,90 |
 
+## Feito em 07/10/2026: vínculo DE>PARA no Empresarius (31 de 31)
+
+Empresarius → Lojas Virtuais → Tray → Produtos → lápis ("vincular") de cada
+linha → "Produto no Empresarius" → pesquisar o **código de barras** → escolher →
+Salvar. Os 31 da Tray (os 30 acima + Água Sanitária 2L Atrius, 7898556040334)
+casaram 1 a 1 pelo código. A partir daqui a integração manda **preço e estoque
+do ERP** para a Tray e importa os pedidos da Tray para o ERP.
+Script usado (Playwright, só salva se a busca achar exatamente 1 produto com o
+código): `.playwright-mcp/vincular.js` (fora do git).
+
 ## Cuidados (aprendidos no cadastro)
 
 **Empresarius (só leitura):**
