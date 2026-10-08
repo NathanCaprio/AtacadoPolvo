@@ -48,12 +48,15 @@
         abrir(false);
     });
 
-    // Marca no menu a página atual (o menu personalizado da Tray não faz isso).
+    // Marca no menu a página atual (o menu personalizado da Tray não faz isso). Busca,
+    // categoria e produto marcam "Produtos" (o link da busca, /loja/busca.php?...).
     var aqui = location.pathname.replace(/\/+$/, '') || '/';
+    var catalogo = {{ ('catalog' in pages.current or 'search' in pages.current or 'product' in pages.current) ? 'true' : 'false' }};
     header.querySelectorAll('.nav .list > li > a').forEach(function (a) {
         var url = new URL(a.href, location.href);
         var caminho = url.pathname.replace(/\/+$/, '') || '/';
-        if (url.origin === location.origin && caminho === aqui && !url.search) a.setAttribute('aria-current', 'page');
+        if (url.origin !== location.origin) return;
+        if ((caminho === aqui && !url.search) || (catalogo && caminho === '/loja/busca.php')) a.setAttribute('aria-current', 'page');
     });
 })();
 </script>
