@@ -5,7 +5,7 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Fluxo (sempre este)
 1. Editar aqui → `npm run tema-zip` (raiz) → gera `tray-tema.zip` (fora do git).
-2. Subir na **cópia de trabalho, tema 3560443** ("Cópia tema 3521907…", não publicada; publicada é a 3564393 "Cópia tema 3560443…" desde 07/10/2026 22:44). Logo após publicar, a cópia de trabalho recebeu o mesmo ZIP (as duas iguais):
+2. Subir na **cópia de trabalho, tema 3560443** ("Cópia tema 3521907…", não publicada; publicada é a 3564393 "Cópia tema 3560443…" desde 07/10/2026 22:57). Logo após publicar, a cópia de trabalho recebeu o mesmo ZIP (as duas iguais):
    painel → Aparência da loja (`/studio-app/?platform=tray`) → link "Editar HTML"
    da cópia (`a[href="/studio-app/themes/3560443/code"]`) → Ações → Enviar tema →
    Procurar arquivo → Enviar (o botão do diálogo; escolher o arquivo não envia). Resultado sai no console (Pusher): "Upload de Zip
@@ -17,7 +17,7 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 - Envio só substitui arquivos de mesmo nome; arquivo apagado aqui continua lá.
 - Enviar ZIP sem abrir a janela de arquivo: `page.locator('input[type=file]').last().setInputFiles(...)` e depois o botão "Enviar" do diálogo.
 - Na lista de temas, conferir **qual está publicado** antes de clicar em "Publicar" (o card do topo é o publicado).
-- Publicado (07/10/2026, 22:44) = 3564393. **Não é possível editar um tema que já está publicado** (o menu dele não tem "Editar HTML" e o /code responde "Tema está publicado"). É necessário **duplicar o tema publicado** (Mais opções → Duplicar tema): a cópia exibe a opção **Editar HTML**, e depois sobe o ZIP de novo nela e publica. Por isso a correção vai na
+- Publicado (07/10/2026, 22:57) = 3564393. **Não é possível editar um tema que já está publicado** (o menu dele não tem "Editar HTML" e o /code responde "Tema está publicado"). É necessário **duplicar o tema publicado** (Mais opções → Duplicar tema): a cópia exibe a opção **Editar HTML**, e depois sobe o ZIP de novo nela e publica. Por isso a correção vai na
   3560443 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
   (no domínio antigo dá "unauthorized"). Ao publicar, as duas cópias trocam de papel: atualizar o código
   e o `opencode_theme` acima (link "Pré-visualizar" do Editar HTML da cópia). "Genesis" (3512519) é o tema antigo. **"agrada dev" não é deste projeto — nunca mexer.**
@@ -58,9 +58,9 @@ provisórias, o usuário ajusta) e `home.polvo_cta` (caixa em degradê + unidade
 `img/marcas/`). Animações ao rolar + contadores do hero: `snippets/polvo-reveal.html`
 (incluído no fim de `pages/home.html`; alvos marcados por seletor, sem `data-*` nos snippets).
 Ordem igual à home antiga: hero, marcas, mais vendidos,
-categorias, como comprar, segmentos, recorrência, clube, novidades, a empresa,
-FAQ, notícias, chamada final. Depoimentos **fora** até o usuário confirmar que
-são clientes reais. Cada uma = JSON em
+categorias, como comprar, segmentos, recorrência, clube, novidades, a empresa, depoimentos,
+FAQ, notícias, chamada final. Depoimentos (`home.polvo_reviews`, `snippets/polvo-reviews.html`)
+visíveis desde 07/10/2026 a pedido do usuário, com os textos do site antigo (Marcos Silva, Renata Alves, Juliana Prado); ele troca pelos reais no painel. Cada uma = JSON em
 `configs/editor/sections/home.<tipo>.json` + `elements/snippets/polvo-*.html`
 (abre com `{% if section.type == '<tipo>' and section.settings.enabled %}`) +
 CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
@@ -131,7 +131,7 @@ Cadastro de produtos na Tray (30 feitos à mão, categorias, cuidados com o ERP,
 - [x] Home: hero, barra de informações, mais vendidos, segmentos, como comprar, marcas (logos em `img/marcas/`).
 - [x] Cabeçalho em uma linha como o do site antigo.
 - [x] Home completa: categorias, recorrência, clube de ofertas, a empresa, FAQ, chamada final.
-- [ ] Usuário: revisar as respostas do FAQ e confirmar os depoimentos (Renata Alves, Jorge Camargo).
+- [ ] Usuário: revisar as respostas do FAQ e trocar os depoimentos da home (textos do site antigo, já visíveis) pelos de clientes reais.
 - [x] Página de produto: preço em destaque (WhatsApp é nativo da Tray, ver acima).
 - [x] Links dos cards de segmento → LPs.
 - [x] LPs de SEO criadas no criador da Tray (inativas).

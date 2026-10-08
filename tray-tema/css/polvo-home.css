@@ -1228,3 +1228,69 @@
   /* Mascote, mancha, bolhas e faixa de marcas animam mesmo com "reduzir movimento":
      o Windows liga isso ao desligar "Efeitos de animação" e o site parecia quebrado. */
 }
+
+/* ---- Depoimentos (snippets/polvo-reviews.html) ------------------------- */
+
+.polvo-depos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.polvo-depo {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 28px;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-lg);
+  background: #fff;
+  box-shadow: var(--polvo-shadow-sm);
+}
+
+.polvo-depo__estrelas { display: flex; gap: 3px; margin-bottom: 14px; }
+
+.polvo-depo__estrelas svg { width: 18px; height: 18px; fill: var(--polvo-accent); }
+
+.polvo-depo__estrelas svg.is-vazia { fill: var(--polvo-line-strong); }
+
+.polvo-depo__texto {
+  flex: 1;
+  margin: 0 0 22px;
+  padding: 0;
+  border: 0;
+  color: var(--polvo-ink-2);
+  font-size: 1rem;
+  font-style: normal;
+  line-height: 1.65;
+}
+
+.polvo-depo__autor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--polvo-line);
+}
+
+.polvo-depo__avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--polvo-brand);
+  color: #fff;
+  font-family: var(--polvo-font-display);
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.polvo-depo__autor b { display: block; color: var(--polvo-ink); font-weight: 700; }
+
+.polvo-depo__autor b + span { display: block; color: var(--polvo-ink-3); font-size: 0.8125rem; }
+
+@media (max-width: 991px) {
+  .polvo-depos { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
+}

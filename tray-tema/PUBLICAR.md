@@ -31,7 +31,7 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       promete "em até 2 dias úteis". O título "Seguranca" está sem cedilha.
 - [ ] **Política de privacidade** nova (a do site antigo descreve o servidor antigo, não serve).
 - [x] **CNPJ do rodapé** (06/10/2026): 37.418.777/0001-80 com a razão social, no tema e nas LPs.
-- [ ] **FAQ e depoimentos.** Revisar as respostas do FAQ da home e confirmar os depoimentos.
+- [ ] **FAQ e depoimentos.** Revisar as respostas do FAQ da home e trocar os depoimentos da home (textos do site antigo, já no ar) pelos de clientes reais (painel → Editar tema → Polvo: depoimentos).
 - [ ] **Checkout (opcional).** O carrinho e o checkout da Tray usam roxo-escuro e o logo
       pequeno. Dá para acertar a cor e o logo nas configurações do checkout.
 

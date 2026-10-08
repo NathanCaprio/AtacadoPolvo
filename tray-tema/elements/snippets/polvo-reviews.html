@@ -1,0 +1,44 @@
+{# Atacado Polvo: depoimentos (configs/editor/sections/home.polvo_reviews.json). Textos do site
+   antigo; o usuário vai trocar pelos de clientes reais no painel. Iniciais do avatar = primeira
+   letra do primeiro e do último nome. #}
+{% if section.type == 'polvo_reviews' and section.settings.enabled %}
+{% set s = section.settings %}
+<section class="polvo-secao polvo-secao--tinta" id="{{ section.id }}">
+  <div class="container">
+    <div class="polvo-secao__cabeca">
+      {% if s.eyebrow %}<span class="polvo-eyebrow">{{ s.eyebrow }}</span>{% endif %}
+      {% if s.title %}<h2 class="polvo-secao__titulo">{{ s.title }}</h2>{% endif %}
+      {% if s.subtitle %}<p class="polvo-secao__sub">{{ s.subtitle }}</p>{% endif %}
+    </div>
+
+    <div class="polvo-depos">
+      {% for block in section.blocks %}
+        {% if block.settings.enabled and block.settings.text %}
+          {% set b = block.settings %}
+          {% set estrelas = b.stars | default('5') %}
+          {% set partes = b.name | default('') | trim | split(' ') %}
+          <figure class="polvo-depo" id="{{ block.id }}">
+            {% if estrelas > 0 %}
+              <div class="polvo-depo__estrelas" aria-label="{{ estrelas }} de 5 estrelas">
+                {% for i in 1..5 %}
+                  <svg viewBox="0 0 24 24" aria-hidden="true" class="{{ i > estrelas ? 'is-vazia' }}"><path d="M12 2l3 6.5 7 .9-5 4.8 1.2 7L12 17.8 5.8 21.2 7 14.2l-5-4.8 7-.9z"/></svg>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <blockquote class="polvo-depo__texto">&ldquo;{{ b.text }}&rdquo;</blockquote>
+            {% if b.name %}
+              <figcaption class="polvo-depo__autor">
+                <span class="polvo-depo__avatar" aria-hidden="true">{{ partes|first|first|upper }}{% if partes|length > 1 %}{{ partes|last|first|upper }}{% endif %}</span>
+                <span>
+                  <b>{{ b.name }}</b>
+                  {% if b.role %}<span>{{ b.role }}</span>{% endif %}
+                </span>
+              </figcaption>
+            {% endif %}
+          </figure>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

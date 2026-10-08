@@ -1,0 +1,50 @@
+{
+  "name": "Polvo: depoimentos",
+  "template": "snippets/polvo-reviews",
+  "group": "Conteúdo",
+  "limit": 1,
+  "max_blocks": 6,
+  "defaults": {
+    "tray": {
+      "blocks": [
+        { "type": "polvo_review", "settings": { "enabled": true, "text": "Reponho o mercado toda semana com eles. O que mais pesa é o prazo: pedi na terça, chegou na quarta de manhã. Nunca deixaram a gargalheira do detergente vazia.", "name": "Marcos Silva", "role": "Mercado São Jorge", "stars": "5" } },
+        { "type": "polvo_review", "settings": { "enabled": true, "text": "Administro seis prédios e comprava em três fornecedores diferentes. Migrei tudo para a linha profissional deles — o concentrado de 5 litros derrubou meu custo por metro quadrado.", "name": "Renata Alves", "role": "Administradora de condomínios", "stars": "5" } },
+        { "type": "polvo_review", "settings": { "enabled": true, "text": "Tenho uma loja de 1 a 99 e revendo o que compro aqui. Margem boa, produto que não encalha e eles avisam quando vai subir preço. Isso vale ouro.", "name": "Juliana Prado", "role": "Revendedora", "stars": "5" } }
+      ],
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Depoimentos",
+        "title": "Quem já repõe estoque com a Polvo",
+        "subtitle": ""
+      }
+    }
+  },
+  "blocks": [
+    {
+      "type": "polvo_review",
+      "name": "Depoimento",
+      "limit": 6,
+      "settings": [
+        { "id": "text", "type": "textarea", "label": "Depoimento", "maxLength": 300 },
+        { "id": "name", "type": "text", "label": "Nome", "maxLength": 40 },
+        { "id": "role", "type": "text", "label": "Empresa ou cargo", "maxLength": 50 },
+        {
+          "id": "stars",
+          "type": "select",
+          "label": "Estrelas",
+          "options": [
+            { "value": "5", "label": "5 estrelas" },
+            { "value": "4", "label": "4 estrelas" },
+            { "value": "0", "label": "Sem estrelas" }
+          ],
+          "default": "5"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    { "id": "eyebrow", "type": "text", "label": "Selo acima do título", "maxLength": 40 },
+    { "id": "title", "type": "text", "label": "Título", "maxLength": 60 },
+    { "id": "subtitle", "type": "textarea", "label": "Subtítulo", "maxLength": 200 }
+  ]
+}
