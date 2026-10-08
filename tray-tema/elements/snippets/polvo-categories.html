@@ -29,7 +29,7 @@
       {% for block in section.blocks %}
         {% if block.settings.enabled %}
           {% set b = block.settings %}
-          <a class="polvo-cat" id="{{ block.id }}" href="{% if b.link %}{{ b.link }}{% else %}{{ busca }}{% element 'snippets/polvo-urlencode' { 'texto': b.title } %}{% endif %}">
+          <a class="polvo-cat" id="{{ block.id }}" href="{% if b.link %}{{ b.link }}{% else %}{{ busca }}{% element 'snippets/polvo-busca-termo' { 'texto': b.title } %}{% endif %}">
             <span class="polvo-cat__icone" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">{{ icones[b.icon]|default(icones['limpeza'])|raw }}</svg>
             </span>

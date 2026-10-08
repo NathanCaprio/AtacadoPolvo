@@ -46,6 +46,17 @@ const PASTA = path.join(RAIZ, 'tray-tema', 'lp');
 const SAIDA = path.join(PASTA, 'dist');
 const BUSCA = '/loja/busca.php?loja=1544153&amp;palavra_busca=';
 
+/* A busca da Tray lê o termo em windows-1252 (a loja é servida assim): "é" vai
+   como %E9; em UTF-8 (%C3%A9) a página mostra "Papã©is". */
+function termoBusca(texto) {
+  return [...texto].map(c => {
+    if (/[A-Za-z0-9_.~-]/.test(c)) return c;
+    if (c === ' ') return '+';
+    const n = c.charCodeAt(0);
+    return n < 256 ? '%' + n.toString(16).toUpperCase().padStart(2, '0') : encodeURIComponent(c);
+  }).join('');
+}
+
 /** Contatos do site (fonte única: assets/js/config.js, que define window.SITE). */
 function site() {
   const ctx = { window: {} };
@@ -73,7 +84,7 @@ const SECOES = {
       <article class="polvo-card polvo-card--simples${s.alerta ? ' polvo-card--alerta' : ''}">
         <h3 class="polvo-card__titulo">${esc(i.titulo)}</h3>
         <p class="polvo-card__texto">${esc(i.texto)}</p>${i.busca ? `
-        <a class="polvo-card__link" href="${BUSCA}${encodeURIComponent(i.busca).replace(/%20/g, '+')}">Ver produtos ${SETA}</a>` : ''}
+        <a class="polvo-card__link" href="${BUSCA}${termoBusca(i.busca)}">Ver produtos ${SETA}</a>` : ''}
       </article>`).join('')}
     </div>`,
   passos: s => `<ol class="polvo-passos">${s.itens.map((i, n) => `
@@ -294,7 +305,7 @@ function cabecalho(nome, s, t, wppOrcamento) {
     <a class="lp-redondo lp-conta" href="${CONTA}" aria-label="Minha conta">${ICONE.conta}</a>
     <a class="lp-redondo lp-carrinho" href="${CARRINHO}" aria-label="Carrinho">${ICONE.carrinho}</a>
     <button type="button" class="lp-redondo lp-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="lp-nav"><span></span><span></span><span></span></button>
-    <form class="lp-busca" id="lp-busca" action="/loja/busca.php" method="get" role="search">
+    <form class="lp-busca" id="lp-busca" action="/loja/busca.php" method="get" accept-charset="windows-1252" role="search">
       <input type="hidden" name="loja" value="1544153">
       <input type="search" name="palavra_busca" placeholder="Olá, o que você procura?" aria-label="Buscar produtos" autocomplete="off">
       <button type="submit" aria-label="Buscar">${ICONE.lupa}</button>

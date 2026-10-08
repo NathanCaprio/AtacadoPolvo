@@ -1,0 +1,19 @@
+{#- Atacado Polvo: termo para palavra_busca= em windows-1252, que é como a busca da
+    Tray lê (a loja é servida assim; a própria caixa de busca manda "pap%E9is").
+    Em UTF-8 (%C3%A9, o que polvo-urlencode faz para o WhatsApp) a página mostra "Papã©is".
+    Cobre o acento em entidade (como a Tray entrega) e o acento literal.
+    Uso: {% element 'snippets/polvo-busca-termo' { 'texto': '...' } %} -#}
+{%- set polvo_latin1 = {
+    '%26aacute%3B': '%E1', '%26agrave%3B': '%E0', '%26acirc%3B': '%E2', '%26atilde%3B': '%E3',
+    '%26eacute%3B': '%E9', '%26ecirc%3B': '%EA', '%26iacute%3B': '%ED', '%26oacute%3B': '%F3',
+    '%26ocirc%3B': '%F4', '%26otilde%3B': '%F5', '%26uacute%3B': '%FA', '%26ccedil%3B': '%E7',
+    '%26Aacute%3B': '%C1', '%26Agrave%3B': '%C0', '%26Acirc%3B': '%C2', '%26Atilde%3B': '%C3',
+    '%26Eacute%3B': '%C9', '%26Ecirc%3B': '%CA', '%26Iacute%3B': '%CD', '%26Oacute%3B': '%D3',
+    '%26Ocirc%3B': '%D4', '%26Otilde%3B': '%D5', '%26Uacute%3B': '%DA', '%26Ccedil%3B': '%C7',
+    '%C3%A1': '%E1', '%C3%A0': '%E0', '%C3%A2': '%E2', '%C3%A3': '%E3', '%C3%A9': '%E9', '%C3%AA': '%EA',
+    '%C3%AD': '%ED', '%C3%B3': '%F3', '%C3%B4': '%F4', '%C3%B5': '%F5', '%C3%BA': '%FA', '%C3%A7': '%E7',
+    '%C3%81': '%C1', '%C3%80': '%C0', '%C3%82': '%C2', '%C3%83': '%C3', '%C3%89': '%C9', '%C3%8A': '%CA',
+    '%C3%8D': '%CD', '%C3%93': '%D3', '%C3%94': '%D4', '%C3%95': '%D5', '%C3%9A': '%DA', '%C3%87': '%C7',
+    '%26amp%3B': '%26', '%26quot%3B': '%22', '%26%2339%3B': '%27'
+} -%}
+{{- texto | url_encode | replace(polvo_latin1) -}}

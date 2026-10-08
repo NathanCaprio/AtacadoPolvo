@@ -68,7 +68,7 @@ CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
 Arquivos novos em `configs/` entram normalmente pelo ZIP.
 - Twig: evitar `??` e `?:` (versão da Tray desconhecida); usar `|default(...)`.
   Também nada de `filter(x => ...)` nem `for ... if`: `if` dentro do laço.
-- Texto em URL (`?text=`, `palavra_busca=`): sempre por `snippets/polvo-urlencode.html`
+- Texto em URL: `?text=` (WhatsApp, UTF-8) por `snippets/polvo-urlencode.html`; `palavra_busca=` por `snippets/polvo-busca-termo.html` (**windows-1252**: `%E9`, não `%C3%A9`, senão a busca mostra "Papã©is"). Link fixo em `settings.json`/LP idem; nas LPs, `termoBusca` (`server/tema-lp.js`)
   (a Tray entrega acento como entidade, até nos literais do template).
 - CSS: nada de caractere fora do ASCII em `content:` (a Tray serve o CSS sem
   UTF-8); usar escape (`"\2013"`).
