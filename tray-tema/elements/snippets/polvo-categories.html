@@ -29,7 +29,21 @@
       {% for block in section.blocks %}
         {% if block.settings.enabled %}
           {% set b = block.settings %}
-          <a class="polvo-cat" id="{{ block.id }}" href="{% if b.link %}{{ b.link }}{% else %}{{ busca }}{% element 'snippets/polvo-busca-termo' { 'texto': b.title } %}{% endif %}">
+          {# Sem link no painel: a categoria da loja com o mesmo nome do card (a busca pelo
+             nome não acha "Lavanderia" nem "Vassouras, Rodos e Pás"); sem categoria, a busca. #}
+          {# Compara pelo termo normalizado: o título do card chega com acento em entidade
+             (&eacute;) e o nome da categoria não. #}
+          {% set link_card = b.link %}
+          {% if not link_card %}
+            {% set chave_card %}{% element 'snippets/polvo-busca-termo' { 'texto': b.title|lower|trim } %}{% endset %}
+            {% for category in categories %}
+              {% if not link_card %}
+                {% set chave_cat %}{% element 'snippets/polvo-busca-termo' { 'texto': category.name|lower|trim } %}{% endset %}
+                {% if chave_cat == chave_card %}{% set link_card = category.link %}{% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          <a class="polvo-cat" id="{{ block.id }}" href="{% if link_card %}{{ link_card }}{% else %}{{ busca }}{% element 'snippets/polvo-busca-termo' { 'texto': b.title } %}{% endif %}">
             <span class="polvo-cat__icone" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">{{ icones[b.icon]|default(icones['limpeza'])|raw }}</svg>
             </span>
