@@ -114,7 +114,7 @@ JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linh
 
 ## Regras
 - Mexer o mínimo nos arquivos da Tray (facilita atualizar o tema); o nosso vai em `polvo.css` e em arquivos novos.
-- `.container` = 1200px a partir de 1025px e 20px de recuo a partir de 768px (cabeçalho: 16px no celular), igual às LPs (`lp/_base.css`), senão o cabeçalho pula ao entrar numa LP. Mudou um lado, mudar o outro. Tray: 75% / 1440px.
+- `.container`: o da Tray (1080px; 75% entre 1025 e 1919px, com mínimo de 1200px em `polvo.css`; 1440px a partir de 1920; 15px dos lados; cabeçalho 16px no celular). As LPs copiam as mesmas regras (`lp/_base.css`), senão o cabeçalho pula ao entrar numa LP: mudou um lado, mudar o outro e recolar as LPs. Fixar 1200px estreitou demais a categoria em tela grande (o usuário pediu de volta, 07/10/2026).
 - Tokens do site antigo: `--polvo-*` no topo de `polvo.css` (iguais a `assets/css/style.css`).
 - `main.css` é minificado (70 KB): achar seletor com `grep -o '\.seletor[^}]*}' css/main.css`.
 - A CSP/regras do site antigo (sem inline) **não** valem aqui; o tema da Tray usa `<style>`/`<script>` inline.

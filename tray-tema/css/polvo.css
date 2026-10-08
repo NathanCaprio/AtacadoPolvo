@@ -70,16 +70,12 @@ h1, h2, h3,
   letter-spacing: 0.02em;
 }
 
-/* Largura do site antigo (--wrap: 1200px), igual à das LPs (lp/_base.css: 1200px, 20px dos
-   lados), para o cabeçalho não pular ao ir de uma página do tema para uma LP. A Tray usa 75% da
-   tela entre 1025 e 1919px (1013px numa tela de 1366, onde a linha do cabeçalho não cabe) e
-   1440px a partir de 1920. */
-@media (min-width: 1025px) {
-  .container { max-width: 1200px; }
-}
-
-@media (min-width: 768px) {
-  .container { padding-left: 20px; padding-right: 20px; }
+/* Pelo menos a largura do site antigo (--wrap: 1200px). A Tray usa 75% da tela entre 1025 e
+   1919px (1013px numa tela de 1366, onde a linha do cabeçalho não cabe) e 1440px a partir de
+   1920. As LPs copiam estas regras (lp/_base.css, .container) para o cabeçalho não pular ao
+   entrar numa LP: mudou aqui, muda lá. */
+@media (min-width: 1025px) and (max-width: 1919px) {
+  .container { max-width: max(75%, 1200px); }
 }
 
 /* No celular a Tray usa 10px; a linha do cabeçalho das LPs, 16px. */

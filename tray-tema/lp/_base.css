@@ -24,7 +24,21 @@ a { color: inherit; text-decoration: none; }
 
 h1, h2, h3, p { margin-top: 0; }
 
-.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+/* Mesma largura do .container do tema (main.css da Tray + css/polvo.css), senão o cabeçalho
+   pula ao ir de uma página do tema para uma LP. No celular fica 20px (cabeçalho: 16px). */
+.container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+@media (min-width: 768px) {
+  .container { padding: 0 .938rem; }
+}
+
+@media (min-width: 1025px) {
+  .container { max-width: max(75%, 1200px); }
+}
+
+@media (min-width: 1920px) {
+  .container { max-width: 1440px; }
+}
 
 /* ---- Faixa do topo e cabeçalho --------------------------------------- */
 /* Espelho de css/polvo.css seção 2 (o tema estiliza classes da Tray, que a LP
