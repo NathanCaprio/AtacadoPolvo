@@ -5,12 +5,12 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Fluxo (sempre este)
 1. Editar aqui → `npm run tema-zip` (raiz) → gera `tray-tema.zip` (fora do git).
-2. Subir na **cópia de trabalho, tema 3564393** ("Cópia tema 3560443…", não publicada; publicada é a 3560443 "Cópia tema 3521907…" desde 08/10/2026 00:12). **Pendente:** a 3564393 ainda não recebeu o ZIP do commit 43ee604 (WhatsApp flutuante + foto do produto no celular); subir o tema atual nela antes de outra mudança:
+2. Subir na **cópia de trabalho, tema 3564393** ("Cópia tema 3560443…", não publicada; publicada é a 3560443 "Cópia tema 3521907…" desde 08/10/2026 00:12). Logo após publicar, a cópia de trabalho recebeu o mesmo ZIP (as duas iguais):
    painel → Aparência da loja (`/studio-app/?platform=tray`) → link "Editar HTML"
    da cópia (`a[href="/studio-app/themes/3564393/code"]`) → Ações → Enviar tema →
    Procurar arquivo → Enviar (o botão do diálogo; escolher o arquivo não envia). Resultado sai no console (Pusher): "Upload de Zip
    finalizado com sucesso." (~20 s).
-3. Conferir pelo link "Pré-visualizar" do Editar HTML da 3564393 (o `opencode_theme=ab9ec62e-5e89-49cc-8f53-b2fff4524948` é o da 3560443, hoje publicada; anotar aqui o da 3564393).
+3. Conferir em `https://www.atacadopolvo.com.br?loja=1544153&opencode_theme=e959dda5-b2fb-4127-a8b6-f4fe3b584fa8` (3564393; o `ab9ec62e-…` é o da 3560443, hoje publicada).
 4. Commit. **Publicar** a cópia só o usuário decide.
 
 - Tray **recusa ZIP parcial** ("estrutura inválida"): sempre o tema inteiro.
