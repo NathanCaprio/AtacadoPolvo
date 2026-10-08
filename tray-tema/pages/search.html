@@ -52,6 +52,11 @@
         <h1 class="catalog-name">Todos os produtos</h1>
     {% endif %}
 
+    {# Atacado Polvo: atalhos para as categorias (carrossel). #}
+    {% set faixa_atual = 'todos' %}
+    {% if search.word %}{% set faixa_atual = '' %}{% endif %}
+    {% element 'snippets/polvo-cat-faixa' { 'atual': faixa_atual } %}
+
     {% for section in settings.content.catalog %}
         {% element section.template {
           'section' : section

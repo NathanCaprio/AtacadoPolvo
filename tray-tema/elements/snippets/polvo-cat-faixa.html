@@ -1,0 +1,100 @@
+{# Atacado Polvo: faixa de categorias em carrossel no topo da categoria e da busca
+   (pages/catalog.html e pages/search.html), como os atalhos de subcategoria da Carrano.
+   Mostra as categorias de primeiro nível da loja; a atual (ou a mãe da subcategoria atual) fica
+   destacada e rola para a vista. Ícone escolhido pelo nome (primeira palavra-chave que bater em
+   `chaves`); sem palavra conhecida, ícone de caixa. CSS em polvo.css seção 7.
+   Parâmetro: atual = id da categoria aberta, ou 'todos' na busca sem termo. #}
+{% if categories|length > 1 %}
+{% set icones = {
+  'limpeza': '<path d="M9 3h5l1 4H8z"/><path d="M8 7h7v2.5l2 2V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-8.5l2-2z"/><path d="M14 3h3.5"/>',
+  'roupa': '<path d="M9 3l3 2 3-2 5 3-2 4-2-1v12H8V9L6 10 4 6z"/>',
+  'papel': '<rect x="4" y="4" width="10" height="16" rx="4"/><path d="M14 10h4a2 2 0 0 1 2 2v8h-6"/>',
+  'descartavel': '<path d="M3 3v7a4 4 0 0 0 4 4v7"/><path d="M7 3v7"/><path d="M21 3c-2 0-4 3-4 7s1 4 2 4v7"/>',
+  'saco': '<path d="M5 8h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  'vassoura': '<path d="M14 3l-7 7"/><path d="M9 8l5 5"/><path d="M11 13l-4 8h12l-3-8z"/>',
+  'balde': '<path d="M4 9h16l-2 11a2 2 0 0 1-2 1.6H8A2 2 0 0 1 6 20z"/><path d="M5 9a7 6 0 0 1 14 0"/>',
+  'pano': '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10l6-6M4 16 16 4M8 20 20 8M14 20l6-6"/>',
+  'gota': '<path d="M12 2.5S5.5 10 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 10 12 2.5 12 2.5z"/>',
+  'sabonete': '<rect x="3" y="11" width="18" height="10" rx="3"/><path d="M8 11V8a2 2 0 0 1 4 0M16 8a1.5 1.5 0 1 0 0-3"/>',
+  'caixa': '<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
+  'esponja': '<rect x="3" y="8" width="18" height="10" rx="2"/><path d="M3 12h18"/><circle cx="8" cy="15" r=".6"/><circle cx="12" cy="15.5" r=".6"/><circle cx="16" cy="15" r=".6"/>',
+  'spray': '<path d="M8 9h6v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1z"/><path d="M9 9V6h4v3M13 6h3l2-2M17 8h2M17 11l1.5 1"/>',
+  'onda': '<path d="M3 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',
+  'escudo': '<path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+  'inseto': '<ellipse cx="12" cy="14" rx="4" ry="6"/><path d="M12 8V5M10 5l-2-2M14 5l2-2M8 12H4M8 16l-3 2M16 12h4M16 16l3 2"/>',
+  'lixeira': '<path d="M4 7h16M10 3h4l1 4H9z"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/>',
+  'carro': '<path d="M5 16V12l2-5h10l2 5v4"/><path d="M3 16h18v2H3zM5 12h14"/><circle cx="7.5" cy="18.5" r="1.5"/><circle cx="16.5" cy="18.5" r="1.5"/>',
+  'sacola': '<path d="M5 8h14l-1 13H6z"/><path d="M9 11V6a3 3 0 0 1 6 0v5"/>',
+  'escritorio': '<path d="M4 20l4-1L19 8a2.1 2.1 0 0 0-3-3L5 16z"/><path d="M14 7l3 3"/>',
+  'comida': '<path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M9 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4"/>',
+  'grade': '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'
+} %}
+{# Ordem importa: "Sacos de Lixo" antes de "lixeira"; "Sacolas" antes de "saco". #}
+{% set chaves = [
+  ['sacola', 'sacola'], ['saco', 'saco'], ['lixeir', 'lixeira'], ['lavand', 'roupa'], ['pap', 'papel'],
+  ['descart', 'descartavel'], ['vassour', 'vassoura'], ['balde', 'balde'], ['pano', 'pano'],
+  ['esponj', 'esponja'], ['aromat', 'spray'], ['dispens', 'spray'], ['piscin', 'onda'],
+  ['aliment', 'comida'], ['epi', 'escudo'], ['inset', 'inseto'], ['sanit', 'gota'],
+  ['higien', 'sabonete'], ['automot', 'carro'], ['escrit', 'escritorio'], ['embalag', 'caixa'],
+  ['caixa', 'caixa'], ['divers', 'grade'], ['limp', 'limpeza']
+] %}
+<nav class="polvo-catnav container" aria-label="Categorias">
+  <div class="polvo-catnav__trilho">
+    <a class="polvo-catnav__item{% if atual == 'todos' %} is-atual{% endif %}" href="{{ links.search ~ '&palavra_busca=' }}"{% if atual == 'todos' %} aria-current="page"{% endif %}>
+      <span class="polvo-catnav__icone" aria-hidden="true"><svg viewBox="0 0 24 24">{{ icones['grade']|raw }}</svg></span>
+      <span class="polvo-catnav__nome">Todos os produtos</span>
+    </a>
+    {% for cat in categories %}
+      {% set nome = cat.name|lower %}
+      {% set icone = '' %}
+      {% for par in chaves %}
+        {% if not icone and par[0] in nome %}{% set icone = par[1] %}{% endif %}
+      {% endfor %}
+      {% set e_atual = (cat.id ~ '') == (atual ~ '') %}
+      {% for filho in cat.children|default([]) %}
+        {% if (filho.id ~ '') == (atual ~ '') %}{% set e_atual = true %}{% endif %}
+      {% endfor %}
+      <a class="polvo-catnav__item{% if e_atual %} is-atual{% endif %}" href="{{ cat.link }}"{% if e_atual %} aria-current="page"{% endif %}>
+        <span class="polvo-catnav__icone" aria-hidden="true"><svg viewBox="0 0 24 24">{{ icones[icone|default('caixa')]|raw }}</svg></span>
+        <span class="polvo-catnav__nome">{{ cat.name }}</span>
+      </a>
+    {% endfor %}
+  </div>
+  <button type="button" class="polvo-catnav__seta polvo-catnav__seta--prev" aria-label="Categorias anteriores" hidden>
+    <span class="icon icon-arrow-prev" aria-hidden="true"></span>
+  </button>
+  <button type="button" class="polvo-catnav__seta polvo-catnav__seta--next" aria-label="Mais categorias" hidden>
+    <span class="icon icon-arrow-next" aria-hidden="true"></span>
+  </button>
+</nav>
+<script>
+(function () {
+  var faixa = document.currentScript.previousElementSibling;
+  var trilho = faixa.querySelector('.polvo-catnav__trilho');
+  var prev = faixa.querySelector('.polvo-catnav__seta--prev');
+  var next = faixa.querySelector('.polvo-catnav__seta--next');
+
+  function atualizar() {
+    var fim = trilho.scrollWidth - trilho.clientWidth;
+    prev.hidden = trilho.scrollLeft <= 4;
+    next.hidden = trilho.scrollLeft >= fim - 4;
+    faixa.classList.toggle('tem-antes', !prev.hidden);
+    faixa.classList.toggle('tem-depois', !next.hidden);
+  }
+
+  function andar(lado) {
+    trilho.scrollBy({ left: lado * trilho.clientWidth * 0.8, behavior: 'smooth' });
+  }
+
+  prev.addEventListener('click', function () { andar(-1); });
+  next.addEventListener('click', function () { andar(1); });
+  trilho.addEventListener('scroll', atualizar, { passive: true });
+  window.addEventListener('resize', atualizar);
+
+  /* Categoria aberta no meio da faixa, sem rolar a página. */
+  var atual = trilho.querySelector('.is-atual');
+  if (atual) trilho.scrollLeft = atual.offsetLeft - (trilho.clientWidth - atual.offsetWidth) / 2;
+  atualizar();
+})();
+</script>
+{% endif %}

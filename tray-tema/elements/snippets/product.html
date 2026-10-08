@@ -59,7 +59,8 @@
             {{ product.name }}{{ variantSkuSuffix }}
         </div>
 
-        {% if settings.configs.show_ratting %}
+        {# Atacado Polvo: estrelas só quando o produto já tem avaliação (cinco vazias só poluíam o cartão). #}
+        {% if settings.configs.show_ratting and product.ranking.count | default(0) > 0 %}
             {% element 'snippets/rating' { 'review': product.ranking } %}
         {% endif %}
 
@@ -102,9 +103,22 @@
             {# Atacado Polvo: sem variação (ou com a variação já escolhida na vitrine) adiciona direto e abre
                o carrinho lateral (js/polvo-adicionar.js); com variação a escolher, vai para a página do produto. #}
             {% if not product.has_variation or variant %}
-                <a class="product-button polvo-adicionar" href="{{ product.link }}" data-produto="{{ product.id }}" {% if variant %}data-variante="{{ variant.id }}"{% endif %}>
-                    Adicionar ao carrinho
-                </a>
+                {# Seletor de quantidade: o botão manda o número escolhido (js/polvo-adicionar.js). #}
+                <div class="polvo-compra">
+                    <div class="polvo-qtd swiper-no-swiping" role="group" aria-label="Quantidade de {{ product.name }}">
+                        <button type="button" class="polvo-qtd__botao" data-qtd="-1" aria-label="Diminuir quantidade" disabled>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+                        </button>
+                        <input class="polvo-qtd__campo" type="number" inputmode="numeric" min="1" max="999" step="1" value="1" aria-label="Quantidade">
+                        <button type="button" class="polvo-qtd__botao" data-qtd="1" aria-label="Aumentar quantidade">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                        </button>
+                    </div>
+                    <a class="product-button polvo-adicionar" href="{{ product.link }}" data-produto="{{ product.id }}" {% if variant %}data-variante="{{ variant.id }}"{% endif %}>
+                        <svg class="polvo-adicionar__icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3.5h2.6l2.4 11.2a1.6 1.6 0 0 0 1.6 1.3h8.6a1.6 1.6 0 0 0 1.6-1.2l1.6-6.8H6.2"/></svg>
+                        <span class="polvo-adicionar__texto">Adicionar</span>
+                    </a>
+                </div>
             {% else %}
                 <a class="product-button" href="{{ product.link }}">
                     Escolher opção

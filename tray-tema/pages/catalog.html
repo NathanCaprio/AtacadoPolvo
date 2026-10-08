@@ -48,6 +48,9 @@
       {{ category.name }}
     </h1>
 
+    {# Atacado Polvo: atalhos para as outras categorias (carrossel). #}
+    {% element 'snippets/polvo-cat-faixa' { 'atual': category.id } %}
+
     {% for section in settings.content.catalog %}
         {% element section.template {
           'section' : section
