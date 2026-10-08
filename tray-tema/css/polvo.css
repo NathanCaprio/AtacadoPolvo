@@ -392,6 +392,44 @@ h1, h2, h3,
   box-shadow: 0 0 0 3px var(--polvo-brand-soft);
 }
 
+/* Termos sugeridos embaixo do campo (snippets/search.html); somem quando se começa a digitar. */
+.polvo-busca-sugestoes { margin-top: 12px; padding: 0 4px 2px; }
+
+.header-search-wrapper:has(.input-search:not(:placeholder-shown)) + .polvo-busca-sugestoes { display: none; }
+
+.polvo-busca-sugestoes__rotulo {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--polvo-ink-3);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.polvo-busca-sugestoes__lista { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.polvo-busca-sugestao {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
+  background: var(--polvo-surface-2);
+  color: var(--polvo-ink-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.polvo-busca-sugestao:hover,
+.polvo-busca-sugestao:focus-visible {
+  border-color: var(--polvo-brand);
+  background: var(--polvo-brand);
+  color: #fff;
+}
+
 .header .suggestion {
   left: 0;
   right: 0;
@@ -1603,11 +1641,10 @@ h1, h2, h3,
 }
 
 /* Abas (descrição, pagamento, avaliações) */
-.product-wrapper .product-tabs { margin-top: 1.5rem; border-top: 1px solid var(--polvo-line); }
+/* sublinhado da aba ativa = o .text:after (3px) da Tray, rente à linha do .tabs-nav */
+.product-wrapper .product-tabs { margin-top: 1.5rem; }
 
 .product-wrapper .product-tabs .tabs-nav .tab-link {
-  padding-bottom: 0.75rem;
-  border-bottom: 3px solid transparent;
   color: var(--polvo-ink-3);
   font-family: var(--polvo-font-display);
   font-size: 1rem;
@@ -1615,7 +1652,6 @@ h1, h2, h3,
 }
 
 .product-wrapper .product-tabs .tabs-nav .tab-link.active {
-  border-bottom-color: var(--polvo-brand);
   color: var(--polvo-brand);
 }
 

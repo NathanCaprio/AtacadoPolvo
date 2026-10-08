@@ -42,6 +42,12 @@
           "label": "Texto da busca",
           "maxLength": 35,
           "default": "Olá, o que você procura?"
+        },
+        {
+          "id": "polvo_suggestions",
+          "type": "textarea",
+          "label": "Sugestões de busca (separadas por vírgula; vazio esconde)",
+          "default": "Água sanitária, Detergente, Papel higiênico, Saco de lixo, Desinfetante, Álcool 70, Luva, Copo descartável"
         }
       ]
     },

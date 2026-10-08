@@ -24,5 +24,22 @@
             </button>
             <div class="suggestion is-hidden" data-container="suggestion"></div>
         </form>
+
+        {# Atacado Polvo: termos sugeridos (painel > Cabeçalho > Busca, separados por vírgula). Link em
+           windows-1252 (polvo-busca-termo); só aparecem com o campo vazio (CSS em polvo.css seção 2). #}
+        {% set polvo_sugestoes = section.settings.polvo_suggestions | default('') | trim %}
+        {% if polvo_sugestoes %}
+            <div class="polvo-busca-sugestoes">
+                <span class="polvo-busca-sugestoes__rotulo">Mais buscados</span>
+                <div class="polvo-busca-sugestoes__lista">
+                    {% for termo in polvo_sugestoes | split(',') %}
+                        {% set termo = termo | trim %}
+                        {% if termo %}
+                            <a class="polvo-busca-sugestao" href="{{ links.search }}&palavra_busca={% element 'snippets/polvo-busca-termo' { 'texto': termo | lower } %}">{{ termo }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endif %}
