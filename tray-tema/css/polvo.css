@@ -612,8 +612,9 @@ h1, h2, h3,
 
 .product .product-price .price .old-price { color: var(--polvo-ink-3); }
 
-/* Compra no cartão (js/polvo-adicionar.js): quantidade -/+ e "Adicionar". Lado a lado quando
-   o cartão tem largura; empilhados no celular e na busca com filtros (cartão estreito). */
+/* Compra no cartão (js/polvo-adicionar.js): quantidade -/+ e "Adicionar", sempre na mesma linha.
+   Cartão estreito (celular, busca com filtros): botões menores e "Adicionar" só com o ícone
+   (bloco @container no fim desta seção). */
 .product .actions {
   padding: 0.625rem 0.875rem 0.875rem;
   container-type: inline-size;
@@ -621,12 +622,8 @@ h1, h2, h3,
 
 .polvo-compra {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: auto 1fr;
   gap: 0.5rem;
-}
-
-@container (min-width: 228px) {
-  .polvo-compra { grid-template-columns: auto 1fr; }
 }
 
 .polvo-qtd {
@@ -733,6 +730,23 @@ h1, h2, h3,
   .product .actions { padding: 0.5rem 0.625rem 0.75rem; }
   .polvo-qtd, .product .actions .product-button { height: 40px; }
   .product .actions .product-button { font-size: 0.875rem; }
+}
+
+/* Cartão estreito: o texto do botão fica só para leitor de tela (o JS troca o texto por
+   "Adicionando..."/"Adicionado"; o verde do .is-adicionado continua avisando). */
+@container (max-width: 227.98px) {
+  .polvo-compra { gap: 0.375rem; }
+  .polvo-qtd__botao { width: 28px; }
+  .polvo-compra .polvo-qtd input.polvo-qtd__campo { width: 1.75rem; }
+  .product .actions .polvo-adicionar { padding: 0; }
+  .polvo-adicionar__texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 }
 
 /* Preço na página do produto (bloco que a Tray injeta em .product-price-tray). */
@@ -864,8 +878,9 @@ h1, h2, h3,
   .polvo-seta--next { right: 0; }
 }
 
+/* No celular a vitrine passa com o dedo e tem as bolinhas; as setas cobriam o nome do produto. */
 @media (max-width: 767px) {
-  .polvo-seta { width: 36px; height: 36px; font-size: 12px; }
+  .polvo-seta { display: none; }
 }
 
 /* ---- 5. Rodapé escuro --------------------------------------------------- */

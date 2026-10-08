@@ -1294,3 +1294,69 @@
 @media (max-width: 991px) {
   .polvo-depos { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
 }
+
+/* ---- Celular: segmentos e depoimentos em carrossel, um card por vez ------ */
+/* Passa com o dedo (scroll-snap); as bolinhas vêm de snippets/polvo-deslize.html. */
+
+.polvo-pontos { display: none; }
+
+@media (max-width: 767px) {
+  .polvo-segmentos,
+  .polvo-depos {
+    display: flex;
+    gap: 16px;
+    max-width: none;
+    margin: 0 -16px;
+    padding: 4px 16px 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 16px;
+    scrollbar-width: none;
+  }
+
+  .polvo-segmentos::-webkit-scrollbar,
+  .polvo-depos::-webkit-scrollbar { display: none; }
+
+  .polvo-segmentos > .polvo-card,
+  .polvo-depos > .polvo-depo {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+
+  /* fora da tela na horizontal o IntersectionObserver não os vê: sem animação de entrada */
+  .polvo-segmentos > [data-polvo-reveal],
+  .polvo-depos > [data-polvo-reveal] { opacity: 1; transform: none; }
+
+  .polvo-pontos {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  .polvo-pontos__ponto {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .polvo-pontos__ponto::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--polvo-line-strong);
+    border-radius: 50%;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+
+  .polvo-pontos__ponto.is-ativo::after {
+    background: var(--polvo-brand);
+    border-color: var(--polvo-brand);
+  }
+}

@@ -1,0 +1,49 @@
+{# Atacado Polvo: bolinhas dos carrosséis de celular da home (segmentos e depoimentos).
+   O carrossel é só CSS (scroll-snap em polvo-home.css, até 767px); aqui as bolinhas mostram
+   qual card está na tela e levam até ele. Acima de 767px as bolinhas ficam escondidas.
+   Incluído no fim de pages/home.html. #}
+<script>
+(function () {
+    var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('.polvo-segmentos, .polvo-depos').forEach(function (trilho) {
+        var cards = trilho.children;
+        if (cards.length < 2) return;
+
+        var pontos = document.createElement('div');
+        pontos.className = 'polvo-pontos';
+        var botoes = [];
+        for (var i = 0; i < cards.length; i++) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'polvo-pontos__ponto';
+            b.setAttribute('aria-label', 'Mostrar card ' + (i + 1) + ' de ' + cards.length);
+            b.addEventListener('click', ir.bind(null, i));
+            pontos.appendChild(b);
+            botoes.push(b);
+        }
+        trilho.parentNode.insertBefore(pontos, trilho.nextSibling);
+
+        // distância entre um card e o próximo (largura + espaço)
+        function passo() { return cards[1].offsetLeft - cards[0].offsetLeft || 1; }
+
+        function ir(n) {
+            trilho.scrollTo({ left: n * passo(), behavior: suave ? 'smooth' : 'auto' });
+        }
+
+        var agendado = false;
+        function marcar() {
+            agendado = false;
+            var atual = Math.min(botoes.length - 1, Math.round(trilho.scrollLeft / passo()));
+            botoes.forEach(function (b, n) {
+                b.classList.toggle('is-ativo', n === atual);
+                if (n === atual) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+            });
+        }
+        trilho.addEventListener('scroll', function () {
+            if (!agendado) { agendado = true; requestAnimationFrame(marcar); }
+        }, { passive: true });
+        marcar();
+    });
+})();
+</script>
