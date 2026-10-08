@@ -698,9 +698,6 @@ h1, h2, h3,
   color: var(--polvo-brand);
 }
 
-.product-price-tray.normal #produto_preco .PrecoPrincipal,
-.product-price-tray.normal #produto_preco #variacaoPreco { font-size: 2rem; }
-
 /* Selos: amarelo da marca, como o "Mais vendido" do site antigo. */
 .product-tags .tag.text {
   background-color: var(--polvo-accent);
@@ -813,6 +810,8 @@ h1, h2, h3,
 .polvo-seta--prev { left: -22px; }
 
 .polvo-seta--next { right: -22px; }
+
+.polvo-carrossel.sem-setas .polvo-seta { display: none; }
 
 /* Sem sobra fora do container: a seta encosta por dentro, em cima da beira do cartão. */
 @media (max-width: 1519px) {
@@ -1353,7 +1352,292 @@ h1, h2, h3,
   .polvo-catnav__nome { font-size: 0.75rem; }
 }
 
-/* ---- 8. Movimento reduzido --------------------------------------------- */
+/* ---- 8. Página de produto ---------------------------------------------- */
+
+/* Galeria: foto num cartão lilás claro (multiply some com o fundo branco das fotos). */
+.product-wrapper .product-gallery .product-images {
+  padding: 2rem;
+  border-radius: var(--polvo-r-lg);
+  background: var(--polvo-surface-2);
+}
+
+/* fundo no slide também: o .swiper-wrapper (z-index + transform) isola a mesclagem */
+.product-wrapper .product-gallery .product-images .image { background: var(--polvo-surface-2); }
+
+.product-wrapper .product-gallery .product-images img { mix-blend-mode: multiply; }
+
+.product-wrapper .product-gallery .product-images .zoom { padding-bottom: 0; }
+
+.product-gallery .zoom:after { content: none; display: none; }
+
+.product-wrapper .product-gallery .product-thumbs .thumb {
+  overflow: hidden;
+  border: 1px solid var(--polvo-line);
+  border-radius: 10px;
+  background: var(--polvo-surface-2);
+}
+
+.product-wrapper .product-gallery .product-thumbs .thumb img { mix-blend-mode: multiply; }
+
+.product-wrapper .product-gallery .product-thumbs .active .thumb { border-color: var(--polvo-brand); }
+
+/* Coluna de compra */
+.product-wrapper .product-form .product-name {
+  margin-bottom: 0.625rem;
+  font-family: var(--polvo-font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--polvo-ink);
+}
+
+.product-wrapper .product-form .product-infos { color: var(--polvo-ink-3); font-size: 0.8125rem; }
+
+.product-wrapper .product-form .product-infos a { color: var(--polvo-ink-2); font-weight: 600; }
+
+.product-wrapper .product-form .product-price-tray {
+  margin-top: 1.25rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: var(--polvo-r-md);
+  background: var(--polvo-surface-2);
+}
+
+.product-price-tray.normal #produto_preco .PrecoPrincipal,
+.product-price-tray.normal #produto_preco #variacaoPreco { font-size: 2.25rem; }
+
+/* Quantidade + Comprar (product_form.html; botões ligados pelo page-product.js da Tray) */
+.polvo-pdp-compra { margin-top: 1.25rem; }
+
+.polvo-pdp-compra__rotulo {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--polvo-ink-2);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.product-wrapper .product-form .polvo-pdp-compra .tray-buy-button {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+/* o page-product.js põe display:block inline no .increment-page */
+.product-wrapper .product-form .increment-page.polvo-pdp-qtd {
+  display: flex !important;
+  position: static;
+  flex: none;
+  width: auto;
+  height: 52px;
+  border: 1px solid var(--polvo-line-strong);
+  border-radius: 999px;
+  background: #fff;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.product-wrapper .product-form .polvo-pdp-qtd:focus-within {
+  border-color: var(--polvo-brand);
+  box-shadow: 0 0 0 3px var(--polvo-brand-soft);
+}
+
+.product-wrapper .product-form .polvo-pdp-qtd .increment {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--polvo-line-strong);
+  transform: none;
+  cursor: default;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.product-wrapper .product-form .polvo-pdp-qtd .increment.active { color: var(--polvo-brand); background: transparent; cursor: pointer; }
+
+.product-wrapper .product-form .polvo-pdp-qtd .increment.active:hover { background: var(--polvo-brand-soft); }
+
+.product-wrapper .product-form .polvo-pdp-qtd .increment svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.product-wrapper .product-form .polvo-pdp-qtd #quantidade { display: flex; height: 100%; }
+
+.product-wrapper .product-form .polvo-pdp-qtd #quant {
+  width: 3.25rem;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: var(--polvo-ink);
+  font-family: var(--polvo-font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.product-wrapper .product-form .polvo-pdp-qtd #quant:focus { outline: none; }
+
+.product-wrapper .product-form .polvo-pdp-compra #product-form-box { display: flex; flex: 1 1 140px; min-width: 0; }
+
+.product-wrapper .product-form .polvo-pdp-compra #bt_comprar { flex: 1; width: 100%; max-width: none; }
+
+.product-wrapper .product-form .polvo-pdp-compra #button-buy {
+  width: 100%;
+  height: 52px;
+  border-radius: 999px;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  box-shadow: var(--polvo-shadow-brand);
+}
+
+.product-wrapper .product-form .polvo-pdp-compra #span_erro_carrinho { flex-basis: 100%; order: 3; }
+
+/* WhatsApp para pedido grande */
+.polvo-pdp-wpp {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.875rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #c6ebd4;
+  border-radius: var(--polvo-r-md);
+  background: #effaf3;
+  color: #1d6b3d;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.polvo-pdp-wpp:hover { background: #e0f5e8; border-color: #9fdcb6; color: #1d6b3d; }
+
+.polvo-pdp-wpp .icon { flex: none; font-size: 1.5rem; color: var(--polvo-ok); }
+
+.polvo-pdp-wpp b { color: #134d2b; }
+
+/* Frete num cartão */
+.product-wrapper .product-form .product-shipping {
+  gap: 0.625rem;
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-md);
+}
+
+.product-wrapper .product-form .product-shipping .info {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--polvo-ink);
+  font-weight: 700;
+}
+
+.product-wrapper .product-form .product-shipping .shipping-form { flex: 1; max-width: none; margin: 0; }
+
+.product-wrapper .product-form .product-shipping .shipping-form .form-input { flex: 1; }
+
+.product-wrapper .product-form .product-shipping .submit-shipping { margin-left: 0.625rem; }
+
+/* Vantagens */
+.polvo-pdp-vantagens {
+  display: grid;
+  gap: 0.625rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.polvo-pdp-vantagens li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--polvo-ink-2);
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.polvo-pdp-vantagens svg {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 50%;
+  background: var(--polvo-brand-soft);
+  fill: none;
+  stroke: var(--polvo-brand);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.polvo-pdp-vantagens b { color: var(--polvo-ink); }
+
+.product-wrapper .product-form .product-share {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--polvo-line);
+}
+
+.product-wrapper .product-form .product-share .share-title {
+  margin: 0;
+  color: var(--polvo-ink-3);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* Abas (descrição, pagamento, avaliações) */
+.product-wrapper .product-tabs { margin-top: 1.5rem; border-top: 1px solid var(--polvo-line); }
+
+.product-wrapper .product-tabs .tabs-nav .tab-link {
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid transparent;
+  color: var(--polvo-ink-3);
+  font-family: var(--polvo-font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.product-wrapper .product-tabs .tabs-nav .tab-link.active {
+  border-bottom-color: var(--polvo-brand);
+  color: var(--polvo-brand);
+}
+
+.product-wrapper .product-tabs .tab.rte {
+  max-width: 75ch;
+  color: var(--polvo-ink-2);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* "Ver produto" dos cartões de "Produtos visualizados" (js/polvo-setas.js) */
+.polvo-ver-produto { height: 44px; }
+
+@media (max-width: 767px) {
+  .product-wrapper .product-gallery .product-images { padding: 1rem; border-radius: var(--polvo-r-md); }
+  .product-wrapper .product-form .product-name { font-size: 1.5rem; }
+  .product-price-tray.normal #produto_preco .PrecoPrincipal,
+  .product-price-tray.normal #produto_preco #variacaoPreco { font-size: 1.875rem; }
+  .product-wrapper .product-form .product-shipping { padding: 0.875rem; }
+}
+
+/* ---- 9. Movimento reduzido --------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   .product,
