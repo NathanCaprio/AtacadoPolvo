@@ -6,4 +6,29 @@
 <a class="polvo-wpp-fab" href="{% element 'snippets/polvo-wpp-url' { 'number': '55' ~ polvo_wpp, 'message': 'Olá! Vim pela loja e gostaria de ajuda.' } %}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1s-.7 1-.9 1.2c-.2.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-.9-2.2c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.5 3.5 0 0 0-1.1 2.6A6.1 6.1 0 0 0 7.3 13a13.9 13.9 0 0 0 5.3 4.7c.7.3 1.3.5 1.8.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2-1.4 2.6 2.6 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
 </a>
+<script>
+/* Esconde o botão enquanto ele cobre o "Adicionar" de um cartão ou o "Comprar" do produto. */
+(function () {
+    var fab = document.querySelector('.polvo-wpp-fab');
+    if (!fab || !window.requestAnimationFrame) return;
+    var agendado = false;
+    function confere() {
+        agendado = false;
+        var f = fab.getBoundingClientRect(), cobre = false;
+        var lista = document.querySelectorAll('.polvo-compra, .polvo-pdp-compra');
+        for (var i = 0; i < lista.length && !cobre; i++) {
+            var r = lista[i].getBoundingClientRect();
+            cobre = r.width > 0 && r.left < f.right && r.right > f.left && r.top < f.bottom && r.bottom > f.top;
+        }
+        fab.classList.toggle('polvo-wpp-fab--oculto', cobre);
+    }
+    function agenda() { if (!agendado) { agendado = true; requestAnimationFrame(confere); } }
+    window.addEventListener('scroll', agenda, { passive: true });
+    window.addEventListener('resize', agenda);
+    window.addEventListener('load', agenda);
+    /* o preço do produto chega por JS e empurra o "Comprar" sem rolar a página */
+    if (window.ResizeObserver) new ResizeObserver(agenda).observe(document.body);
+    agenda();
+})();
+</script>
 {% endif %}

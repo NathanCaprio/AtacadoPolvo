@@ -1065,10 +1065,13 @@ h1, h2, h3,
   background: var(--polvo-ok);
   color: #fff;
   box-shadow: 0 12px 30px rgba(31, 175, 84, 0.42);
-  transition: transform 0.22s var(--polvo-ease);
+  transition: transform 0.22s var(--polvo-ease), opacity 0.2s, visibility 0.2s;
 }
 
 .polvo-wpp-fab:hover { color: #fff; transform: scale(1.08); }
+
+/* Some enquanto estiver em cima de um botão de compra (script no próprio snippet). */
+.polvo-wpp-fab.polvo-wpp-fab--oculto { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .polvo-wpp-fab svg { width: 30px; height: 30px; }
 
@@ -1673,6 +1676,10 @@ h1, h2, h3,
 .polvo-ver-produto { height: 44px; }
 
 @media (max-width: 767px) {
+  /* foto mais baixa para o preço e o "Comprar" caberem na primeira tela */
+  .product-wrapper .product-gallery { margin-bottom: 1.25rem; }
+  .product-wrapper .product-gallery .product-images .image { height: 200px; }
+  .product-wrapper .product-gallery .product-images img { width: 100%; height: 100%; object-fit: contain; }
   .product-wrapper .product-gallery .product-images { padding: 1rem; border-radius: var(--polvo-r-md); }
   .product-wrapper .product-form .product-name { font-size: 1.5rem; }
   .product-price-tray.normal #produto_preco .PrecoPrincipal,
