@@ -1,0 +1,27 @@
+{#- Atacado Polvo: conserta link de busca com acento em UTF-8 (%C3%A9).
+    A busca da Tray le o termo em windows-1252: "Papeis" com acento em UTF-8 vira
+    "Papã©is" na tela. Vale para qualquer origem (LPs, Google, link compartilhado):
+    na busca, se o termo veio em UTF-8, troca a URL pela versao em windows-1252 (%E9).
+    So ASCII aqui: a Tray troca acento do template por entidade, e no <script> isso quebra. -#}
+<script>
+(function () {
+  var q = location.search;
+  if (location.pathname.indexOf('/loja/busca.php') !== 0) return;
+  if (!/[?&]palavra_busca=[^&]*%C[23]%[89AB][0-9A-F]/i.test(q)) return;
+  try {
+    var nova = q.replace(/([?&]palavra_busca=)([^&]*)/, function (_, chave, valor) {
+      var texto = decodeURIComponent(valor.replace(/\+/g, ' '));
+      var saida = '';
+      for (var i = 0; i < texto.length; i++) {
+        var c = texto.charAt(i), n = texto.charCodeAt(i);
+        if (/[A-Za-z0-9_.~-]/.test(c)) saida += c;
+        else if (c === ' ') saida += '+';
+        else if (n < 256) saida += '%' + (n < 16 ? '0' : '') + n.toString(16).toUpperCase();
+        else throw new Error('fora do windows-1252');
+      }
+      return chave + saida;
+    });
+    if (nova !== q) location.replace(location.pathname + nova + location.hash);
+  } catch (e) { /* termo que nao cabe em windows-1252: deixa como veio */ }
+})();
+</script>

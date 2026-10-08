@@ -68,7 +68,7 @@ CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
 Arquivos novos em `configs/` entram normalmente pelo ZIP.
 - Twig: evitar `??` e `?:` (versão da Tray desconhecida); usar `|default(...)`.
   Também nada de `filter(x => ...)` nem `for ... if`: `if` dentro do laço.
-- Texto em URL: `?text=` (WhatsApp, UTF-8) por `snippets/polvo-urlencode.html`; `palavra_busca=` por `snippets/polvo-busca-termo.html` (**windows-1252**: `%E9`, não `%C3%A9`, senão a busca mostra "Papã©is"). Link fixo em `settings.json`/LP idem; nas LPs, `termoBusca` (`server/tema-lp.js`)
+- Texto em URL: `?text=` (WhatsApp, UTF-8) por `snippets/polvo-urlencode.html`; `palavra_busca=` por `snippets/polvo-busca-termo.html` (**windows-1252**: `%E9`, não `%C3%A9`, senão a busca mostra "Papã©is"). Link fixo em `settings.json`/LP idem; nas LPs, `termoBusca` (`server/tema-lp.js`). Rede de segurança: `snippets/polvo-busca-utf8.html` (no `<head>`) troca na hora qualquer `palavra_busca=` em UTF-8 pela versão windows-1252, venha de onde vier (LP antiga, Google). Não salva busca **sem resultado**: essa a Tray redireciona no servidor para `/sem-resultados-na-busca` antes do script
   (a Tray entrega acento como entidade, até nos literais do template).
 - CSS: nada de caractere fora do ASCII em `content:` (a Tray serve o CSS sem
   UTF-8); usar escape (`"\2013"`).
