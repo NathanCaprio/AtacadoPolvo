@@ -63,7 +63,8 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="dots"></div>
+        {# Atacado Polvo: uma foto só = sem bolinha (o elemento fica, o page-product.js usa) #}
+        <div class="dots{% if product.images | length < 2 %} polvo-sem-dots{% endif %}"></div>
 
     </div>
 

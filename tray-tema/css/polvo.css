@@ -1532,6 +1532,9 @@ h1, h2, h3,
 
 /* ---- 8. Página de produto ---------------------------------------------- */
 
+/* Uma foto só: sem a bolinha do carrossel (classe posta em snippets/product_gallery.html) */
+.product-gallery .dots.polvo-sem-dots { display: none !important; }
+
 /* Galeria: foto num cartão lilás claro (multiply some com o fundo branco das fotos). */
 .product-wrapper .product-gallery .product-images {
   padding: 2rem;
