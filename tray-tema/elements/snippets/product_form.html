@@ -211,6 +211,8 @@
 
       </form>
 
+      {% element 'snippets/polvo-barra-compra' %}
+
       {# Atacado Polvo: pedido grande ou dúvida vai direto para o WhatsApp da loja, já com o produto. #}
       {% set polvo_wpp = Translation('ag_telefone_3') | replace({'(': '', ')': '', ' ': '', '-': ''}) %}
       {% if polvo_wpp %}

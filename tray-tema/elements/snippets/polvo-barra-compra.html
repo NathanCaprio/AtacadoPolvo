@@ -1,0 +1,45 @@
+{# Atacado Polvo: barra fixa de compra no celular (página de produto). Aparece quando o bloco
+   "Quantidade + Comprar" (.polvo-pdp-compra) sai da tela por cima e some quando ele volta.
+   O botão usa o "Comprar" nativo (#button-buy) com a quantidade escolhida no #quant; produto com
+   variação rola até o formulário (precisa escolher a opção antes). Preço lido de #produto_preco
+   (chega por JS). Incluída em snippets/product_form.html; CSS em polvo.css seção 8. #}
+<div class="polvo-barra-compra" hidden>
+    <div class="polvo-barra-compra__info">
+        <span class="polvo-barra-compra__nome">{{ product.name }}</span>
+        <span class="polvo-barra-compra__preco"></span>
+    </div>
+    <button type="button" class="polvo-barra-compra__botao">Comprar</button>
+</div>
+<script>
+(function () {
+    var barra = document.querySelector('.polvo-barra-compra');
+    var bloco = document.querySelector('.polvo-pdp-compra');
+    var nativo = document.getElementById('button-buy');
+    if (!barra || !bloco || !nativo || !window.IntersectionObserver) return;
+    document.body.appendChild(barra);
+    var preco = barra.querySelector('.polvo-barra-compra__preco');
+    var temVariacao = !!document.querySelector('#form_comprar .product-variants');
+
+    function atualizaPreco() {
+        var p = document.getElementById('produto_preco');
+        var txt = p ? p.textContent.replace(/\s+/g, ' ').trim() : '';
+        var m = txt.match(/R\$\s?[\d.]+,\d{2}/);
+        preco.textContent = m ? m[0] : '';
+    }
+
+    new IntersectionObserver(function (e) {
+        var passou = !e[0].isIntersecting && e[0].boundingClientRect.top < 0;
+        if (passou) atualizaPreco();
+        barra.hidden = !passou;
+        document.body.classList.toggle('polvo-com-barra-compra', passou);
+    }).observe(bloco);
+
+    barra.querySelector('.polvo-barra-compra__botao').addEventListener('click', function () {
+        if (temVariacao) {
+            bloco.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        nativo.click();
+    });
+})();
+</script>

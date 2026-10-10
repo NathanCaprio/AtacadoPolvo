@@ -6,11 +6,8 @@
 
             {% element 'snippets/polvo-marca' %}
 
-            {% if 'home' in pages.current %}
-                <h1 class="title-store">{{ store.name }}</h1>
-            {% else %}
-                <div class="title-store">{{ store.name }}</div>
-            {% endif %}
+            {# o h1 da home é o título do destaque (polvo-hero); aqui era um segundo h1 escondido #}
+            <div class="title-store">{{ store.name }}</div>
 
         </a>
 

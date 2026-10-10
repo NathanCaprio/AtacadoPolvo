@@ -1,8 +1,13 @@
 
 <div class="header-menu {% if settings.header.settings.menu_style == 'hamburger' %}menu-hamburger{% endif %}" data-target="#nav">
-    <div class="header-menu-icon">
+    <div class="header-menu-icon" role="button" tabindex="0" aria-label="Abrir menu" aria-controls="menu-mobile">
         <div></div>
         <div></div>
         <div></div>
     </div>
-</div>
+</div><script>
+/* o ☰ é uma div: Enter/espaço abrem o menu como o clique (teclado e leitor de tela) */
+document.querySelectorAll('.header-menu-icon[role=button]').forEach(function (b) {
+    b.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); } });
+});
+</script>

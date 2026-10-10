@@ -520,6 +520,54 @@ h1, h2, h3,
   .polvo-marca__txt b { font-size: 1.2rem; }
 }
 
+/* Menu do celular: "Entrar / Cadastrar" com área de toque maior e o complemento com as
+   categorias e o WhatsApp (snippets/polvo-menu-extra.html). */
+.menu-mobile .login-links { display: flex; align-items: center; }
+
+.menu-mobile .login-links a { display: inline-block; padding: 0.5rem 0.25rem; }
+
+/* a lista do menu tinha height:100% (main.css) e empurrava o complemento para fora da tela;
+   quem rola é o .nav-mobile-wrapper */
+.menu-mobile .nav-mobile { height: auto; overflow: visible; }
+
+.polvo-menu-extra { margin-top: 1.5rem; }
+
+.polvo-menu-extra__titulo {
+  margin: 0 0 0.75rem;
+  color: var(--polvo-ink-3);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.polvo-menu-extra__cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.polvo-menu-extra__cats a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  background: var(--polvo-brand-soft);
+  color: var(--polvo-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.polvo-menu-extra__cats a:hover { background: var(--polvo-brand); color: #fff; }
+
+.polvo-menu-extra--wpp { padding-bottom: 2rem; }
+
+.polvo-menu-extra__wpp { display: flex; gap: 0.5rem; width: 100%; justify-content: center; }
+
 /* ---- 3. Botões ---------------------------------------------------------- */
 
 .button,
@@ -1174,8 +1222,8 @@ h1, h2, h3,
 }
 
 .box-cart .quantity-button {
-  width: 27px;
-  height: 27px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   border: 0;
   border-radius: 999px;
@@ -1193,6 +1241,15 @@ h1, h2, h3,
 }
 
 .box-cart .quantity-button:disabled { cursor: not-allowed; opacity: 0.35; }
+
+/* Setas do "Recomendamos para você" eram quadradinhos de 18x20 (difícil acertar no celular) */
+.cart-sidebar .related-product .prev,
+.cart-sidebar .related-product .next {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  line-height: 30px;
+}
 
 .box-cart .quantity-value {
   min-width: 26px;
@@ -1818,6 +1875,93 @@ h1, h2, h3,
   .product-price-tray.normal #produto_preco .PrecoPrincipal,
   .product-price-tray.normal #produto_preco #variacaoPreco { font-size: 1.875rem; }
   .product-wrapper .product-form .product-shipping { padding: 0.875rem; }
+}
+
+/* Barra fixa de compra no celular (snippets/polvo-barra-compra.html) */
+.polvo-barra-compra {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 18;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 16px calc(0.625rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--polvo-line);
+  background: #fff;
+  box-shadow: 0 -6px 20px rgba(27, 7, 51, 0.1);
+}
+
+.polvo-barra-compra[hidden] { display: none; }
+
+.polvo-barra-compra__info { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+
+.polvo-barra-compra__nome {
+  overflow: hidden;
+  color: var(--polvo-ink-2);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.polvo-barra-compra__preco {
+  color: var(--polvo-brand);
+  font-family: var(--polvo-font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.polvo-barra-compra__botao {
+  flex: none;
+  height: 46px;
+  padding: 0 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--polvo-brand);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.polvo-barra-compra__botao:hover { background: var(--polvo-brand-600); }
+
+/* com a barra aberta, o botão de WhatsApp sobe e o rodapé ganha folga para não ficar coberto */
+@media (max-width: 767px) {
+  body.polvo-com-barra-compra .polvo-wpp-fab { bottom: 88px; }
+  body.polvo-com-barra-compra .footer { margin-bottom: 72px; }
+}
+
+@media (min-width: 768px) {
+  .polvo-barra-compra { display: none !important; }
+}
+
+/* No computador a Tray tem a barra de compra dela (.quick-buy, 76px, z-index 10) e ela cobria o
+   botão de WhatsApp (z-index 9): enquanto ela está aberta, o botão sobe. */
+@media (min-width: 768px) {
+  body:has(.quick-buy.active) .polvo-wpp-fab { bottom: 96px; }
+}
+
+/* ---- QA do celular (10/10/2026) ------------------------------------------ */
+
+/* Selo do reCAPTCHA (contato, cadastro) ficava embaixo do botão de WhatsApp: sobe acima dele. */
+.grecaptcha-badge { bottom: 96px !important; }
+
+/* "Tecnologia Tray" alinhado com a linha de copyright (centro) */
+#NavLogoTray { text-align: center; }
+
+@media (max-width: 767px) {
+  /* Grade de produtos da categoria/busca: 40px entre linhas viravam muito rolar; cartões
+     colados na borda (5px). Agora 8px entre cartões e 14px nas bordas. */
+  .catalog-content .showcase-catalog .list-product { margin: 0; }
+  .catalog-content .list-product .item { margin-bottom: 8px; padding: 0 4px; }
+
+  /* Sugestões da busca: itens de 20px de altura viram alvos de 40px */
+  .header .suggestion-words span { padding: 10px 0; }
+
+  /* Filtros: a linha inteira da marca/categoria é o alvo, não só a caixinha de 16px */
+  .filter-checkbox .filter-label { display: inline-block; padding: 8px 0; }
 }
 
 /* ---- 9. Movimento reduzido --------------------------------------------- */

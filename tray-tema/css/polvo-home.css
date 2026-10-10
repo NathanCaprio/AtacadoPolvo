@@ -1212,10 +1212,11 @@
   .polvo-hero > .container,
   .polvo-secao > .container,
   .polvo-cta > .container { padding-left: 16px; padding-right: 16px; }
-  .polvo-hero { padding: 36px 0 48px; }
+  .polvo-hero { padding: 20px 0 40px; }
   .polvo-hero__grid { grid-template-columns: 1fr; gap: 8px; }
-  .polvo-hero__arte { order: -1; min-height: 200px; }
-  .polvo-hero__arte img { width: 240px; }
+  /* mascote menor: o título, o "Ver catálogo" e os números cabem na primeira tela */
+  .polvo-hero__arte { order: -1; min-height: 0; }
+  .polvo-hero__arte img { width: 150px; }
   .polvo-hero__texto-apoio { font-size: 1rem; }
   .polvo-hero__acoes .polvo-btn { flex: 1 1 100%; justify-content: center; }
   .polvo-secao { padding: 52px 0; }
