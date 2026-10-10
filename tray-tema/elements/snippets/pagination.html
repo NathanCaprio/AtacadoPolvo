@@ -1,47 +1,42 @@
+{# Atacado Polvo: "Anterior/Próxima" com texto, primeira e última página como número com reticências
+   (opções first/last/ellipsis do numbers) no lugar das setas duplas. CSS em polvo.css seção 7. #}
 {% if paginate.params.pageCount > 1 %}
+    <nav class="polvo-paginacao" aria-label="Páginas de produtos">
     <ul class="pagination flex align-center">
 
-        {{ paginate.first('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/><path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>', {
-            'escape' : false,
-            'tag'    : 'li',
-            'title'  : 'Primeira página',
-            'class'  : 'page first'
-        }) }}
-
         {% if paginate.hasPrev %}
-            {{ paginate.prev('<i class="icon icon-arrow-prev"></i>', {
+            {{ paginate.prev('<i class="icon icon-arrow-prev" aria-hidden="true"></i><span class="polvo-paginacao__txt">Anterior</span>', {
                 'escape' : false,
                 'tag'    : 'li',
                 'title'  : 'Página anterior',
                 'class'  : 'page prev'
             }) }}
+        {% else %}
+            <li class="page prev disabled" aria-hidden="true"><span><i class="icon icon-arrow-prev"></i><span class="polvo-paginacao__txt">Anterior</span></span></li>
         {% endif %}
 
         {{ paginate.numbers({
-            'modulus'      : 3,
+            'modulus'      : 2,
             'separator'    : false,
             'tag'          : 'li',
             'class'        : 'page',
             'currentClass' : 'current',
+            'first'        : 1,
+            'last'         : 1,
+            'ellipsis'     : '<li class="page ellipsis" aria-hidden="true">&hellip;</li>',
         }) }}
 
         {% if paginate.hasNext %}
-            {{ paginate.next('<i class="icon icon-arrow-next"></i>', {
+            {{ paginate.next('<span class="polvo-paginacao__txt">Próxima</span><i class="icon icon-arrow-next" aria-hidden="true"></i>', {
                 'escape' : false,
                 'tag'    : 'li',
-                'title'  : 'Próxima anterior',
+                'title'  : 'Próxima página',
                 'class'  : 'page next'
             }) }}
+        {% else %}
+            <li class="page next disabled" aria-hidden="true"><span><span class="polvo-paginacao__txt">Próxima</span><i class="icon icon-arrow-next"></i></span></li>
         {% endif %}
 
-        
-
-         {{ paginate.last('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/><path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/></svg>',{
-            'escape' : false,
-            'tag'    : 'li',
-            'title'  : 'Última página',
-            'class'  : 'page last'
-        }) }}
-
     </ul>
+    </nav>
 {% endif %}

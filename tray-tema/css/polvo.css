@@ -835,6 +835,19 @@ h1, h2, h3,
    .list-product tem margem -10px dos lados; tudo andava 10px e aparecia a beira do 5º cartão. */
 .list-slide .list-product.swiper-wrapper { margin-left: 0; margin-right: 0; }
 
+/* Antes do swiper iniciar (o slider-product.js é defer), o .item tem 25% do main.css:
+   no celular eram 4 cartões de ~90px, com -/+ e "Adicionar" espremidos (PageSpeed: área de
+   toque pequena) e tudo pulando ao iniciar. Mesmas colunas do slider: 2 / 3 (768) / 4 (1024). */
+.list-slide .swiper-container:not(.swiper-initialized) .list-product .item { width: 50%; }
+
+@media (min-width: 768px) {
+  .list-slide .swiper-container:not(.swiper-initialized) .list-product .item { width: 33.3333%; }
+}
+
+@media (min-width: 1024px) {
+  .list-slide .swiper-container:not(.swiper-initialized) .list-product .item { width: 25%; }
+}
+
 /* Setas das vitrines (js/polvo-setas.js). O .swiper-container tem 40px embaixo para as bolinhas. */
 .polvo-carrossel { position: relative; }
 
@@ -941,7 +954,8 @@ h1, h2, h3,
   padding-top: 1.25rem;
 }
 
-.footer .copy a { color: #fff; }
+/* sublinhado: link no meio do texto não pode depender só da cor (acessibilidade) */
+.footer .copy a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
 
 /* Colunas como no site antigo: sobre | navegação | categorias | institucional | contato,
    e pagamento/segurança numa linha embaixo (blocos em configs/settings.json → footer). */
@@ -1114,6 +1128,12 @@ h1, h2, h3,
    quantidade em pílula (- 3 +). */
 
 .cart-sidebar { max-width: 420px; }
+
+/* O sidecart.css carrega sem bloquear (elements/styles.html): até ele chegar, isto
+   mantém a gaveta fechada fora da tela (mesmas regras de lá). */
+.cart-sidebar { position: fixed; top: 0; right: 0; height: 100%; transform: translate(calc(100% + 10px)); }
+
+.cart-sidebar.active { transform: translate(0); }
 
 .header-cart {
   font-family: var(--polvo-font-display);
@@ -1413,6 +1433,101 @@ h1, h2, h3,
   .polvo-catnav__icone { width: 52px; height: 52px; }
   .polvo-catnav__icone svg { width: 24px; height: 24px; }
   .polvo-catnav__nome { font-size: 0.75rem; }
+}
+
+/* Paginação (snippets/pagination.html): botões redondos, página atual cheia,
+   1 ... 4 5 6 ... 12, contagem embaixo. Vale para categoria e busca. */
+.catalog-footer {
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--polvo-line);
+}
+
+.catalog-footer .results {
+  width: 100%;
+  margin: 0;
+  color: var(--polvo-ink-3);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.polvo-paginacao { max-width: 100%; }
+
+.polvo-paginacao .pagination {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.polvo-paginacao .pagination .page { margin: 0; }
+
+.polvo-paginacao .pagination .page > a,
+.polvo-paginacao .pagination .page > span,
+.polvo-paginacao .pagination .page.current,
+.polvo-paginacao .pagination .page.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 0.875rem;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--polvo-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.polvo-paginacao .pagination .page > a:hover,
+.polvo-paginacao .pagination .page > a:focus-visible {
+  border-color: var(--polvo-brand);
+  background: var(--polvo-brand-soft);
+  color: var(--polvo-brand-700);
+}
+
+.polvo-paginacao .pagination .page > a:focus-visible { outline: 2px solid var(--polvo-brand); outline-offset: 2px; }
+
+.polvo-paginacao .pagination .page.current {
+  border-color: var(--polvo-brand);
+  background: var(--polvo-brand);
+  color: #fff;
+  box-shadow: var(--polvo-shadow-sm);
+}
+
+.polvo-paginacao .pagination .page.ellipsis {
+  min-width: 24px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--polvo-ink-3);
+}
+
+.polvo-paginacao .pagination .page.prev > a,
+.polvo-paginacao .pagination .page.next > a { color: var(--polvo-brand-700); }
+
+.polvo-paginacao .pagination .page.disabled > span { opacity: 0.4; cursor: default; }
+
+.polvo-paginacao .pagination .page .icon { width: auto; font-size: 0.75rem; }
+
+@media (max-width: 767px) {
+  /* no celular só as setas, para caber numa linha */
+  .polvo-paginacao__txt { display: none; }
+  .polvo-paginacao .pagination { gap: 0.25rem; }
+  .polvo-paginacao .pagination .page > a,
+  .polvo-paginacao .pagination .page > span,
+  .polvo-paginacao .pagination .page.current { min-width: 40px; height: 40px; padding: 0 0.5rem; }
+  .polvo-paginacao .pagination .page.ellipsis { min-width: 16px; height: 40px; }
 }
 
 /* ---- 8. Página de produto ---------------------------------------------- */

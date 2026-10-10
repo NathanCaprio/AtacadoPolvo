@@ -25,6 +25,19 @@ function arquivos(pasta) {
   });
 }
 
+/* Nosso CSS (polvo*.css) vai minificado no ZIP: o PageSpeed acusava ~6 KB de comentários e
+   espaços. Só tira comentário e espaço sobrando; o fonte aqui continua legível. */
+const MINIFICAR = /^css[\\/]polvo[^\\/]*\.css$/;
+
+function minificarCss(css) {
+  return css
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*([{};,])\s*/g, '$1')
+    .replace(/;}/g, '}')
+    .trim();
+}
+
 /** Data/hora no formato do MS-DOS que o ZIP usa. */
 function horaDos(d) {
   return {
@@ -44,7 +57,10 @@ function empacotar() {
 
   for (const arq of lista) {
     const nome = Buffer.from(path.relative(ORIGEM, arq).split(path.sep).join('/'), 'utf8');
-    const bruto = fs.readFileSync(arq);
+    const relativo = path.relative(ORIGEM, arq);
+    const bruto = MINIFICAR.test(relativo)
+      ? Buffer.from(minificarCss(fs.readFileSync(arq, 'utf8')), 'utf8')
+      : fs.readFileSync(arq);
     const comprimido = zlib.deflateRawSync(bruto, { level: 9 });
     const crc = zlib.crc32(bruto);
 
@@ -97,4 +113,4 @@ if (require.main === module) {
   console.log(`tray-tema.zip: ${r.arquivos} arquivos, ${(r.bytes / 1024).toFixed(0)} KB`);
 }
 
-module.exports = { empacotar };
+module.exports = { empacotar, minificarCss };

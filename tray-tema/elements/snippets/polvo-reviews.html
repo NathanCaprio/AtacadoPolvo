@@ -19,7 +19,7 @@
           {% set partes = b.name | default('') | trim | split(' ') %}
           <figure class="polvo-depo" id="{{ block.id }}">
             {% if estrelas > 0 %}
-              <div class="polvo-depo__estrelas" aria-label="{{ estrelas }} de 5 estrelas">
+              <div class="polvo-depo__estrelas" role="img" aria-label="{{ estrelas }} de 5 estrelas">
                 {% for i in 1..5 %}
                   <svg viewBox="0 0 24 24" aria-hidden="true" class="{{ i > estrelas ? 'is-vazia' }}"><path d="M12 2l3 6.5 7 .9-5 4.8 1.2 7L12 17.8 5.8 21.2 7 14.2l-5-4.8 7-.9z"/></svg>
                 {% endfor %}

@@ -4,6 +4,9 @@
    (o Windows liga isso ao desligar "Efeitos de animação" e a faixa parecia quebrada). #}
 {% if section.type == 'polvo_brands' and section.settings.enabled %}
 {% set s = section.settings %}
+{# Largura de cada logo a 56px de altura (proporção do arquivo), para o navegador reservar o espaço.
+   Logo novo fora da lista sai sem width (funciona igual, só o PageSpeed reclama). #}
+{% set larguras = { "alklin.png": 89, "atrius.png": 124, "bombril.svg": 96, "bompack.png": 157, "brilhante.webp": 69, "coala.png": 88, "copozan.png": 224, "elgin.svg": 128, "florax.png": 83, "gota-limpa.png": 56, "higifort.png": 165, "jimo.svg": 164, "nobre.png": 103, "plasvale.png": 213, "qboa.png": 99, "saif.png": 81, "toksuave.png": 98, "veja.png": 56, "ype.png": 70 } %}
 <section class="polvo-marcas" id="{{ section.id }}"{% if s.title %} aria-label="{{ s.title }}"{% endif %}>
   {% if s.title %}<p class="polvo-marcas__titulo container">{{ s.title }}</p>{% endif %}
   <div class="polvo-marcas__viewport">
@@ -11,7 +14,8 @@
       <ul class="polvo-marcas__lista">
         {% for block in section.blocks %}
           {% if block.settings.enabled and block.settings.image %}
-            <li id="{{ block.id }}"><img src="{{ asset(block.settings.image) }}" alt="{{ block.settings.alt }}" height="56" decoding="async"></li>
+            {% set arquivo = block.settings.image|split("/")|last %}
+            <li id="{{ block.id }}"><img src="{{ asset(block.settings.image) }}" alt="{{ block.settings.alt }}"{% if larguras[arquivo] is defined %} width="{{ larguras[arquivo] }}"{% endif %} height="56" decoding="async"></li>
           {% endif %}
         {% endfor %}
       </ul>
@@ -37,10 +41,19 @@
     // Velocidade constante: 4 s por logo.
     var viewport = secao.querySelector('.polvo-marcas__viewport');
     var x = 0, volta = 0, parado = false, arraste = null, anterior = 0;
-    function medir() { volta = lista.offsetWidth; }
-    medir();
-    window.addEventListener('resize', medir);
-    lista.querySelectorAll('img').forEach(function (img) { img.addEventListener('load', medir); });
+    // ResizeObserver entrega a largura (com padding) sem forçar layout (PageSpeed: "reflow forçado")
+    // e já avisa quando a tela muda ou um logo termina de carregar.
+    if (window.ResizeObserver) {
+        new ResizeObserver(function (e) {
+            var caixa = e[0].borderBoxSize && e[0].borderBoxSize[0];
+            volta = caixa ? caixa.inlineSize : lista.offsetWidth;
+        }).observe(lista);
+    } else {
+        var medir = function () { volta = lista.offsetWidth; };
+        medir();
+        window.addEventListener('resize', medir);
+        lista.querySelectorAll('img').forEach(function (img) { img.addEventListener('load', medir); });
+    }
 
     function quadro(t) {
         var dt = anterior ? Math.min(t - anterior, 100) : 0;
