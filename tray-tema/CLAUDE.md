@@ -5,20 +5,20 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Fluxo (sempre este)
 1. Editar aqui → `npm run tema-zip` (raiz) → gera `tray-tema.zip` (fora do git).
-2. Subir na **cópia de trabalho, tema 3560443** ("Cópia tema 3521907…", não publicada; publicada é a 3564393 "Cópia tema 3560443…" desde 08/10/2026 00:29). Logo após publicar, a cópia de trabalho recebeu o mesmo ZIP (as duas iguais):
+2. Subir na **cópia de trabalho, tema 3564393** ("Cópia tema 3560443…", não publicada; publicada é a 3560443 "Cópia tema 3521907…" desde 10/10/2026 18:42). Logo após publicar, a cópia de trabalho recebeu o mesmo ZIP (as duas iguais):
    painel → Aparência da loja (`/studio-app/?platform=tray`) → link "Editar HTML"
-   da cópia (`a[href="/studio-app/themes/3560443/code"]`) → Ações → Enviar tema →
+   da cópia (`a[href="/studio-app/themes/3564393/code"]`) → Ações → Enviar tema →
    Procurar arquivo → Enviar (o botão do diálogo; escolher o arquivo não envia). Resultado sai no console (Pusher): "Upload de Zip
    finalizado com sucesso." (~20 s).
-3. Conferir em `https://www.atacadopolvo.com.br?loja=1544153&opencode_theme=ab9ec62e-5e89-49cc-8f53-b2fff4524948` (3560443; o `e959dda5-b2fb-4127-a8b6-f4fe3b584fa8` é o da 3564393, hoje publicada).
+3. Conferir em `https://www.atacadopolvo.com.br?loja=1544153&opencode_theme=e959dda5-b2fb-4127-a8b6-f4fe3b584fa8` (3564393; o `ab9ec62e-5e89-49cc-8f53-b2fff4524948` é o da 3560443, hoje publicada).
 4. Commit. **Publicar** a cópia só o usuário decide.
 
 - Tray **recusa ZIP parcial** ("estrutura inválida"): sempre o tema inteiro.
 - Envio só substitui arquivos de mesmo nome; arquivo apagado aqui continua lá.
 - Enviar ZIP sem abrir a janela de arquivo: `page.locator('input[type=file]').last().setInputFiles(...)` e depois o botão "Enviar" do diálogo.
 - Na lista de temas, conferir **qual está publicado** antes de clicar em "Publicar" (o card do topo é o publicado).
-- Publicado (08/10/2026, 00:29) = 3564393. **Não é possível editar um tema que já está publicado** (o menu dele não tem "Editar HTML" e o /code responde "Tema está publicado"). É necessário **duplicar o tema publicado** (Mais opções → Duplicar tema): a cópia exibe a opção **Editar HTML**, e depois sobe o ZIP de novo nela e publica. Por isso a correção vai na
-  3560443 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
+- Publicado (10/10/2026, 18:42) = 3560443. **Não é possível editar um tema que já está publicado** (o menu dele não tem "Editar HTML" e o /code responde "Tema está publicado"). É necessário **duplicar o tema publicado** (Mais opções → Duplicar tema): a cópia exibe a opção **Editar HTML**, e depois sobe o ZIP de novo nela e publica. Por isso a correção vai na
+  3564393 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
   (no domínio antigo dá "unauthorized"). Ao publicar, as duas cópias trocam de papel: atualizar o código
   e o `opencode_theme` acima (link "Pré-visualizar" do Editar HTML da cópia). "Genesis" (3512519) é o tema antigo. **"agrada dev" não é deste projeto — nunca mexer.**
 - Login no painel tem reCAPTCHA: o usuário entra na janela do Playwright.
@@ -117,7 +117,7 @@ JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linh
 - Mexer o mínimo nos arquivos da Tray (facilita atualizar o tema); o nosso vai em `polvo.css` e em arquivos novos.
 - `.container`: o da Tray (1080px; 75% entre 1025 e 1919px, com mínimo de 1200px em `polvo.css`; 1440px a partir de 1920; 15px dos lados; cabeçalho 16px no celular). As LPs copiam as mesmas regras (`lp/_base.css`), senão o cabeçalho pula ao entrar numa LP: mudou um lado, mudar o outro e recolar as LPs. Fixar 1200px estreitou demais a categoria em tela grande (o usuário pediu de volta, 07/10/2026).
 - Tokens do site antigo: `--polvo-*` no topo de `polvo.css` (iguais a `assets/css/style.css`).
-- PageSpeed (10/10/2026): `css/polvo*.css` vão **minificados no ZIP** (`minificarCss` em `server/tema-zip.js`; o fonte fica legível). Fontes do Google e `sidecart.css` carregam sem bloquear (`media=print` + `onload`, em `elements/styles.html`); a regra que mantém a gaveta fora da tela até lá está em `polvo.css` seção 6. Logos de `img/marcas/` reduzidos a até 112px de altura; `polvo-brands.html` tem a largura de cada um (`larguras`): logo novo = linha nova lá. Antes do swiper iniciar, `.item` das vitrines já tem a largura final (`polvo.css` seção 4). PageSpeed da prévia (`opencode_theme`) não serve para comparar desempenho: a prévia carrega jQuery/application da Tray em dobro.
+- PageSpeed (10/10/2026, publicado): `css/polvo*.css` vão **minificados no ZIP** (`minificarCss` em `server/tema-zip.js`; o fonte fica legível). Fontes do Google e `sidecart.css` carregam sem bloquear (`media=print` + `onload`, em `elements/styles.html`); a regra que mantém a gaveta fora da tela até lá está em `polvo.css` seção 6. Logos de `img/marcas/` reduzidos a até 112px de altura; `polvo-brands.html` tem a largura de cada um (`larguras`): logo novo = linha nova lá. Antes do swiper iniciar, `.item` das vitrines já tem a largura final (`polvo.css` seção 4). PageSpeed da prévia (`opencode_theme`) não serve para comparar desempenho: a prévia carrega jQuery/application da Tray em dobro.
 - `main.css` é minificado (70 KB): achar seletor com `grep -o '\.seletor[^}]*}' css/main.css`.
 - A CSP/regras do site antigo (sem inline) **não** valem aqui; o tema da Tray usa `<style>`/`<script>` inline.
 
