@@ -39,15 +39,23 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Pix, Transf. BB, Transf. Bradesco). Desligadas e disponíveis: Faturamento Direto, Depósito,
       Boleto do banco, Banricompras, outros intermediadores (Mercado Pago, PagBank, Pagar.me...,
       com +1,5% da Tray no plano Crescimento).
-- [ ] **Vínculo das formas de pagamento no ERP** (Empresarius > Lojas Virtuais > Tray > Formas de
-      Pagamentos). Em 11/10/2026 as 9 formas ativas estavam **sem condição vinculada** e a
+- [x] **Vínculo das formas de pagamento no ERP (11/10/2026, a pedido do usuário):** Pix - Vindi →
+      PIX QR CODE; Cartão Visa/MasterCard/Elo/Amex/Diners - Vindi → CRÉDITO (conferido na lista).
+      Boleto e Transferência Online BB/Bradesco ficam sem vínculo: o usuário quer **desligá-los na
+      Tray** (Pagamentos > Configurações > Vindi > Status), mas o salvar da Tray deu "Falha ao salvar"
+      (POST 401 em payment-integrator.tray.net.br, painel com aviso de manutenção); refazer.
+      Condição padrão (Lojas Virtuais > Configurações > Tray) = **CRÉDITO** (salva pelo usuário;
+      o modo automático barrou o "Salvar" dessa tela). Enquanto boleto/transferência estiverem
+      ligados na Tray, pedido por eles entra no ERP como CRÉDITO.
+      Histórico: em 11/10/2026 as 9 formas ativas estavam **sem condição vinculada** e a
       "Condição de Pagamento padrão (forma do pedido sem vínculo)" em Lojas Virtuais > Configurações >
       Tray estava **vazia**. Condições ativas no ERP: PIX QR CODE, CRÉDITO, DÉBITO, BOLETO SICREDI,
       DINHEIRO, CHEQUE, CARTEIRA, CRÉDITO TELE, DEPÓSITO / PIX VIA CHAVE, BANRI PRAZO, NENHUM.
       Sugestão: Pix → PIX QR CODE; cartões → CRÉDITO; boleto/transferências → condição própria da
       Vindi (o dinheiro cai na Vindi, não no Sicredi). Decisão do usuário/contador; não gravamos no ERP.
-- [ ] **Estoque do ERP para a Tray:** em Lojas Virtuais > Configurações > Tray, "Atualizar o estoque
-      dos produtos vinculados na loja" estava **desligado** em 11/10/2026 (preço ligado).
+- [x] **Estoque do ERP para a Tray (11/10/2026):** em Lojas Virtuais > Configurações > Tray, "Atualizar o
+      estoque dos produtos vinculados na loja" **ligado** (antes desligado; preço já estava ligado).
+      Produto zerado no ERP fica indisponível na loja.
 - [ ] **Páginas institucionais** (Como comprar, Envio, Pagamento, Tempo de Garantia, Trocas e
       devoluções, Segurança). Ainda estão com o texto padrão da Tray; o de Envio, por exemplo,
       promete "em até 2 dias úteis". O título "Seguranca" está sem cedilha.
