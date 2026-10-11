@@ -98,7 +98,7 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Home com `robots: INDEX,FOLLOW` e canonical certo; robots.txt só bloqueia carrinho/checkout.
       **Search Console (11/10/2026):** propriedade "Prefixo do URL" `https://www.atacadopolvo.com.br`;
       tag `google-site-verification` no `<head>` de `layouts/default.html` (não remover), publicada na
-      3564393 às 15:39 e conferida na loja. Falta o usuário: clicar em Verificar, enviar
+      3564393 às 15:39 e conferida na loja. **Verificada** pelo usuário no mesmo dia. Falta: enviar
       `https://www.atacadopolvo.com.br/sitemap.xml` e pedir indexação da home e das LPs. Em 11/10/2026
       uma busca `site:atacadopolvo.com.br` (ferramenta de busca, não o Google) não achou nada.
 - [ ] Conferir numa **janela anônima**. A Tray manda o navegador guardar as páginas por 4 h,
