@@ -1,0 +1,102 @@
+{# Atacado Polvo: pop-up do cupom de primeira compra (o do site antigo, assets/js/cupom.js, adaptado
+   à Tray). Liga no editor do tema: Rodapé > "Pop-up de cupom de primeira compra" + código do cupom
+   (cadastrado antes em Marketing > Cupons de desconto). Sem código, não aparece.
+   Pede nome e e-mail (vão para a newsletter da Tray, painel > Assinantes da newsletter) e mostra o
+   código para usar no carrinho. Aparece uma vez, no primeiro sinal de interesse: 20 s na página,
+   metade da página rolada ou o mouse saindo pelo topo (computador). Fechou: volta em 7 dias.
+   Pegou o código: não volta. Textos ficam no HTML: a Tray troca acento por entidade até em <script>.
+   CSS em polvo.css ("Pop-up do cupom"). Incluído em layouts/default.html. #}
+{% set fs = settings.footer.settings %}
+{% set cupom_codigo = fs.polvo_cupom_codigo | default('') | trim %}
+{% if fs.polvo_cupom_ativo | default(false) and cupom_codigo %}
+{% set cupom_desconto = fs.polvo_cupom_desconto | default('5%') %}
+<dialog class="polvo-cupom" aria-labelledby="polvo-cupom-titulo">
+    <button type="button" class="polvo-cupom__fechar" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+
+    <div class="polvo-cupom__passo" data-passo="form">
+        <span class="polvo-cupom__selo">Primeira compra</span>
+        <h2 id="polvo-cupom-titulo" tabindex="-1" autofocus>Ganhe <span class="polvo-grad">{{ cupom_desconto }} de desconto</span> no seu primeiro pedido</h2>
+        <p class="polvo-cupom__lead">Deixe seu nome e e-mail e receba o cupom agora, para usar no carrinho.</p>
+        <form class="polvo-cupom__form" novalidate>
+            <label class="polvo-cupom__campo">
+                <span>Seu nome</span>
+                <input type="text" name="name" autocomplete="name" required maxlength="80">
+            </label>
+            <label class="polvo-cupom__campo">
+                <span>E-mail</span>
+                <input type="email" name="email" autocomplete="email" inputmode="email" required maxlength="120">
+            </label>
+            <p class="polvo-cupom__erro" hidden>Confira o nome e o e-mail.</p>
+            <button type="submit" class="polvo-btn polvo-btn--primario polvo-cupom__botao">Quero meu cupom</button>
+            <p class="polvo-cupom__nota">Você também recebe nossas ofertas por e-mail e pode sair da lista quando quiser.</p>
+        </form>
+    </div>
+
+    <div class="polvo-cupom__passo" data-passo="ok" hidden>
+        <span class="polvo-cupom__selo">Cupom liberado</span>
+        <h2>Pronto! Use este código no carrinho:</h2>
+        <div class="polvo-cupom__codigo">
+            <strong>{{ cupom_codigo }}</strong>
+            <button type="button" class="polvo-cupom__copiar" data-copiado="Copiado">Copiar</button>
+        </div>
+        <p class="polvo-cupom__lead">No carrinho, toque em <b>Cupom de desconto</b> e cole o código. Vale para o primeiro pedido.</p>
+        <button type="button" class="polvo-btn polvo-btn--primario polvo-cupom__botao" data-fechar>Continuar comprando</button>
+    </div>
+</dialog>
+<script>
+(function () {
+    var d = document.querySelector('.polvo-cupom');
+    if (!d || typeof d.showModal !== 'function') return;
+    var CHAVE = 'polvo-cupom', FECHOU = 'polvo-cupom-fechou', PAUSA = 7 * 864e5;
+    function ler(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function gravar(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    if (ler(CHAVE) || Date.now() - (Number(ler(FECHOU)) || 0) < PAUSA) return;
+    /* no carrinho/checkout, na conta e com outra gaveta aberta, não interrompe */
+    if (/checkout|central-do-cliente|login|cadastro/.test(location.pathname)) return;
+
+    var mostrou = false;
+    function mostrar() {
+        if (mostrou || document.querySelector('.cart-sidebar.active, .menu-mobile.show, .polvo-cupom[open]')) return;
+        mostrou = true;
+        limpar();
+        d.showModal();
+    }
+    var timer = setTimeout(mostrar, 20000);
+    function rolou() { if (scrollY + innerHeight > document.documentElement.scrollHeight / 2) mostrar(); }
+    function saiu(e) { if (e.clientY <= 0 && !e.relatedTarget) mostrar(); }
+    function limpar() { clearTimeout(timer); removeEventListener('scroll', rolou); document.removeEventListener('mouseout', saiu); }
+    addEventListener('scroll', rolou, { passive: true });
+    if (matchMedia('(hover: hover)').matches) document.addEventListener('mouseout', saiu);
+
+    function fechar() { d.close(); }
+    d.addEventListener('close', function () { if (!ler(CHAVE)) gravar(FECHOU, String(Date.now())); });
+    d.querySelector('.polvo-cupom__fechar').addEventListener('click', fechar);
+    d.querySelector('[data-fechar]').addEventListener('click', fechar);
+    d.addEventListener('click', function (e) { if (e.target === d) fechar(); });
+
+    var form = d.querySelector('.polvo-cupom__form');
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var nome = form.elements.name.value.trim(), email = form.elements.email.value.trim();
+        var ok = nome.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+        d.querySelector('.polvo-cupom__erro').hidden = ok;
+        if (!ok) return;
+        /* mesmo destino do formulário de newsletter do rodapé da Tray; se falhar, o cupom aparece igual */
+        var dados = new URLSearchParams({ loja: '{{ store.id }}', name: nome, email: email });
+        try { fetch('/mvc/store/newsletter/', { method: 'POST', body: dados, credentials: 'same-origin' }).catch(function () {}); } catch (err) {}
+        gravar(CHAVE, '1');
+        d.querySelector('[data-passo="form"]').hidden = true;
+        d.querySelector('[data-passo="ok"]').hidden = false;
+    });
+
+    var copiar = d.querySelector('.polvo-cupom__copiar');
+    copiar.addEventListener('click', function () {
+        var codigo = d.querySelector('.polvo-cupom__codigo strong').textContent.trim();
+        var feito = function () { copiar.textContent = copiar.getAttribute('data-copiado'); };
+        if (navigator.clipboard) navigator.clipboard.writeText(codigo).then(feito, feito); else feito();
+    });
+})();
+</script>
+{% endif %}

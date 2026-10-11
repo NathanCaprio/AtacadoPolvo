@@ -124,6 +124,9 @@ h1, h2, h3, p { margin-top: 0; }
 
 .lp-nav .lp-nav__conta { display: none; }
 
+/* Categorias + WhatsApp: só no menu do ☰ (espelho de .polvo-menu-extra do tema) */
+.lp-nav__extra { display: none; }
+
 .polvo-header-wpp {
   display: inline-flex;
   align-items: center;
@@ -244,6 +247,51 @@ h1, h2, h3, p { margin-top: 0; }
   .lp-nav a[aria-current="page"] { background: var(--polvo-brand-soft); }
 
   .lp-nav a[aria-current="page"]::after { content: none; }
+
+  .lp-topo--menu .lp-nav { max-height: calc(100vh - 100px); overflow-y: auto; }
+
+  .lp-nav__extra { display: block; margin-top: 14px; padding: 16px 0 6px; border-top: 1px solid var(--polvo-line); }
+
+  .lp-nav__titulo {
+    margin: 0 0 10px;
+    color: var(--polvo-ink-3);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lp-nav .lp-nav__cats { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+
+  .lp-nav .lp-nav__cats a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: var(--polvo-brand-soft);
+    color: var(--polvo-ink);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .lp-nav .lp-nav__cats a:hover { background: var(--polvo-brand); color: #fff; }
+
+  .lp-nav .lp-nav__wpp {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-radius: 999px;
+    background: var(--polvo-ok);
+    color: #fff;
+  }
+
+  .lp-nav .lp-nav__wpp:hover { background: #198f45; color: #fff; }
+
+  .lp-nav .lp-nav__wpp svg { width: 20px; height: 20px; }
 }
 
 /* Celular: marca | lupa | carrinho | ☰ (conta vai para o menu; WhatsApp no botão flutuante). */
@@ -364,6 +412,63 @@ h1, h2, h3, p { margin-top: 0; }
 @media (max-width: 575px) {
   .lp-rodape__cols { gap: 28px 20px; padding-left: 16px; padding-right: 16px; }
   .lp-rodape__cols > :nth-child(n+4) { grid-column: 1 / -1; }
+}
+
+/* Colunas de links que abrem e fecham no celular (espelho de .polvo-rodape-sanfona, css/polvo.css
+   seção 5; script no SCRIPT de server/tema-lp.js). No computador o botão é só o título. */
+.lp-rodape__toggle {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  text-transform: inherit;
+  cursor: default;
+}
+
+@media (max-width: 767px) {
+  .lp-rodape--sanfona .lp-rodape__cols { row-gap: 28px; }
+
+  .lp-rodape--sanfona .lp-rodape__links {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* fechadas coladas uma na outra (anula o espaço da grade e a borda dupla) */
+  .lp-rodape--sanfona .lp-rodape__links + .lp-rodape__links { margin-top: -29px; }
+
+  .lp-rodape--sanfona .lp-rodape__links h2 { margin: 0; }
+
+  .lp-rodape--sanfona .lp-rodape__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    cursor: pointer;
+  }
+
+  .lp-rodape--sanfona .lp-rodape__toggle::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-3px);
+    transition: transform 0.2s var(--polvo-ease);
+  }
+
+  .lp-rodape--sanfona .lp-rodape__links.is-aberto .lp-rodape__toggle::after { transform: rotate(-135deg) translateY(-3px); }
+
+  .lp-rodape--sanfona .lp-rodape__links:not(.is-aberto) ul { display: none; }
+
+  .lp-rodape--sanfona .lp-rodape__links.is-aberto ul { padding-bottom: 18px; }
+
+  .lp-rodape--sanfona .lp-rodape__links a { display: inline-block; padding: 4px 0; }
 }
 
 /* ---- Botão flutuante de WhatsApp (espelho de .polvo-wpp-fab) ---------- */

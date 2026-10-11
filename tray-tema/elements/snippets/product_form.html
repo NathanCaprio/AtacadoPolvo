@@ -14,7 +14,17 @@
         'show_tags': show_tags
     } %}
 
+    {# Atacado Polvo: compartilhar (só celular) ao lado do nome; antes ficava sozinho numa linha embaixo dele. #}
+    <div class="polvo-pdp-titulo">
     <h1 class="product-name"> {{ product.name }} </h1>
+      {% if section.settings.enable_social_share and utils.is_mobile %}
+        <div class="product-share-mobile">
+            <div class="share-button" data-store="{{ store.name }}" data-product="{{ product.name }}" data-url="{{ product.link }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 0 26 26" width="22" height="22"><path fill-rule="evenodd" d="M19 24a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM19 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 14c-1.77 0-3.315.925-4.204 2.312l-5.355-3.06c.346-.68.559-1.438.559-2.252 0-.503-.097-.979-.235-1.437l5.571-3.183A4.97 4.97 0 0 0 19 10a5 5 0 0 0 5-5 5 5 0 0 0-5-5 5 5 0 0 0-5 5c0 .503.097.979.235 1.438L8.664 9.62A4.973 4.973 0 0 0 5 8a5 5 0 0 0-5 5 5 5 0 0 0 5 5c1.14 0 2.179-.396 3.02-1.038L8 17l6.055 3.46c-.02.18-.055.354-.055.54a5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5Z"/></svg>
+            </div>
+        </div>
+      {% endif %}
+    </div>
 
     <div class="flex align-center justify-between">
 
@@ -23,13 +33,7 @@
         {% element 'snippets/rating' { 'review': product.ranking, 'total' : true } %}
       {% endif %}
 
-      {% if section.settings.enable_social_share and utils.is_mobile %}
-        <div class="product-share-mobile">
-            <div class="share-button" data-store="{{ store.name }}" data-product="{{ product.name }}" data-url="{{ product.link }}">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 0 26 26" width="22" height="22"><path fill-rule="evenodd" d="M19 24a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM19 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 14c-1.77 0-3.315.925-4.204 2.312l-5.355-3.06c.346-.68.559-1.438.559-2.252 0-.503-.097-.979-.235-1.437l5.571-3.183A4.97 4.97 0 0 0 19 10a5 5 0 0 0 5-5 5 5 0 0 0-5-5 5 5 0 0 0-5 5c0 .503.097.979.235 1.438L8.664 9.62A4.973 4.973 0 0 0 5 8a5 5 0 0 0-5 5 5 5 0 0 0 5 5c1.14 0 2.179-.396 3.02-1.038L8 17l6.055 3.46c-.02.18-.055.354-.055.54a5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5Z"/></svg>
-            </div>
-        </div>
-      {% endif %}
+
 
     </div>
 

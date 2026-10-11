@@ -15,6 +15,9 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] **Frete.** Com CEP de Porto Alegre (90010-000), o carrinho responde "Nenhuma forma de
       envio disponível para este endereço". Configurar a entrega própria (frete por faixa
       de CEP da Região Metropolitana) e, se quiser, retirada nas duas lojas.
+      **11/10/2026:** painel > Configurações > Frete e envio diz "Você ainda não possui nenhuma
+      forma de envio habilitada" (todas inativas, inclusive Motoboy e Retirar no local): ninguém
+      fecha pedido até isso ser configurado.
 - [ ] **Dados da empresa.** O rodapé do checkout mostra "ATACADO POLVO, **CPF** …, Rua Ângelo
       Crivellaro…". Trocar pelo CNPJ e pelo endereço da loja (painel > Configurações > dados
       da loja).
@@ -33,7 +36,11 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [x] **CNPJ do rodapé** (06/10/2026): 37.418.777/0001-80 com a razão social, no tema e nas LPs.
 - [ ] **FAQ e depoimentos.** Revisar as respostas do FAQ da home e trocar os depoimentos da home (textos do site antigo, já no ar) pelos de clientes reais (painel → Editar tema → Polvo: depoimentos).
 - [ ] **Checkout (opcional).** O carrinho e o checkout da Tray usam roxo-escuro e o logo
-      pequeno. Dá para acertar a cor e o logo nas configurações do checkout.
+      pequeno. Dá para acertar a cor e o logo nas configurações do checkout: painel >
+      Configurações > **Aparência do carrinho** (37 cores + fonte; botão principal hoje #4b1d4c).
+      Paleta proposta em 11/10: botões #7b2fe3 (hover #6a20cc) com texto branco, textos #1b0733 /
+      #463160, links #551aa6, bordas #e8def7, caixa selecionada #f2eafe, fonte Roboto.
+      Aguardando o ok do usuário para aplicar.
 
 ### No dia
 - [x] Publicar a cópia 3521907 (publicada em 02/10/2026).

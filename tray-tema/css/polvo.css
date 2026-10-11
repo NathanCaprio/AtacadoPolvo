@@ -1645,6 +1645,27 @@ h1, h2, h3,
 
 /* ---- 8. Página de produto ---------------------------------------------- */
 
+/* Nome do produto com o "compartilhar" (só celular) ao lado (snippets/product_form.html) */
+.polvo-pdp-titulo { display: flex; align-items: flex-start; gap: 0.75rem; }
+
+.polvo-pdp-titulo .product-name { flex: 1 1 auto; min-width: 0; }
+
+.polvo-pdp-titulo .product-share-mobile { flex: none; margin: 0.125rem 0 0; }
+
+.polvo-pdp-titulo .product-share-mobile .share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--polvo-line);
+  border-radius: 999px;
+  color: var(--polvo-brand);
+  cursor: pointer;
+}
+
+.polvo-pdp-titulo .product-share-mobile svg { width: 18px; height: 18px; fill: currentColor; }
+
 /* Uma foto só: sem a bolinha do carrossel (classe posta em snippets/product_gallery.html) */
 .product-gallery .dots.polvo-sem-dots { display: none !important; }
 
@@ -1997,6 +2018,136 @@ h1, h2, h3,
    botão de WhatsApp (z-index 9): enquanto ela está aberta, o botão sobe. */
 @media (min-width: 768px) {
   body:has(.quick-buy.active) .polvo-wpp-fab { bottom: 96px; }
+}
+
+/* Pop-up do cupom de primeira compra (snippets/polvo-cupom.html). No celular, folha presa embaixo. */
+.polvo-cupom {
+  box-sizing: border-box;
+  /* o main.css da Tray zera a margem de tudo; sem isto o dialog não centraliza */
+  margin: auto;
+  width: min(440px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  padding: 2rem 1.75rem 1.75rem;
+  border: 0;
+  border-radius: var(--polvo-r-lg);
+  background: #fff;
+  color: var(--polvo-ink);
+  box-shadow: 0 24px 60px rgba(27, 7, 51, 0.28);
+}
+
+.polvo-cupom::backdrop { background: rgba(27, 7, 51, 0.55); }
+
+.polvo-cupom h2 {
+  margin: 0.75rem 0 0.5rem;
+  outline: none;
+  font-family: var(--polvo-font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.polvo-cupom__fechar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--polvo-ink-3);
+  cursor: pointer;
+}
+
+.polvo-cupom__fechar:hover { background: var(--polvo-surface-2); color: var(--polvo-ink); }
+
+.polvo-cupom__fechar svg { width: 20px; height: 20px; }
+
+.polvo-cupom__selo {
+  display: inline-block;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 999px;
+  background: var(--polvo-accent);
+  color: var(--polvo-accent-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.polvo-cupom__lead { margin: 0 0 1.25rem; color: var(--polvo-ink-2); font-size: 0.9375rem; line-height: 1.5; }
+
+.polvo-cupom__form { display: grid; gap: 0.875rem; }
+
+.polvo-cupom__campo { display: grid; gap: 0.375rem; font-size: 0.875rem; font-weight: 600; }
+
+/* seletor forte: a Tray põe borda em input:not([type=radio]):not([type=checkbox]) */
+.polvo-cupom .polvo-cupom__campo input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+  border: 1px solid var(--polvo-line-strong);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--polvo-ink);
+  font-size: 1rem;
+}
+
+.polvo-cupom .polvo-cupom__campo input:focus { border-color: var(--polvo-brand); outline: 3px solid var(--polvo-brand-soft); }
+
+.polvo-cupom__erro { margin: 0; color: var(--polvo-danger); font-size: 0.875rem; font-weight: 600; }
+
+.polvo-cupom__botao { justify-content: center; width: 100%; }
+
+.polvo-cupom__nota { margin: 0; color: var(--polvo-ink-3); font-size: 0.75rem; text-align: center; }
+
+.polvo-cupom__codigo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+  border: 2px dashed var(--polvo-brand);
+  border-radius: 14px;
+  background: var(--polvo-brand-soft);
+}
+
+.polvo-cupom__codigo strong {
+  color: var(--polvo-brand-700);
+  font-family: var(--polvo-font-display);
+  font-size: 1.375rem;
+  letter-spacing: 0.06em;
+  word-break: break-all;
+}
+
+.polvo-cupom__copiar {
+  flex: none;
+  height: 40px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--polvo-brand);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .polvo-cupom {
+    width: 100%;
+    max-width: none;
+    margin: auto 0 0;
+    padding: 1.75rem 16px calc(1.25rem + env(safe-area-inset-bottom));
+    border-radius: var(--polvo-r-lg) var(--polvo-r-lg) 0 0;
+  }
+
+  .polvo-cupom h2 { font-size: 1.3125rem; }
 }
 
 /* ---- QA do celular (10/10/2026) ------------------------------------------ */

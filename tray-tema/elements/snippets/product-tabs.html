@@ -133,4 +133,15 @@
 
     </div>
 </div>
+{# Atacado Polvo: no celular a "Descrição Geral" começa aberta (a Tray abre a 1a aba e o
+   page-product.js fecha tudo abaixo de 768px). O toque simulado usa o próprio abre/fecha da Tray. #}
+<script>
+window.addEventListener('load', function () {
+    if (window.innerWidth >= 768) return;
+    setTimeout(function () {
+        var link = document.querySelector('.product-tabs .tabs-content .tab-link-mobile');
+        if (link && !link.classList.contains('active') && /descri/i.test(link.textContent)) link.click();
+    }, 300);
+});
+</script>
 {% endif %}

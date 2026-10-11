@@ -288,6 +288,14 @@ function cabecalho(nome, s, t, wppOrcamento) {
     const atual = i.url === '/' + nome ? ' aria-current="page"' : '';
     return `<li><a href="${esc(i.url)}"${atual}${i.openInNewTab ? ' target="_blank" rel="noopener"' : ''}>${esc(i.label)}</a></li>`;
   }).join('\n          ');
+  // Menu do celular como o do tema (snippets/polvo-menu-extra.html): categorias + WhatsApp. A LP não
+  // lê as categorias da loja; usa as da coluna "Categorias" do rodapé (settings.json).
+  const cats = t.links.find(l => /categ/i.test(l.titulo));
+  const extra = `<div class="lp-nav__extra">${cats ? `
+        <p class="lp-nav__titulo">${esc(cats.titulo)}</p>
+        <ul class="lp-nav__cats">${cats.itens.map(([txt, url]) => `<li><a href="${esc(url)}"${externo(url)}>${esc(txt)}</a></li>`).join('')}</ul>` : ''}
+        <a class="polvo-btn polvo-btn--wpp lp-nav__wpp" href="${wppOrcamento}" target="_blank" rel="noopener">${ICONE.wpp}<span>Pedir pelo WhatsApp</span></a>
+      </div>`;
   return `${t.faixa ? `<div class="lp-faixa"><div class="container">${esc(t.faixa)}</div></div>
 ` : ''}<header class="lp-topo">
   <div class="container lp-topo__linha">
@@ -299,6 +307,7 @@ function cabecalho(nome, s, t, wppOrcamento) {
           ${menu}
           <li class="lp-nav__conta"><a href="${CONTA}">Minha conta</a></li>
       </ul>
+      ${extra}
     </nav>
     <a class="polvo-header-wpp" href="${wppOrcamento}" target="_blank" rel="noopener">${ICONE.wpp}<span>Orçamento</span></a>
     <button type="button" class="lp-redondo lp-lupa" aria-label="Buscar produtos" aria-expanded="false" aria-controls="lp-busca">${ICONE.lupa}</button>
@@ -327,9 +336,11 @@ function rodape(s, t) {
       </div>
       ${t.sobre.group_text && t.sobre.group_link ? `<a class="polvo-rodape-grupo" href="${esc(t.sobre.group_link)}" target="_blank" rel="noopener">${ICONE.raio} ${esc(t.sobre.group_text)}</a>` : ''}
     </div>` : '';
+  // Título com botão: no celular a coluna abre e fecha (SCRIPT); no computador o botão é só o título.
+  let nColuna = 0;
   const coluna = (titulo, itens) => `<div class="lp-rodape__links">
-      <h2>${esc(titulo)}</h2>
-      <ul>${itens.map(([txt, url]) => `
+      <h2><button type="button" class="lp-rodape__toggle" aria-expanded="false" aria-controls="lp-rodape-lista-${++nColuna}">${esc(titulo)}</button></h2>
+      <ul id="lp-rodape-lista-${nColuna}">${itens.map(([txt, url]) => `
         <li><a href="${esc(url)}"${externo(url)}>${esc(txt)}</a></li>`).join('')}
       </ul>
     </div>`;
@@ -386,6 +397,19 @@ const SCRIPT = `(function () {
   document.addEventListener('click', function (e) {
     if (topo.classList.contains('lp-topo--busca') && !e.target.closest('.lp-busca') && !e.target.closest('.lp-lupa')) busca(false);
   });
+  /* Rodapé no celular: Navegação, Categorias e Institucional abrem e fecham (como no tema).
+     A classe liga o CSS: sem JS, tudo aberto. */
+  var rodape = document.querySelector('.lp-rodape');
+  var celular = window.matchMedia('(max-width: 767px)');
+  if (rodape) {
+    rodape.classList.add('lp-rodape--sanfona');
+    rodape.addEventListener('click', function (e) {
+      var b = e.target.closest('.lp-rodape__toggle');
+      if (!b || !celular.matches) return;
+      var aberto = b.closest('.lp-rodape__links').classList.toggle('is-aberto');
+      b.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+    });
+  }
 })();`;
 
 /* Contagem do hero: zera quando passa da data (a LP sai do ar na mão). */

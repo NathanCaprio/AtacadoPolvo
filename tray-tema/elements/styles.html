@@ -15,25 +15,39 @@
 {% endif %}
 {% set font_url = 'https://fonts.googleapis.com/css2?family=' ~ settings.configs.font.family|replace({' ': '+'}) ~ ':' ~ font_spec ~ '&display=swap' %}
 
+{# Atacado Polvo: Inter (corpo) e Montserrat (títulos) ficam no próprio tema, em css/fonts/
+   (subconjunto "latin" do Google Fonts, arquivo variável: todos os pesos num arquivo só).
+   Sem conexão extra com o Google e com preload, o texto já sai na fonte certa. Se a fonte do
+   corpo for trocada no painel, ela volta a vir do Google (sem bloquear a pintura). #}
+{% set fonte_local = settings.configs.font.family == 'Inter' and font_style == 'normal' %}
+{% set fonte_inter = asset('css/fonts/inter-latin.woff2') %}
+{% set fonte_titulos = asset('css/fonts/montserrat-latin.woff2') %}
+{% set unicode_latin = 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD' %}
+
 {# Styles Pre-loads #}
+{% if fonte_local %}
+<link rel="preload" href="{{ fonte_inter }}" as="font" type="font/woff2" crossorigin />
+{% else %}
 <link rel="preload" href="{{ font_url }}" as="style" type="text/css">
+{% endif %}
+<link rel="preload" href="{{ fonte_titulos }}" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="{{ asset('css/fonts/icomoon.woff2')|split('?')[0] }}?v=3.0.2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="{{ asset('css/swiper.min.css') }}" as="style" type="text/css" />
 <link rel="preload" href="{{ asset('css/main.css') }}" as="style" type="text/css" />
 
 {# Theme Style #}
+<style>
+{% if fonte_local %}
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("{{ fonte_inter }}") format("woff2"); unicode-range: {{ unicode_latin }}; }
+{% endif %}
+@font-face { font-family: "Montserrat"; font-style: normal; font-weight: 700 800; font-display: swap; src: url("{{ fonte_titulos }}") format("woff2"); unicode-range: {{ unicode_latin }}; }
+</style>
+{% if not fonte_local %}
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-{# Atacado Polvo: fontes sem bloquear a primeira pintura (media=print vira all ao carregar; display=swap
-   já mostra o texto na fonte do sistema enquanto isso). PageSpeed: ~1,5 s de bloqueio a menos. #}
-{% set font_titulos = "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" %}
-<link rel="preload" href="{{ font_titulos }}" as="style" type="text/css">
 <link href="{{ font_url }}" rel="stylesheet" media="print" onload="this.media='all'">
-<link href="{{ font_titulos }}" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript>
-  <link href="{{ font_url }}" rel="stylesheet">
-  <link href="{{ font_titulos }}" rel="stylesheet">
-</noscript>
+<noscript><link href="{{ font_url }}" rel="stylesheet"></noscript>
+{% endif %}
 
 <link href="{{ asset('css/swiper.min.css')       }}" type="text/css" rel="stylesheet" />
 <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />

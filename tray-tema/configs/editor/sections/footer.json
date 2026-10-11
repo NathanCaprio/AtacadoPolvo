@@ -195,6 +195,27 @@
       "maxLength": 120,
       "default": "Atacado da Limpeza Polvo — CNPJ 37.418.777/0001-80",
       "info": "Vale só se a mensagem do rodapé (dados da loja) estiver vazia."
+    },
+    {
+      "id": "polvo_cupom_ativo",
+      "type": "checkbox",
+      "label": "Pop-up de cupom de primeira compra",
+      "default": false,
+      "info": "Cadastre o cupom antes em Marketing > Cupons de desconto e escreva o código abaixo. Sem código o pop-up não aparece."
+    },
+    {
+      "id": "polvo_cupom_codigo",
+      "type": "text",
+      "label": "Código do cupom",
+      "maxLength": 30,
+      "default": ""
+    },
+    {
+      "id": "polvo_cupom_desconto",
+      "type": "text",
+      "label": "Desconto do cupom (como aparece no pop-up)",
+      "maxLength": 20,
+      "default": "5%"
     }
   ]
 }
