@@ -9,7 +9,7 @@
       "blocks": [
         { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "local", "title": "Unidade Medianeira", "text": "Av. Dr. Carlos Barbosa, 931 - Medianeira - Porto Alegre/RS" } },
         { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "local", "title": "Unidade Bento Gonçalves", "text": "Av. Bento Gonçalves, 5928 - Porto Alegre/RS" } },
-        { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "entrega", "title": "Entrega própria", "text": "Porto Alegre e Região Metropolitana" } },
+        { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "entrega", "title": "Frete grátis", "text": "Porto Alegre, Canoas, Cachoeirinha e Viamão" } },
         { "type": "polvo_cta_info", "settings": { "enabled": true, "icon": "relogio", "title": "Atendimento", "text": "Segunda a sexta, 08h às 18h\nSábado, 09h às 15h" } }
       ],
       "settings": {

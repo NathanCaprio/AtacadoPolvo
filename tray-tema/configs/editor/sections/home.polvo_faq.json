@@ -7,10 +7,10 @@
   "defaults": {
     "tray": {
       "blocks": [
-        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Tem pedido mínimo?", "answer": "Sim. O valor mínimo aparece no carrinho antes de você finalizar a compra." } },
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Tem pedido mínimo?", "answer": "Sim, R$ 300,00. O carrinho mostra quanto falta, e a entrega em Porto Alegre, Canoas, Cachoeirinha e Viamão é grátis." } },
         { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Preciso ter CNPJ para comprar?", "answer": "Não. Vendemos para empresas e para pessoa física. Com CNPJ, a nota sai no nome da empresa." } },
         { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Quais são as formas de pagamento?", "answer": "Pix, boleto e cartão de crédito, direto no fechamento do pedido aqui na loja." } },
-        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Em quanto tempo a entrega chega?", "answer": "O prazo aparece no carrinho assim que você informa o CEP. Em Porto Alegre e Região Metropolitana, a entrega é feita pela nossa frota." } },
+        { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Em quanto tempo a entrega chega?", "answer": "Em Porto Alegre, normalmente no dia útil seguinte; em Canoas, Cachoeirinha e Viamão, de 2 a 4 dias úteis, contando da confirmação do pagamento. A entrega é feita pela nossa frota, com frete grátis, e a data prevista aparece no carrinho quando você informa o CEP." } },
         { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Vocês vendem por unidade ou só caixa fechada?", "answer": "Cada produto mostra na página como é vendido: unidade, pacote ou caixa fechada." } },
         { "type": "polvo_faq_item", "settings": { "enabled": true, "question": "Os produtos têm registro na Anvisa?", "answer": "Sim. Os saneantes que vendemos são notificados ou registrados na Anvisa, com rótulo dentro da norma." } }
       ],

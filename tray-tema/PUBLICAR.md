@@ -12,21 +12,16 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Papéis, Descartáveis, Sacos de Lixo, Vassouras, Rodos e Pás, Baldes, Bacias e Mops,
       Panos e Flanelas**. Hoje todas caem em "não encontrado". Se as categorias da Tray
       tiverem outros nomes, me avise que eu troco os links.
-- [x] **Frete (11/10/2026).** "Frete grátis (entrega própria)" ligado, a pedido do usuário: só Porto
-      Alegre e Região Metropolitana ("não iremos atender outras regiões"). Faixas de CEP (ceps.io,
-      conferidas no ViaCEP; os buracos entre faixas não têm cidade, e onde há cidade de fora a faixa
-      para antes):
-      90000000–91999999 Porto Alegre (prazo 1) · 92000000–92849999 Canoas, Nova Santa Rita,
-      Montenegro (CEP novo 925xx), Guaíba (927xx) · 92990000–93939999 Eldorado do Sul, São Leopoldo,
-      Portão, Sapucaia, Esteio, Novo Hamburgo, Estância Velha, Campo Bom, Sapiranga, Araricá, Nova
-      Hartz, Ivoti · 93950000–93989999 Dois Irmãos · 94000000–94999999 Gravataí, Glorinha, Viamão,
-      Alvorada, Cachoeirinha · 95500000–95514999 Santo Antônio da Patrulha · 95600000–95624999
-      Taquara · 95630000–95659999 Parobé, Igrejinha · 95690000–95694999 Rolante ·
-      95745000–95747999 Capela de Santana · 95760000–95764999 São Sebastião do Caí ·
-      95780000–95782999 Montenegro (CEP antigo) · 95840000–95859999 Triunfo · 96700000–96734999
-      São Jerônimo · 96740000–96749999 Arroio dos Ratos, Charqueadas (todas com prazo 2 a 4 dias úteis).
-      Fora disso (ex.: Lindolfo Collor 93940-000, São Paulo) não aparece opção. Retirada nas lojas
-      continua desligada (só se o usuário quiser).
+- [x] **Frete (11/10/2026).** "Frete grátis (entrega própria)" ligado, a pedido do usuário, **só em
+      Porto Alegre, Canoas, Cachoeirinha e Viamão**. A primeira versão tinha os 34 municípios da Região
+      Metropolitana; o usuário cortou ("Rolante, Taquara, Santo Antônio da Patrulha e São Jerônimo são
+      muito longe"). Faixas de CEP (ceps.io, conferidas no ViaCEP):
+      90000000–91999999 Porto Alegre (prazo 1) · 92000000–92449999 Canoas · 94400000–94599999 Viamão
+      (a cidade; os distritos rurais Itapuã, Águas Claras, Capão da Porteira etc. vão até 9478x e
+      ficaram de fora) · 94900000–94999999 Cachoeirinha (prazo 2 a 4 dias úteis nas três).
+      **Cuidado:** 9464x–9469x são CEPs novos do litoral (Tramandaí, Osório, Capão da Canoa); não usar
+      uma faixa larga tipo 94000000–94999999. Testado: Gravataí, Alvorada e 94644-000 (Tramandaí) sem
+      opção. Retirada nas lojas continua desligada (só se o usuário quiser).
 - [x] **Pedido mínimo R$ 300 (11/10/2026):** Configurações > Gerais > Exceções de Estado, RS bloqueado
       de 0,00 a 299,99 com mensagem. Testado: R$ 39,90 mostra a mensagem, R$ 319,20 mostra o frete grátis.
 - [ ] **Dados da empresa.** O rodapé do checkout mostra "ATACADO POLVO, **CPF** …, Rua Ângelo
@@ -69,8 +64,11 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] **Cupom POLVO5** (5% nos produtos, 1 uso por cliente, mínimo R$ 300, sem validade, fora da
       página pública de cupons), igual ao site antigo. Cadastro barrado pelo modo automático em
       11/10 (o formulário não foi salvo). Depois de cadastrar, ligar `polvo_cupom_ativo` no tema.
-- [ ] **Publicar a 3560443** (barra do pedido mínimo no carrinho, textos de frete grátis). A
-      publicação também foi barrada ("Production Deploy"): só com o ok do usuário.
+- [ ] **Publicar a 3560443** (barra do pedido mínimo no carrinho, textos de frete grátis nas 4
+      cidades). A publicação também foi barrada ("Production Deploy"): só com o ok do usuário.
+- [ ] **Recolar as 12 LPs** (`lp/dist` já refeito): a faixa do topo de todas vem do tema e ainda diz
+      "Entrega própria em Porto Alegre e Região Metropolitana"; blog e os 4 artigos também têm
+      "entrega própria em Porto Alegre e Região Metropolitana" na chamada final. Avisar o usuário antes.
 
 ### No dia
 - [x] Publicar a cópia 3521907 (publicada em 02/10/2026).
