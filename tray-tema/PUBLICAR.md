@@ -96,7 +96,9 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] Sitemap: **regenerado (conferido em 11/10/2026)**, 642 endereços já em `www.atacadopolvo.com.br`
       (produtos, categorias, marcas, as LPs, /empresa e /contato; a blackfriday inativa fica de fora).
       Home com `robots: INDEX,FOLLOW` e canonical certo; robots.txt só bloqueia carrinho/checkout.
-      Falta o usuário: verificar o site no **Google Search Console**, enviar
+      **Search Console (11/10/2026):** propriedade "Prefixo do URL" `https://www.atacadopolvo.com.br`;
+      tag `google-site-verification` no `<head>` de `layouts/default.html` (não remover), publicada na
+      3564393 às 15:39 e conferida na loja. Falta o usuário: clicar em Verificar, enviar
       `https://www.atacadopolvo.com.br/sitemap.xml` e pedir indexação da home e das LPs. Em 11/10/2026
       uma busca `site:atacadopolvo.com.br` (ferramenta de busca, não o Google) não achou nada.
 - [ ] Conferir numa **janela anônima**. A Tray manda o navegador guardar as páginas por 4 h,
