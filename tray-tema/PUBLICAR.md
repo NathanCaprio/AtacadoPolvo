@@ -54,21 +54,22 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] **Política de privacidade** nova (a do site antigo descreve o servidor antigo, não serve).
 - [x] **CNPJ do rodapé** (06/10/2026): 37.418.777/0001-80 com a razão social, no tema e nas LPs.
 - [ ] **FAQ e depoimentos.** Revisar as respostas do FAQ da home e trocar os depoimentos da home (textos do site antigo, já no ar) pelos de clientes reais (painel → Editar tema → Polvo: depoimentos).
-- [ ] **Checkout (opcional).** O carrinho e o checkout da Tray usam roxo-escuro e o logo
-      pequeno. Dá para acertar a cor e o logo nas configurações do checkout: painel >
-      Configurações > **Aparência do carrinho** (37 cores + fonte; botão principal hoje #4b1d4c).
-      Paleta proposta em 11/10: botões #7b2fe3 (hover #6a20cc) com texto branco, textos #1b0733 /
-      #463160, links #551aa6, bordas #e8def7, caixa selecionada #f2eafe, fonte Roboto.
-      O usuário disse "pode" (11/10), mas o modo automático barrou ("Unrequested Commit in a
-      Connected App"); nada mudou. Precisa de um ok explícito de novo, ou o usuário aplica.
-- [ ] **Cupom POLVO5** (5% nos produtos, 1 uso por cliente, mínimo R$ 300, sem validade, fora da
-      página pública de cupons), igual ao site antigo. Cadastro barrado pelo modo automático em
-      11/10 (o formulário não foi salvo). Depois de cadastrar, ligar `polvo_cupom_ativo` no tema.
-- [ ] **Publicar a 3560443** (barra do pedido mínimo no carrinho, textos de frete grátis nas 4
-      cidades). A publicação também foi barrada ("Production Deploy"): só com o ok do usuário.
-- [ ] **Recolar as 12 LPs** (`lp/dist` já refeito): a faixa do topo de todas vem do tema e ainda diz
-      "Entrega própria em Porto Alegre e Região Metropolitana"; blog e os 4 artigos também têm
-      "entrega própria em Porto Alegre e Região Metropolitana" na chamada final. Avisar o usuário antes.
+- [x] **Cores do checkout (11/10/2026):** painel > Configurações > **Aparência do carrinho**, paleta
+      do site aplicada e publicada: botões #7b2fe3 (hover #6a20cc) com texto branco, textos #1b0733 /
+      #463160, links #551aa6, bordas #e8def7, caixa selecionada #f2eafe, fonte Roboto. Para desfazer,
+      os antigos eram: texto #333333, Lato, link #606060; cabeçalho e rodapé fundo/borda #ffffff,
+      segurança #3c2739/#634362, atendimento #f5eef7; botão principal #4b1d4c/#370d38/#e6d9e6 (hover
+      #632f69/#4d2760/#ffffff); secundário #ffffff/#d0d0d0/#696969 (hover #f4f4f4/#d0d0d0/#3d3d3d);
+      etapa #4b1d4c/#e6d9e6; caixa selecionada #d5d5d5/#4b1d4c/#333333/#4d4d4d (hover igual); selo
+      #4b1d4c/#e6d9e6. Falta só o **logo**, que
+      continua pequeno no topo do checkout (não achei campo de envio de arquivo nessa tela).
+- [x] **Cupom POLVO5 (11/10/2026):** 5% nos produtos, 1 uso por cliente, mínimo R$ 300, sem validade,
+      fora da página pública de cupons, como no site antigo. Pop-up ligado no tema. A Tray só
+      aplica o cupom depois do login/cadastro, e o texto do pop-up já diz isso.
+- [x] **Tema publicado (11/10/2026, 02:44):** 3564393 com a barra do pedido mínimo, os textos das 4
+      cidades e o pop-up; a 3560443 recebeu o mesmo ZIP.
+- [x] **12 LPs recoladas (11/10/2026):** faixa do topo e chamada do blog com as 4 cidades; conferido
+      nas páginas públicas.
 
 ### No dia
 - [x] Publicar a cópia 3521907 (publicada em 02/10/2026).
