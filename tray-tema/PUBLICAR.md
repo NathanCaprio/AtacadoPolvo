@@ -76,6 +76,9 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       aplica o cupom depois do login/cadastro, e o texto do pop-up já diz isso.
 - [x] **Tema publicado (11/10/2026, 02:44):** 3564393 com a barra do pedido mínimo, os textos das 4
       cidades e o pop-up; a 3560443 recebeu o mesmo ZIP.
+- [x] **Tema publicado (11/10/2026, 15:27):** 3560443 com o aviso de estoque no cartão ("Adicionar"
+      ia para a página do produto quando a quantidade passava do estoque); a 3564393 recebeu o mesmo
+      ZIP. Conferido na loja pública em sessão anônima.
 - [x] **12 LPs recoladas (11/10/2026):** faixa do topo e chamada do blog com as 4 cidades; conferido
       nas páginas públicas.
 
