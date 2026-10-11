@@ -1170,6 +1170,62 @@ h1, h2, h3,
   .polvo-wpp-fab::after { animation: none; }
 }
 
+/* Seções do rodapé que abrem e fecham no celular (script em elements/footer.html). O título
+   vira <button class="title polvo-rodape-toggle">; no computador ele parece o título de sempre. */
+.footer .polvo-rodape-toggle {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  text-align: left;
+  cursor: default;
+}
+
+@media (max-width: 767px) {
+  .footer .cols .box.polvo-rodape-sanfona {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* seções fechadas coladas uma na outra (anula o espaço da grade e a borda dupla) */
+  .footer .cols .container { row-gap: 28px; }
+  .footer .cols .box.polvo-rodape-sanfona + .box.polvo-rodape-sanfona { margin-top: -29px; }
+
+  .footer .polvo-rodape-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  /* seta (chevron) feita com borda, gira ao abrir */
+  .footer .polvo-rodape-toggle::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-3px);
+    transition: transform 0.2s var(--polvo-ease);
+  }
+
+  .footer .polvo-rodape-sanfona.is-aberto .polvo-rodape-toggle::after { transform: rotate(-135deg) translateY(-3px); }
+
+  .footer .polvo-rodape-sanfona:not(.is-aberto) > .list,
+  .footer .polvo-rodape-sanfona:not(.is-aberto) > .overflow { display: none; }
+
+  .footer .polvo-rodape-sanfona.is-aberto > .list,
+  .footer .polvo-rodape-sanfona.is-aberto > .overflow { padding-bottom: 18px; }
+
+  /* links abertos com área de toque decente */
+  .footer .polvo-rodape-sanfona .list a { display: inline-block; padding: 4px 0; }
+}
+
 /* ---- 6. Carrinho lateral ------------------------------------------------ */
 /* Gaveta da Tray (snippets/sidecart.html + js/sidecart.js) com a cara da
    gaveta de orçamento do site antigo: itens separados por linha e

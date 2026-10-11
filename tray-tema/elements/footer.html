@@ -44,6 +44,34 @@
         </div>
     </div>
 
+    {# Atacado Polvo: no celular, Navegação, Categorias e Institucional viram seções que abrem e
+       fecham (eram ~30 links em sequência). O título vira botão; Contato e Pagamento ficam abertos.
+       No computador o botão é só o título (CSS em polvo.css seção 5). Sem JS, tudo aberto. #}
+    <script>
+    (function () {
+        var celular = window.matchMedia('(max-width: 767px)');
+        document.querySelectorAll('.footer .cols .box').forEach(function (box, n) {
+            var titulo = box.querySelector(':scope > .title');
+            var lista = box.querySelector(':scope > .list, :scope > .overflow');
+            if (!titulo || !lista || box.classList.contains('polvo-rodape-contato')) return;
+            lista.id = lista.id || 'polvo-rodape-secao-' + n;
+            var botao = document.createElement('button');
+            botao.type = 'button';
+            botao.className = 'title polvo-rodape-toggle';
+            botao.setAttribute('aria-controls', lista.id);
+            botao.setAttribute('aria-expanded', 'false');
+            botao.textContent = titulo.textContent.trim();
+            titulo.replaceWith(botao);
+            box.classList.add('polvo-rodape-sanfona');
+            botao.addEventListener('click', function () {
+                if (!celular.matches) return;
+                var aberto = box.classList.toggle('is-aberto');
+                botao.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+            });
+        });
+    })();
+    </script>
+
     <div class="copy">
         <div class="container flex align-center justify-between">
 
