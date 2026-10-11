@@ -93,8 +93,12 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       dão 301 para https://www; canonical já aponta para o domínio novo.
 - [ ] Redirecionamentos 301 (lista em `tray-tema/CLAUDE.md`): hoje `/condominios.html` etc. dão 302
       para `/sem-resultados-na-busca`.
-- [ ] Sitemap: o da Tray ainda lista `nathansilva.commercesuite.com.br`; conferir se regenera e
-      depois enviar `https://www.atacadopolvo.com.br/sitemap.xml` no Google Search Console.
+- [ ] Sitemap: **regenerado (conferido em 11/10/2026)**, 642 endereços já em `www.atacadopolvo.com.br`
+      (produtos, categorias, marcas, as LPs, /empresa e /contato; a blackfriday inativa fica de fora).
+      Home com `robots: INDEX,FOLLOW` e canonical certo; robots.txt só bloqueia carrinho/checkout.
+      Falta o usuário: verificar o site no **Google Search Console**, enviar
+      `https://www.atacadopolvo.com.br/sitemap.xml` e pedir indexação da home e das LPs. Em 11/10/2026
+      uma busca `site:atacadopolvo.com.br` (ferramenta de busca, não o Google) não achou nada.
 - [ ] Conferir numa **janela anônima**. A Tray manda o navegador guardar as páginas por 4 h,
       então quem já abriu uma página pode continuar vendo a versão velha por um tempo.
 
