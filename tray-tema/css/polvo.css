@@ -1325,6 +1325,47 @@ h1, h2, h3,
   background: var(--polvo-surface-2);
 }
 
+/* Quanto falta para o pedido mínimo (snippets/sidecart.html), acima do subtotal */
+.cart-sidebar .polvo-minimo {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-md);
+  background: #fff;
+}
+
+.cart-sidebar .content-cart.empty ~ .footer-cart .polvo-minimo,
+.cart-sidebar .polvo-minimo[hidden],
+.cart-sidebar .polvo-minimo [hidden] { display: none; }
+
+.cart-sidebar .polvo-minimo__txt {
+  margin: 0 0 8px;
+  color: var(--polvo-ink);
+  font-size: .875rem;
+  line-height: 1.4;
+}
+
+.cart-sidebar .polvo-minimo__txt strong { color: var(--polvo-brand); }
+.cart-sidebar .polvo-minimo__txt--ok { color: #198f45; font-weight: 600; }
+
+.cart-sidebar .polvo-minimo__barra {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--polvo-brand-soft);
+}
+
+.cart-sidebar .polvo-minimo__barra span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--polvo-brand);
+  transition: width .3s var(--polvo-ease);
+}
+
+.cart-sidebar .polvo-minimo.is-ok .polvo-minimo__barra span { background: var(--polvo-ok); }
+
 /* "Enviar pelo WhatsApp": segunda opção, abaixo do "Finalizar pedido". */
 .cart-sidebar .polvo-cart-wpp {
   display: flex;

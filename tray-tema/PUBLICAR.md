@@ -12,12 +12,23 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Papéis, Descartáveis, Sacos de Lixo, Vassouras, Rodos e Pás, Baldes, Bacias e Mops,
       Panos e Flanelas**. Hoje todas caem em "não encontrado". Se as categorias da Tray
       tiverem outros nomes, me avise que eu troco os links.
-- [ ] **Frete.** Com CEP de Porto Alegre (90010-000), o carrinho responde "Nenhuma forma de
-      envio disponível para este endereço". Configurar a entrega própria (frete por faixa
-      de CEP da Região Metropolitana) e, se quiser, retirada nas duas lojas.
-      **11/10/2026:** painel > Configurações > Frete e envio diz "Você ainda não possui nenhuma
-      forma de envio habilitada" (todas inativas, inclusive Motoboy e Retirar no local): ninguém
-      fecha pedido até isso ser configurado.
+- [x] **Frete (11/10/2026).** "Frete grátis (entrega própria)" ligado, a pedido do usuário: só Porto
+      Alegre e Região Metropolitana ("não iremos atender outras regiões"). Faixas de CEP (ceps.io,
+      conferidas no ViaCEP; os buracos entre faixas não têm cidade, e onde há cidade de fora a faixa
+      para antes):
+      90000000–91999999 Porto Alegre (prazo 1) · 92000000–92849999 Canoas, Nova Santa Rita,
+      Montenegro (CEP novo 925xx), Guaíba (927xx) · 92990000–93939999 Eldorado do Sul, São Leopoldo,
+      Portão, Sapucaia, Esteio, Novo Hamburgo, Estância Velha, Campo Bom, Sapiranga, Araricá, Nova
+      Hartz, Ivoti · 93950000–93989999 Dois Irmãos · 94000000–94999999 Gravataí, Glorinha, Viamão,
+      Alvorada, Cachoeirinha · 95500000–95514999 Santo Antônio da Patrulha · 95600000–95624999
+      Taquara · 95630000–95659999 Parobé, Igrejinha · 95690000–95694999 Rolante ·
+      95745000–95747999 Capela de Santana · 95760000–95764999 São Sebastião do Caí ·
+      95780000–95782999 Montenegro (CEP antigo) · 95840000–95859999 Triunfo · 96700000–96734999
+      São Jerônimo · 96740000–96749999 Arroio dos Ratos, Charqueadas (todas com prazo 2 a 4 dias úteis).
+      Fora disso (ex.: Lindolfo Collor 93940-000, São Paulo) não aparece opção. Retirada nas lojas
+      continua desligada (só se o usuário quiser).
+- [x] **Pedido mínimo R$ 300 (11/10/2026):** Configurações > Gerais > Exceções de Estado, RS bloqueado
+      de 0,00 a 299,99 com mensagem. Testado: R$ 39,90 mostra a mensagem, R$ 319,20 mostra o frete grátis.
 - [ ] **Dados da empresa.** O rodapé do checkout mostra "ATACADO POLVO, **CPF** …, Rua Ângelo
       Crivellaro…". Trocar pelo CNPJ e pelo endereço da loja (painel > Configurações > dados
       da loja).
@@ -29,6 +40,19 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] **Pagamento.** Conferir se "Transf. Bradesco" e "Transf. Banco do Brasil" existem
       mesmo; se não, desligar. Definir a parcela mínima: hoje um produto de R$ 5,00 mostra
       "5x de R$ 1,08 com juros" e o carrinho de R$ 10 oferece 11x de R$ 1,07.
+      **11/10/2026:** ativas na Tray = 9 formas da Vindi (Boleto, Visa, Master, Elo, Amex, Diners,
+      Pix, Transf. BB, Transf. Bradesco). Desligadas e disponíveis: Faturamento Direto, Depósito,
+      Boleto do banco, Banricompras, outros intermediadores (Mercado Pago, PagBank, Pagar.me...,
+      com +1,5% da Tray no plano Crescimento).
+- [ ] **Vínculo das formas de pagamento no ERP** (Empresarius > Lojas Virtuais > Tray > Formas de
+      Pagamentos). Em 11/10/2026 as 9 formas ativas estavam **sem condição vinculada** e a
+      "Condição de Pagamento padrão (forma do pedido sem vínculo)" em Lojas Virtuais > Configurações >
+      Tray estava **vazia**. Condições ativas no ERP: PIX QR CODE, CRÉDITO, DÉBITO, BOLETO SICREDI,
+      DINHEIRO, CHEQUE, CARTEIRA, CRÉDITO TELE, DEPÓSITO / PIX VIA CHAVE, BANRI PRAZO, NENHUM.
+      Sugestão: Pix → PIX QR CODE; cartões → CRÉDITO; boleto/transferências → condição própria da
+      Vindi (o dinheiro cai na Vindi, não no Sicredi). Decisão do usuário/contador; não gravamos no ERP.
+- [ ] **Estoque do ERP para a Tray:** em Lojas Virtuais > Configurações > Tray, "Atualizar o estoque
+      dos produtos vinculados na loja" estava **desligado** em 11/10/2026 (preço ligado).
 - [ ] **Páginas institucionais** (Como comprar, Envio, Pagamento, Tempo de Garantia, Trocas e
       devoluções, Segurança). Ainda estão com o texto padrão da Tray; o de Envio, por exemplo,
       promete "em até 2 dias úteis". O título "Seguranca" está sem cedilha.
@@ -40,7 +64,13 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Configurações > **Aparência do carrinho** (37 cores + fonte; botão principal hoje #4b1d4c).
       Paleta proposta em 11/10: botões #7b2fe3 (hover #6a20cc) com texto branco, textos #1b0733 /
       #463160, links #551aa6, bordas #e8def7, caixa selecionada #f2eafe, fonte Roboto.
-      Aguardando o ok do usuário para aplicar.
+      O usuário disse "pode" (11/10), mas o modo automático barrou ("Unrequested Commit in a
+      Connected App"); nada mudou. Precisa de um ok explícito de novo, ou o usuário aplica.
+- [ ] **Cupom POLVO5** (5% nos produtos, 1 uso por cliente, mínimo R$ 300, sem validade, fora da
+      página pública de cupons), igual ao site antigo. Cadastro barrado pelo modo automático em
+      11/10 (o formulário não foi salvo). Depois de cadastrar, ligar `polvo_cupom_ativo` no tema.
+- [ ] **Publicar a 3560443** (barra do pedido mínimo no carrinho, textos de frete grátis). A
+      publicação também foi barrada ("Production Deploy"): só com o ok do usuário.
 
 ### No dia
 - [x] Publicar a cópia 3521907 (publicada em 02/10/2026).

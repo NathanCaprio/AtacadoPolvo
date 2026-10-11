@@ -216,6 +216,14 @@
       "label": "Desconto do cupom (como aparece no pop-up)",
       "maxLength": 20,
       "default": "5%"
+    },
+    {
+      "id": "polvo_pedido_minimo",
+      "type": "text",
+      "label": "Pedido mínimo em reais (barra do carrinho)",
+      "maxLength": 10,
+      "default": "300",
+      "info": "Só o número, ex.: 300. Mostra no carrinho quanto falta. Quem trava o pedido é o painel: Configurações > Gerais > Exceções de Estado (RS bloqueado de 0,00 a 299,99). Mudou aqui, mude lá. Vazio esconde a barra."
     }
   ]
 }

@@ -13,6 +13,42 @@
             </div>
         </div>
         <div class="footer-cart">
+            {# Atacado Polvo: quanto falta para o pedido mínimo (Editar tema > Rodapé > Pedido mínimo).
+               Só avisa: quem trava o pedido é a exceção de estado do RS no painel. Lê o subtotal que o
+               sidecart.js escreve em .total .value. Textos no HTML (a Tray troca acento por entidade no JS). #}
+            {% set polvo_minimo = settings.footer.settings.polvo_pedido_minimo | default('') | trim %}
+            {% if polvo_minimo %}
+            <div class="polvo-minimo" data-minimo="{{ polvo_minimo }}" role="status" hidden>
+                <p class="polvo-minimo__txt" data-falta>Faltam <strong></strong> para o pedido mínimo de <span data-minimo-valor></span>.</p>
+                <p class="polvo-minimo__txt polvo-minimo__txt--ok" data-ok hidden>Pedido mínimo atingido. Frete grátis em Porto Alegre e Região Metropolitana.</p>
+                <div class="polvo-minimo__barra" aria-hidden="true"><span></span></div>
+            </div>
+            <script>
+            /* o .total .value vem depois no HTML: espera a página montar */
+            document.addEventListener('DOMContentLoaded', function () {
+                var caixa = document.querySelector('.polvo-minimo');
+                var valor = document.querySelector('.cart-sidebar .total .value');
+                if (!caixa || !valor) return;
+                var minimo = parseFloat(caixa.getAttribute('data-minimo').replace(/\./g, '').replace(',', '.')) || 0;
+                if (!minimo) return;
+                function reais(n) { return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+                caixa.querySelector('[data-minimo-valor]').textContent = reais(minimo);
+                function atualizar() {
+                    var total = parseFloat(valor.textContent.replace(/[^\d,]/g, '').replace(',', '.'));
+                    if (!(total > 0)) { caixa.hidden = true; return; }
+                    var falta = Math.max(0, Math.round((minimo - total) * 100) / 100);
+                    caixa.hidden = false;
+                    caixa.classList.toggle('is-ok', !falta);
+                    caixa.querySelector('[data-falta]').hidden = !falta;
+                    caixa.querySelector('[data-ok]').hidden = !!falta;
+                    caixa.querySelector('[data-falta] strong').textContent = reais(falta);
+                    caixa.querySelector('.polvo-minimo__barra span').style.width = Math.min(100, total / minimo * 100) + '%';
+                }
+                new MutationObserver(atualizar).observe(valor, { childList: true, characterData: true, subtree: true });
+                atualizar();
+            });
+            </script>
+            {% endif %}
             <div class="text-info flex align-center justify-end">
                 <div class="total">
                     <span>Subtotal:</span>

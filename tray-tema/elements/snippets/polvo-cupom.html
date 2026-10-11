@@ -10,6 +10,7 @@
 {% set cupom_codigo = fs.polvo_cupom_codigo | default('') | trim %}
 {% if fs.polvo_cupom_ativo | default(false) and cupom_codigo %}
 {% set cupom_desconto = fs.polvo_cupom_desconto | default('5%') %}
+{% set cupom_minimo = fs.polvo_pedido_minimo | default('') | trim %}
 <dialog class="polvo-cupom" aria-labelledby="polvo-cupom-titulo">
     <button type="button" class="polvo-cupom__fechar" aria-label="Fechar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -41,7 +42,7 @@
             <strong>{{ cupom_codigo }}</strong>
             <button type="button" class="polvo-cupom__copiar" data-copiado="Copiado">Copiar</button>
         </div>
-        <p class="polvo-cupom__lead">No carrinho, toque em <b>Cupom de desconto</b> e cole o código. Vale para o primeiro pedido.</p>
+        <p class="polvo-cupom__lead">No carrinho, toque em <b>Cupom de desconto</b> e cole o código. Vale para o primeiro pedido{% if cupom_minimo %}, a partir de R$ {{ cupom_minimo }}{% endif %}.</p>
         <button type="button" class="polvo-btn polvo-btn--primario polvo-cupom__botao" data-fechar>Continuar comprando</button>
     </div>
 </dialog>
