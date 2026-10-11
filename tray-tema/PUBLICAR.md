@@ -21,7 +21,13 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       ficaram de fora) · 94900000–94999999 Cachoeirinha (prazo 2 a 4 dias úteis nas três).
       **Cuidado:** 9464x–9469x são CEPs novos do litoral (Tramandaí, Osório, Capão da Canoa); não usar
       uma faixa larga tipo 94000000–94999999. Testado: Gravataí, Alvorada e 94644-000 (Tramandaí) sem
-      opção. Retirada nas lojas continua desligada (só se o usuário quiser).
+      opção. Retirada nas lojas continua desligada (só se o usuário quiser). Como seria (visto em
+      11/10/2026): a forma "Retirar no local" já existe, inativa (`frete_editar_v2.php?id_tabela=10&
+      identificacao=extra_cep`). É uma tabela por CEP comum: nome, faixas de CEP, preço, prazo e texto
+      ao cliente, **sem campo de endereço nem de ponto de retirada**. Para as duas lojas: renomear
+      essa para a Medianeira e criar outra ("Adicionar tabela por CEP") para a Bento Gonçalves, com
+      R$ 0,00 e o endereço/horário no texto. O bloqueio de pedido mínimo (RS < R$ 300) é por estado,
+      então deve valer para elas também (não testado).
 - [x] **Pedido mínimo R$ 300 (11/10/2026):** Configurações > Gerais > Exceções de Estado, RS bloqueado
       de 0,00 a 299,99 com mensagem. Testado: R$ 39,90 mostra a mensagem, R$ 319,20 mostra o frete grátis.
 - [ ] **Dados da empresa.** O rodapé do checkout mostra "ATACADO POLVO, **CPF** …, Rua Ângelo
@@ -46,6 +52,12 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Boleto e Transferência Online BB/Bradesco ficam sem vínculo: o usuário quer **desligá-los na
       Tray** (Pagamentos > Configurações > Vindi > Status), mas o salvar da Tray deu "Falha ao salvar"
       (POST 401 em payment-integrator.tray.net.br, painel com aviso de manutenção); refazer.
+      **Refeito em 11/10/2026 20h15, mesmo 401.** A resposta mostra a causa: ao gravar, a Tray entra na
+      Vindi (`sts.lwsa.tech`, realm "VINDI - PAYMENTS") e recebe `invalid_grant: Invalid user
+      credentials`. A conta Vindi está ativa e verificada (nível 5); o que falhou é a credencial
+      guardada na ligação Tray↔Vindi. Só o usuário resolve: "Mais opções > Trocar conta Vindi" na
+      mesma tela, com o login da Vindi, ou chamado na Tray citando o erro. Provável causa também
+      da Central de contas que não carregava.
       Condição padrão (Lojas Virtuais > Configurações > Tray) = **CRÉDITO** (salva pelo usuário;
       o modo automático barrou o "Salvar" dessa tela). Enquanto boleto/transferência estiverem
       ligados na Tray, pedido por eles entra no ERP como CRÉDITO.
