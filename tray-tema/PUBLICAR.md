@@ -27,9 +27,11 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] **Dados da empresa.** O rodapé do checkout mostra "ATACADO POLVO, **CPF** …, Rua Ângelo
       Crivellaro…". Trocar pelo CNPJ e pelo endereço da loja (painel > Configurações > dados
       da loja).
-- [ ] **Contato da loja.** Os dados da loja têm WhatsApp **(51) 99526-6894** e o seu e-mail
-      pessoal. Eles aparecem no botão Orçamento, no botão flutuante, no rodapé e no checkout.
-      O oficial é **(51) 98025-6547** (o hero, a chamada final e as LPs já usam ele).
+- [ ] **Contato da loja (11/10/2026):** padrão = **(51) 98025-6547** e **polvoclean@gmail.com**.
+      Feito e conferido na loja: Configurações > Informações (Telefone principal e E-mail principal),
+      `ag_telefone_3` em Textos e mensagens (WhatsApp do tema) e `assets/js/config.js` + HTML do site
+      antigo. **Falta recolar as 12 LPs** (só muda o e-mail do rodapé; `lp/dist` já remontado): o modo
+      automático barrou o `colar-na-tray.js` ("Production Deploy").
 
 ### Antes de abrir ao público
 - [ ] **Pagamento.** Conferir se "Transf. Bradesco" e "Transf. Banco do Brasil" existem

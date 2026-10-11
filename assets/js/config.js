@@ -30,7 +30,7 @@ window.SITE = {
   whatsappLabel: '(51) 98025-6547',
   telefone: '(51) 98025-6547',
   telefoneLink: '+5551980256547',
-  email: 'contato@atacadopolvo.com.br',   // CONFERIR
+  email: 'polvoclean@gmail.com',
 
   // --- Endereço (loja principal) -------------------------------------------
   endereco: 'Av. Dr. Carlos Barbosa, 931',

@@ -112,7 +112,10 @@ JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linh
   servidor/ERP do site antigo, não a Tray); precisa de texto novo, decisão do usuário.
 
 ## Fica com o usuário no painel (não é tema)
-- Telefone/WhatsApp/e-mail do rodapé = dados da loja (hoje (51) 99526-6894 e e-mail pessoal; o oficial é (51) 98025-6547, ver `assets/js/config.js`).
+- Telefone/WhatsApp/e-mail do rodapé = dados da loja: **(51) 98025-6547** e **polvoclean@gmail.com** (11/10/2026; LPs leem de `assets/js/config.js`). Como a Tray liga isso (descoberto em 11/10/2026):
+  - Configurações > **Informações** (`/admin/settings/store-info`): Telefone principal → `ag_telefone_1`, E-mail principal → `ag_email_1`. Os telefones adicionais entram **compactados** (o 1º preenchido vira `ag_telefone_2`).
+  - **`ag_telefone_3`** (WhatsApp de todos os botões do tema) é texto de Configurações > **Textos e mensagens** (`/admin/settings/langs`). **Cada salvamento em Informações o apaga** ("(não informado)") e os botões de WhatsApp do tema somem: depois de salvar Informações, preencher de novo o `ag_telefone_3`.
+  - "Informações adicionais para o rodapé da loja" = `ag_mensagem_rodape`, **obrigatório** para salvar a tela (sem ele o Salvar não manda nada). Preenchido, ele substitui o `polvo_copy` na linha final do rodapé. A tela grava em ISO-8859-1: travessão "—" vira "?", usar hífen. Hoje: "Atacado da Limpeza Polvo - CNPJ 37.418.777/0001-80".
 - Botão flutuante de WhatsApp = recurso nativo ("Ative o botão de WhatsApp na sua loja").
 - Banners (o "Destaque suas CATEGORIAS" no topo da busca/categorias é banner de exemplo do painel). Texto da faixa do topo: `settings.json` → `header.settings.message_line_content` (editável no painel).
 - Número do botão "Orçamento" do cabeçalho = WhatsApp dos dados da loja (`ag_telefone_3`), o mesmo do rodapé.
