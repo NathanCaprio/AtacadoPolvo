@@ -770,6 +770,16 @@ h1, h2, h3,
   box-shadow: none;
 }
 
+/* Aviso de estoque embaixo do -/+ e "Adicionar" (js/polvo-adicionar.js; some em 6 s) */
+.polvo-compra__aviso {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--polvo-danger);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
 @media (max-width: 767px) {
   .product .image { padding: 0.375rem 0.375rem 0; }
   .product .product-info { padding: 0.625rem 0.625rem 0.25rem; }

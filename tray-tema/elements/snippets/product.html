@@ -103,14 +103,16 @@
             {# Atacado Polvo: sem variação (ou com a variação já escolhida na vitrine) adiciona direto e abre
                o carrinho lateral (js/polvo-adicionar.js); com variação a escolher, vai para a página do produto. #}
             {% if not product.has_variation or variant %}
-                {# Seletor de quantidade: o botão manda o número escolhido (js/polvo-adicionar.js). #}
+                {# Seletor de quantidade: o botão manda o número escolhido (js/polvo-adicionar.js).
+                   Teto = estoque (a Tray recusa acima dele); vendendo sem estoque, 999. #}
+                {% set qtdMax = (effectiveStock > 0 and effectiveStock < 999 and not settings.without_stock_sale) ? effectiveStock : 999 %}
                 <div class="polvo-compra">
                     <div class="polvo-qtd swiper-no-swiping" role="group" aria-label="Quantidade de {{ product.name }}">
                         <button type="button" class="polvo-qtd__botao" data-qtd="-1" aria-label="Diminuir quantidade" disabled>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
                         </button>
-                        <input class="polvo-qtd__campo" type="number" inputmode="numeric" min="1" max="999" step="1" value="1" aria-label="Quantidade">
-                        <button type="button" class="polvo-qtd__botao" data-qtd="1" aria-label="Aumentar quantidade">
+                        <input class="polvo-qtd__campo" type="number" inputmode="numeric" min="1" max="{{ qtdMax }}" step="1" value="1" aria-label="Quantidade">
+                        <button type="button" class="polvo-qtd__botao" data-qtd="1" aria-label="Aumentar quantidade" {% if qtdMax <= 1 %}disabled{% endif %}>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
                         </button>
                     </div>
