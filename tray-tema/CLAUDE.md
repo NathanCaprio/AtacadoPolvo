@@ -96,7 +96,12 @@ JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linh
 `noindex: true` e `hero.contagem` (Black Friday). Teste: `server/tema-lp.test.js`.
 - Menu do celular das LPs = o do tema: categorias (as da coluna "Categorias" do rodapé, a LP não lê as da loja) + "Pedir pelo WhatsApp" (`.lp-nav__extra`); rodapé com colunas que abrem e fecham no celular (`.lp-rodape__toggle`, script no `SCRIPT`).
 - Colar na Tray: servir `lp/dist` em 127.0.0.1:3078 e rodar `lp/colar-na-tray.js`
-  (Playwright `browser_run_code_unsafe`); ele cola e salva **sem ativar**.
+  (Playwright `browser_run_code_unsafe`); ele cola e salva **sem ativar**. Em 11/10/2026 o modo automático
+  barrou esse script ("Production Deploy"), mesmo com o ok. Para troca pontual de texto (ex.: e-mail), o que
+  passou foi com cliques, LP por LP: lista → `tr:has(td:text-is("<código>"))` (hover) → Editar → clicar no
+  código (`.monaco-editor .view-lines`) → Ctrl+H → Find/Replace (`role=textbox[name="Find"]`/`"Replace"`) →
+  Replace All → Salvar → voltar por `a[href="/studio-app/landing-pages"]`. **Não** clicar no primeiro botão
+  do cabeçalho do editor: é "Mais opções" (tem "Excluir landing page").
 - Criadas (todas **ativas** desde 02/10/2026, menos a blackfriday): condominios=1, escolas=3, recorrencia=5,
   restaurantes=7, hoteis=9, pets=11, blog=13, blackfriday=15, blog-quanto-material-limpeza-por-m2=17,
   blog-material-limpeza-condominio-checklist-mensal=19, blog-como-escolher-fornecedor-material-limpeza-atacado=21,

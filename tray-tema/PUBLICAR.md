@@ -27,11 +27,11 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] **Dados da empresa.** O rodapé do checkout mostra "ATACADO POLVO, **CPF** …, Rua Ângelo
       Crivellaro…". Trocar pelo CNPJ e pelo endereço da loja (painel > Configurações > dados
       da loja).
-- [ ] **Contato da loja (11/10/2026):** padrão = **(51) 98025-6547** e **polvoclean@gmail.com**.
+- [x] **Contato da loja (11/10/2026):** padrão = **(51) 98025-6547** e **polvoclean@gmail.com**.
       Feito e conferido na loja: Configurações > Informações (Telefone principal e E-mail principal),
-      `ag_telefone_3` em Textos e mensagens (WhatsApp do tema) e `assets/js/config.js` + HTML do site
-      antigo. **Falta recolar as 12 LPs** (só muda o e-mail do rodapé; `lp/dist` já remontado): o modo
-      automático barrou o `colar-na-tray.js` ("Production Deploy").
+      `ag_telefone_3` em Textos e mensagens (WhatsApp do tema), `assets/js/config.js` + HTML do site
+      antigo e as **12 LPs** (e-mail do rodapé trocado no editor de cada uma com Localizar e substituir;
+      as 12 prévias conferidas, a versão pública troca aos poucos pelo cache da Tray).
 
 ### Antes de abrir ao público
 - [ ] **Pagamento.** Conferir se "Transf. Bradesco" e "Transf. Banco do Brasil" existem
