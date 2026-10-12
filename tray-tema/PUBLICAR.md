@@ -21,13 +21,16 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       ficaram de fora) · 94900000–94999999 Cachoeirinha (prazo 2 a 4 dias úteis nas três).
       **Cuidado:** 9464x–9469x são CEPs novos do litoral (Tramandaí, Osório, Capão da Canoa); não usar
       uma faixa larga tipo 94000000–94999999. Testado: Gravataí, Alvorada e 94644-000 (Tramandaí) sem
-      opção. Retirada nas lojas continua desligada (só se o usuário quiser). Como seria (visto em
-      11/10/2026): a forma "Retirar no local" já existe, inativa (`frete_editar_v2.php?id_tabela=10&
-      identificacao=extra_cep`). É uma tabela por CEP comum: nome, faixas de CEP, preço, prazo e texto
-      ao cliente, **sem campo de endereço nem de ponto de retirada**. Para as duas lojas: renomear
-      essa para a Medianeira e criar outra ("Adicionar tabela por CEP") para a Bento Gonçalves, com
-      R$ 0,00 e o endereço/horário no texto. O bloqueio de pedido mínimo (RS < R$ 300) é por estado,
-      então deve valer para elas também (não testado).
+      opção.
+- [x] **Retirada nas lojas (12/10/2026, a pedido do usuário).** Duas formas de envio ativas, grátis,
+      com os **mesmos 4 CEPs** da entrega e prazo de **1 dia útil** (sugestão aceita): "Retirar na loja
+      Medianeira (Av. Dr. Carlos Barbosa, 931)" = antiga "Retirar no local" (`id_tabela=10`) e "Retirar
+      na loja Bento Gonçalves (Av. Bento Gonçalves, 5928)" (`id_tabela=21`, criada). Configuração: "retirada
+      do produto pessoalmente na loja = Sim", produto e frete pagos na loja virtual; cada faixa com peso
+      0 a 10.000.000 g "Frete Grátis". O texto ao cliente traz endereço, `[prazo_entrega_extenso]` e
+      horário (seg–sex 8h–18h, sáb 9h–15h). Testado na página do produto: CEP 90010-000 mostra as duas
+      retiradas e a entrega (14/10/2026); Gravataí 94010-000 sem opção; abaixo de R$ 300 o pedido mínimo
+      bloqueia igual. Falta ver como o primeiro pedido com retirada chega no ERP.
 - [x] **Pedido mínimo R$ 300 (11/10/2026):** Configurações > Gerais > Exceções de Estado, RS bloqueado
       de 0,00 a 299,99 com mensagem. Testado: R$ 39,90 mostra a mensagem, R$ 319,20 mostra o frete grátis.
 - [ ] **Dados da empresa.** O rodapé do checkout mostra "ATACADO POLVO, **CPF** …, Rua Ângelo
