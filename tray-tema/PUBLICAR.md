@@ -16,9 +16,9 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Porto Alegre, Canoas, Cachoeirinha e Viamão**. A primeira versão tinha os 34 municípios da Região
       Metropolitana; o usuário cortou ("Rolante, Taquara, Santo Antônio da Patrulha e São Jerônimo são
       muito longe"). Faixas de CEP (ceps.io, conferidas no ViaCEP):
-      90000000–91999999 Porto Alegre (prazo 1) · 92000000–92449999 Canoas · 94400000–94599999 Viamão
+      90000000–91999999 Porto Alegre · 92000000–92449999 Canoas · 94400000–94599999 Viamão
       (a cidade; os distritos rurais Itapuã, Águas Claras, Capão da Porteira etc. vão até 9478x e
-      ficaram de fora) · 94900000–94999999 Cachoeirinha (prazo 2 a 4 dias úteis nas três).
+      ficaram de fora) · 94900000–94999999 Cachoeirinha. Prazo **3 a 4 dias úteis** nas quatro (14/10/2026, a pedido do usuário; antes Porto Alegre tinha 1 e as outras 2 a 4).
       **Cuidado:** 9464x–9469x são CEPs novos do litoral (Tramandaí, Osório, Capão da Canoa); não usar
       uma faixa larga tipo 94000000–94999999. Testado: Gravataí, Alvorada e 94644-000 (Tramandaí) sem
       opção.
