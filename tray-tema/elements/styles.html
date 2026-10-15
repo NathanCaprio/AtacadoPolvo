@@ -49,7 +49,15 @@
 <noscript><link href="{{ font_url }}" rel="stylesheet"></noscript>
 {% endif %}
 
+{# Atacado Polvo: na home o swiper só aparece abaixo do destaque (vitrines; a largura dos .item
+   já vem do polvo.css seção 4), então não bloqueia a pintura. Produto (galeria) e categoria usam
+   no topo: lá continua bloqueando. #}
+{% if pages.current == 'home' %}
+<link href="{{ asset('css/swiper.min.css') }}" type="text/css" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="{{ asset('css/swiper.min.css') }}" type="text/css" rel="stylesheet" /></noscript>
+{% else %}
 <link href="{{ asset('css/swiper.min.css')       }}" type="text/css" rel="stylesheet" />
+{% endif %}
 <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
 {# Atacado Polvo: carrinho lateral só abre com clique; carrega sem bloquear (o que o mantém
    fora da tela até lá está em polvo.css seção 6). #}

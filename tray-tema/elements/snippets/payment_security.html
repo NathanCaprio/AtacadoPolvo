@@ -31,7 +31,8 @@
 
                 {% if seals.hackersafe %}
                     <li class="loja-protegida-seal">
-                        {{ seals.hackersafe }}
+                        {# Atacado Polvo: a Tray manda o selo sem tamanho (PageSpeed: "imagem sem width/height"); o GIF é 130x38. #}
+                        {{ seals.hackersafe|replace({'border="0"': 'border="0" width="130" height="38" loading="lazy"'}) }}
                     </li>
                 {% endif %}
 
