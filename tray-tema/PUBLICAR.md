@@ -106,6 +106,8 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       recebeu o mesmo ZIP. Conferido na prévia com celular lento e no script servido pela loja.
 - [x] **Tema publicado (15/10/2026, 09:47):** 3560443 sem a faixa de números do destaque da home;
       a 3564393 recebeu o mesmo ZIP.
+- [x] **Tema publicado (15/10/2026, 11:24):** 3564393 com ajustes do PageSpeed (swiper.min.css sem
+      bloquear na home, selo Loja Protegida com tamanho); a 3560443 recebeu o mesmo ZIP.
 - [x] **12 LPs recoladas (11/10/2026):** faixa do topo e chamada do blog com as 4 cidades; conferido
       nas páginas públicas.
 
