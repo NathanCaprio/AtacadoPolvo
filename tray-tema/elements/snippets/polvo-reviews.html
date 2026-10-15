@@ -82,6 +82,33 @@
     // Só ASCII aqui: a Tray troca caractere especial do template por entidade (&ndash;).
     contador.textContent = (primeiro === ultimo ? primeiro : primeiro + ' a ' + ultimo) + ' de ' + cards.length;
   }
+  // Arrastar com o mouse (no toque o navegador já passa com o dedo). Durante o arraste o
+  // scroll-snap fica desligado (.is-arrastando); ao soltar, encaixa no cartão mais perto.
+  var arraste = null;
+  trilho.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    arraste = { x: e.clientX, inicio: trilho.scrollLeft, moveu: false };
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (!arraste) return;
+    var dx = e.clientX - arraste.x;
+    if (!arraste.moveu && Math.abs(dx) < 5) return;
+    if (!arraste.moveu) { arraste.moveu = true; trilho.classList.add('is-arrastando'); }
+    trilho.scrollLeft = arraste.inicio - dx;
+  });
+  function soltar() {
+    if (!arraste) return;
+    var moveu = arraste.moveu;
+    arraste = null;
+    if (!moveu) return;
+    var alvo = Math.round(trilho.scrollLeft / passo()) * passo();
+    trilho.classList.remove('is-arrastando');
+    trilho.scrollTo({ left: alvo, behavior: suave ? 'smooth' : 'auto' });
+  }
+  window.addEventListener('pointerup', soltar);
+  window.addEventListener('pointercancel', soltar);
+  trilho.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
   function agendar() { if (!agendado) { agendado = true; requestAnimationFrame(atualizar); } }
   trilho.addEventListener('scroll', agendar, { passive: true });
   window.addEventListener('resize', agendar);

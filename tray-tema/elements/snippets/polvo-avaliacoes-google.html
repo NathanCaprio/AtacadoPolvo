@@ -1,7 +1,7 @@
 {# Atacado Polvo: avaliações reais do perfil no Google (todas as que têm texto), para o carrossel de
    snippets/polvo-reviews.html. Gerado em 15/10/2026 a partir da ficha do Google: nome + inicial do
    sobrenome, sem emoji, fotos de perfil em img/avaliacoes/ (88px, webp). Com foto primeiro.
-   Fora: a avaliação do próprio dono e duas que não falam da loja. Para atualizar, pedir ao Claude
+   Fora: a do próprio dono, duas que não falam da loja e as que parecem de familiares (Sá Costa, Pauli Costa, de Castro, Magda). Para atualizar, pedir ao Claude
    ("atualizar avaliações do Google"). #}
 {% set avaliacoes = [
   { 'n': "Lucas A.", 't': "Encontrei um lugar com mix de produtos a preço acessível! Me tornei cliente recorrente, pois além disso, o atendimento é gentil e rápido. Super recomendo!", 'f': "lucas-appel.webp" },
@@ -25,8 +25,6 @@
   { 'n': "Leticia S.", 't': "Ótimo custo benefício, muita variedade de produtos!", 'f': "leticia-caroline-tibola-da-silva.webp" },
   { 'n': "Sinara C.", 't': "Ótimo atendimento, encontramos tudo e mais um pouco", 'f': "sinara-carvalho.webp" },
   { 'n': "Simone S.", 't': "Atendimento ótimo e encontrei tudo o que precisava.", 'f': "simone-sarmento.webp" },
-  { 'n': "Anna C.", 't': "Produto de qualidade e atendimento excelente!", 'f': "anna-de-castro.webp" },
-  { 'n': "Patricia C.", 't': "Preços, produtos e atendimento excelentes!", 'f': "patricia-pauli-costa.webp" },
   { 'n': "Guilherme C.", 't': "Ótimo atendimento e produtos de qualidade.", 'f': "guilherme-coelho.webp" },
   { 'n': "Josiane F.", 't': "Ótimo lugar os produtos muito bom!", 'f': "josiane-freitas.webp" },
   { 'n': "Rozane R.", 't': "Excelente atendimento, preço justo", 'f': "rozane-rebechi.webp" },
@@ -39,7 +37,6 @@
   { 'n': "Laurita C.", 't': "Excelente!", 'f': "laurita-castegnaro.webp" },
   { 'n': "Vinicius K.", 't': "Fui comprar um detergente e saí com: 1 vassoura, 2 limpa vidro, 1 rodo, outra vassoura, sabão em pó, clorofina e amaciante. Porque os preços estavam muito bons!! Muito ágil o atendimento, facilitou minha vida, recomendo.", 'f': "" },
   { 'n': "Raquel R.", 't': "Oiii, tive uma ótima experiência comprando pelo WhatsApp. Eles são muito atenciosos e ligeiros na geração do pedido. Recomendo!", 'f': "" },
-  { 'n': "Magda", 't': "Com certeza, o melhor atacado de produtos de limpeza de Porto Alegre! Ótimo preço, atendimento eficaz, tele entrega rápida!", 'f': "" },
   { 'n': "Alex P.", 't': "Somos gratos pela parceria há três anos, nunca nos deixam faltar nada. Produtos justos e de muita qualidade! Recomendamos.", 'f': "" },
   { 'n': "Darla Q.", 't': "Ótimo atendimento, loja bem variada de produtos de qualidade, organizada e excelente preço!! Super recomendo!", 'f': "" },
   { 'n': "Roberta H.", 't': "Atendimento ótimo. Produtos com qualidade para todos os preços e gostos. Entrega rápida. Recomendo muito!", 'f': "" },
@@ -48,17 +45,13 @@
   { 'n': "Neusa R.", 't': "Bom preço, produtos com boa qualidade e bem atenciosos no atendimento.", 'f': "" },
   { 'n': "Itassusce G.", 't': "Loja limpa, organizada, ótimo atendimento e os preços são muito bons", 'f': "" },
   { 'n': "Marcus B.", 't': "Preço muito bom. Adorei os produtos e o atendimento também!", 'f': "" },
-  { 'n': "Victor C.", 't': "Atendimento ótimo. Produtos baratos, top d+ recomendo", 'f': "" },
   { 'n': "Paula A.", 't': "Ótimo atendimento,ótimos produtos e preços muito bom.", 'f': "" },
   { 'n': "Ronaldo R.", 't': "Ótimo muito bom o atendimento ótima indicação.", 'f': "" },
   { 'n': "Luiz A.", 't': "Preços ótimos tem de tudo, ótimo atendimento", 'f': "" },
-  { 'n': "Mauro C.", 't': "Produtas de qualidade com ótimos preços", 'f': "" },
   { 'n': "Filipe R.", 't': "Muito rápido e melhor preço da região", 'f': "" },
   { 'n': "Math S.", 't': "Top demais produtos e qualidade", 'f': "" },
   { 'n': "Claudia G.", 't': "Rápido, eficiente, bem atendido", 'f': "" },
-  { 'n': "Magda C.", 't': "Empresa top de linha, amei!", 'f': "" },
   { 'n': "Lucas A.", 't': "Muito bom o atendimento", 'f': "" },
-  { 'n': "Márcia C.", 't': "Atendimento nota 1000.", 'f': "" },
   { 'n': "Emanuel B.", 't': "Muito bom o serviço!", 'f': "" },
   { 'n': "Desiree C.", 't': "Atendimento top", 'f': "" },
   { 'n': "Rosely O.", 't': "Super recomendo", 'f': "" },

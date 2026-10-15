@@ -1352,6 +1352,13 @@
 
 .polvo-depos--trilho > .polvo-depo { flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start; }
 
+@media (pointer: fine) {
+  .polvo-depos--trilho { cursor: grab; }
+}
+
+/* Arrastando com o mouse: sem encaixe nem seleção de texto até soltar. */
+.polvo-depos--trilho.is-arrastando { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+
 .polvo-depos--trilho:focus-visible { outline: 2px solid var(--polvo-brand); outline-offset: 4px; }
 
 .polvo-avals .polvo-seta { top: 50%; }
