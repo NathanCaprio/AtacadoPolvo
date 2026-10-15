@@ -112,6 +112,8 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       depoimentos; a 3564393 recebeu o mesmo ZIP.
 - [x] **Tema publicado (15/10/2026, 12:10):** 3564393 com as avaliações do Google em carrossel (60,
       com foto primeiro); a 3560443 recebeu o mesmo ZIP.
+- [x] **Tema publicado (15/10/2026, 12:22):** 3560443 com o carrossel de avaliações arrastável e sem as
+      que parecem de familiares (53); a 3564393 recebeu o mesmo ZIP.
 - [x] **12 LPs recoladas (11/10/2026):** faixa do topo e chamada do blog com as 4 cidades; conferido
       nas páginas públicas.
 
