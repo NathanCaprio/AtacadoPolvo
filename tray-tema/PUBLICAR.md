@@ -101,6 +101,9 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [x] **Tema publicado (11/10/2026, 15:27):** 3560443 com o aviso de estoque no cartão ("Adicionar"
       ia para a página do produto quando a quantidade passava do estoque); a 3564393 recebeu o mesmo
       ZIP. Conferido na loja pública em sessão anônima.
+- [x] **Tema publicado (15/10/2026, 09:42):** 3564393 com o link de carrinho esperando a sessão
+      (aberto pelo WhatsApp em celular lento, limpava a URL e não montava o carrinho); a 3560443
+      recebeu o mesmo ZIP. Conferido na prévia com celular lento e no script servido pela loja.
 - [x] **12 LPs recoladas (11/10/2026):** faixa do topo e chamada do blog com as 4 cidades; conferido
       nas páginas públicas.
 
