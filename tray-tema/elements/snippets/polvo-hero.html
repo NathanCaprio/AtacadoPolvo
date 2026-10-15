@@ -32,16 +32,6 @@
           </a>
         {% endif %}
       </div>
-
-      {% if section.blocks|length %}
-        <ul class="polvo-hero__numeros">
-          {% for block in section.blocks %}
-            {% if block.settings.enabled %}
-              <li id="{{ block.id }}"><strong>{{ block.settings.number }}</strong><span>{{ block.settings.label }}</span></li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      {% endif %}
     </div>
 
     {% if s.image %}

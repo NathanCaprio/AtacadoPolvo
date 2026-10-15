@@ -51,7 +51,7 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 | Link de carrinho (`/?carrinho=produto:qtd,produto-variacao:qtd`) | `js/polvo-carrinho-link.js`: botão discreto "Copiar link do carrinho" na gaveta (todos veem; no celular abre o compartilhar) e, ao abrir o link, adiciona pela `/web_api/cart/` só o que falta até a qtd do link (reabrir não dobra), limpa a URL e abre a gaveta. Espera o `data-session` (até 20 s): visitante novo em celular lento (link aberto pelo WhatsApp) recebe a sessão depois do `load`, e antes o script limpava a URL e desistia; a URL só é limpa depois de montar o carrinho. Preço = o da loja na hora; kits/compre junto não entram |
 
 ## Seções próprias da home (editáveis no painel)
-`home.polvo_hero` (destaque + números), `home.polvo_segments` (cards com ícone
+`home.polvo_hero` (destaque; a faixa de números foi tirada a pedido em 15/10/2026, os blocos `polvo_stat` ficam no painel sem uso), `home.polvo_segments` (cards com ícone
 escolhido numa lista), `home.polvo_steps` (como comprar), `home.polvo_categories`
 (cards + chips com as categorias reais da loja; card sem link = busca pelo título),
 `home.polvo_strip` (faixa de chamada: recorrência), `home.polvo_club` (grupo de
