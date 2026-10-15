@@ -18,6 +18,23 @@
     return document.documentElement.getAttribute('data-session');
   }
 
+  // A Tray preenche o data-session por JS; em celular com rede lenta (link aberto
+  // pelo WhatsApp, visitante novo) ele chega depois do load.
+  function esperarSessao(limite) {
+    return new Promise(function (ok) {
+      if (sessao()) { ok(sessao()); return; }
+      var timer;
+      var obs = new MutationObserver(function () {
+        if (!sessao()) return;
+        obs.disconnect();
+        clearTimeout(timer);
+        ok(sessao());
+      });
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-session'] });
+      timer = setTimeout(function () { obs.disconnect(); ok(sessao()); }, limite);
+    });
+  }
+
   function variacao(v) {
     return v && String(v) !== '0' ? String(v) : '';
   }
@@ -166,14 +183,17 @@
   function receber() {
     if (!new URLSearchParams(window.location.search).has(PARAMETRO)) return;
     var pedidos = lerParametro();
-    limparUrl();
-    if (!pedidos.length || !sessao()) return;
+    if (!pedidos.length) { limparUrl(); return; }
 
     avisar('Montando seu carrinho...');
     var falhas = 0;
 
-    lerCarrinho()
-      .catch(function () { return []; })
+    esperarSessao(20000)
+      .then(function (s) {
+        // Sem sessão a URL fica com o parâmetro: recarregar a página tenta de novo.
+        if (!s) throw new Error('sem data-session');
+        return lerCarrinho().catch(function () { return []; });
+      })
       .then(function (atuais) {
         var tem = {};
         atuais.forEach(function (i) { tem[chave(i.produto, i.variante)] = i.qtd; });
@@ -190,6 +210,7 @@
         }, Promise.resolve());
       })
       .then(function () {
+        limparUrl();
         abrirCarrinho();
         if (falhas) {
           avisar(falhas + (falhas > 1 ? t(' itens do link n%C3%A3o puderam ser adicionados')
@@ -197,6 +218,10 @@
         } else {
           avisar(t('Pronto! Os itens est%C3%A3o no seu carrinho.'), 3500);
         }
+      })
+      .catch(function (erro) {
+        console.error('Erro ao montar o carrinho do link:', erro);
+        avisar(t('N%C3%A3o deu para montar o carrinho. Recarregue a p%C3%A1gina.'), 8000);
       });
   }
 
