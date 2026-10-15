@@ -1334,6 +1334,43 @@
 
 .polvo-google__acoes .polvo-btn { min-height: 44px; padding: 0 20px; font-size: 0.9375rem; }
 
+.polvo-depo__avatar--foto { object-fit: cover; background: var(--polvo-brand-50, #f1e9fd); }
+
+/* Carrossel de avaliações: passa com o dedo/rolagem (scroll-snap) e com as setas .polvo-seta
+   (polvo.css), 3 cartões no computador, 2 no tablet, 1 e um pedaço do próximo no celular. */
+.polvo-depos--trilho {
+  display: flex;
+  gap: 20px;
+  padding: 4px 2px 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.polvo-depos--trilho::-webkit-scrollbar { display: none; }
+
+.polvo-depos--trilho > .polvo-depo { flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start; }
+
+.polvo-depos--trilho:focus-visible { outline: 2px solid var(--polvo-brand); outline-offset: 4px; }
+
+.polvo-avals .polvo-seta { top: 50%; }
+
+.polvo-avals .polvo-seta:disabled { opacity: 0; pointer-events: none; }
+
+.polvo-avals__contador { margin: 14px 0 0; color: var(--polvo-ink-3); font-size: 0.875rem; text-align: center; }
+
+@media (max-width: 991px) {
+  .polvo-depos.polvo-depos--trilho { max-width: none; margin: 0; }
+  .polvo-depos--trilho > .polvo-depo { flex-basis: calc((100% - 20px) / 2); }
+}
+
+@media (max-width: 767px) {
+  .polvo-depos.polvo-depos--trilho { margin: 0 -16px; }
+  .polvo-depos.polvo-depos--trilho > .polvo-depo { flex: 0 0 86%; }
+  .polvo-depo { padding: 22px; }
+}
+
 @media (max-width: 767px) {
   .polvo-google { padding: 16px; }
   .polvo-google__acoes { width: 100%; }

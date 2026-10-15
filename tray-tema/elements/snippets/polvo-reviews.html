@@ -1,12 +1,12 @@
 {# Atacado Polvo: avaliações do Google (configs/editor/sections/home.polvo_reviews.json).
-   Selo com a nota e o total do perfil no Google (atualizados à mão no painel) + cartões com
-   avaliações reais copiadas de lá (nome e inicial do sobrenome). Sem dados estruturados de
-   avaliação: o Google proíbe marcar avaliações do próprio negócio no próprio site.
-   Iniciais do avatar = primeira letra do primeiro e do último nome. #}
+   Selo com a nota e o total do perfil no Google (atualizados à mão no painel) + carrossel com
+   todas as avaliações reais que têm texto (snippets/polvo-avaliacoes-google.html, com foto primeiro).
+   Carrossel = scroll-snap (polvo-home.css "Avaliações do Google") + setas/contador do script abaixo.
+   Sem dados estruturados de avaliação: o Google proíbe marcar avaliações do próprio negócio no
+   próprio site. #}
 {% if section.type == 'polvo_reviews' and section.settings.enabled %}
 {% set s = section.settings %}
 {% set estrela = 'M12 2l3 6.5 7 .9-5 4.8 1.2 7L12 17.8 5.8 21.2 7 14.2l-5-4.8 7-.9z' %}
-{% set logo_google %}<svg class="polvo-google__g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.5 2.3-6.2 0-11.5-4.2-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>{% endset %}
 <section class="polvo-secao polvo-secao--tinta" id="{{ section.id }}">
   <div class="container">
     <div class="polvo-secao__cabeca">
@@ -19,7 +19,7 @@
       {% set nota = s.google_rating|replace({',': '.'})|round %}
       <div class="polvo-google">
         <div class="polvo-google__nota">
-          {{ logo_google }}
+          {% element 'snippets/polvo-google-g' %}
           <strong>{{ s.google_rating }}</strong>
           <span class="polvo-depo__estrelas polvo-google__estrelas" role="img" aria-label="Nota {{ s.google_rating }} de 5 no Google">
             {% for i in 1..5 %}
@@ -39,35 +39,53 @@
       </div>
     {% endif %}
 
-    <div class="polvo-depos">
-      {% for block in section.blocks %}
-        {% if block.settings.enabled and block.settings.text %}
-          {% set b = block.settings %}
-          {% set estrelas = b.stars | default('5') %}
-          {% set partes = b.name | default('') | trim | split(' ') %}
-          <figure class="polvo-depo" id="{{ block.id }}">
-            {% if estrelas > 0 %}
-              <div class="polvo-depo__estrelas" role="img" aria-label="{{ estrelas }} de 5 estrelas">
-                {% for i in 1..5 %}
-                  <svg viewBox="0 0 24 24" aria-hidden="true" class="{{ i > estrelas ? 'is-vazia' }}"><path d="{{ estrela }}"/></svg>
-                {% endfor %}
-              </div>
-            {% endif %}
-            <blockquote class="polvo-depo__texto">&ldquo;{{ b.text }}&rdquo;</blockquote>
-            {% if b.name %}
-              <figcaption class="polvo-depo__autor">
-                <span class="polvo-depo__avatar" aria-hidden="true">{{ partes|first|first|upper }}{% if partes|length > 1 %}{{ partes|last|first|upper }}{% endif %}</span>
-                <span>
-                  <b>{{ b.name }}</b>
-                  {% if b.role %}<span>{{ b.role }}</span>{% endif %}
-                </span>
-                {% if b.google %}<span class="polvo-depo__fonte" role="img" aria-label="Avaliação no Google" title="Avaliação no Google">{{ logo_google }}</span>{% endif %}
-              </figcaption>
-            {% endif %}
-          </figure>
-        {% endif %}
-      {% endfor %}
+    <div class="polvo-carrossel polvo-avals" aria-roledescription="carrossel" aria-label="Avaliações de clientes no Google">
+      <button type="button" class="polvo-seta polvo-seta--prev" aria-label="Avaliações anteriores" disabled><span class="icon icon-arrow-prev" aria-hidden="true"></span></button>
+      <div class="polvo-depos polvo-depos--trilho" tabindex="0">
+        {% element 'snippets/polvo-avaliacoes-google' %}
+      </div>
+      <button type="button" class="polvo-seta polvo-seta--next" aria-label="Próximas avaliações"><span class="icon icon-arrow-next" aria-hidden="true"></span></button>
     </div>
+    <p class="polvo-avals__contador" aria-live="polite"></p>
   </div>
 </section>
+<script>
+(function () {
+  var caixa = document.querySelector('#{{ section.id }} .polvo-avals');
+  if (!caixa) return;
+  var trilho = caixa.querySelector('.polvo-depos--trilho');
+  var ant = caixa.querySelector('.polvo-seta--prev');
+  var prox = caixa.querySelector('.polvo-seta--next');
+  var contador = caixa.parentNode.querySelector('.polvo-avals__contador');
+  var cards = trilho.children;
+  var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!cards.length) return;
+
+  function passo() { return cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : trilho.clientWidth; }
+  function porTela() { return Math.max(1, Math.round(trilho.clientWidth / passo())); }
+
+  // A seta anda uma "tela" (3 cartões no computador, 1 no celular).
+  function andar(sentido) {
+    trilho.scrollBy({ left: sentido * porTela() * passo(), behavior: suave ? 'smooth' : 'auto' });
+  }
+  ant.addEventListener('click', function () { andar(-1); });
+  prox.addEventListener('click', function () { andar(1); });
+
+  var agendado = false;
+  function atualizar() {
+    agendado = false;
+    var fim = trilho.scrollWidth - trilho.clientWidth - 2;
+    ant.disabled = trilho.scrollLeft <= 2;
+    prox.disabled = trilho.scrollLeft >= fim;
+    var primeiro = Math.round(trilho.scrollLeft / passo()) + 1;
+    var ultimo = Math.min(cards.length, primeiro + porTela() - 1);
+    // Só ASCII aqui: a Tray troca caractere especial do template por entidade (&ndash;).
+    contador.textContent = (primeiro === ultimo ? primeiro : primeiro + ' a ' + ultimo) + ' de ' + cards.length;
+  }
+  function agendar() { if (!agendado) { agendado = true; requestAnimationFrame(atualizar); } }
+  trilho.addEventListener('scroll', agendar, { passive: true });
+  window.addEventListener('resize', agendar);
+  atualizar();
+})();
+</script>
 {% endif %}

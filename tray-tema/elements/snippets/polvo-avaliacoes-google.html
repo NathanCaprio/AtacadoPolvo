@@ -1,0 +1,85 @@
+{# Atacado Polvo: avaliações reais do perfil no Google (todas as que têm texto), para o carrossel de
+   snippets/polvo-reviews.html. Gerado em 15/10/2026 a partir da ficha do Google: nome + inicial do
+   sobrenome, sem emoji, fotos de perfil em img/avaliacoes/ (88px, webp). Com foto primeiro.
+   Fora: a avaliação do próprio dono e duas que não falam da loja. Para atualizar, pedir ao Claude
+   ("atualizar avaliações do Google"). #}
+{% set avaliacoes = [
+  { 'n': "Lucas A.", 't': "Encontrei um lugar com mix de produtos a preço acessível! Me tornei cliente recorrente, pois além disso, o atendimento é gentil e rápido. Super recomendo!", 'f': "lucas-appel.webp" },
+  { 'n': "Suzi K.", 't': "Estabelecimento com diversidade de produtos de limpeza pra casa, empresa, carro, pets. de excelente qualidade, preco justo.", 'f': "suzi-kluwe.webp" },
+  { 'n': "Rodrigo S.", 't': "Comprei sacos lixos nesse local,fomos bem recebidos pelo dono, ótimo lugar,loja bem limpa, recomendo.", 'f': "rodrigo-vieira-santos.webp" },
+  { 'n': "Banaleffa", 't': "Top: atendimento, preços, produtos. Show de loja de material de limpeza e higiene. Recomendo.", 'f': "banaleffa.webp" },
+  { 'n': "Patricia D.", 't': "Loja bem organizada, bons preços e atendimento de uma educação e excelência incrível!", 'f': "patricia-d.webp" },
+  { 'n': "Marco P.", 't': "Excelente atendimento, vários produtos de boa qualidade, preço dentro do mercado.", 'f': "marco-peruzzo.webp" },
+  { 'n': "Gilnei J.", 't': "Um lugar com produtos de boa qualidade e com o preço melhor que a concorrência!", 'f': "gilnei-junior.webp" },
+  { 'n': "Corrente do Bem", 't': "Atendimento excelente, preços em conta, tem tudo que é preciso para limpeza!", 'f': "corrente-do-bem.webp" },
+  { 'n': "Janine R.", 't': "Excelente atendimento, loja maravilhosa encontrei tudo o que eu precisava", 'f': "janine-romulo.webp" },
+  { 'n': "Gabriel C.", 't': "Ótima empresa, com atendimento diferenciado e boa qualidade nos produtos", 'f': "gabriel-carlos.webp" },
+  { 'n': "Karen M.", 't': "Excelentes produtos e ótimos preços! Atendentes educados e atenciosos.", 'f': "karen-escobar-martins.webp" },
+  { 'n': "Silvinha R.", 't': "Muita variedade, achei um produto que procura só ai, preço legal.", 'f': "silvinha-rodrigues.webp" },
+  { 'n': "Vera L.", 't': "Otimos preços recomendo e com uma boa diversidade de produtos!", 'f': "vera-lucia.webp" },
+  { 'n': "Vandi S.", 't': "Ótimos preços, lugar muito bem organizado e ótimos atendentes.", 'f': "vandi-souza.webp" },
+  { 'n': "Kevyn S.", 't': "ótimo atendimento, sempre procurando o melhor para o cliente!", 'f': "kevyn-simao.webp" },
+  { 'n': "Maira H.", 't': "Tudo de qualidade e preço muito bom. Adoramos o atendimento!", 'f': "maira-hendges.webp" },
+  { 'n': "Chopp Dalla Zona Sul", 't': "Muitas variedades e produtos com qualidade! Recomendo!", 'f': "chopp-dalla-zona-sul-poa.webp" },
+  { 'n': "Michele S.", 't': "Atendimento com excelência,e bons produtos e qualidade", 'f': "michele-da-silva-pacheco-santos.webp" },
+  { 'n': "Leticia S.", 't': "Ótimo custo benefício, muita variedade de produtos!", 'f': "leticia-caroline-tibola-da-silva.webp" },
+  { 'n': "Sinara C.", 't': "Ótimo atendimento, encontramos tudo e mais um pouco", 'f': "sinara-carvalho.webp" },
+  { 'n': "Simone S.", 't': "Atendimento ótimo e encontrei tudo o que precisava.", 'f': "simone-sarmento.webp" },
+  { 'n': "Anna C.", 't': "Produto de qualidade e atendimento excelente!", 'f': "anna-de-castro.webp" },
+  { 'n': "Patricia C.", 't': "Preços, produtos e atendimento excelentes!", 'f': "patricia-pauli-costa.webp" },
+  { 'n': "Guilherme C.", 't': "Ótimo atendimento e produtos de qualidade.", 'f': "guilherme-coelho.webp" },
+  { 'n': "Josiane F.", 't': "Ótimo lugar os produtos muito bom!", 'f': "josiane-freitas.webp" },
+  { 'n': "Rozane R.", 't': "Excelente atendimento, preço justo", 'f': "rozane-rebechi.webp" },
+  { 'n': "Fabiano L.", 't': "TOP DEMAIS! Atendimento muito bom", 'f': "fabiano-lopes.webp" },
+  { 'n': "Emma R.", 't': "O atendimento dos guris é top", 'f': "emma-ramos.webp" },
+  { 'n': "Fabio R.", 't': "Variedades e preço bom!", 'f': "fabio-ribas.webp" },
+  { 'n': "Patricia D.", 't': "Atendimento excelente!", 'f': "patricia-dutra.webp" },
+  { 'n': "Marconi K.", 't': "Ótimo atendimento!", 'f': "marconi-knevitz.webp" },
+  { 'n': "Pets Go Club", 't': "Empresa show", 'f': "pets-go-club-marketing.webp" },
+  { 'n': "Laurita C.", 't': "Excelente!", 'f': "laurita-castegnaro.webp" },
+  { 'n': "Vinicius K.", 't': "Fui comprar um detergente e saí com: 1 vassoura, 2 limpa vidro, 1 rodo, outra vassoura, sabão em pó, clorofina e amaciante. Porque os preços estavam muito bons!! Muito ágil o atendimento, facilitou minha vida, recomendo.", 'f': "" },
+  { 'n': "Raquel R.", 't': "Oiii, tive uma ótima experiência comprando pelo WhatsApp. Eles são muito atenciosos e ligeiros na geração do pedido. Recomendo!", 'f': "" },
+  { 'n': "Magda", 't': "Com certeza, o melhor atacado de produtos de limpeza de Porto Alegre! Ótimo preço, atendimento eficaz, tele entrega rápida!", 'f': "" },
+  { 'n': "Alex P.", 't': "Somos gratos pela parceria há três anos, nunca nos deixam faltar nada. Produtos justos e de muita qualidade! Recomendamos.", 'f': "" },
+  { 'n': "Darla Q.", 't': "Ótimo atendimento, loja bem variada de produtos de qualidade, organizada e excelente preço!! Super recomendo!", 'f': "" },
+  { 'n': "Roberta H.", 't': "Atendimento ótimo. Produtos com qualidade para todos os preços e gostos. Entrega rápida. Recomendo muito!", 'f': "" },
+  { 'n': "Prisa Representações", 't': "Excelência e preço justo! Compramos todos os materiais de limpeza para o Escritório.", 'f': "" },
+  { 'n': "Luis B.", 't': "Local organizado, limpo e super bem atendido! Sucesso e prosperidade pessoal", 'f': "" },
+  { 'n': "Neusa R.", 't': "Bom preço, produtos com boa qualidade e bem atenciosos no atendimento.", 'f': "" },
+  { 'n': "Itassusce G.", 't': "Loja limpa, organizada, ótimo atendimento e os preços são muito bons", 'f': "" },
+  { 'n': "Marcus B.", 't': "Preço muito bom. Adorei os produtos e o atendimento também!", 'f': "" },
+  { 'n': "Victor C.", 't': "Atendimento ótimo. Produtos baratos, top d+ recomendo", 'f': "" },
+  { 'n': "Paula A.", 't': "Ótimo atendimento,ótimos produtos e preços muito bom.", 'f': "" },
+  { 'n': "Ronaldo R.", 't': "Ótimo muito bom o atendimento ótima indicação.", 'f': "" },
+  { 'n': "Luiz A.", 't': "Preços ótimos tem de tudo, ótimo atendimento", 'f': "" },
+  { 'n': "Mauro C.", 't': "Produtas de qualidade com ótimos preços", 'f': "" },
+  { 'n': "Filipe R.", 't': "Muito rápido e melhor preço da região", 'f': "" },
+  { 'n': "Math S.", 't': "Top demais produtos e qualidade", 'f': "" },
+  { 'n': "Claudia G.", 't': "Rápido, eficiente, bem atendido", 'f': "" },
+  { 'n': "Magda C.", 't': "Empresa top de linha, amei!", 'f': "" },
+  { 'n': "Lucas A.", 't': "Muito bom o atendimento", 'f': "" },
+  { 'n': "Márcia C.", 't': "Atendimento nota 1000.", 'f': "" },
+  { 'n': "Emanuel B.", 't': "Muito bom o serviço!", 'f': "" },
+  { 'n': "Desiree C.", 't': "Atendimento top", 'f': "" },
+  { 'n': "Rosely O.", 't': "Super recomendo", 'f': "" },
+  { 'n': "Brunna N.", 't': "Muito bom", 'f': "" },
+  { 'n': "Andrielli S.", 't': "Muito boa", 'f': "" }
+] %}
+{% for a in avaliacoes %}
+  {% set partes = a.n|split(' ') %}
+  <figure class="polvo-depo">
+    <div class="polvo-depo__estrelas" role="img" aria-label="5 de 5 estrelas">
+      {% for i in 1..5 %}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 6.5 7 .9-5 4.8 1.2 7L12 17.8 5.8 21.2 7 14.2l-5-4.8 7-.9z"/></svg>{% endfor %}
+    </div>
+    <blockquote class="polvo-depo__texto">&ldquo;{{ a.t }}&rdquo;</blockquote>
+    <figcaption class="polvo-depo__autor">
+      {% if a.f %}
+        <img class="polvo-depo__avatar polvo-depo__avatar--foto" src="{{ asset('img/avaliacoes/' ~ a.f) }}" alt="" width="44" height="44" loading="lazy" decoding="async">
+      {% else %}
+        <span class="polvo-depo__avatar" aria-hidden="true">{{ partes|first|first|upper }}{% if partes|length > 1 %}{{ partes|last|first|upper }}{% endif %}</span>
+      {% endif %}
+      <span><b>{{ a.n }}</b></span>
+      <span class="polvo-depo__fonte" role="img" aria-label="Avaliação no Google" title="Avaliação no Google">{% element 'snippets/polvo-google-g' %}</span>
+    </figcaption>
+  </figure>
+{% endfor %}

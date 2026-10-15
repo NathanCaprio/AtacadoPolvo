@@ -6,7 +6,8 @@
 (function () {
     var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    document.querySelectorAll('.polvo-segmentos, .polvo-depos').forEach(function (trilho) {
+    // O carrossel de avaliações (.polvo-depos--trilho) tem setas e contador próprios (polvo-reviews.html).
+    document.querySelectorAll('.polvo-segmentos, .polvo-depos:not(.polvo-depos--trilho)').forEach(function (trilho) {
         var cards = trilho.children;
         if (cards.length < 2) return;
 
