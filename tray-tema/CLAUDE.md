@@ -5,20 +5,20 @@ v3.0.8 da Tray, **Twig**. A loja vende **com preço**. Este arquivo não entra n
 
 ## Fluxo (sempre este)
 1. Editar aqui → `npm run tema-zip` (raiz) → gera `tray-tema.zip` (fora do git).
-2. Subir na **cópia de trabalho, tema 3564393** ("Cópia tema 3560443…", não publicada; publicada é a 3560443 "Cópia tema 3521907…" desde 15/10/2026 11:58). Logo após publicar, a cópia de trabalho recebeu o mesmo ZIP (as duas iguais):
+2. Subir na **cópia de trabalho, tema 3560443** ("Cópia tema 3521907…", não publicada; publicada é a 3564393 "Cópia tema 3560443…" desde 15/10/2026 12:10). Logo após publicar, a cópia de trabalho recebeu o mesmo ZIP (as duas iguais):
    painel → Aparência da loja (`/studio-app/?platform=tray`) → link "Editar HTML"
-   da cópia (`a[href="/studio-app/themes/3564393/code"]`; abrir `/code` direto pela URL dá 404) → Ações → Enviar tema →
+   da cópia (`a[href="/studio-app/themes/3560443/code"]`; abrir `/code` direto pela URL dá 404) → Ações → Enviar tema →
    Procurar arquivo → Enviar (o botão do diálogo; escolher o arquivo não envia). Resultado sai no console (Pusher): "Upload de Zip
    finalizado com sucesso." (~20 s).
-3. Conferir em `https://www.atacadopolvo.com.br?loja=1544153&opencode_theme=e959dda5-b2fb-4127-a8b6-f4fe3b584fa8` (3564393; o `ab9ec62e-5e89-49cc-8f53-b2fff4524948` é o da 3560443, hoje publicada). A prévia funciona também num contexto novo do Playwright (`browser.newContext()`), sem login: bom para testar carrinho sem mexer no da janela do usuário. A prévia cai ao abrir o painel (studio-app): repetir o `?loja=...&opencode_theme=` antes de conferir, senão se vê o tema publicado.
+3. Conferir em `https://www.atacadopolvo.com.br?loja=1544153&opencode_theme=ab9ec62e-5e89-49cc-8f53-b2fff4524948` (3560443; o `e959dda5-b2fb-4127-a8b6-f4fe3b584fa8` é o da 3564393, hoje publicada). A prévia funciona também num contexto novo do Playwright (`browser.newContext()`), sem login: bom para testar carrinho sem mexer no da janela do usuário. A prévia cai ao abrir o painel (studio-app): repetir o `?loja=...&opencode_theme=` antes de conferir, senão se vê o tema publicado.
 4. Commit. **Publicar** a cópia só o usuário decide. O modo automático barra publicar por script ("Production Deploy"), mesmo com o ok. Com o ok explícito do usuário, o caminho que passou foi clicar com as ferramentas de clique: lista de temas → botão "Publicar" do card da cópia → "Publicar tema". O modal mostra o **nome** do tema, não o código.
 
 - Tray **recusa ZIP parcial** ("estrutura inválida"): sempre o tema inteiro.
 - Envio só substitui arquivos de mesmo nome; arquivo apagado aqui continua lá.
 - Enviar ZIP sem abrir a janela de arquivo: `page.locator('input[type=file]').last().setInputFiles(...)` e depois o botão "Enviar" do diálogo. Em 11/10/2026 o modo automático barrou isso por script ("Production Deploy", mesmo na cópia não publicada); com o ok do usuário passou com cliques: Ações → Enviar tema → Procurar arquivo → `browser_file_upload` → Enviar.
 - Na lista de temas, conferir **qual está publicado** antes de clicar em "Publicar" (o card do topo é o publicado).
-- Publicado (15/10/2026, 11:58) = 3560443. **Não é possível editar um tema que já está publicado** (o menu dele não tem "Editar HTML" e o /code responde "Tema está publicado"). É necessário **duplicar o tema publicado** (Mais opções → Duplicar tema): a cópia exibe a opção **Editar HTML**, e depois sobe o ZIP de novo nela e publica. Por isso a correção vai na
-  3564393 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
+- Publicado (15/10/2026, 12:10) = 3564393. **Não é possível editar um tema que já está publicado** (o menu dele não tem "Editar HTML" e o /code responde "Tema está publicado"). É necessário **duplicar o tema publicado** (Mais opções → Duplicar tema): a cópia exibe a opção **Editar HTML**, e depois sobe o ZIP de novo nela e publica. Por isso a correção vai na
+  3560443 e só entra no ar quando o usuário publicar. O painel agora é em `www.atacadopolvo.com.br/studio-app/`
   (no domínio antigo dá "unauthorized"). Ao publicar, as duas cópias trocam de papel: atualizar o código
   e o `opencode_theme` acima (link "Pré-visualizar" do Editar HTML da cópia). "Genesis" (3512519) é o tema antigo. **"agrada dev" não é deste projeto — nunca mexer.**
 - Login no painel tem reCAPTCHA: o usuário entra na janela do Playwright.
