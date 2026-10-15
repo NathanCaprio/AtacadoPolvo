@@ -73,9 +73,14 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [x] **Estoque do ERP para a Tray (11/10/2026):** em Lojas Virtuais > Configurações > Tray, "Atualizar o
       estoque dos produtos vinculados na loja" **ligado** (antes desligado; preço já estava ligado).
       Produto zerado no ERP fica indisponível na loja.
-- [ ] **Páginas institucionais** (Como comprar, Envio, Pagamento, Tempo de Garantia, Trocas e
-      devoluções, Segurança). Ainda estão com o texto padrão da Tray; o de Envio, por exemplo,
-      promete "em até 2 dias úteis". O título "Seguranca" está sem cedilha.
+- [ ] **Páginas institucionais** (Como comprar, Pagamento, Tempo de Garantia, Trocas e
+      devoluções, Segurança). Ainda estão com o texto padrão da Tray. O título "Seguranca" está sem
+      cedilha. Editar em `/admin/store/pages` (editor CKEditor: `CKEDITOR.instances.editor1.setData`).
+      **Envio** (`/admin/store/pages/detail/4`) reescrita em 14/10/2026: entrega própria grátis nas 4
+      cidades em 3 a 4 dias úteis, retirada grátis nas 2 lojas, pedido mínimo, WhatsApp para outras cidades.
+- **Prazo de entrega nos textos (14/10/2026):** "24h" virou "até 4 dias úteis para entregar" no hero
+      da home, "3 a 4 dias úteis" na linha do tempo da empresa (`polvo-empresa.html`) e na LP de
+      condomínios (só ela foi recolada). Site antigo (raiz do repo) ainda diz 24h: não está mais no ar.
 - [ ] **Política de privacidade** nova (a do site antigo descreve o servidor antigo, não serve).
 - [x] **CNPJ do rodapé** (06/10/2026): 37.418.777/0001-80 com a razão social, no tema e nas LPs.
 - [ ] **FAQ e depoimentos.** Revisar as respostas do FAQ da home e trocar os depoimentos da home (textos do site antigo, já no ar) pelos de clientes reais (painel → Editar tema → Polvo: depoimentos).

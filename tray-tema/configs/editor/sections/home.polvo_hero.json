@@ -8,7 +8,7 @@
     "tray": {
       "blocks": [
         { "type": "polvo_stat", "settings": { "enabled": true, "number": "+400", "label": "itens em estoque" } },
-        { "type": "polvo_stat", "settings": { "enabled": true, "number": "24h", "label": "prazo médio de entrega" } },
+        { "type": "polvo_stat", "settings": { "enabled": true, "number": "até 4", "label": "dias úteis para entregar" } },
         { "type": "polvo_stat", "settings": { "enabled": true, "number": "+850", "label": "clientes atendidos" } }
       ],
       "settings": {
