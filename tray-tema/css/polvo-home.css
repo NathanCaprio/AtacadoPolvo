@@ -1292,6 +1292,54 @@
 
 .polvo-depo__autor b + span { display: block; color: var(--polvo-ink-3); font-size: 0.8125rem; }
 
+/* "G" do Google no canto do autor: a avaliação veio do perfil no Google. */
+.polvo-depo__fonte { display: grid; place-items: center; margin-left: auto; }
+
+.polvo-google__g { width: 22px; height: 22px; flex: none; }
+
+/* Selo com a nota do Google acima dos cartões. */
+.polvo-google {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin: 0 0 28px;
+  padding: 18px 24px;
+  border: 1px solid var(--polvo-line);
+  border-radius: var(--polvo-r-lg);
+  background: #fff;
+  box-shadow: var(--polvo-shadow-sm);
+}
+
+.polvo-google__nota { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+
+.polvo-google__nota .polvo-google__g { width: 30px; height: 30px; }
+
+.polvo-google__nota strong {
+  color: var(--polvo-ink);
+  font-family: var(--polvo-font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.polvo-google__estrelas.polvo-depo__estrelas { margin: 0; }
+
+.polvo-google__estrelas svg { width: 22px; height: 22px; }
+
+.polvo-google__total { color: var(--polvo-ink-3); font-size: 0.9375rem; }
+
+.polvo-google__acoes { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.polvo-google__acoes .polvo-btn { min-height: 44px; padding: 0 20px; font-size: 0.9375rem; }
+
+@media (max-width: 767px) {
+  .polvo-google { padding: 16px; }
+  .polvo-google__acoes { width: 100%; }
+  .polvo-google__acoes .polvo-btn { flex: 1 1 auto; justify-content: center; }
+}
+
 @media (max-width: 991px) {
   .polvo-depos { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
 }

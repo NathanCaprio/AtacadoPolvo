@@ -63,8 +63,7 @@ provisórias, o usuário ajusta) e `home.polvo_cta` (caixa em degradê + unidade
 (incluído no fim de `pages/home.html`; alvos marcados por seletor, sem `data-*` nos snippets).
 Ordem igual à home antiga: hero, marcas, mais vendidos,
 categorias, como comprar, segmentos, recorrência, clube, novidades, a empresa, depoimentos,
-FAQ, notícias, chamada final. Depoimentos (`home.polvo_reviews`, `snippets/polvo-reviews.html`)
-visíveis desde 07/10/2026 a pedido do usuário, com os textos do site antigo (Marcos Silva, Renata Alves, Juliana Prado); ele troca pelos reais no painel. Cada uma = JSON em
+FAQ, notícias, chamada final. Avaliações do Google (`home.polvo_reviews`, `snippets/polvo-reviews.html`, desde 15/10/2026 no lugar dos depoimentos inventados): selo com nota e total do perfil (`google_rating`/`google_count`, **atualizar à mão** no painel) + links "Ver todas"/"Avaliar" (`#lrd=0x95199d104b92e6a1:0x2cf1555d271facf3,1` / `,3`) + 6 avaliações reais copiadas do Google (nome + inicial do sobrenome, sem emoji; bloco `google` mostra o G). Sem dados estruturados de review (o Google proíbe em avaliação do próprio negócio). Não usar API/widget: decisão do usuário (custo, PageSpeed). Cada uma = JSON em
 `configs/editor/sections/home.<tipo>.json` + `elements/snippets/polvo-*.html`
 (abre com `{% if section.type == '<tipo>' and section.settings.enabled %}`) +
 CSS em `css/polvo-home.css` (só na home). Ordem/conteúdo inicial da home:
@@ -149,7 +148,7 @@ Cadastro de produtos na Tray (30 feitos à mão, categorias, cuidados com o ERP,
 - [x] Home: hero, barra de informações, mais vendidos, segmentos, como comprar, marcas (logos em `img/marcas/`).
 - [x] Cabeçalho em uma linha como o do site antigo.
 - [x] Home completa: categorias, recorrência, clube de ofertas, a empresa, FAQ, chamada final.
-- [ ] Usuário: revisar as respostas do FAQ e trocar os depoimentos da home (textos do site antigo, já visíveis) pelos de clientes reais.
+- [ ] Usuário: revisar as respostas do FAQ. (Depoimentos trocados por avaliações reais do Google em 15/10/2026.)
 - [x] Página de produto: preço em destaque (WhatsApp é nativo da Tray, ver acima).
 - [x] Links dos cards de segmento → LPs.
 - [x] LPs de SEO criadas no criador da Tray (inativas).
