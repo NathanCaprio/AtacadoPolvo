@@ -78,6 +78,9 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       cedilha. Editar em `/admin/store/pages` (editor CKEditor: `CKEDITOR.instances.editor1.setData`).
       **Envio** (`/admin/store/pages/detail/4`) reescrita em 14/10/2026: entrega própria grátis nas 4
       cidades em 3 a 4 dias úteis, retirada grátis nas 2 lojas, pedido mínimo, WhatsApp para outras cidades.
+      **Trocas e devoluções** (`/admin/store/pages/detail/12`) reescrita em 16/10/2026: só o arrependimento
+      de 7 dias do CDC (sem uso, lacrado; devolução sem custo numa das 2 lojas; estorno/depósito), defeito
+      pelo CDC, sem troca de produto sem defeito. Igual ao `hasMerchantReturnPolicy` do schema.
 - **Prazo de entrega nos textos (14/10/2026):** "24h" virou "até 4 dias úteis para entregar" no hero
       da home, "3 a 4 dias úteis" na linha do tempo da empresa (`polvo-empresa.html`) e na LP de
       condomínios (só ela foi recolada). Site antigo (raiz do repo) ainda diz 24h: não está mais no ar.
