@@ -50,6 +50,11 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       Pix, Transf. BB, Transf. Bradesco). Desligadas e disponíveis: Faturamento Direto, Depósito,
       Boleto do banco, Banricompras, outros intermediadores (Mercado Pago, PagBank, Pagar.me...,
       com +1,5% da Tray no plano Crescimento).
+      **Taxas por pedido (16/10/2026, calculadora de taxas em Pagamentos > Visão geral, taxas padrão
+      Vindi):** Pix **1,60%** (recebe na hora); boleto **R$ 2,99 fixo** (2 dias); cartão Visa/Master
+      à vista **5,48% + R$ 0,39** (14 dias). Parcelado é "com juros" (juros com o cliente). Plano
+      atual = **Avançado** (não mais Crescimento), com "comissão pagamentos até 0,75%"; não está
+      claro se ela já entra nas taxas acima ou é cobrada à parte — conferir na 1ª fatura.
 - [x] **Vínculo das formas de pagamento no ERP (11/10/2026, a pedido do usuário):** Pix - Vindi →
       PIX QR CODE; Cartão Visa/MasterCard/Elo/Amex/Diners - Vindi → CRÉDITO (conferido na lista).
       Boleto e Transferência Online BB/Bradesco ficam sem vínculo: o usuário quer **desligá-los na
