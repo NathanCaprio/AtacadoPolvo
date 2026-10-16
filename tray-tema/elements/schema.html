@@ -94,6 +94,17 @@
                         "transitTime": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 3, "unitCode": "DAY" }
                     }
                 },
+                {# Atacado Polvo: só o direito de arrependimento do CDC (art. 49): 7 dias, sem custo,
+                   devolução na loja. A loja não tem outra política de troca (16/10/2026). Igual ao
+                   da Organization em snippets/polvo-schema-loja.html. #}
+                "hasMerchantReturnPolicy": {
+                    "@type": "MerchantReturnPolicy",
+                    "applicableCountry": "BR",
+                    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                    "merchantReturnDays": 7,
+                    "returnMethod": "https://schema.org/ReturnInStore",
+                    "returnFees": "https://schema.org/FreeReturn"
+                },
                 {# Atacado Polvo: sem o espaço que o tema padrão deixava antes da URL. #}
                 "availability": "{{ product.available and (product.stock > 0 or settings.without_stock_sale) ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock' }}"
             }
