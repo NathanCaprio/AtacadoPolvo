@@ -140,3 +140,14 @@ maior; quem já está na loja é atualizado (mesma Referência), não duplica.
   depois do push.
 - Fica para depois: foto para os 315 sem foto (`npm run fotos` + revisão + reenvio pela
   planilha, mesma Referência atualiza).
+- **Vínculo no Empresarius (16/10/2026): 553 de 558** (`app.empresarius.com.br` →
+  Lojas Virtuais → Tray → Produtos; `ferramentas/vincular-erp.js` em lotes, a função
+  guardada em `page.context()` para não reenviar o script a cada lote). Os códigos curtos
+  (958, 914, 9221, 2100, 1000, 853) não acham pela busca longa: buscar com **termo curto**
+  do nome ("PILHA", "60X75") e conferir o código no resultado; 1000 e 853 também não
+  dão linha única na grade pelo código — buscar a grade pelo nome.
+- **Sem vínculo (5)** — não aparecem mais na busca do ERP (inativados/excluídos depois
+  de 07/10?): 7898903623159 Limpador Perfumado 5L Blue Supreme Wuax, 1452 Papel Toalha
+  Int. Avulso Soft Ipel, 78965409336 Alvejante sem Cloro 5L Quimifel, 1013 Aromatizador
+  24hrs Fort Aroma 5L, 7899682735675 Limpador Ácido 5L Uppro Nobre. Na Tray ficam com
+  preço/estoque de 07/10 sem atualizar; decidir com o usuário se esconde ou exclui.
