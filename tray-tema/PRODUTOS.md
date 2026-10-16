@@ -153,3 +153,22 @@ maior; quem já está na loja é atualizado (mesma Referência), não duplica.
   preço/estoque de 07/10 sem atualizar. **Escondidos em 16/10/2026** (a pedido do usuário):
   "Exibir produto na loja virtual" desmarcado, "Produto ativo" mantido; fichas 1061,
   1777, 2063, 2065, 2125. Se voltarem no ERP: vincular e marcar de novo.
+
+## Feito em 16/10/2026: fotos dos produtos sem foto (Tray)
+
+- Conferência na lista da Tray (miniatura de cada linha, 1.058 produtos): eram 317 sem
+  foto, todos do lote novo. 2 eram foto do ERP em **PNG** que a importação por link
+  descartou sem aviso (Wuax Orvalho 1L e Alecrim 500ml) — enviadas na ficha (PNG original,
+  para não perder o fundo transparente).
+- Xerox Colorido/Preto e Branco (fichas 1335 e 1395) escondidos da loja (serviço de balcão).
+- `npm run fotos` nos 188 que nunca acharam: 0 com a regra normal. Nova opção
+  `--frouxo` (`server/fotos.js`): nota a partir de 0,45 vai para **dúvida**, nunca direto
+  para o ar. Resultado: 4 no ar + 179 em dúvida; revisão visual das 5 folhas: 109
+  aprovadas, 2 das que entraram direto tiradas do ar → **111 fotos novas**, enviadas na
+  ficha de cada produto (o link do GitHub só vale depois do push).
+  Critério da revisão: recusar marca/fragrância/medida diferente, kit ou várias cores no
+  lugar da unidade, print de ficha técnica de catálogo e marca d'água de outra loja.
+- **Restam 198 visíveis sem foto** (175 com estoque): lista em `produtos-sem-foto-tray.csv`
+  (raiz, fora do git). 116 já tinham sido recusados na revisão de 02/10 e não foram
+  buscados de novo; 7 não estão no espelho local do ERP (criados depois de 02/10).
+  Para estes, o caminho é foto própria (tirada na loja) ou do fornecedor.

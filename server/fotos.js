@@ -6,6 +6,7 @@
      node server/fotos.js --grupo LIMPEZA    só um grupo do ERP
      node server/fotos.js --so 7891,7892     só estes códigos (refaz a foto)
      node server/fotos.js --de-novo          tenta de novo quem não achou antes
+     node server/fotos.js --frouxo           nota a partir de 0,45 vai para dúvida (revisar)
      node server/fotos.js --folha            folha de contato para revisão visual
      node server/fotos.js --revisar --recusar 3,7 --aprovar 12
 
@@ -38,6 +39,7 @@ const { PASTA_FOTOS } = require('./erp');
 const REGISTRO = path.join(path.dirname(ARQUIVO), 'fotos-busca.jsonl');
 const PASTA_DUVIDA = path.join(path.dirname(ARQUIVO), 'fotos-duvida');   // esperando revisão
 const NOTA_MINIMA = 0.6;
+const NOTA_FROUXA = 0.45;        // --frouxo: daqui para cima vai para dúvida
 const PAUSA = 1200;              // ms entre buscas, para não martelar o Bing
 const LADO = 600;                // px da miniatura baixada
 const NAVEGADOR = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
@@ -204,6 +206,7 @@ function argumentos(lista) {
     else if (lista[i] === '--grupo') a.grupo = semAcento(lista[++i]);
     else if (lista[i] === '--so') a.so = new Set(String(lista[++i] || '').split(',').map(s => s.trim()));
     else if (lista[i] === '--de-novo') a.deNovo = true;
+    else if (lista[i] === '--frouxo') a.frouxo = true;
     else if (lista[i] === '--folha') a.folha = true;
     else if (lista[i] === '--revisar') a.revisar = true;
     else if (lista[i] === '--recusar') a.recusar = numeros(lista[++i]);
@@ -273,6 +276,8 @@ async function buscarTodos(a) {
     const linha = { erpId: p.erp_id, codigo: p.codigo, nome: p.nome, revisada: false };
     try {
       const m = await fotoPara(p);
+      // --frouxo: o que passou perto também vai para a revisão visual (nunca direto para o ar).
+      if (m && !m.serve && !m.duvida && a.frouxo && m.nota >= NOTA_FROUXA) m.duvida = true;
       if (m && (m.serve || m.duvida)) {
         const pasta = m.serve ? PASTA_FOTOS : PASTA_DUVIDA;
         fs.writeFileSync(path.join(pasta, `${p.erp_id}.jpg`), await baixar(m.miniatura));
