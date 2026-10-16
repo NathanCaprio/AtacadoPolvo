@@ -126,8 +126,8 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 - [ ] Ativar a **blackfriday** (noindex, contagem até 27/11) perto da campanha.
 - [x] Domínio próprio (06/10/2026): www.atacadopolvo.com.br com SSL (até 04/01/2027); sem www e http
       dão 301 para https://www; canonical já aponta para o domínio novo.
-- [ ] Redirecionamentos 301 (lista em `tray-tema/CLAUDE.md`): hoje `/condominios.html` etc. dão 302
-      para `/sem-resultados-na-busca`.
+- [x] Redirecionamentos 301 (16/10/2026, 19 endereços, lista em `tray-tema/CLAUDE.md`): conferidos
+      com curl, todos 301 para a página certa (200). Falta só `privacidade.html` (sem página nova).
 - [ ] Sitemap: **regenerado (conferido em 11/10/2026)**, 642 endereços já em `www.atacadopolvo.com.br`
       (produtos, categorias, marcas, as LPs, /empresa e /contato; a blackfriday inativa fica de fora).
       Home com `robots: INDEX,FOLLOW` e canonical certo; robots.txt só bloqueia carrinho/checkout.

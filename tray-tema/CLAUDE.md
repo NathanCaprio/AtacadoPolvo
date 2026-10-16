@@ -107,10 +107,16 @@ JSON do artigo). Artigo novo: `lp/blog-<slug>.json` + item em `blog.json` + linh
   blog-diferenca-produto-limpeza-profissional-domestico=23. Prévia: `/<slug>?preview=1&v=<qualquer>` (a LP sai com cache de 4 h; sem o `&v=` o navegador mostra a versão velha). LP que sai **vazia** (200, 0 bytes) para o público: salvar de novo no editor (sem mudar nada) resolve; o vazio fica no cache 4 h por URL (aconteceu com /blog em 07/10/2026). Logo após publicar um tema o /blog pode vir vazio por alguns segundos e voltar sozinho: conferir de novo antes de mexer. Depois de colar, a versão pública pode demorar a trocar mesmo com `?v=` novo: quem segura é a origem da Tray, não o CDN (`x-cache-hits: 0`); a prévia (`?preview=1`) já mostra a nova. Em 07/10/2026: 9 LPs na hora, /escolas em ~2 min, /condominios passou de 10 min mesmo salva de novo. Conferir com `fetch` procurando um trecho novo do CSS. Em 11/10/2026 (troca do e-mail) foram duas camadas: com `?nc=` aleatório a origem alternava nova/velha em todas as 11 LPs (metade dos servidores ainda velha 1 h depois de salvar), e o endereço puro vinha **fixo** da borda Azion (POA, `x-cache-hits: 1`, `max-age=14400`, `Vary: User-Agent`) com a versão velha. Lojista não tem como limpar esse cache: é esperar até ~4 h (o visitante vê o endereço puro).
 - Ativar = checkbox "Ativo" do editor da LP (`.sidebar-edit-blank__section-status`, clicar no `label`) + Salvar. Decisão do usuário
   (os cards da home já apontam para `/condominios` e `/escolas`).
-- Redirecionar quando o domínio virar (301 no painel da Tray): `/condominios.html`→`/condominios`,
+- **Redirecionamentos 301 feitos (16/10/2026)**, 19 em Configurações > **Redirecionamento de URL**
+  (`/admin/settings/redirect`), todos "Parcial" (pega também `?utm=`/`?id=`, e a query cai) + 301:
+  `/condominios.html`→`/condominios`,
   `/escolas.html`→`/escolas`, `/recorrencia.html`→`/recorrencia`, `/restaurantes.html`→`/restaurantes`,
   `/hoteis.html`→`/hoteis`, `/pets.html`→`/pets`, `/blog.html`→`/blog`, `/blackfriday.html`→`/blackfriday`,
-  `/blog-<slug>.html`→`/blog-<slug>` (os 4 artigos), `/produtos.html`→busca vazia, `/index.html`→`/`.
+  `/blog-<slug>.html`→`/blog-<slug>` (os 4 artigos), `/sobre.html`→`/empresa`, `/contato.html`→`/contato`,
+  `/index.html`→`/`; `/produtos.html`, `/produto.html` (`?id=` do ERP) e as 2 calculadoras → busca vazia
+  (`/loja/busca.php?loja=1544153&palavra_busca=`). `privacidade.html` ficou sem (não há página nova).
+  No formulário, o rádio "Parcial" só pega clicando no `label.custom-control-label`. A borda (Azion)
+  guarda a resposta por 4 h: testar com `?v=n` no fim, senão aparece o 302 antigo.
   "A empresa" foi para o tema (/empresa, não é LP). Sem equivalente: calculadoras (desligadas no
   site antigo; o texto dos artigos que citava a calculadora virou convite para o WhatsApp). Política de privacidade: **não** copiar a antiga (descreve o
   servidor/ERP do site antigo, não a Tray); precisa de texto novo, decisão do usuário.
@@ -153,6 +159,6 @@ Cadastro de produtos na Tray (30 feitos à mão, categorias, cuidados com o ERP,
 - [x] Links dos cards de segmento → LPs.
 - [x] LPs de SEO criadas no criador da Tray (inativas).
 - [x] LPs ativas e tema publicado (02/10/2026). Black Friday inativa até perto da campanha.
-- [ ] Usuário: redirecionamentos 301 quando o domínio virar (lista acima).
+- [x] Redirecionamentos 301 (16/10/2026, lista acima).
 - [x] Blog (índice + 4 artigos) e Black Friday como LPs (inativas); "Blog" no rodapé (Navegação).
 - [ ] Calculadoras: sem equivalente (desligadas também no site antigo).
