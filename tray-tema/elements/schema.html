@@ -73,7 +73,29 @@
                 {% endif %}
 
                 "itemCondition": "http://schema.org/NewCondition",
-                "availability": " {{ product.available and (product.stock > 0 or settings.without_stock_sale) ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock' }}"
+                {# Atacado Polvo: frete grátis (entrega própria) só nas 4 faixas de CEP da tabela
+                   "Frete Grátis" do painel, prazo 3 a 4 dias úteis. Mudou lá, mudar aqui. #}
+                "shippingDetails": {
+                    "@type": "OfferShippingDetails",
+                    "shippingRate": { "@type": "MonetaryAmount", "value": 0, "currency": "BRL" },
+                    "shippingDestination": {
+                        "@type": "DefinedRegion",
+                        "addressCountry": "BR",
+                        "postalCodeRange": [
+                            { "postalCodeBegin": "90000-000", "postalCodeEnd": "91999-999" },
+                            { "postalCodeBegin": "92000-000", "postalCodeEnd": "92449-999" },
+                            { "postalCodeBegin": "94400-000", "postalCodeEnd": "94599-999" },
+                            { "postalCodeBegin": "94900-000", "postalCodeEnd": "94999-999" }
+                        ]
+                    },
+                    "deliveryTime": {
+                        "@type": "ShippingDeliveryTime",
+                        "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 1, "unitCode": "DAY" },
+                        "transitTime": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 3, "unitCode": "DAY" }
+                    }
+                },
+                {# Atacado Polvo: sem o espaço que o tema padrão deixava antes da URL. #}
+                "availability": "{{ product.available and (product.stock > 0 or settings.without_stock_sale) ? 'http://schema.org/InStock' : 'http://schema.org/OutOfStock' }}"
             }
         }
     </script>

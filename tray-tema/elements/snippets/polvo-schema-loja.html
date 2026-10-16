@@ -1,0 +1,82 @@
+{# Atacado Polvo: dados estruturados da empresa (só na home).
+   WebSite = nome do site nos resultados do Google; Organization + as 2 lojas físicas
+   (Store) para ligar o site à ficha do Google. Dados iguais aos de assets/js/config.js:
+   mudou telefone, endereço ou horário lá, mudar aqui.
+   Acentos em \u porque a Tray troca acento por entidade HTML, e dentro de <script> a
+   entidade não seria convertida. #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://www.atacadopolvo.com.br/#site",
+      "url": "https://www.atacadopolvo.com.br/",
+      "name": "Atacado Polvo",
+      "alternateName": "Atacado da Limpeza Polvo",
+      "inLanguage": "pt-BR",
+      "publisher": { "@id": "https://www.atacadopolvo.com.br/#empresa" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.atacadopolvo.com.br/#empresa",
+      "name": "Atacado Polvo",
+      "legalName": "Atacado da Limpeza Polvo",
+      "taxID": "37.418.777/0001-80",
+      "foundingDate": "2020-06-15",
+      "url": "https://www.atacadopolvo.com.br/",
+      "logo": "{{ asset('img/polvo/favicon-192.png') }}",
+      "email": "polvoclean@gmail.com",
+      "telephone": "+55 51 98025-6547",
+      "sameAs": ["https://www.instagram.com/atacadopolvo/"],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "telephone": "+55 51 98025-6547",
+        "areaServed": "BR-RS",
+        "availableLanguage": "pt-BR"
+      }
+    },
+    {
+      "@type": "Store",
+      "@id": "https://www.atacadopolvo.com.br/#loja-medianeira",
+      "name": "Atacado Polvo - Medianeira",
+      "parentOrganization": { "@id": "https://www.atacadopolvo.com.br/#empresa" },
+      "url": "https://www.atacadopolvo.com.br/",
+      "image": "{{ asset('img/polvo/loja/medianeira-fachada.webp') }}",
+      "telephone": "+55 51 98025-6547",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Dr. Carlos Barbosa, 931",
+        "addressLocality": "Porto Alegre",
+        "addressRegion": "RS",
+        "addressCountry": "BR"
+      },
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "18:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "15:00" }
+      ]
+    },
+    {
+      "@type": "Store",
+      "@id": "https://www.atacadopolvo.com.br/#loja-bento",
+      "name": "Atacado Polvo - Bento Gon\u00e7alves",
+      "parentOrganization": { "@id": "https://www.atacadopolvo.com.br/#empresa" },
+      "url": "https://www.atacadopolvo.com.br/",
+      "image": "{{ asset('img/polvo/loja/bento-fachada.webp') }}",
+      "telephone": "+55 51 98025-6547",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Bento Gon\u00e7alves, 5928",
+        "addressLocality": "Porto Alegre",
+        "addressRegion": "RS",
+        "addressCountry": "BR"
+      },
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "18:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "15:00" }
+      ]
+    }
+  ]
+}
+</script>
