@@ -1,13 +1,16 @@
-// Monta a planilha de importação da Tray com 469 produtos novos (500 - 31 que já existem).
-// Uso: node tray-tema/ferramentas/planilha-produtos.js <raiz do repo> <mercadorias.json> <saida-dir>
+// Monta a planilha de importação da Tray com os produtos novos.
+// Uso: node tray-tema/ferramentas/planilha-produtos.js <raiz do repo> <mercadorias.json> <saida-dir> [so-estes.csv]
+// 07/10/2026: 469 (500 - 31 que já existiam). 16/10/2026 (plano maior): só os da
+// lista produtos-fora-da-tray.csv (1ª coluna = código), sem limite: LIMITE_NOVOS=9999.
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const zlib = require('node:zlib');
 const { DatabaseSync } = require('node:sqlite');
 
-const [RAIZ, MERC, SAIDA] = process.argv.slice(2);
-const LIMITE_NOVOS = 469;
+const [RAIZ, MERC, SAIDA, SO_ESTES] = process.argv.slice(2);
+const LIMITE_NOVOS = Number(process.env.LIMITE_NOVOS) || 469;
+const SO = SO_ESTES ? new Set(fs.readFileSync(SO_ESTES, 'utf8').split(/\r?\n/).slice(1).map(l => l.split(';')[0]).filter(Boolean)) : null;
 const RAW = 'https://raw.githubusercontent.com/NathanCaprio/AtacadoPolvo/main/assets/img/produtos/';
 
 // nomeSite/GRUPOS/frase de server/erp.js sem abrir o banco pelo db.js (que migra).
@@ -60,12 +63,13 @@ const candidatos = [];
 const fora = [];
 for (const x of merc) {
   const ref = String(x.codigo);
-  if (JA_NA_TRAY.has(ref)) continue;
+  if (JA_NA_TRAY.has(ref) || (SO && !SO.has(ref))) continue;
   const l = local.get(x.id) || {};
   const fotosErp = l.fotos ? JSON.parse(l.fotos) : [];
   const temLocal = !l.foto_oculta && fs.existsSync(path.join(RAIZ, 'assets/img/produtos', x.id + '.jpg'));
   const WEBP = new Set(fs.existsSync(path.join(SAIDA, 'webp.json')) ? JSON.parse(fs.readFileSync(path.join(SAIDA, 'webp.json'), 'utf8')) : []);
-  const foto = WEBP.has(ref) ? '' : fotosErp[0] || (temLocal ? RAW + x.id + '.jpg' : '');
+  // WebP do ERP: vale a cópia em JPEG de assets/img/produtos/, se houver.
+  const foto = (WEBP.has(ref) ? '' : fotosErp[0]) || (temLocal ? RAW + x.id + '.jpg' : '');
   const estoque = Math.max(0, Math.floor(x.quantidadeAtualEstoque || 0));
   const item = {
     id: x.id, ref, nomeErp: x.descricao,
@@ -104,7 +108,7 @@ for (let n = 0; n <= 3 && escolhidos.length < LIMITE_NOVOS; n++) {
   }
 }
 const sel = new Set(escolhidos);
-for (const c of candidatos) if (!sel.has(c)) fora.push({ ...c, motivo: 'limite de 500' });
+for (const c of candidatos) if (!sel.has(c)) fora.push({ ...c, motivo: 'limite do plano' });
 
 // Nomes repetidos confundem a vinculação por nome; acrescenta o código.
 const vezes = new Map();

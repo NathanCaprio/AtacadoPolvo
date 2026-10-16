@@ -123,3 +123,20 @@ código): `.playwright-mcp/vincular.js` (fora do git).
 
 Para crescer (plano maior): gerar de novo a planilha com `LIMITE_NOVOS`
 maior; quem já está na loja é atualizado (mesma Referência), não duplica.
+
+## Feito em 16/10/2026: +558 (plano Avançado, produtos ilimitados) — loja com 1.058
+
+- Os 558 de `produtos-fora-da-tray.csv` entraram todos (decisão do usuário), inclusive
+  os sem foto (281 + 34) e os sem estoque (111, aparecem indisponíveis até o ERP ter).
+  `LIMITE_NOVOS=9999 node tray-tema/ferramentas/planilha-produtos.js . .playwright-mcp/mercadorias.json <saida> produtos-fora-da-tray.csv`
+  (4º argumento = só os códigos da 1ª coluna do CSV). Dados do `mercadorias.json` de
+  07/10; preço e estoque se acertam pelo vínculo com o ERP.
+- Importação pelo modelo "Polvo - ERP": 558 importados, 0 erros, de primeira.
+- **Fotos WebP:** eram 14, não 10 — 4 fotos do ERP com nome `.jpg` eram WebP e não estavam
+  em `webp.json` (a Tray ignora a imagem sem avisar). Conferir o formato pelos bytes
+  (`RIFF` = WebP) antes de importar. As 14 foram convertidas para JPEG
+  (`assets/img/produtos/<uuid>.jpg`) e enviadas **na ficha de cada produto** no painel
+  (`input[type=file]` de "Imagens e vídeo" + Salvar), porque o link do GitHub só vale
+  depois do push.
+- Fica para depois: foto para os 315 sem foto (`npm run fotos` + revisão + reenvio pela
+  planilha, mesma Referência atualiza).
