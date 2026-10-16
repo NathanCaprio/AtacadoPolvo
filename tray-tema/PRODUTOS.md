@@ -150,4 +150,6 @@ maior; quem já está na loja é atualizado (mesma Referência), não duplica.
   de 07/10?): 7898903623159 Limpador Perfumado 5L Blue Supreme Wuax, 1452 Papel Toalha
   Int. Avulso Soft Ipel, 78965409336 Alvejante sem Cloro 5L Quimifel, 1013 Aromatizador
   24hrs Fort Aroma 5L, 7899682735675 Limpador Ácido 5L Uppro Nobre. Na Tray ficam com
-  preço/estoque de 07/10 sem atualizar; decidir com o usuário se esconde ou exclui.
+  preço/estoque de 07/10 sem atualizar. **Escondidos em 16/10/2026** (a pedido do usuário):
+  "Exibir produto na loja virtual" desmarcado, "Produto ativo" mantido; fichas 1061,
+  1777, 2063, 2065, 2125. Se voltarem no ERP: vincular e marcar de novo.
