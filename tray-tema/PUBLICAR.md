@@ -6,7 +6,30 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
 ## Painel (com você)
 
 ### Impede de vender
-- [ ] **Catálogo.** A loja só tem "produto teste" (em "categoria teste"). Falta trazer os
+- [ ] **Pedidos da Tray não chegam no Empresarius (pedido teste de 16/10/2026).** Pedido **11**:
+      1 Copo Cafezinho (ref. 78965409211) R$ 3,99, **Pix Vindi aprovado** (transação 290582336),
+      "Retirar na loja Medianeira", status "A enviar Vindi" — na Tray tudo certo. No ERP, Lojas
+      Virtuais > Tray > Pedidos ficou **vazio** ("Linhas: 0"); Situações mapeia todos os status
+      (inclusive A ENVIAR VINDI), então não é filtro. Suspeita: o endereço de notificação que o ERP
+      mostra é `empresarius-preview.azurewebsites.net/api/Tray/Notificacao` (ambiente de teste?).
+      Para amanhã (usuário):
+      1. Chamado na WME: "pedidos da Tray não chegam; o endereço de notificação exibido é o
+         *preview*; é esse que está cadastrado na Tray para a loja 1544153?"
+      2. Antes de usar o botão "buscar pedidos na Tray (últimos 7 dias)" (cria pedido no ERP):
+         cancelar na Tray os pedidos de teste **1** (R$ 384,78) e **3** (R$ 486,90) de 11/10,
+         nunca pagos ("Aguardando Vindi") — senão entram no ERP como "Em andamento".
+      3. Depois de puxar o 11: conferir condição **PIX QR CODE**, retirada e baixa de estoque.
+      4. Encerrar o teste: cancelar o pedido 11 e estornar o Pix (tela do pedido > "Cancelamento
+         e reembolso"); cancelar também no ERP.
+      Pedido mínimo: baixado para o teste e **voltou para RS 0,00–299,99** (conferido 17/10).
+      Tarifa real do Pix: **R$ 1,99 em R$ 3,99** (a calculadora dizia 1,6%): há tarifa mínima
+      por Pix de ~R$ 2.
+- [ ] **Vínculo das formas de pagamento no ERP (print do usuário, 16/10):** Boleto, Amex, Elo e
+      MasterCard estão **sem condição** (Pix → PIX QR CODE e Diners → CRÉDITO ok). Sem vínculo
+      caem na padrão, que é CRÉDITO. Religar os cartões a CRÉDITO e decidir a do boleto (usuário,
+      Lojas Virtuais > Tray > Formas de Pagamentos).
+- [x] **Catálogo (16/10/2026):** 1.058 produtos na loja, 1.053 vinculados ao ERP (ver
+      `PRODUTOS.md`). Antigo: a loja só tinha "produto teste" (em "categoria teste"). Falta trazer os
       produtos do Empresarius pela integração e apagar o produto e a categoria de teste.
       Os cards da home e a coluna Categorias do rodapé buscam por **Limpeza, Lavanderia,
       Papéis, Descartáveis, Sacos de Lixo, Vassouras, Rodos e Pás, Baldes, Bacias e Mops,
