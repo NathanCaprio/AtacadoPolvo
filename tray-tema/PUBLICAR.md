@@ -66,6 +66,12 @@ computador (1366/1791px) e no celular (390px). Este arquivo não entra no ZIP.
       guardada na ligação Tray↔Vindi. Só o usuário resolve: "Mais opções > Trocar conta Vindi" na
       mesma tela, com o login da Vindi, ou chamado na Tray citando o erro. Provável causa também
       da Central de contas que não carregava.
+      **Resolvido (conferido em 16/10/2026):** Central de contas carrega (conta Vindi 18433, "Conta
+      ativa") e salvar o Boleto sem mudar nada respondeu 200 `{"message":"success"}`. Estado:
+      Cartões, Pix e **Boleto ativos** (o usuário quer o boleto), Transferência online **inativa**.
+      Configuração da Vindi: Configurações > Formas de Pagamento > Vindi
+      (`/admin/#/appstore/admin/open-app/23?route=app/initialize&target_page=vindi_payment_configuration`).
+      Pendente: o boleto segue **sem vínculo** de condição no ERP (entra como CRÉDITO, a padrão).
       Condição padrão (Lojas Virtuais > Configurações > Tray) = **CRÉDITO** (salva pelo usuário;
       o modo automático barrou o "Salvar" dessa tela). Enquanto boleto/transferência estiverem
       ligados na Tray, pedido por eles entra no ERP como CRÉDITO.
